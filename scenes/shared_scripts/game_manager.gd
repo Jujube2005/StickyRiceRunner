@@ -4,6 +4,7 @@ extends Node3D
 @export var player2_path: NodePath = "../Players/Player2"
 @export var skill_cooldown_min := 3.0
 @export var skill_cooldown_max := 5.0
+const GOAL_DISTANCE = 1000
 
 @onready var p1 = get_node(player1_path)
 @onready var p2 = get_node(player2_path)
@@ -12,11 +13,55 @@ extends Node3D
 var death_frames = {"p1": null, "p2": null}
 var skill_cooldown_active := false
 var pending_pranks = {}
+var game_ended = false
 
 func _ready():
 	ui_gameover.visible = false
 	p1.connect("died", Callable(self, "_on_p1_died"))
 	p2.connect("died", Callable(self, "_on_p2_died"))
+	
+	# Connect to distance changes to check for goal
+	p1.distance_changed.connect(_check_distance_goal)
+	p2.distance_changed.connect(_check_distance_goal)
+
+func _input(event):
+	# Debug keys for testing goal
+	if event is InputEventKey and event.pressed:
+		match event.keycode:
+			KEY_F1: # Set both players near goal
+				p1.debug_set_distance(980)
+				p2.debug_set_distance(980)
+				print("DEBUG: Set distance to 980m")
+			KEY_F2: # Give P1 full charge
+				p1.debug_add_charge(5)
+				print("DEBUG: P1 Charge Full")
+			KEY_F3: # Give P2 full charge
+				p2.debug_add_charge(5)
+				print("DEBUG: P2 Charge Full")
+			KEY_F4: # Fast forward current player slightly
+				p1.debug_set_distance(p1.distance + 50)
+				print("DEBUG: P1 jumped +50m")
+
+func _check_distance_goal(_new_dist):
+	if game_ended:
+		return
+		
+	if p1.distance >= GOAL_DISTANCE or p2.distance >= GOAL_DISTANCE:
+		game_ended = true
+		_determine_winner_by_score()
+
+func _determine_winner_by_score():
+	var winner = "Draw"
+	if p1.score > p2.score:
+		winner = "Player 1"
+	elif p2.score > p1.score:
+		winner = "Player 2"
+	elif p1.distance > p2.distance:
+		winner = "Player 1"
+	elif p2.distance > p1.distance:
+		winner = "Player 2"
+	
+	game_over(winner)
 
 func _on_p1_died():
 	death_frames["p1"] = Engine.get_physics_frames()

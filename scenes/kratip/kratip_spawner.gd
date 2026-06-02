@@ -40,18 +40,9 @@ func spawn_kratip():
 	var lane_x = free_lanes[randi() % free_lanes.size()]
 	var k = kratip_scene.instantiate()
 	k.add_to_group("kratip")
+	k.position = Vector3(lane_x, 1.2, spawn_z)
 	get_parent().add_child(k)
-	# Set height clearly above the road (Road top is at Y=0)
-	# Road mesh is 1m thick centered at Y=0.5, so road top is at Y=1.0 in local coords?
-	# Wait, ground.tscn says:
-	# [node name="RoadBase" type="MeshInstance3D" parent="."]
-	# transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
-	# mesh = BoxMesh (size 9, 1, 20)
-	# So road surface is at Y = 0.5 + 0.5 = 1.0 relative to Ground root.
-	# Ground root is spawned at Y = -1.0 in ground_spawner.gd.
-	# So road surface is at Y = -1.0 + 1.0 = 0.0 in World coordinates.
 	
-	k.global_position = Vector3(lane_x, 1.2, spawn_z)
 	spawned_kratips.append(k)
 	spawn_z -= spawn_interval
 

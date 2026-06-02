@@ -314,3 +314,13 @@ func set_warning(text):
 
 func clear_warning():
 	emit_signal("warning_changed", "")
+
+# --- DEBUG FUNCTIONS ---
+func debug_set_distance(value: float):
+	# Move the player's Z position to simulate the distance
+	global_position.z = start_z - value
+	distance = int(value)
+	emit_signal("distance_changed", distance)
+
+func debug_add_charge(amount: int):
+	add_charge(amount)

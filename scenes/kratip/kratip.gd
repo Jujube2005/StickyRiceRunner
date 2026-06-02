@@ -11,8 +11,6 @@ var time_passed := 0.0
 
 func _ready():
 	connect("body_entered", Callable(self, "_on_body_entered"))
-	# Wait one frame to get the correct global position from spawner
-	await get_tree().process_frame
 	start_y = global_position.y
 	time_passed = randf() * PI * 2
 

@@ -157,7 +157,7 @@ func update_score(value):
 	tween.tween_property(score_label, "scale", Vector2(1.0, 1.0), 0.1)
 
 func update_distance(value):
-	distance_label.text = str(value) + " m"
+	distance_label.text = str(value) + " / 1000 m"
 
 func update_charge(current, max_val):
 	for i in range(charge_segments.size()):
