@@ -17,8 +17,8 @@ var game_ended = false
 
 func _ready():
 	ui_gameover.visible = false
-	p1.connect("died", Callable(self, "_on_p1_died"))
-	p2.connect("died", Callable(self, "_on_p2_died"))
+	# p1.connect("died", Callable(self, "_on_p1_died")) # Signal removed due to Stun system
+	# p2.connect("died", Callable(self, "_on_p2_died"))
 	
 	# Connect to distance changes to check for goal
 	p1.distance_changed.connect(_check_distance_goal)
@@ -87,31 +87,6 @@ func _determine_winner_by_score():
 	
 	game_over(winner)
 
-func _on_p1_died():
-	death_frames["p1"] = Engine.get_physics_frames()
-	_check_game_over()
-
-func _on_p2_died():
-	death_frames["p2"] = Engine.get_physics_frames()
-	_check_game_over()
-
-func _check_game_over():
-	if death_frames["p1"] != null and death_frames["p2"] != null:
-		var p1_frame = death_frames["p1"]
-		var p2_frame = death_frames["p2"]
-		var winner = "Draw"
-		if p1_frame == p2_frame:
-			winner = "Draw"
-		elif p1.score > p2.score:
-			winner = "Player 1"
-		elif p2.score > p1.score:
-			winner = "Player 2"
-		elif p1.distance > p2.distance:
-			winner = "Player 1"
-		elif p2.distance > p1.distance:
-			winner = "Player 2"
-		game_over(winner)
-
 func request_skill(attacker):
 	if skill_cooldown_active:
 		return
@@ -125,7 +100,8 @@ func request_skill(attacker):
 	_start_global_cooldown()
 	_queue_prank(target, _choose_skill())
 
-func try_block_prank(player):
+func try_block_prank(_player):
+	# logic for blocking pranks will be implemented later
 	pass
 
 func _choose_skill():

@@ -1,7 +1,7 @@
 extends Control
 
-const PLAYER1_MODEL_SCENE = preload("res://assets/models/player/manmodel.glb")
-const PLAYER2_MODEL_SCENE = preload("res://assets/models/player/womenmodel.glb")
+var player1_model_scene: PackedScene
+var player2_model_scene: PackedScene
 
 @onready var winner_label = $WinnerLabel
 @onready var final_score_label = $FinalScoreLabel
@@ -21,6 +21,10 @@ var section_label: Label
 var preview_spin_tween: Tween
 
 func _ready():
+	# Load models at runtime to avoid parser errors with preload
+	player1_model_scene = load("res://assets/models/player/manmodel.glb")
+	player2_model_scene = load("res://assets/models/player/womenmodel.glb")
+	
 	_build_layout()
 	hide()
 	retry_button.pressed.connect(_on_retry_pressed)
@@ -220,11 +224,14 @@ func _show_winner_model(winner_id: String):
 	if preview_spin_tween:
 		preview_spin_tween.kill()
 
-	var model_scene: PackedScene = PLAYER1_MODEL_SCENE if winner_id == "p1" else PLAYER2_MODEL_SCENE
-	var model = model_scene.instantiate()
-	preview_pivot.add_child(model)
-	preview_spin_tween = create_tween()
-	preview_spin_tween.tween_property(preview_pivot, "rotation:y", 0.0, 0.7).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	var model_scene: PackedScene = player1_model_scene if winner_id == "p1" else player2_model_scene
+	if model_scene:
+		var model = model_scene.instantiate()
+		preview_pivot.add_child(model)
+		preview_spin_tween = create_tween()
+		preview_spin_tween.tween_property(preview_pivot, "rotation:y", 0.0, 0.7).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	else:
+		push_error("Could not load winner model for: " + winner_id)
 
 func _on_retry_pressed():
 	get_tree().reload_current_scene()

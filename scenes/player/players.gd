@@ -1,6 +1,5 @@
 extends CharacterBody3D
 
-signal died
 signal score_changed(amount)
 signal distance_changed(amount)
 signal charge_changed(current, max)
@@ -183,7 +182,7 @@ func _physics_process(delta):
 	lane = clamp(lane, -1, 1)
 
 	var target_x = lane * lane_distance
-	var lerp_speed = 2.5 if _has_effect("slow_floor") else 10
+	var lerp_speed = 2.5 if _has_effect("slow_floor") else 10.0
 	position.x = lerp(position.x, target_x, lerp_speed * delta)
 
 	if _has_effect("wind_push"):
@@ -209,8 +208,8 @@ func _update_effects(delta):
 	for effect in expired:
 		effect_durations.erase(effect)
 
-func _has_effect(name):
-	return effect_durations.has(name)
+func _has_effect(effect_name):
+	return effect_durations.has(effect_name)
 
 func add_score(amount):
 	score += amount
