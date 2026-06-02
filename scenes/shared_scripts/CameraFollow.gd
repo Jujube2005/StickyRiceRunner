@@ -2,11 +2,11 @@ extends Camera3D
 
 @export var target : Node3D
 @export var follow_speed : float = 8.0
-@export var roll_amount : float = 0.1
-@export var fov_target : float = 100.0
+@export var roll_amount : float = 0.05
+@export var fov_target : float = 75.0
 
-var offset = Vector3(0, 2.8, 5.5)
-var look_offset = Vector3(0, 1.2, 0)
+var offset = Vector3(0, 4.5, 6.5)
+var look_offset = Vector3(0, 2.5, 0)
 
 func _ready():
 	fov = fov_target
