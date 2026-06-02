@@ -18,6 +18,7 @@ var lane = 0
 var lane_distance = 3.0
 
 var alive = true
+var stun_timer := 0.0
 var score = 0
 var charges := 0
 var can_charge := true
@@ -51,6 +52,16 @@ func _physics_process(delta):
 	if new_distance != distance:
 		distance = new_distance
 		emit_signal("distance_changed", distance)
+
+	if stun_timer > 0:
+		stun_timer -= delta
+		velocity.z = 0
+		if !is_on_floor():
+			velocity.y -= GRAVITY * delta
+		move_and_slide()
+		# Visual feedback for stun (shaking/dizzy)
+		$Model.rotation.y += delta * 20.0
+		return
 
 	if !alive:
 		return
@@ -181,7 +192,10 @@ func _physics_process(delta):
 	move_and_slide()
 
 	if position.y < -10:
-		call("die")
+		# No death, so teleport back to lane 0 surface
+		position.y = 2.0
+		position.x = 0.0
+		stun(2.0)
 
 func _update_effects(delta):
 	for effect in effect_durations.keys():
@@ -204,8 +218,18 @@ func add_score(amount):
 	print(name, "score:", score)
 
 func die() -> void:
-	alive = false
-	emit_signal("died")
+	# Redirect die to stun if it's from obstacle, 
+	# but keep it for falling out of bounds for now or just stun.
+	# The requirement says "No death", so let's just stun.
+	stun(2.0)
+
+func stun(duration: float = 2.0):
+	stun_timer = duration
+	velocity.z = 0
+	# Visual feedback: Scale pulse
+	var tween = create_tween()
+	tween.tween_property($Model, "scale", Vector3(1.5, 1.5, 1.5), 0.1)
+	tween.tween_property($Model, "scale", Vector3(1.0, 1.0, 1.0), 0.1)
 
 func add_charge(amount):
 	if !can_charge:
