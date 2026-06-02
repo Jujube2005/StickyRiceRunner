@@ -25,8 +25,8 @@ func activate(pos: Vector3, height: float, high_obstacle: bool):
 	
 	# Enable processing and collision
 	set_process(true)
-	monitorable = true
-	monitoring = true
+	set_deferred("monitorable", true)
+	set_deferred("monitoring", true)
 
 func deactivate():
 	is_active = false
@@ -36,8 +36,8 @@ func deactivate():
 	
 	# Disable processing and collision
 	set_process(false)
-	monitorable = false
-	monitoring = false
+	set_deferred("monitorable", false)
+	set_deferred("monitoring", false)
 
 func _on_body_entered(body) -> void:
 	if !is_active: return
