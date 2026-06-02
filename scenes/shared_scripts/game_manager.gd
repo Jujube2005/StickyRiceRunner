@@ -24,6 +24,30 @@ func _ready():
 	p1.distance_changed.connect(_check_distance_goal)
 	p2.distance_changed.connect(_check_distance_goal)
 
+	# Apply Curvature Effect INSIDE each SubViewport for perfect split-screen isolation
+	_apply_curvature_effect("../Cameras/SubViewportContainerP1er/SubViewportP1", 0.4)
+	_apply_curvature_effect("../Cameras/SubViewportContainerP2/SubViewportP2", 0.4)
+
+func _apply_curvature_effect(viewport_path: String, amount: float):
+	var viewport = get_node_or_null(viewport_path)
+	if not viewport: return
+	
+	# Create a CanvasLayer inside the SubViewport
+	# This ensures SCREEN_UV is local to THIS viewport only (0.0 to 1.0)
+	var canvas_layer = CanvasLayer.new()
+	viewport.add_child(canvas_layer)
+	
+	var color_rect = ColorRect.new()
+	color_rect.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	color_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	
+	var mat = ShaderMaterial.new()
+	mat.shader = load("res://scenes/shared_scripts/curvature.gdshader")
+	mat.set_shader_parameter("curve_y", amount)
+	
+	color_rect.material = mat
+	canvas_layer.add_child(color_rect)
+
 func _input(event):
 	# Debug keys for testing goal
 	if event is InputEventKey and event.pressed:
