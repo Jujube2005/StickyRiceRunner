@@ -4,32 +4,70 @@ extends Node3D
 @export var player1 : CharacterBody3D
 @export var player2 : CharacterBody3D
 
-var spawn_z = 0
-var tile_length = 20
-var spawned_tiles = []
+@export var pool_size = 12 # Total tiles to keep in memory
+@export var tile_length = 20.0
+@export var despawn_threshold = 40.0 # How far behind the player a tile can be before moving it
+
+var spawn_z = 0.0
+var pool = []
 
 func _ready():
-	for i in range(15):
-		spawn_ground()
+	# Initial Pool Creation
+	for i in range(pool_size):
+		_create_pool_tile()
 
 func _process(_delta):
-	# Use the player who is furthest ahead (most negative Z)
-	var lead_z = min(player1.global_position.z, player2.global_position.z)
+	# The "tail" of the track is the player who is furthest behind (most positive Z)
+	var trail_z = max(player1.global_position.z, player2.global_position.z)
 	
-	if lead_z < spawn_z + 100:
-		spawn_ground()
-		_cleanup_old_tiles()
+	# Check the first tile in the pool (the one furthest back)
+	var oldest_tile = pool[0]
+	if oldest_tile.global_position.z > trail_z + despawn_threshold:
+		_recycle_tile(oldest_tile)
 
-func spawn_ground():
+func _create_pool_tile():
 	var ground = ground_scene.instantiate()
 	ground.position = Vector3(0, -1, spawn_z)
 	get_parent().get_node("World").add_child(ground)
-	spawned_tiles.append(ground)
+	pool.append(ground)
 	
-	# Add Random Scenery (Houses)
+	# Initial Scenery
 	_add_scenery(ground)
 	
 	spawn_z -= tile_length
+
+func _recycle_tile(tile):
+	# Move tile to the front of the line
+	tile.global_position.z = spawn_z
+	
+	# Refresh scenery for the reused tile
+	_refresh_scenery(tile)
+	
+	# Update spawn_z for the NEXT tile
+	spawn_z -= tile_length
+	
+	# Re-order the pool array: Move the recycled tile from index 0 to the end
+	pool.remove_at(0)
+	pool.append(tile)
+
+func _refresh_scenery(ground_node):
+	# Clear old houses from the recycled tile
+	var points = [
+		ground_node.get_node("SceneryPoints/Left"),
+		ground_node.get_node("SceneryPoints/Right"),
+		ground_node.get_node("SceneryPoints/LeftFar"),
+		ground_node.get_node("SceneryPoints/RightFar")
+	]
+	
+	for p in points:
+		for child in p.get_children():
+			child.queue_free()
+		
+		# Add new random houses
+		if randf() < 0.5: 
+			var house = _create_prototype_house()
+			p.add_child(house)
+			house.rotation.y = randf() * PI * 2
 
 func _add_scenery(ground_node):
 	var points = [
@@ -82,17 +120,3 @@ func _create_prototype_house():
 	house_node.add_child(roof)
 	
 	return house_node
-
-func _cleanup_old_tiles():
-	# Keep track of the trailing player
-	var trail_z = max(player1.global_position.z, player2.global_position.z)
-	
-	# Remove tiles that are far behind both players
-	var i = 0
-	while i < spawned_tiles.size():
-		var tile = spawned_tiles[i]
-		if is_instance_valid(tile) and tile.global_position.z > trail_z + 40:
-			tile.queue_free()
-			spawned_tiles.remove_at(i)
-		else:
-			i += 1
