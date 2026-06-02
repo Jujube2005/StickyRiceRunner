@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://dcyl0is0fe4wr"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_qcbvg"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qcbvg"]
+albedo_color = Color(0.8644015, 0.43233383, 0.2577288, 0.99607843)
+
+[sub_resource type="BoxMesh" id="BoxMesh_sl1jc"]
+material = SubResource("StandardMaterial3D_qcbvg")
+
+[node name="Obstacle" type="Area3D" unique_id=382382366]
+collision_layer = 8
+collision_mask = 3
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=390459932]
+shape = SubResource("BoxShape3D_qcbvg")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1332997309]
+mesh = SubResource("BoxMesh_sl1jc")

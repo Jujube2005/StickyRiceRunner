@@ -1,0 +1,329 @@
+[gd_scene format=3 uid="uid://crp1rsbj8p8ft"]
+
+[ext_resource type="Script" uid="uid://b84jmds2gue0y" path="res://scenes/ground/ground_spawner.gd" id="1_7mycd"]
+[ext_resource type="PackedScene" uid="uid://baf0pxdlg0sqp" path="res://scenes/player/players.tscn" id="1_h2yge"]
+[ext_resource type="PackedScene" uid="uid://cfi32xwqvv463" path="res://scenes/ground/ground.tscn" id="1_lquwl"]
+[ext_resource type="PackedScene" uid="uid://b6x7cfks4ovil" path="res://assets/models/player/manmodel.glb" id="2_h2yge"]
+[ext_resource type="PackedScene" uid="uid://bmk616bv7ntrf" path="res://assets/models/player/womenmodel.glb" id="3_1bvp3"]
+[ext_resource type="Script" uid="uid://dsqgp3ntb5tu5" path="res://scenes/obstacle/obstacle_spawner.gd" id="3_272bh"]
+[ext_resource type="Script" uid="uid://bhb3mmiktlya" path="res://scenes/shared_scripts/CameraFollow.gd" id="4_1bvp3"]
+[ext_resource type="PackedScene" uid="uid://dcyl0is0fe4wr" path="res://scenes/obstacle/obstacle.tscn" id="4_5vw27"]
+[ext_resource type="Script" uid="uid://t3xm3mhhixq0" path="res://scenes/shared_scripts/game_manager.gd" id="5_1gmgm"]
+[ext_resource type="Script" uid="uid://dbr2pcwj4k6wc" path="res://scenes/kratip/kratip_spawner.gd" id="5_4c57u"]
+[ext_resource type="PackedScene" uid="uid://2718haf4cta6" path="res://scenes/kratip/kratip.tscn" id="6_efxa6"]
+[ext_resource type="Script" uid="uid://cfgjmuv7bje58" path="res://scenes/shared_scripts/game_over_panel.gd" id="11_w48qg"]
+[ext_resource type="Script" uid="uid://c8njdy4tkmyah" path="res://scenes/ui/Player1_UI.gd" id="11_ycdy4"]
+[ext_resource type="Script" uid="uid://corwpvxtnw26d" path="res://scenes/ui/Player2_UI.gd" id="12_w48qg"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_sky"]
+sky_top_color = Color(0.384314, 0.454902, 0.54902, 1)
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_sky"]
+sky_material = SubResource("ProceduralSkyMaterial_sky")
+
+[sub_resource type="Environment" id="Environment_glow"]
+background_mode = 2
+sky = SubResource("Sky_sky")
+tonemap_mode = 2
+glow_enabled = true
+glow_intensity = 0.12
+glow_strength = 0.35
+glow_bloom = 0.05
+glow_hdr_threshold = 1.8
+fog_enabled = true
+fog_light_color = Color(0.647059, 0.654902, 0.670588, 1)
+fog_density = 0.003
+fog_sky_affect = 0.2
+fog_height = -3.0
+fog_height_density = 0.05
+
+[node name="Main" type="Node3D" unique_id=773682926]
+
+[node name="World" type="Node3D" parent="." unique_id=1993019558]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=2084994250]
+transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 3.5405931, 2.3632915)
+shadow_enabled = true
+shadow_opacity = 0.7
+shadow_blur = 1.2
+
+[node name="GroundSpawner" type="Node3D" parent="." unique_id=834509586 node_paths=PackedStringArray("player1", "player2")]
+script = ExtResource("1_7mycd")
+ground_scene = ExtResource("1_lquwl")
+player1 = NodePath("../Players/Player1")
+player2 = NodePath("../Players/Player2")
+
+[node name="ObstacleSpawner" type="Node3D" parent="." unique_id=799236897 node_paths=PackedStringArray("player1", "player2")]
+script = ExtResource("3_272bh")
+obstacle_scene = ExtResource("4_5vw27")
+player1 = NodePath("../Players/Player1")
+player2 = NodePath("../Players/Player2")
+
+[node name="ItemSpawner" type="Node3D" parent="." unique_id=228926545]
+
+[node name="KratipSpawner" type="Node3D" parent="." unique_id=871863492 node_paths=PackedStringArray("player1", "player2")]
+script = ExtResource("5_4c57u")
+kratip_scene = ExtResource("6_efxa6")
+player1 = NodePath("../Players/Player1")
+player2 = NodePath("../Players/Player2")
+
+[node name="Players" type="Node3D" parent="." unique_id=1667052160]
+
+[node name="Player1" parent="Players" unique_id=1649001234 instance=ExtResource("1_h2yge")]
+collision_mask = 4
+left_action = "p1_left"
+right_action = "p1_right"
+jump_action = "p1_jump"
+
+[node name="CollisionShape3D" parent="Players/Player1" index="0" unique_id=200647315]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9224752, 0)
+
+[node name="Model" parent="Players/Player1" index="1" unique_id=1547751969]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 0)
+
+[node name="manmodel" parent="Players/Player1/Model" index="0" unique_id=1680955100 instance=ExtResource("2_h2yge")]
+
+[node name="Player2" parent="Players" unique_id=1643508373 instance=ExtResource("1_h2yge")]
+collision_layer = 2
+collision_mask = 4
+left_action = "p2_left"
+right_action = "p2_right"
+jump_action = "p2_jump"
+
+[node name="CollisionShape3D" parent="Players/Player2" index="0" unique_id=200647315]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.88775384, 0)
+
+[node name="Model" parent="Players/Player2" index="1" unique_id=1547751969]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 0)
+
+[node name="womenmodel" parent="Players/Player2/Model" index="0" unique_id=1743992758 instance=ExtResource("3_1bvp3")]
+
+[node name="Cameras" type="Node3D" parent="." unique_id=342059943]
+
+[node name="SubViewportContainerP1er" type="SubViewportContainer" parent="Cameras" unique_id=1704416382]
+anchors_preset = 15
+anchor_right = 0.5
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stretch = true
+
+[node name="SubViewportP1" type="SubViewport" parent="Cameras/SubViewportContainerP1er" unique_id=115898985]
+handle_input_locally = false
+size = Vector2i(576, 648)
+render_target_update_mode = 4
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="Cameras/SubViewportContainerP1er/SubViewportP1" unique_id=861682158]
+environment = SubResource("Environment_glow")
+
+[node name="CameraP1" type="Camera3D" parent="Cameras/SubViewportContainerP1er/SubViewportP1" unique_id=1583858623 node_paths=PackedStringArray("target")]
+transform = Transform3D(1, 0, 0, 0, 0.9848077, 0.17364818, 0, -0.17364818, 0.9848077, 0, 2, 3.5)
+current = true
+script = ExtResource("4_1bvp3")
+target = NodePath("../../../../Players/Player1")
+
+[node name="SubViewportContainerP2" type="SubViewportContainer" parent="Cameras" unique_id=1890724059]
+anchors_preset = 15
+anchor_left = 0.5
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stretch = true
+
+[node name="SubViewportP2" type="SubViewport" parent="Cameras/SubViewportContainerP2" unique_id=1675053584]
+handle_input_locally = false
+size = Vector2i(576, 648)
+render_target_update_mode = 4
+
+[node name="CameraP2" type="Camera3D" parent="Cameras/SubViewportContainerP2/SubViewportP2" unique_id=1137410629 node_paths=PackedStringArray("target")]
+transform = Transform3D(1, 0, 0, 0, 0.98480767, 0.17364816, 0, -0.17364816, 0.98480767, 0, 2, 3.5)
+current = true
+script = ExtResource("4_1bvp3")
+target = NodePath("../../../../Players/Player2")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="Cameras/SubViewportContainerP2/SubViewportP2" unique_id=516188658]
+environment = SubResource("Environment_glow")
+
+[node name="Obstacles" type="Node3D" parent="." unique_id=672315890]
+
+[node name="UI" type="CanvasLayer" parent="." unique_id=1984742735]
+
+[node name="Player1_UI" type="Control" parent="UI" unique_id=1185480335 node_paths=PackedStringArray("player")]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("11_ycdy4")
+player = NodePath("../../Players/Player1")
+
+[node name="ScoreLabel" type="Label" parent="UI/Player1_UI" unique_id=1401346342]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+text = "P1: 0"
+
+[node name="DistanceLabel" type="Label" parent="UI/Player1_UI" unique_id=1815327905]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 46.0
+text = "P1 Distance: 0 m"
+vertical_alignment = 2
+
+[node name="ChargeLabel" type="Label" parent="UI/Player1_UI" unique_id=1000000001]
+layout_mode = 0
+offset_top = 70.0
+offset_right = 120.0
+offset_bottom = 90.0
+text = "Charge: 0/5"
+vertical_alignment = 2
+
+[node name="WarningLabel" type="Label" parent="UI/Player1_UI" unique_id=1000000002]
+layout_mode = 0
+offset_top = 95.0
+offset_right = 200.0
+offset_bottom = 115.0
+vertical_alignment = 2
+
+[node name="SkillButton" type="Button" parent="UI/Player1_UI" unique_id=1000000003]
+layout_mode = 0
+offset_top = 120.0
+offset_right = 120.0
+offset_bottom = 150.0
+text = "Use Skill"
+
+[node name="DefendButton" type="Button" parent="UI/Player1_UI" unique_id=1000000004]
+layout_mode = 0
+offset_top = 155.0
+offset_right = 120.0
+offset_bottom = 185.0
+text = "Defend"
+
+[node name="Player2_UI" type="Control" parent="UI" unique_id=1301379591 node_paths=PackedStringArray("player")]
+layout_mode = 3
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -169.0
+offset_bottom = 40.0
+grow_horizontal = 0
+script = ExtResource("12_w48qg")
+player = NodePath("../../Players/Player2")
+
+[node name="ScoreLabel" type="Label" parent="UI/Player2_UI" unique_id=388383461]
+layout_mode = 1
+offset_right = 40.0
+offset_bottom = 23.0
+text = "P2: 0"
+vertical_alignment = 2
+
+[node name="DistanceLabel" type="Label" parent="UI/Player2_UI" unique_id=-2094967294]
+layout_mode = 1
+offset_right = 40.0
+offset_bottom = 46.0
+text = "P2 Distance: 0 m"
+vertical_alignment = 2
+
+[node name="ChargeLabel" type="Label" parent="UI/Player2_UI" unique_id=1000000005]
+layout_mode = 0
+offset_top = 70.0
+offset_right = 120.0
+offset_bottom = 90.0
+text = "Charge: 0/5"
+vertical_alignment = 2
+
+[node name="WarningLabel" type="Label" parent="UI/Player2_UI" unique_id=1000000006]
+layout_mode = 0
+offset_left = -33.0
+offset_top = 95.0
+offset_right = 167.0
+offset_bottom = 118.0
+vertical_alignment = 2
+
+[node name="SkillButton" type="Button" parent="UI/Player2_UI" unique_id=1000000007]
+layout_mode = 0
+offset_top = 120.0
+offset_right = 120.0
+offset_bottom = 150.0
+text = "Use Skill"
+
+[node name="DefendButton" type="Button" parent="UI/Player2_UI" unique_id=1000000008]
+layout_mode = 0
+offset_top = 155.0
+offset_right = 120.0
+offset_bottom = 185.0
+text = "Defend"
+
+[node name="GameOverPanel" type="Panel" parent="UI" unique_id=1748702769]
+z_index = 10
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("11_w48qg")
+
+[node name="WinnerLabel" type="Label" parent="UI/GameOverPanel" unique_id=415348748]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.25
+anchor_right = 0.5
+anchor_bottom = 0.25
+offset_left = -150.0
+offset_top = -20.0
+offset_right = 150.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="FinalScoreLabel" type="Label" parent="UI/GameOverPanel" unique_id=1427340966]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.4
+anchor_right = 0.5
+anchor_bottom = 0.4
+offset_left = -200.0
+offset_top = -15.0
+offset_right = 200.0
+offset_bottom = 15.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "P1 Score: 0   P2 Score: 0"
+
+[node name="DistanceLabel" type="Label" parent="UI/GameOverPanel" unique_id=-2094967295]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -15.0
+offset_right = 200.0
+offset_bottom = 15.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "P1 Distance: 0 m   P2 Distance: 0 m"
+
+[node name="RetryButton" type="Button" parent="UI/GameOverPanel" unique_id=959511231]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.7
+anchor_right = 0.5
+anchor_bottom = 0.7
+offset_left = -80.0
+offset_top = -20.0
+offset_right = 80.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Retry"
+
+[node name="GameManager" type="Node3D" parent="." unique_id=184800071]
+script = ExtResource("5_1gmgm")
+
+[editable path="Players/Player1"]
+[editable path="Players/Player2"]

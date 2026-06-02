@@ -1,0 +1,116 @@
+[gd_scene format=3 uid="uid://cfi32xwqvv463"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_lv0v5"]
+size = Vector3(60, 1, 20)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_asphalt"]
+albedo_color = Color(0.12, 0.12, 0.12, 1)
+roughness = 0.8
+
+[sub_resource type="BoxMesh" id="BoxMesh_asphalt"]
+material = SubResource("StandardMaterial3D_asphalt")
+size = Vector3(9, 1, 20)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_grass"]
+albedo_color = Color(0.15, 0.35, 0.1, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_grass"]
+material = SubResource("StandardMaterial3D_grass")
+size = Vector3(30, 0.8, 20)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yellow"]
+albedo_color = Color(1, 0.8, 0, 1)
+emission_enabled = true
+emission = Color(1, 0.8, 0, 1)
+emission_energy_multiplier = 0.2
+
+[sub_resource type="BoxMesh" id="BoxMesh_line"]
+material = SubResource("StandardMaterial3D_yellow")
+size = Vector3(0.15, 0.02, 2)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_white"]
+albedo_color = Color(0.9, 0.9, 0.9, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_side_line"]
+material = SubResource("StandardMaterial3D_white")
+size = Vector3(0.2, 0.02, 20)
+
+[node name="Ground" type="StaticBody3D" unique_id=1642254633]
+collision_layer = 6
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1372169769]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("BoxShape3D_lv0v5")
+
+[node name="RoadBase" type="MeshInstance3D" parent="." unique_id=616486246]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+mesh = SubResource("BoxMesh_asphalt")
+
+[node name="GrassLeft" type="MeshInstance3D" parent="RoadBase"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19.5, -0.1, 0)
+mesh = SubResource("BoxMesh_grass")
+
+[node name="GrassRight" type="MeshInstance3D" parent="RoadBase"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.5, -0.1, 0)
+mesh = SubResource("BoxMesh_grass")
+
+[node name="YellowLinesL" type="Node3D" parent="RoadBase" unique_id=2053231936]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 0.5, 0)
+
+[node name="Line1" type="MeshInstance3D" parent="RoadBase/YellowLinesL" unique_id=446001168]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, -7.5)
+mesh = SubResource("BoxMesh_line")
+
+[node name="Line2" type="MeshInstance3D" parent="RoadBase/YellowLinesL" unique_id=2132403501]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, -2.5)
+mesh = SubResource("BoxMesh_line")
+
+[node name="Line3" type="MeshInstance3D" parent="RoadBase/YellowLinesL" unique_id=1008002381]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, 2.5)
+mesh = SubResource("BoxMesh_line")
+
+[node name="Line4" type="MeshInstance3D" parent="RoadBase/YellowLinesL" unique_id=2115668814]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, 7.5)
+mesh = SubResource("BoxMesh_line")
+
+[node name="YellowLinesR" type="Node3D" parent="RoadBase" unique_id=873221839]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0.5, 0)
+
+[node name="Line1" type="MeshInstance3D" parent="RoadBase/YellowLinesR" unique_id=827852663]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, -7.5)
+mesh = SubResource("BoxMesh_line")
+
+[node name="Line2" type="MeshInstance3D" parent="RoadBase/YellowLinesR" unique_id=1148135353]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, -2.5)
+mesh = SubResource("BoxMesh_line")
+
+[node name="Line3" type="MeshInstance3D" parent="RoadBase/YellowLinesR" unique_id=494062464]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, 2.5)
+mesh = SubResource("BoxMesh_line")
+
+[node name="Line4" type="MeshInstance3D" parent="RoadBase/YellowLinesR" unique_id=1232128165]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, 7.5)
+mesh = SubResource("BoxMesh_line")
+
+[node name="WhiteLineL" type="MeshInstance3D" parent="RoadBase" unique_id=1319512345]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.4, 0.51, 0)
+mesh = SubResource("BoxMesh_side_line")
+
+[node name="WhiteLineR" type="MeshInstance3D" parent="RoadBase" unique_id=240781250]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.4, 0.51, 0)
+mesh = SubResource("BoxMesh_side_line")
+
+[node name="SceneryPoints" type="Node3D" parent="."]
+
+[node name="Left" type="Marker3D" parent="SceneryPoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 1, 0)
+
+[node name="Right" type="Marker3D" parent="SceneryPoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 1, 0)
+
+[node name="LeftFar" type="Marker3D" parent="SceneryPoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 1, -5)
+
+[node name="RightFar" type="Marker3D" parent="SceneryPoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 1, 5)
