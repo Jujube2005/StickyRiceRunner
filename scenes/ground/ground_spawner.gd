@@ -4,9 +4,9 @@ extends Node3D
 @export var player1 : CharacterBody3D
 @export var player2 : CharacterBody3D
 
-@export var pool_size = 12 # Total tiles to keep in memory
+@export var pool_size = 40 
 @export var tile_length = 20.0
-@export var despawn_threshold = 40.0 # How far behind the player a tile can be before moving it
+@export var despawn_threshold = 100.0 
 
 var spawn_z = 0.0
 var pool = []
@@ -17,13 +17,24 @@ func _ready():
 		_create_pool_tile()
 
 func _process(_delta):
-	# The "tail" of the track is the player who is furthest behind (most positive Z)
+	# เช็กตำแหน่งผู้เล่นทั้งคู่
+	var lead_z = min(player1.global_position.z, player2.global_position.z)
 	var trail_z = max(player1.global_position.z, player2.global_position.z)
 	
-	# Check the first tile in the pool (the one furthest back)
-	var oldest_tile = pool[0]
-	if oldest_tile.global_position.z > trail_z + despawn_threshold:
-		_recycle_tile(oldest_tile)
+	while spawn_z > lead_z - 200.0:
+		# ถ้าถนนข้างหน้าสั้นไป ให้พยายาม Recycle แผ่นที่อยู่หลังสุดมาวางข้างหน้าทันที
+		var oldest_tile = pool[0]
+		if oldest_tile.global_position.z > trail_z + despawn_threshold:
+			_recycle_tile(oldest_tile)
+		else:
+			break
+	
+	while pool.size() > 0:
+		var oldest_tile = pool[0]
+		if oldest_tile.global_position.z > trail_z + despawn_threshold:
+			_recycle_tile(oldest_tile)
+		else:
+			break
 
 func _create_pool_tile():
 	var ground = ground_scene.instantiate()
@@ -37,16 +48,16 @@ func _create_pool_tile():
 	spawn_z -= tile_length
 
 func _recycle_tile(tile):
-	# Move tile to the front of the line
-	tile.global_position.z = spawn_z
+	# ย้ายไปข้างหน้าและล็อคค่า X, Y ให้ตรง
+	tile.global_position = Vector3(0, -1, spawn_z)
 	
-	# Refresh scenery for the reused tile
+	# Refresh scenery
 	_refresh_scenery(tile)
 	
-	# Update spawn_z for the NEXT tile
+	# เตรียมตำแหน่งถัดไป
 	spawn_z -= tile_length
 	
-	# Re-order the pool array: Move the recycled tile from index 0 to the end
+	# จัดลำดับ Array ใหม่
 	pool.remove_at(0)
 	pool.append(tile)
 
