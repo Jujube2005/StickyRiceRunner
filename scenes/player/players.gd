@@ -3,6 +3,7 @@ extends CharacterBody3D
 signal score_changed(amount)
 signal distance_changed(amount)
 signal charge_changed(current, max)
+signal skill_state_changed(is_ready, skill_name)
 signal warning_changed(message)
 
 const BASE_FORWARD_SPEED = 10.0
@@ -23,6 +24,12 @@ var charges := 0
 var can_charge := true
 var effect_durations := {}
 
+var prepared_skill := ""
+var is_skill_ready := false
+var is_rolling_skill := false
+
+var shield_vfx : MeshInstance3D = null
+
 var distance := 0.0
 var start_z := 0.0
 
@@ -40,10 +47,29 @@ var game_manager : Node = null
 
 func _ready():
 	start_z = global_position.z
+	_setup_shield_vfx()
 	if get_tree().current_scene != null:
 		var scene_root = get_tree().current_scene
 		if scene_root and scene_root.has_node("GameManager"):
 			game_manager = scene_root.get_node("GameManager")
+
+func _setup_shield_vfx():
+	shield_vfx = MeshInstance3D.new()
+	var sphere = SphereMesh.new()
+	sphere.radius = 1.5
+	sphere.height = 3.0
+	shield_vfx.mesh = sphere
+	
+	var mat = StandardMaterial3D.new()
+	mat.transparency = StandardMaterial3D.TRANSPARENCY_ALPHA
+	mat.albedo_color = Color(1.0, 0.8, 0.2, 0.3) # Golden translucent
+	mat.emission_enabled = true
+	mat.emission = Color(1.0, 0.6, 0.0)
+	mat.emission_energy_multiplier = 2.0
+	shield_vfx.material_override = mat
+	
+	add_child(shield_vfx)
+	shield_vfx.visible = false
 
 func _physics_process(delta):
 	var new_distance = int(abs(global_position.z - start_z))
@@ -102,14 +128,28 @@ func _physics_process(delta):
 	if !is_on_floor():
 		velocity.y -= GRAVITY * delta
 
-	if Input.is_action_just_pressed(jump_action) and is_on_floor() and !_has_effect("disable_jump"):
-		velocity.y = JUMP_FORCE
+	if !is_bot:
+		if jump_action != "" and Input.is_action_just_pressed(jump_action) and is_on_floor() and !_has_effect("disable_jump"):
+			velocity.y = JUMP_FORCE
+
+		if skill_action != "" and Input.is_action_just_pressed(skill_action) and charges >= MAX_CHARGES:
+			request_skill()
+		
+		if defend_action != "" and Input.is_action_just_pressed(defend_action) and charges >= 1:
+			try_defend()
 
 	var move_dir = 0
 
 	if is_bot:
 		bot_think_timer -= delta
 		bot_jump_cooldown -= delta
+		
+		# Bot manual skill/defend logic
+		if charges >= MAX_CHARGES:
+			# Random delay for bot to use skill
+			if randf() < 0.02: # Check every physics frame (~1% chance per frame)
+				request_skill()
+		
 		if bot_think_timer <= 0:
 			bot_think_timer = 0.05
 			
@@ -168,11 +208,12 @@ func _physics_process(delta):
 							bot_jump_cooldown = 0.7
 							break
 
-	if Input.is_action_just_pressed(left_action):
-		move_dir -= 1
+	if !is_bot:
+		if left_action != "" and Input.is_action_just_pressed(left_action):
+			move_dir -= 1
 
-	if Input.is_action_just_pressed(right_action):
-		move_dir += 1
+		if right_action != "" and Input.is_action_just_pressed(right_action):
+			move_dir += 1
 
 	if _has_effect("invert_controls"):
 		move_dir *= -1
@@ -235,30 +276,88 @@ func add_charge(amount):
 		return
 	charges = clamp(charges + amount, 0, MAX_CHARGES)
 	emit_signal("charge_changed", charges, MAX_CHARGES)
-	
-	# Automate skill usage when full
-	if charges >= MAX_CHARGES:
-		request_skill()
 
 func deduct_charges(amount):
 	charges = max(charges - amount, 0)
+	if charges < MAX_CHARGES:
+		is_skill_ready = false
+		prepared_skill = ""
 	emit_signal("charge_changed", charges, MAX_CHARGES)
 
 func reset_charges():
 	charges = 0
+	is_skill_ready = false
+	prepared_skill = ""
 	emit_signal("charge_changed", charges, MAX_CHARGES)
+
+func _prepare_skill():
+	if is_rolling_skill: return
+	
+	is_rolling_skill = true
+	emit_signal("skill_state_changed", false, "ROLLING")
+	emit_signal("warning_changed", "🎆 ลุ้นบั้งไฟ...")
+	
+	# Build anticipation
+	var roll_timer = get_tree().create_timer(1.2)
+	await roll_timer.timeout
+	
+	if game_manager and game_manager.has_method("get_random_skill"):
+		prepared_skill = game_manager.get_random_skill()
+		is_skill_ready = true
+		is_rolling_skill = false
+		emit_signal("skill_state_changed", true, prepared_skill)
+		emit_signal("warning_changed", "พร้อมแล้ว: " + prepared_skill)
 
 func request_skill():
 	if charges < MAX_CHARGES:
 		return
+	if !is_skill_ready:
+		_prepare_skill()
+		return
 	if game_manager:
-		game_manager.request_skill(self)
+		game_manager.request_skill(self, prepared_skill)
+		is_skill_ready = false
+		prepared_skill = ""
+		emit_signal("skill_state_changed", false, "")
 
 func try_defend():
 	if charges < 1:
 		return
+	
+	deduct_charges(1)
+	_show_shield_vfx()
+	
 	if game_manager:
 		game_manager.try_block_prank(self)
+
+func _show_shield_vfx():
+	if !shield_vfx: return
+	
+	shield_vfx.visible = true
+	shield_vfx.scale = Vector3.ZERO
+	
+	var tween = create_tween()
+	# Pop in
+	tween.tween_property(shield_vfx, "scale", Vector3(1.2, 1.2, 1.2), 0.15).set_trans(Tween.TRANS_BACK)
+	tween.tween_property(shield_vfx, "scale", Vector3(1.0, 1.0, 1.0), 0.1)
+	
+	# Pulse effect while active
+	var pulse_tween = create_tween().set_loops(6)
+	pulse_tween.tween_property(shield_vfx, "scale", Vector3(1.05, 1.05, 1.05), 0.2)
+	pulse_tween.tween_property(shield_vfx, "scale", Vector3(1.0, 1.0, 1.0), 0.2)
+	
+	# Fade out after some time (matching block duration if implemented, else fixed)
+	await get_tree().create_timer(2.0).timeout
+	
+	pulse_tween.kill()
+	var fade_tween = create_tween()
+	fade_tween.tween_property(shield_vfx, "scale", Vector3(1.5, 1.5, 1.5), 0.2)
+	fade_tween.parallel().tween_property(shield_vfx, "material_override:albedo_color:a", 0.0, 0.2)
+	fade_tween.tween_callback(func(): 
+		shield_vfx.visible = false
+		shield_vfx.scale = Vector3.ONE
+		shield_vfx.material_override.albedo_color.a = 0.3
+	)
 
 func apply_prank(skill_name):
 	match skill_name:
@@ -288,31 +387,46 @@ func apply_prank(skill_name):
 			effect_durations["disable_jump"] = 4.0
 		_:
 			pass
-	if game_manager:
-		game_manager.clear_warning(self)
+
+func on_prank_state_updated(prank):
+	# Map PrankState to UI Warnings
+	# PrankState { QUEUED, PREPARED, ARMED, ACTIVE, BLOCKED, FINISHED, CANCELLED }
+	match prank.state:
+		1: # PREPARED (not used in this simplified flow yet, but for consistency)
+			pass
+		2: # ARMED
+			set_warning(prank.type + " กำลังมา!")
+		4: # BLOCKED
+			set_warning("ป้องได้แล้ว!")
+			# Auto-clear block message
+			get_tree().create_timer(1.5).timeout.connect(func(): if charges >= 0: clear_warning("ป้องได้แล้ว!"))
+		3: # ACTIVE (Failed to block)
+			set_warning("ป้องกันบ่ทัน")
+			# Auto-clear fail message
+			get_tree().create_timer(1.5).timeout.connect(func(): if charges >= 0: clear_warning("ป้องกันบ่ทัน"))
 
 func set_warning(text):
 	emit_signal("warning_changed", text)
 	
-	# Automate defense when prank is incoming
-	if text.ends_with(" incoming!") and charges >= 1:
-		# Small delay to let the player see the warning/flash
-		get_tree().create_timer(0.2).timeout.connect(func(): if charges >= 1: try_defend())
+	# Bot auto-defend logic
+	if is_bot and text.ends_with(" incoming!") and charges >= 1:
+		# Small delay for bot to respond
+		get_tree().create_timer(randf_range(0.2, 0.5)).timeout.connect(func(): if charges >= 1: try_defend())
 	
 	# Visual feedback for warning/blocking
-	if text == "Prank blocked!":
+	if text == "ป้องได้แล้ว!":
 		# Pulse green-ish or just jump
-		var tween = create_tween()
-		tween.tween_property($Model, "scale", Vector3(1.5, 1.5, 1.5), 0.1)
-		tween.tween_property($Model, "scale", Vector3(1.0, 1.0, 1.0), 0.1)
+		var tween_block = create_tween()
+		tween_block.tween_property($Model, "scale", Vector3(1.5, 1.5, 1.5), 0.1)
+		tween_block.tween_property($Model, "scale", Vector3(1.0, 1.0, 1.0), 0.1)
 	elif text != "":
 		# Warning pulse
-		var tween = create_tween()
-		tween.tween_property($Model, "position:y", 0.5, 0.1)
-		tween.tween_property($Model, "position:y", 0.0, 0.1)
+		var tween_warn = create_tween()
+		tween_warn.tween_property($Model, "position:y", 0.5, 0.1)
+		tween_warn.tween_property($Model, "position:y", 0.0, 0.1)
 
-func clear_warning():
-	emit_signal("warning_changed", "")
+func clear_warning(message_to_clear = ""):
+	emit_signal("warning_changed", "CLEAR:" + message_to_clear)
 
 # --- DEBUG FUNCTIONS ---
 func debug_set_distance(value: float):
