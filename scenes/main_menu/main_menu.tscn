@@ -1,0 +1,89 @@
+[gd_scene format=3 uid="uid://c1mainmenu"]
+
+[ext_resource type="Script" uid="uid://7he1xsveqhim" path="res://scenes/main_menu/main_menu.gd" id="1_main_menu"]
+[ext_resource type="Texture2D" uid="uid://bwu1pxobu8j8i" path="res://assets/textures/UI/Backgrounds/BG.png" id="2_bg"]
+[ext_resource type="Texture2D" uid="uid://b5gv2k1bjufe1" path="res://assets/textures/UI/Logo/game_logo.png" id="3_logo"]
+[ext_resource type="FontFile" uid="uid://iqch0hhb2rhf" path="res://assets/textures/UI/Font/Mitr/Mitr-Regular.ttf" id="4_uqeha"]
+
+[node name="MainMenu" type="Control" unique_id=577320393]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_main_menu")
+
+[node name="Background" type="TextureRect" parent="." unique_id=1707252462]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_bg")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="MenuContainer" type="PanelContainer" parent="." unique_id=1797221629]
+layout_mode = 0
+offset_left = 220.0
+offset_top = 276.0
+offset_right = 420.0
+offset_bottom = 501.0
+rotation = -0.122173
+scale = Vector2(1.2566994, 1.0777587)
+pivot_offset = Vector2(100, 112)
+
+[node name="ButtonList" type="VBoxContainer" parent="MenuContainer" unique_id=2055811206]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="PlayBtn" type="Button" parent="MenuContainer/ButtonList" unique_id=23425570]
+custom_minimum_size = Vector2(0, 45)
+layout_mode = 2
+text = "PLAY"
+
+[node name="SettingsBtn" type="Button" parent="MenuContainer/ButtonList" unique_id=693483168]
+custom_minimum_size = Vector2(0, 45)
+layout_mode = 2
+text = "SETTINGS"
+
+[node name="HowToBtn" type="Button" parent="MenuContainer/ButtonList" unique_id=1665851517]
+custom_minimum_size = Vector2(0, 45)
+layout_mode = 2
+text = "HOW TO"
+
+[node name="QuitBtn" type="Button" parent="MenuContainer/ButtonList" unique_id=539844951]
+custom_minimum_size = Vector2(0, 45)
+layout_mode = 2
+text = "QUIT"
+
+[node name="Logo" type="TextureRect" parent="." unique_id=984879737]
+layout_mode = 0
+offset_left = -2.0000017
+offset_top = 36.000004
+offset_right = 498.5343
+offset_bottom = 369.68948
+rotation = -0.122173
+pivot_offset = Vector2(150, 100)
+texture = ExtResource("3_logo")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="VersionLabel" type="Label" parent="." unique_id=1954310675]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -112.0
+offset_top = -26.0
+offset_right = 112.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_fonts/font = ExtResource("4_uqeha")
+theme_override_font_sizes/font_size = 13
+text = "Version 0.1 By Hungry Sleep"
+horizontal_alignment = 1
