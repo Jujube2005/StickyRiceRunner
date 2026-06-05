@@ -13,6 +13,8 @@ script = ExtResource("1_n4luv")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9244131, 0)
 shape = SubResource("CapsuleShape3D_hti1j")
 
+[node name="Rig" type="Node3D" parent="." unique_id=167856694]
+
 [node name="Model" type="Node3D" parent="." unique_id=1547751969]
 
 [node name="CameraHolder" type="Node3D" parent="." unique_id=1291734684]

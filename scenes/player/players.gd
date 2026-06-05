@@ -29,6 +29,7 @@ var is_skill_ready := false
 var is_rolling_skill := false
 
 var shield_vfx : MeshInstance3D = null
+var anim_player : AnimationPlayer = null
 
 var distance := 0.0
 var start_z := 0.0
@@ -48,6 +49,17 @@ var game_manager : Node = null
 func _ready():
 	start_z = global_position.z
 	_setup_shield_vfx()
+	
+	# Find and play running animation
+	anim_player = find_child("AnimationPlayer", true, false)
+	if anim_player:
+		if anim_player.has_animation("mixamo_com"):
+			anim_player.play("mixamo_com")
+			# Ensure it loops
+			var anim = anim_player.get_animation("mixamo_com")
+			if anim:
+				anim.loop_mode = Animation.LOOP_LINEAR
+	
 	if get_tree().current_scene != null:
 		var scene_root = get_tree().current_scene
 		if scene_root and scene_root.has_node("GameManager"):

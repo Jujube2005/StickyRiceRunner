@@ -22,8 +22,8 @@ var preview_spin_tween: Tween
 
 func _ready():
 	# Load models at runtime to avoid parser errors with preload
-	player1_model_scene = load("res://assets/models/player/manmodel.glb")
-	player2_model_scene = load("res://assets/models/player/womenmodel.glb")
+	player1_model_scene = load("res://assets/models/player/girlTmodel.glb")
+	player2_model_scene = load("res://assets/models/player/manTmodel.glb")
 	
 	_build_layout()
 	hide()
