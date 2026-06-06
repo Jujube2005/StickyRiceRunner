@@ -102,9 +102,14 @@ func _animate_button_hover(btn: Button, is_hover: bool):
 
 # --- CALLBACKS ---
 func _on_play_pressed():
+	print("Starting game...")
 	var tween = create_tween()
 	tween.tween_property(self, "modulate:a", 0.0, 0.5)
-	tween.tween_callback(func(): get_tree().change_scene_to_file("res://scenes/main/main.tscn"))
+	tween.tween_callback(func(): 
+		var error = get_tree().change_scene_to_file("res://scenes/main/main.tscn")
+		if error != OK:
+			print("Error loading game scene: ", error)
+	)
 
 func _on_settings_pressed():
 	if has_node("SettingsMenu"):
