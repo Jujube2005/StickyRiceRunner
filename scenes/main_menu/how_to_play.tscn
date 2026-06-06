@@ -1,0 +1,134 @@
+[gd_scene format=3 uid="uid://blecox4oollt0"]
+
+[ext_resource type="Script" uid="uid://dciijg0dnqvp1" path="res://scenes/main_menu/how_to_play.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://cgp1wqlt1jb3w" path="res://assets/textures/UI/Backgrounds/panelBackground.png" id="2_bg"]
+[ext_resource type="Texture2D" uid="uid://dh6oan0e5pc1n" path="res://assets/textures/UI/Buttons/howtoplay_header.png" id="3_header"]
+[ext_resource type="Texture2D" uid="uid://e26vfcqmahao" path="res://assets/textures/UI/Buttons/howto_P1.png" id="4_p1"]
+[ext_resource type="Texture2D" uid="uid://efmvnl3q6xm8" path="res://assets/textures/UI/Buttons/howto_P2.png" id="5_p2"]
+[ext_resource type="Texture2D" uid="uid://2m440y1sbbdp" path="res://assets/textures/UI/Buttons/btn_back.png" id="6_btn_back"]
+
+[ext_resource type="FontFile" uid="uid://2d6rvw7lnbb6" path="res://assets/textures/UI/Font/Mitr/Mitr-Bold.ttf" id="7_font"]
+[ext_resource type="Texture2D" uid="uid://bwu1pxobu8j8i" path="res://assets/textures/UI/Backgrounds/BG.png" id="8_bg_main"]
+
+[node name="HowToPlay" type="Control" unique_id=946935040]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_script")
+
+[node name="Background" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("8_bg_main")
+expand_mode = 1
+
+[node name="Overlay" type="ColorRect" parent="." unique_id=1271795184]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1, 0.99498045)
+color = Color(0, 0, 0, 0.352941)
+
+[node name="Panel" type="TextureRect" parent="." unique_id=1140296356]
+modulate = Color(1, 1, 1, 0.95)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -579.0
+offset_top = -210.0
+offset_right = 579.0
+offset_bottom = 327.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_bg")
+expand_mode = 1
+
+[node name="Header" type="TextureRect" parent="Panel" unique_id=1983521508]
+layout_mode = 0
+offset_left = 27.999989
+offset_top = -64.0
+offset_right = 296.01675
+offset_bottom = 50.86432
+rotation = -0.122173
+texture = ExtResource("3_header")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Content" type="HBoxContainer" parent="Panel" unique_id=68426899]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -940.0
+offset_top = -166.5
+offset_bottom = 193.5
+grow_horizontal = 0
+grow_vertical = 2
+scale = Vector2(0.777633, 0.777633)
+theme_override_constants/separation = 40
+alignment = 1
+
+[node name="P1" type="TextureRect" parent="Panel/Content" unique_id=1866776479]
+custom_minimum_size = Vector2(450, 360)
+layout_mode = 2
+texture = ExtResource("4_p1")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="P2" type="TextureRect" parent="Panel/Content" unique_id=1312826093]
+custom_minimum_size = Vector2(450, 360)
+layout_mode = 2
+texture = ExtResource("5_p2")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Footer" type="Control" parent="Panel" unique_id=1375587009]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -2.0
+offset_top = -136.0
+offset_right = -2.0
+offset_bottom = -16.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="Buttons" type="HBoxContainer" parent="Panel/Footer" unique_id=78436227]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -110.0
+offset_top = -40.0
+offset_right = 110.0
+offset_bottom = 40.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="BackBtn" type="TextureButton" parent="Panel/Footer/Buttons" unique_id=963670944]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(220, 80)
+layout_mode = 2
+texture_normal = ExtResource("6_btn_back")
+ignore_texture_size = true
+stretch_mode = 5

@@ -120,7 +120,12 @@ func _on_settings_pressed():
 	add_child(settings_instance)
 
 func _on_how_to_pressed():
-	print("How to clicked")
+	if has_node("HowToPlay"):
+		return
+	var how_to_scene = load("res://scenes/main_menu/how_to_play.tscn")
+	var how_to_instance = how_to_scene.instantiate()
+	how_to_instance.name = "HowToPlay"
+	add_child(how_to_instance)
 
 func _on_quit_pressed():
 	get_tree().quit()
