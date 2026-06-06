@@ -1,0 +1,350 @@
+[gd_scene format=3 uid="uid://coe0oi1odarod"]
+
+[ext_resource type="Script" uid="uid://cva0lv33251o4" path="res://scenes/main_menu/settings_menu.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://cgp1wqlt1jb3w" path="res://assets/textures/UI/Backgrounds/panelBackground.png" id="2_bg"]
+[ext_resource type="Texture2D" uid="uid://b48248fthx3nc" path="res://assets/textures/UI/Buttons/settings_header.png" id="3_header"]
+[ext_resource type="Texture2D" uid="uid://deaixmi6cgl8e" path="res://assets/textures/UI/Buttons/icon_master.png" id="4_icon_master"]
+[ext_resource type="Texture2D" uid="uid://d4k3pof0imj0d" path="res://assets/textures/UI/Buttons/icon_music.png" id="5_icon_music"]
+[ext_resource type="Texture2D" uid="uid://38cjdpbstj8m" path="res://assets/textures/UI/Buttons/icon_sfx.png" id="6_icon_sfx"]
+[ext_resource type="Texture2D" uid="uid://dkeuwkccj2l7g" path="res://assets/textures/UI/Buttons/icon_lang.png" id="7_icon_lang"]
+[ext_resource type="Texture2D" uid="uid://cddu5m13v5mo7" path="res://assets/textures/UI/Buttons/icon_screen.png" id="8_icon_screen"]
+[ext_resource type="Texture2D" uid="uid://2m440y1sbbdp" path="res://assets/textures/UI/Buttons/btn_back.png" id="9_btn_back"]
+[ext_resource type="Texture2D" uid="uid://cc6j4ymlk0nge" path="res://assets/textures/UI/Buttons/btn_ok.png" id="10_btn_ok"]
+[ext_resource type="FontFile" uid="uid://2d6rvw7lnbb6" path="res://assets/textures/UI/Font/Mitr/Mitr-Bold.ttf" id="11_font"]
+[ext_resource type="Texture2D" uid="uid://bwu1pxobu8j8i" path="res://assets/textures/UI/Backgrounds/BG.png" id="12_bg_main"]
+
+[node name="SettingsMenu" type="Control" unique_id=1961004934]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_script")
+
+[node name="Background" type="TextureRect" parent="." unique_id=1]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("12_bg_main")
+expand_mode = 1
+
+[node name="Overlay" type="ColorRect" parent="." unique_id=2114468276]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.352941)
+
+[node name="Panel" type="TextureRect" parent="." unique_id=1262961380]
+modulate = Color(1, 1, 1, 0.95)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -579.0
+offset_top = -210.0
+offset_right = 579.0
+offset_bottom = 327.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_bg")
+expand_mode = 1
+
+[node name="Header" type="TextureRect" parent="Panel" unique_id=1416809079]
+layout_mode = 0
+offset_left = 27.999989
+offset_top = -64.0
+offset_right = 296.01675
+offset_bottom = 50.86432
+rotation = -0.122173
+texture = ExtResource("3_header")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="Panel/Header" unique_id=20240607]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -100.0
+offset_top = -25.0
+offset_right = 100.0
+offset_bottom = 25.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 6
+theme_override_fonts/font = ExtResource("11_font")
+theme_override_font_sizes/font_size = 32
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Content" type="VBoxContainer" parent="Panel" unique_id=384838042]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -304.99997
+offset_top = -195.5
+offset_right = 407.5
+offset_bottom = 184.5
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.85, 0.85)
+theme_override_constants/separation = 25
+
+[node name="Master" type="HBoxContainer" parent="Panel/Content" unique_id=396862945]
+layout_mode = 2
+theme_override_constants/separation = 40
+
+[node name="Icon" type="TextureRect" parent="Panel/Content/Master" unique_id=406423936]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+texture = ExtResource("4_icon_master")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Label" type="Button" parent="Panel/Content/Master" unique_id=349761859]
+custom_minimum_size = Vector2(220, 45)
+layout_mode = 2
+mouse_filter = 2
+theme_override_fonts/font = ExtResource("11_font")
+theme_override_font_sizes/font_size = 20
+text = "Master Volume"
+
+[node name="MasterSlider" type="HSlider" parent="Panel/Content/Master" unique_id=652107963]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+max_value = 1.0
+step = 0.05
+value = 0.8
+
+[node name="Music" type="HBoxContainer" parent="Panel/Content" unique_id=1546945383]
+layout_mode = 2
+theme_override_constants/separation = 40
+
+[node name="Icon" type="TextureRect" parent="Panel/Content/Music" unique_id=707155144]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+texture = ExtResource("5_icon_music")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Label" type="Button" parent="Panel/Content/Music" unique_id=51944548]
+custom_minimum_size = Vector2(220, 45)
+layout_mode = 2
+mouse_filter = 2
+theme_override_fonts/font = ExtResource("11_font")
+theme_override_font_sizes/font_size = 20
+text = "Music Volume"
+
+[node name="MusicSlider" type="HSlider" parent="Panel/Content/Music" unique_id=1606888628]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+max_value = 1.0
+step = 0.05
+value = 0.8
+
+[node name="SFX" type="HBoxContainer" parent="Panel/Content" unique_id=1331355692]
+layout_mode = 2
+theme_override_constants/separation = 40
+
+[node name="Icon" type="TextureRect" parent="Panel/Content/SFX" unique_id=1483752020]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+texture = ExtResource("6_icon_sfx")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Label" type="Button" parent="Panel/Content/SFX" unique_id=1882540020]
+custom_minimum_size = Vector2(220, 45)
+layout_mode = 2
+mouse_filter = 2
+theme_override_fonts/font = ExtResource("11_font")
+theme_override_font_sizes/font_size = 20
+text = "SFX Volume"
+
+[node name="SFXSlider" type="HSlider" parent="Panel/Content/SFX" unique_id=1231506170]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+max_value = 1.0
+step = 0.05
+value = 0.8
+
+[node name="Language" type="HBoxContainer" parent="Panel/Content" unique_id=235683492]
+layout_mode = 2
+theme_override_constants/separation = 40
+
+[node name="Icon" type="TextureRect" parent="Panel/Content/Language" unique_id=573167207]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+texture = ExtResource("7_icon_lang")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Label" type="Button" parent="Panel/Content/Language" unique_id=888448593]
+custom_minimum_size = Vector2(220, 45)
+layout_mode = 2
+mouse_filter = 2
+theme_override_fonts/font = ExtResource("11_font")
+theme_override_font_sizes/font_size = 20
+text = "Language"
+
+[node name="LangBtn" type="OptionButton" parent="Panel/Content/Language" unique_id=612209197]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(160, 45)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_fonts/font = ExtResource("11_font")
+theme_override_font_sizes/font_size = 18
+alignment = 1
+selected = 0
+item_count = 2
+popup/item_0/text = "THAI"
+popup/item_0/id = 0
+popup/item_1/text = "ENGLISH"
+popup/item_1/id = 1
+
+[node name="Arrow" type="Label" parent="Panel/Content/Language/LangBtn"]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -30.0
+offset_top = -12.0
+offset_right = -10.0
+offset_bottom = 12.0
+grow_horizontal = 0
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("11_font")
+theme_override_font_sizes/font_size = 14
+text = "▼"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Screen" type="HBoxContainer" parent="Panel/Content" unique_id=684037207]
+layout_mode = 2
+theme_override_constants/separation = 40
+
+[node name="Icon" type="TextureRect" parent="Panel/Content/Screen" unique_id=1743349567]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+texture = ExtResource("8_icon_screen")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Label" type="Button" parent="Panel/Content/Screen" unique_id=1848964006]
+custom_minimum_size = Vector2(220, 45)
+layout_mode = 2
+mouse_filter = 2
+theme_override_fonts/font = ExtResource("11_font")
+theme_override_font_sizes/font_size = 20
+text = "Full screen"
+
+[node name="SwitchContainer" type="HBoxContainer" parent="Panel/Content/Screen"]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="FullscreenSwitch" type="TextureButton" parent="Panel/Content/Screen/SwitchContainer" unique_id=1704055553]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(160, 45)
+layout_mode = 2
+size_flags_vertical = 4
+toggle_mode = true
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="Footer" type="Control" parent="Panel" unique_id=976321713]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -120.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="Buttons" type="HBoxContainer" parent="Panel/Footer" unique_id=211258175]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = -40.0
+offset_right = 300.0
+offset_bottom = 40.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 100
+alignment = 1
+
+[node name="BackBtn" type="TextureButton" parent="Panel/Footer/Buttons" unique_id=203160083]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(220, 80)
+layout_mode = 2
+texture_normal = ExtResource("9_btn_back")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="Panel/Footer/Buttons/BackBtn" unique_id=1438349947]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+theme_override_fonts/font = ExtResource("11_font")
+theme_override_font_sizes/font_size = 24
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="OkBtn" type="TextureButton" parent="Panel/Footer/Buttons" unique_id=1251322744]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(220, 80)
+layout_mode = 2
+texture_normal = ExtResource("10_btn_ok")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="Panel/Footer/Buttons/OkBtn" unique_id=1363176935]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+theme_override_fonts/font = ExtResource("11_font")
+theme_override_font_sizes/font_size = 24
+horizontal_alignment = 1
+vertical_alignment = 1

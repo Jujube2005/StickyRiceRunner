@@ -107,7 +107,9 @@ func _on_play_pressed():
 	tween.tween_callback(func(): get_tree().change_scene_to_file("res://scenes/main/main.tscn"))
 
 func _on_settings_pressed():
-	print("Settings clicked")
+	var settings_scene = load("res://scenes/main_menu/settings_menu.tscn")
+	var settings_instance = settings_scene.instantiate()
+	add_child(settings_instance)
 
 func _on_how_to_pressed():
 	print("How to clicked")
