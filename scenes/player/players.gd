@@ -120,14 +120,10 @@ func _physics_process(delta):
 		$Model.position.y = 0.2 # Adjusted slightly up as requested
 		return
 	elif current_anim == anim_stun:
-		# Just finished stun, play standup or run
+		# Just finished stun, skip standup and go straight to run
 		$Model.position.y = 0.0
 		$Model.rotation.x = 0.0
-		
-		if anim_player.has_animation(anim_standup):
-			play_animation(anim_standup)
-		else:
-			play_animation(anim_run)
+		play_animation(anim_run)
 
 	if !alive:
 		return
@@ -165,7 +161,7 @@ func _physics_process(delta):
 	# Calculate dynamic speed based on distance
 	var current_speed = min(BASE_FORWARD_SPEED + (distance * SPEED_SCALE_FACTOR), MAX_FORWARD_SPEED)
 	
-	# Stop movement if in Standup animation
+	# Stop movement if in Standup animation (Keep logic but standup is bypassed for now)
 	if current_anim == anim_standup and anim_player.is_playing():
 		velocity.z = 0
 	else:
