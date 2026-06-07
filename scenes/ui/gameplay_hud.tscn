@@ -1,0 +1,315 @@
+[gd_scene format=3 uid="uid://b2lscfy2w3ey4"]
+
+[ext_resource type="Script" uid="uid://3q03hyjyr7te" path="res://scenes/ui/gameplay_hud.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://bccy3dy3l2ofr" path="res://assets/textures/UI/Backgrounds/kratib.png" id="2_kratib"]
+[ext_resource type="Texture2D" uid="uid://dq7xbn86me4qp" path="res://assets/textures/UI/Buttons/rice_bar_orange.png" id="3_bar_bg"]
+[ext_resource type="Texture2D" uid="uid://dmrs23yo316wc" path="res://assets/textures/UI/Buttons/progress_fill_orange.png" id="4_bar_fill_orange"]
+[ext_resource type="Texture2D" uid="uid://dttul3r8f2cal" path="res://assets/textures/UI/Buttons/progress_fill_green.png" id="5_bar_fill_green"]
+[ext_resource type="Texture2D" uid="uid://b4k3irenw8bi0" path="res://assets/textures/UI/Buttons/distance_sign.png" id="6_sign"]
+[ext_resource type="Texture2D" uid="uid://bxf60ib60m68i" path="res://assets/textures/UI/Buttons/pause.png" id="7_pause"]
+[ext_resource type="Texture2D" uid="uid://b3nrbryfblcqo" path="res://assets/textures/UI/Buttons/rice_bar_green.png" id="8_noor6"]
+[ext_resource type="Texture2D" uid="uid://u6uemxeq3the" path="res://assets/textures/UI/Buttons/settings.png" id="8_settings"]
+[ext_resource type="Texture2D" uid="uid://sh8mpi3ygefx" path="res://assets/textures/UI/Buttons/skill_bangfai.png" id="9_rocket"]
+[ext_resource type="Texture2D" uid="uid://bfdspjmjgwjm1" path="res://assets/textures/UI/Buttons/down.png" id="10_down"]
+[ext_resource type="FontFile" uid="uid://2d6rvw7lnbb6" path="res://assets/textures/UI/Font/Mitr/Mitr-Bold.ttf" id="11_font"]
+[ext_resource type="Texture2D" uid="uid://bw6tr5y5p4hog" path="res://assets/textures/UI/Buttons/skill_shield.png" id="13_t667q"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_sign"]
+font = ExtResource("11_font")
+font_size = 24
+outline_size = 4
+outline_color = Color(0.2, 0.1, 0, 1)
+shadow_size = 2
+shadow_color = Color(0, 0, 0, 0.5)
+
+[node name="GameplayHUD" type="Control" unique_id=534507249]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_script")
+
+[node name="BottomPlate" type="TextureRect" parent="." unique_id=1190125208]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -29.0
+offset_top = -129.0
+offset_right = 26.0
+offset_bottom = 50.0
+grow_horizontal = 2
+grow_vertical = 0
+texture = ExtResource("10_down")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="TopLeft" type="Control" parent="." unique_id=1064580737]
+layout_mode = 1
+anchors_preset = 0
+offset_left = 40.0
+offset_top = 40.0
+offset_right = 300.0
+offset_bottom = 150.0
+
+[node name="RiceBar" type="Control" parent="TopLeft" unique_id=2051846702]
+layout_mode = 1
+anchors_preset = 0
+offset_left = 60.0
+offset_top = 10.0
+offset_right = 260.0
+offset_bottom = 60.0
+
+[node name="TextureProgressBar" type="TextureProgressBar" parent="TopLeft/RiceBar" unique_id=1661059065]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 21.0
+offset_top = 1.0
+offset_right = 21.0
+offset_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+value = 0.0
+step = 1.0
+nine_patch_stretch = true
+texture_under = ExtResource("3_bar_bg")
+texture_progress = ExtResource("4_bar_fill_orange")
+
+[node name="KratibIcon" type="TextureRect" parent="TopLeft" unique_id=4239334]
+layout_mode = 0
+offset_left = -20.0
+offset_top = -10.0
+offset_right = 70.0
+offset_bottom = 80.0
+texture = ExtResource("2_kratib")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="DistanceSign" type="TextureRect" parent="TopLeft" unique_id=266972342]
+layout_mode = 0
+offset_left = -32.0
+offset_top = 73.0
+offset_right = 95.0
+offset_bottom = 168.0
+texture = ExtResource("6_sign")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="TopLeft/DistanceSign" unique_id=317986312]
+layout_mode = 0
+offset_left = 115.0
+offset_top = 15.0
+offset_right = 235.0
+offset_bottom = 65.0
+text = "0m"
+label_settings = SubResource("LabelSettings_sign")
+vertical_alignment = 1
+
+[node name="WarningLabel" type="Label" parent="TopLeft" unique_id=1204887980]
+layout_mode = 0
+offset_left = 60.0
+offset_top = 160.0
+offset_right = 260.0
+offset_bottom = 183.0
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_fonts/font = ExtResource("11_font")
+text = "Warning!"
+horizontal_alignment = 1
+
+[node name="TopRight" type="Control" parent="." unique_id=29065968]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -300.0
+offset_top = 40.0
+offset_right = -40.0
+offset_bottom = 150.0
+grow_horizontal = 0
+
+[node name="RiceBar" type="Control" parent="TopRight" unique_id=561687972]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -260.0
+offset_top = 10.0
+offset_right = -60.0
+offset_bottom = 60.0
+grow_horizontal = 0
+
+[node name="TextureProgressBar" type="TextureProgressBar" parent="TopRight/RiceBar" unique_id=921897046]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -23.0
+offset_top = 2.0
+offset_right = -23.0
+offset_bottom = 2.0
+grow_horizontal = 2
+grow_vertical = 2
+value = 0.0
+step = 1.0
+fill_mode = 1
+nine_patch_stretch = true
+texture_under = ExtResource("8_noor6")
+texture_progress = ExtResource("5_bar_fill_green")
+
+[node name="KratibIcon" type="TextureRect" parent="TopRight" unique_id=1409141249]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -70.0
+offset_top = -10.0
+offset_right = 20.0
+offset_bottom = 80.0
+grow_horizontal = 0
+texture = ExtResource("2_kratib")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="DistanceSign" type="TextureRect" parent="TopRight" unique_id=172517255]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -110.0
+offset_top = 70.0
+offset_right = 10.0
+offset_bottom = 150.0
+grow_horizontal = 0
+texture = ExtResource("6_sign")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="TopRight/DistanceSign" unique_id=356232778]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -235.0
+offset_top = 15.0
+offset_right = -115.0
+offset_bottom = 65.0
+grow_horizontal = 0
+text = "0m"
+label_settings = SubResource("LabelSettings_sign")
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="WarningLabel" type="Label" parent="TopRight" unique_id=573435237]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -260.0
+offset_top = 160.0
+offset_right = -60.0
+offset_bottom = 183.0
+grow_horizontal = 0
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_fonts/font = ExtResource("11_font")
+text = "Warning!"
+horizontal_alignment = 1
+
+[node name="CenterTop" type="HBoxContainer" parent="." unique_id=903875257]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -80.0
+offset_top = 30.0
+offset_right = 80.0
+offset_bottom = 100.0
+grow_horizontal = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="PauseBtn" type="TextureButton" parent="CenterTop" unique_id=1938676490]
+custom_minimum_size = Vector2(70, 70)
+layout_mode = 2
+texture_normal = ExtResource("7_pause")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="SettingsBtn" type="TextureButton" parent="CenterTop" unique_id=1871672172]
+custom_minimum_size = Vector2(70, 70)
+layout_mode = 2
+texture_normal = ExtResource("8_settings")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="BottomControls" type="Control" parent="." unique_id=1722598361]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -120.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+
+[node name="P1Skills" type="HBoxContainer" parent="BottomControls" unique_id=1736143120]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 40.0
+offset_top = -100.0
+offset_right = 240.0
+offset_bottom = -20.0
+grow_vertical = 0
+theme_override_constants/separation = 15
+
+[node name="SkillRocket" type="TextureButton" parent="BottomControls/P1Skills" unique_id=1182060587]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+texture_normal = ExtResource("9_rocket")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="SkillShield" type="TextureButton" parent="BottomControls/P1Skills" unique_id=128640499]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+texture_normal = ExtResource("13_t667q")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="P2Skills" type="HBoxContainer" parent="BottomControls" unique_id=1890368899]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -240.0
+offset_top = -100.0
+offset_right = -40.0
+offset_bottom = -20.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_constants/separation = 15
+alignment = 2
+
+[node name="SkillShield" type="TextureButton" parent="BottomControls/P2Skills" unique_id=1423934459]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+texture_normal = ExtResource("13_t667q")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="SkillRocket" type="TextureButton" parent="BottomControls/P2Skills" unique_id=1232434785]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+texture_normal = ExtResource("9_rocket")
+ignore_texture_size = true
+stretch_mode = 5
