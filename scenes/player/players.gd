@@ -30,6 +30,17 @@ var is_rolling_skill := false
 
 var shield_vfx : MeshInstance3D = null
 var anim_player : AnimationPlayer = null
+var current_anim : String = ""
+
+@export_group("Animations")
+@export var anim_run : String = "run"
+@export var anim_standup : String = "standup"
+@export var anim_stun : String = "stun"
+
+@export_group("Animation Files")
+@export_file("*.glb", "*.fbx") var run_file : String
+@export_file("*.glb", "*.fbx") var standup_file : String
+@export_file("*.glb", "*.fbx") var stun_file : String
 
 var distance := 0.0
 var start_z := 0.0
@@ -50,15 +61,14 @@ func _ready():
 	start_z = global_position.z
 	_setup_shield_vfx()
 	
-	# Find and play running animation
+	# Find and setup animations
 	anim_player = find_child("AnimationPlayer", true, false)
 	if anim_player:
-		if anim_player.has_animation("mixamo_com"):
-			anim_player.play("mixamo_com")
-			# Ensure it loops
-			var anim = anim_player.get_animation("mixamo_com")
-			if anim:
-				anim.loop_mode = Animation.LOOP_LINEAR
+		print("[ANIM] Found AnimationPlayer for ", name, " at ", anim_player.get_path())
+		_setup_animations()
+		play_animation(anim_run)
+	else:
+		print("[ANIM] WARNING: No AnimationPlayer found for ", name)
 	
 	if get_tree().current_scene != null:
 		var scene_root = get_tree().current_scene
@@ -96,9 +106,29 @@ func _physics_process(delta):
 		if !is_on_floor():
 			velocity.y -= GRAVITY * delta
 		move_and_slide()
-		# Visual feedback for stun (shaking/dizzy)
-		$Model.rotation.y += delta * 20.0
+		
+		# Play stun animation
+		play_animation(anim_stun)
+		
+		# Reset model to origin to prevent disappearing/drifting
+		# We use a safe check to ensure we don't cause jitter
+		if $Model.position.length() > 0.1:
+			$Model.position = Vector3.ZERO
+		if $Model.scale != Vector3.ONE:
+			$Model.scale = Vector3.ONE
+		
+		# Stop any manual rotation during stun
+		$Model.rotation.x = 0
+		$Model.rotation.z = 0
+		# We don't touch Y rotation here to let it stay in the direction it was, 
+		# or let the animation handle the skeleton.
 		return
+	elif current_anim == anim_stun:
+		# Just finished stun, play standup or run
+		if anim_player.has_animation(anim_standup):
+			play_animation(anim_standup)
+		else:
+			play_animation(anim_run)
 
 	if !alive:
 		return
@@ -136,6 +166,15 @@ func _physics_process(delta):
 	# Calculate dynamic speed based on distance
 	var current_speed = min(BASE_FORWARD_SPEED + (distance * SPEED_SCALE_FACTOR), MAX_FORWARD_SPEED)
 	velocity.z = -current_speed * speed_factor
+
+	# Animation handling for normal state
+	if is_on_floor():
+		if current_anim == anim_standup:
+			# If standup finished, back to run
+			if !anim_player.is_playing():
+				play_animation(anim_run)
+		else:
+			play_animation(anim_run)
 
 	if !is_on_floor():
 		velocity.y -= GRAVITY * delta
@@ -421,9 +460,10 @@ func set_warning(text):
 	emit_signal("warning_changed", text)
 	
 	# Bot auto-defend logic
-	if is_bot and text.ends_with(" incoming!") and charges >= 1:
-		# Small delay for bot to respond
-		get_tree().create_timer(randf_range(0.2, 0.5)).timeout.connect(func(): if charges >= 1: try_defend())
+	if is_bot and charges >= 1:
+		if "กำลังมา!" in text:
+			# Random chance to defend based on skill
+			get_tree().create_timer(randf_range(0.2, 0.5)).timeout.connect(func(): if charges >= 1: try_defend())
 	
 	# Visual feedback for warning/blocking
 	if text == "ป้องได้แล้ว!":
@@ -434,11 +474,261 @@ func set_warning(text):
 	elif text != "":
 		# Warning pulse
 		var tween_warn = create_tween()
-		tween_warn.tween_property($Model, "position:y", 0.5, 0.1)
+		tween_warn.tween_property($Model, "position:y", 0.2, 0.1)
 		tween_warn.tween_property($Model, "position:y", 0.0, 0.1)
 
 func clear_warning(message_to_clear = ""):
 	emit_signal("warning_changed", "CLEAR:" + message_to_clear)
+
+# --- Animation Helpers ---
+
+func _setup_animations():
+	if !anim_player: return
+	
+	# Set root node to the player node AFTER fixing animations
+	anim_player.root_node = anim_player.get_path_to(self)
+	
+	# Clean up ALL existing animations in ALL libraries to prevent "metarig" warnings
+	var libs_to_process = []
+	for lib_name in anim_player.get_animation_library_list():
+		libs_to_process.append(lib_name)
+		
+	for lib_name in libs_to_process:
+		var old_lib = anim_player.get_animation_library(lib_name)
+		# Duplicate library to make it unique to this instance
+		var lib = old_lib.duplicate()
+		anim_player.remove_animation_library(lib_name)
+		anim_player.add_animation_library(lib_name, lib)
+		
+		var anims_to_fix = []
+		for anim_name in lib.get_animation_list():
+			anims_to_fix.append(anim_name)
+			
+		for anim_name in anims_to_fix:
+			var anim = lib.get_animation(anim_name)
+			if anim:
+				var new_anim = anim.duplicate()
+				_retarget_animation(new_anim)
+				lib.remove_animation(anim_name)
+				lib.add_animation(anim_name, new_anim)
+	
+	# Ensure we have a default library
+	if !anim_player.has_animation_library(""):
+		anim_player.add_animation_library("", AnimationLibrary.new())
+	
+	# Set root node to the player node AFTER fixing animations
+	anim_player.root_node = anim_player.get_path_to(self)
+	
+	# Auto-assign files based on character type if not set
+	_auto_assign_files()
+	
+	# Import animations from files
+	if run_file: _import_anim(run_file, anim_run)
+	if standup_file: _import_anim(standup_file, anim_standup)
+	if stun_file: _import_anim(stun_file, anim_stun)
+
+func _auto_assign_files():
+	# Simple check: if we have "man" in the name, use man animations
+	var is_male = "man" in name.to_lower() or (get_parent() and "Player1" in name)
+	
+	if is_male:
+		if !run_file: run_file = "res://assets/animation/manRunning.glb"
+		if !standup_file: standup_file = "res://assets/animation/manStandup.glb"
+		if !stun_file: stun_file = "res://assets/animation/manStun.glb"
+	else:
+		if !run_file: run_file = "res://assets/animation/girlRunning.glb"
+		if !standup_file: standup_file = "res://assets/animation/girlStandup.glb"
+		if !stun_file: stun_file = "res://assets/animation/girlStun.fbx"
+
+func _import_anim(path: String, target_name: String):
+	if !FileAccess.file_exists(path): 
+		print("[ANIM] File not found: ", path)
+		return
+		
+	var glb = load(path)
+	if glb:
+		var scene = glb.instantiate()
+		var ap = scene.find_child("AnimationPlayer", true, false)
+		if ap:
+			var anim_names = ap.get_animation_list()
+			print("[ANIM] Found in ", path, ": ", anim_names)
+			if anim_names.size() > 0:
+				# Mixamo usually has "mixamo.com" or the first animation is the one we want
+				var source_name = ""
+				for n in anim_names:
+					if n != "RESET":
+						source_name = n
+						break
+				
+				if source_name != "":
+					var anim = ap.get_animation(source_name).duplicate()
+					_retarget_animation(anim)
+					
+					var lib = anim_player.get_animation_library("")
+					if lib:
+						if lib.has_animation(target_name):
+							lib.remove_animation(target_name)
+						lib.add_animation(target_name, anim)
+						
+						# Set loop mode for running
+						if target_name == anim_run:
+							anim.loop_mode = Animation.LOOP_LINEAR
+						else:
+							anim.loop_mode = Animation.LOOP_NONE
+
+func _retarget_animation(anim: Animation):
+	if !anim: return
+	
+	# Find our skeleton
+	var skeleton = find_child("GeneralSkeleton", true, false)
+	if !skeleton:
+		skeleton = find_child("Skeleton3D", true, false)
+	
+	if !skeleton: 
+		print("[ANIM] No skeleton found for ", name)
+		return
+	
+	# Path from the player node (self) to the skeleton
+	var skeleton_path = get_path_to(skeleton)
+	var bones = []
+	for b in range(skeleton.get_bone_count()):
+		bones.append(skeleton.get_bone_name(b))
+	
+	# Mapping from common Mixamo/Blender source names to target names
+	var bone_map = {
+		"Hips": "Hips", "Spine": "Spine", "Spine1": "Chest", "Spine2": "UpperChest", 
+		"Neck": "Neck", "Head": "Head",
+		"LeftShoulder": "LeftShoulder", "LeftArm": "LeftUpperArm", "LeftForeArm": "LeftLowerArm", "LeftHand": "LeftHand",
+		"RightShoulder": "RightShoulder", "RightArm": "RightUpperArm", "RightForeArm": "RightLowerArm", "RightHand": "RightHand",
+		"LeftUpLeg": "LeftUpperLeg", "LeftLeg": "LeftLowerLeg", "LeftFoot": "LeftFoot",
+		"RightUpLeg": "RightUpperLeg", "RightLeg": "RightLowerLeg", "RightFoot": "RightFoot",
+		"hips": "Hips", "spine": "Spine", "spine.001": "Chest", "spine.002": "UpperChest", 
+		"spine.003": "Neck", "spine.004": "Head", "spine.005": "Head",
+		"shoulder.L": "LeftShoulder", "upper_arm.L": "LeftUpperArm", "lower_arm.L": "LeftLowerArm", "hand.L": "LeftHand",
+		"shoulder.R": "RightShoulder", "upper_arm.R": "RightUpperArm", "lower_arm.R": "RightLowerArm", "hand.R": "RightHand",
+		"upper_leg.L": "LeftUpperLeg", "lower_leg.L": "LeftLowerLeg", "foot.L": "LeftFoot",
+		"upper_leg.R": "RightUpperLeg", "lower_leg.R": "RightLowerLeg", "foot.R": "RightFoot",
+		"thigh.L": "LeftUpperLeg", "shin.L": "LeftLowerLeg", "thigh.R": "RightUpperLeg", "shin.R": "RightLowerLeg",
+		"forearm.L": "LeftLowerArm", "forearm.R": "RightLowerArm",
+		"GeneralSkeleton:RightHand": "RightHand",
+		"GeneralSkeleton:LeftHand": "LeftHand",
+		"GeneralSkeleton:Hips": "Hips",
+		"GeneralSkeleton:Spine": "Spine",
+		"GeneralSkeleton:Chest": "Chest",
+		"GeneralSkeleton:UpperChest": "UpperChest",
+		"GeneralSkeleton:Neck": "Neck",
+		"GeneralSkeleton:Head": "Head",
+		"metarig/GeneralSkeleton:Neck": "Neck",
+		"metarig/GeneralSkeleton:RightHand": "RightHand",
+		"girlTmodel/metarig/GeneralSkeleton:Neck": "Neck",
+		"girlTmodel/metarig/GeneralSkeleton:RightHand": "RightHand"
+	}
+	
+	# Fallback map for when the skeleton uses spine.001 names instead of Humanoid names
+	var fallback_map = {
+		"Hips": "spine", "Spine": "spine.001", "Chest": "spine.002", "UpperChest": "spine.003",
+		"Neck": "spine.004", "Head": "spine.005",
+		"LeftShoulder": "shoulder.L", "LeftUpperArm": "upper_arm.L", "LeftLowerArm": "forearm.L", "LeftHand": "hand.L",
+		"RightShoulder": "shoulder.R", "RightUpperArm": "upper_arm.R", "RightLowerArm": "forearm.R", "RightHand": "hand.R",
+		"LeftUpperLeg": "thigh.L", "LeftLowerLeg": "shin.L", "LeftFoot": "foot.L",
+		"RightUpperLeg": "thigh.R", "RightLowerLeg": "shin.R", "RightFoot": "foot.R"
+	}
+
+	var tracks_to_remove = []
+	for i in range(anim.get_track_count()):
+		var path = anim.track_get_path(i)
+		var path_str = str(path)
+		var new_path_str = ""
+		
+		# 0. Root Motion Removal (Fix backward jumping and rotation bugs)
+		var p_lower = path_str.to_lower()
+		
+		# Aggressively remove position/rotation/scale from root nodes (Root, Hips, Armature, etc.)
+		if p_lower.ends_with(":position") or p_lower.ends_with(":location") or p_lower.ends_with(":rotation") or p_lower.ends_with(":rotation_edit") or p_lower.ends_with(":scale") or p_lower.ends_with(":quaternion"):
+			if "hips" in p_lower or "metarig" in p_lower or "armature" in p_lower or "root" in p_lower:
+				tracks_to_remove.append(i)
+				continue
+		
+		# If it's a node track without colon (root object movement)
+		if !":" in path_str:
+			if "metarig" in p_lower or "armature" in p_lower or "root" in p_lower:
+				tracks_to_remove.append(i)
+				continue
+
+		if ":" in path_str:
+			var parts = path_str.split(":")
+			var bone_part = parts[parts.size() - 1] # Get the last part (the bone name)
+			
+			# 1. Try direct map
+			var target_bone = bone_part
+			if bone_map.has(bone_part):
+				target_bone = bone_map[bone_part]
+			
+			# Special check for full path parts in case bone_part alone isn't enough
+			if !target_bone in bones:
+				for key in bone_map.keys():
+					if key in path_str:
+						target_bone = bone_map[key]
+						break
+			
+			# 2. If not in skeleton, try fallback map (Humanoid -> spine.001)
+			if !target_bone in bones:
+				if fallback_map.has(target_bone):
+					target_bone = fallback_map[target_bone]
+			
+			# 3. Still not found? Try case-insensitive
+			if !target_bone in bones:
+				for b_name in bones:
+					if b_name.to_lower() == target_bone.to_lower() or b_name.to_lower() == bone_part.to_lower():
+						target_bone = b_name
+						break
+			
+			if target_bone in bones:
+				new_path_str = str(skeleton_path) + ":" + target_bone
+			else:
+				# Bone not found in our skeleton, skip this track
+				# print("[ANIM] Bone not found in skeleton: ", bone_part)
+				tracks_to_remove.append(i)
+				continue
+		else:
+			# Track without colon (Node animation)
+			
+			# If the path contains the skeleton name or common rig names, try to map it to our skeleton
+			if "skeleton" in p_lower or "metarig" in p_lower or "armature" in p_lower:
+				new_path_str = str(skeleton_path)
+			elif "model" in p_lower or "rig" in p_lower:
+				var rig_node = find_child("Rig", true, false)
+				if rig_node:
+					new_path_str = str(get_path_to(rig_node))
+				else:
+					tracks_to_remove.append(i)
+					continue
+			else:
+				# Unknown node track
+				tracks_to_remove.append(i)
+				continue
+		
+		if new_path_str != "":
+			anim.track_set_path(i, NodePath(new_path_str))
+	
+	# Remove tracks from end to start to avoid index shifting
+	tracks_to_remove.reverse()
+	for i in tracks_to_remove:
+		anim.remove_track(i)
+	
+	if anim_player.has_method("clear_caches"):
+		anim_player.clear_caches()
+	
+	# Force an update of the animation mixer
+	if anim_player.has_method("force_update_cache"):
+		anim_player.force_update_cache()
+
+func play_animation(anim_name: String):
+	if !anim_player or current_anim == anim_name: return
+	
+	if anim_player.has_animation(anim_name):
+		anim_player.play(anim_name)
+		current_anim = anim_name
 
 # --- DEBUG FUNCTIONS ---
 func debug_set_distance(value: float):
