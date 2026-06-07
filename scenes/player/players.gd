@@ -110,21 +110,20 @@ func _physics_process(delta):
 		# Play stun animation
 		play_animation(anim_stun)
 		
-		# Reset model to origin to prevent disappearing/drifting
-		# We use a safe check to ensure we don't cause jitter
-		if $Model.position.length() > 0.1:
-			$Model.position = Vector3.ZERO
-		if $Model.scale != Vector3.ONE:
-			$Model.scale = Vector3.ONE
+		# Ensure model is positioned correctly during stun
+		$Model.position.x = 0
+		$Model.position.z = 0
+		$Model.scale = Vector3.ONE
 		
-		# Stop any manual rotation during stun
-		$Model.rotation.x = 0
-		$Model.rotation.z = 0
-		# We don't touch Y rotation here to let it stay in the direction it was, 
-		# or let the animation handle the skeleton.
+		# Apply X -90 rotation and slightly raise Y to prevent sinking into the road
+		$Model.rotation.x = deg_to_rad(-90)
+		$Model.position.y = 0.2 # Adjusted slightly up as requested
 		return
 	elif current_anim == anim_stun:
 		# Just finished stun, play standup or run
+		$Model.position.y = 0.0
+		$Model.rotation.x = 0.0
+		
 		if anim_player.has_animation(anim_standup):
 			play_animation(anim_standup)
 		else:
@@ -165,7 +164,12 @@ func _physics_process(delta):
 
 	# Calculate dynamic speed based on distance
 	var current_speed = min(BASE_FORWARD_SPEED + (distance * SPEED_SCALE_FACTOR), MAX_FORWARD_SPEED)
-	velocity.z = -current_speed * speed_factor
+	
+	# Stop movement if in Standup animation
+	if current_anim == anim_standup and anim_player.is_playing():
+		velocity.z = 0
+	else:
+		velocity.z = -current_speed * speed_factor
 
 	# Animation handling for normal state
 	if is_on_floor():
@@ -562,7 +566,7 @@ func _import_anim(path: String, target_name: String):
 				
 				if source_name != "":
 					var anim = ap.get_animation(source_name).duplicate()
-					_retarget_animation(anim)
+					_retarget_animation(anim, target_name)
 					
 					var lib = anim_player.get_animation_library("")
 					if lib:
@@ -576,7 +580,7 @@ func _import_anim(path: String, target_name: String):
 						else:
 							anim.loop_mode = Animation.LOOP_NONE
 
-func _retarget_animation(anim: Animation):
+func _retarget_animation(anim: Animation, anim_name: String = ""):
 	if !anim: return
 	
 	# Find our skeleton
@@ -587,6 +591,9 @@ func _retarget_animation(anim: Animation):
 	if !skeleton: 
 		print("[ANIM] No skeleton found for ", name)
 		return
+	
+	# Try to find a Hips bone to check for height offsets
+	var hips_idx = skeleton.find_bone("Hips")
 	
 	# Path from the player node (self) to the skeleton
 	var skeleton_path = get_path_to(skeleton)
@@ -639,13 +646,24 @@ func _retarget_animation(anim: Animation):
 		var path = anim.track_get_path(i)
 		var path_str = str(path)
 		var new_path_str = ""
-		
-		# 0. Root Motion Removal (Fix backward jumping and rotation bugs)
 		var p_lower = path_str.to_lower()
-		
-		# Aggressively remove position/rotation/scale from root nodes (Root, Hips, Armature, etc.)
-		if p_lower.ends_with(":position") or p_lower.ends_with(":location") or p_lower.ends_with(":rotation") or p_lower.ends_with(":rotation_edit") or p_lower.ends_with(":scale") or p_lower.ends_with(":quaternion"):
+
+		# 0. Root Motion Removal (Fix backward jumping and rotation bugs)
+		# We want to remove forward movement (Z) but KEEP vertical movement (Y) for Stun
+		if p_lower.ends_with(":position") or p_lower.ends_with(":location"):
 			if "hips" in p_lower or "metarig" in p_lower or "armature" in p_lower or "root" in p_lower:
+				if anim_name == anim_run:
+					# For running, remove all root position to keep them in place
+					tracks_to_remove.append(i)
+					continue
+				else:
+					# For Stun/Standup, we KEEP the position track so they can fall to the floor
+					# But we may want to clean the path below
+					pass
+		
+		# Aggressively remove rotation/scale from root nodes (Root, Armature, etc.)
+		if p_lower.ends_with(":rotation") or p_lower.ends_with(":rotation_edit") or p_lower.ends_with(":scale") or p_lower.ends_with(":quaternion"):
+			if "metarig" in p_lower or "armature" in p_lower or "root" in p_lower or "hips" in p_lower:
 				tracks_to_remove.append(i)
 				continue
 		
@@ -727,6 +745,11 @@ func play_animation(anim_name: String):
 	if !anim_player or current_anim == anim_name: return
 	
 	if anim_player.has_animation(anim_name):
+		# Reset any offsets or rotations if we are switching away from stun
+		if current_anim == anim_stun and anim_name != anim_stun:
+			$Model.position.y = 0.0
+			$Model.rotation.x = 0.0
+			
 		anim_player.play(anim_name)
 		current_anim = anim_name
 
