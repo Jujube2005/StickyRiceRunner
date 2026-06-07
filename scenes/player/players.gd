@@ -34,12 +34,10 @@ var current_anim : String = ""
 
 @export_group("Animations")
 @export var anim_run : String = "run"
-@export var anim_standup : String = "standup"
 @export var anim_stun : String = "stun"
 
 @export_group("Animation Files")
 @export_file("*.glb", "*.fbx") var run_file : String
-@export_file("*.glb", "*.fbx") var standup_file : String
 @export_file("*.glb", "*.fbx") var stun_file : String
 
 var distance := 0.0
@@ -120,7 +118,7 @@ func _physics_process(delta):
 		$Model.position.y = 0.2 # Adjusted slightly up as requested
 		return
 	elif current_anim == anim_stun:
-		# Just finished stun, skip standup and go straight to run
+		# Just finished stun, go straight to run
 		$Model.position.y = 0.0
 		$Model.rotation.x = 0.0
 		play_animation(anim_run)
@@ -160,21 +158,11 @@ func _physics_process(delta):
 
 	# Calculate dynamic speed based on distance
 	var current_speed = min(BASE_FORWARD_SPEED + (distance * SPEED_SCALE_FACTOR), MAX_FORWARD_SPEED)
-	
-	# Stop movement if in Standup animation (Keep logic but standup is bypassed for now)
-	if current_anim == anim_standup and anim_player.is_playing():
-		velocity.z = 0
-	else:
-		velocity.z = -current_speed * speed_factor
+	velocity.z = -current_speed * speed_factor
 
 	# Animation handling for normal state
 	if is_on_floor():
-		if current_anim == anim_standup:
-			# If standup finished, back to run
-			if !anim_player.is_playing():
-				play_animation(anim_run)
-		else:
-			play_animation(anim_run)
+		play_animation(anim_run)
 
 	if !is_on_floor():
 		velocity.y -= GRAVITY * delta
@@ -524,7 +512,6 @@ func _setup_animations():
 	
 	# Import animations from files
 	if run_file: _import_anim(run_file, anim_run)
-	if standup_file: _import_anim(standup_file, anim_standup)
 	if stun_file: _import_anim(stun_file, anim_stun)
 
 func _auto_assign_files():
@@ -533,11 +520,9 @@ func _auto_assign_files():
 	
 	if is_male:
 		if !run_file: run_file = "res://assets/animation/manRunning.glb"
-		if !standup_file: standup_file = "res://assets/animation/manStandup.glb"
 		if !stun_file: stun_file = "res://assets/animation/manStun.glb"
 	else:
 		if !run_file: run_file = "res://assets/animation/girlRunning.glb"
-		if !standup_file: standup_file = "res://assets/animation/girlStandup.glb"
 		if !stun_file: stun_file = "res://assets/animation/girlStun.fbx"
 
 func _import_anim(path: String, target_name: String):
@@ -587,9 +572,6 @@ func _retarget_animation(anim: Animation, anim_name: String = ""):
 	if !skeleton: 
 		print("[ANIM] No skeleton found for ", name)
 		return
-	
-	# Try to find a Hips bone to check for height offsets
-	var hips_idx = skeleton.find_bone("Hips")
 	
 	# Path from the player node (self) to the skeleton
 	var skeleton_path = get_path_to(skeleton)
@@ -653,7 +635,7 @@ func _retarget_animation(anim: Animation, anim_name: String = ""):
 					tracks_to_remove.append(i)
 					continue
 				else:
-					# For Stun/Standup, we KEEP the position track so they can fall to the floor
+					# For Stun, we KEEP the position track so they can fall to the floor
 					# But we may want to clean the path below
 					pass
 		
