@@ -208,10 +208,22 @@ func _check_distance_goal(_new_dist):
 		game_ended = true
 		_determine_winner_by_score()
 
+func calculate_final_score(player_id: int) -> int:
+	var player = p1 if player_id == 1 else p2
+	if !player: return 0
+	
+	var kratips = player.kratips_collected if "kratips_collected" in player else 0
+	var dist = player.distance if "distance" in player else 0.0
+	var pens = player.penalties if "penalties" in player else 0
+	
+	return int((kratips * 10) + dist - pens)
+
 func _determine_winner_by_score():
 	var winner = "Draw"
-	if p1.score > p2.score: winner = "Player 1"
-	elif p2.score > p1.score: winner = "Player 2"
+	var p1_final = calculate_final_score(1)
+	var p2_final = calculate_final_score(2)
+	if p1_final > p2_final: winner = "Player 1"
+	elif p2_final > p1_final: winner = "Player 2"
 	elif p1.distance > p2.distance: winner = "Player 1"
 	elif p2.distance > p1.distance: winner = "Player 2"
 	game_over(winner)
@@ -223,4 +235,4 @@ func game_over(winner_text: String):
 	if players_root:
 		for child in players_root.get_children():
 			if child.has_method("set_process"): child.set_process(false)
-	ui_gameover.show_result(winner_text, p1.score, p2.score, p1.distance, p2.distance)
+	ui_gameover.show_result(winner_text, calculate_final_score(1), calculate_final_score(2), int(p1.distance), int(p2.distance))

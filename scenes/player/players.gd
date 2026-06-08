@@ -45,6 +45,9 @@ var current_anim : String = ""
 @export_file("*.glb") var run_file : String
 @export_file("*.glb") var stun_file : String
 
+@export_group("Model Offset")
+@export var model_offset := Vector3(0.0, 0.0, 0.0)
+
 var distance := 0.0
 var start_z := 0.0
 
@@ -192,11 +195,11 @@ func _physics_process(delta):
 		
 		# Apply X -90 rotation and slightly raise Y to prevent sinking into the road
 		$Model.rotation.x = deg_to_rad(-90)
-		$Model.position.y = 0.2
+		$Model.position = model_offset + Vector3(0.0, 0.2, 0.0)
 		return
 	elif current_anim == anim_stun:
 		# Just finished stun, reset model orientation
-		$Model.position.y = 0.0
+		$Model.position = model_offset
 		$Model.rotation.x = 0.0
 		play_animation(anim_run)
 
@@ -221,11 +224,9 @@ func _physics_process(delta):
 		
 	# Visual feedback for screen blur / confusion
 	if _has_effect("screen_blur") or _has_effect("invert_controls"):
-		$Model.position.x += randf_range(-0.2, 0.2)
-		$Model.position.y += randf_range(0.0, 0.2)
+		$Model.position = model_offset + Vector3(randf_range(-0.2, 0.2), randf_range(0.0, 0.2), 0.0)
 	else:
-		$Model.position.x = 0
-		$Model.position.y = 0
+		$Model.position = model_offset
 
 	# Flash or shake when hit by something
 	if _has_effect("slow_speed") or _has_effect("slow_floor") or _has_effect("wind_push"):
@@ -240,6 +241,11 @@ func _physics_process(delta):
 	# Animation handling for normal state
 	if is_on_floor():
 		play_animation(anim_run)
+		if anim_player and current_anim == anim_run:
+			anim_player.speed_scale = abs(velocity.z) / BASE_FORWARD_SPEED
+	else:
+		if anim_player:
+			anim_player.speed_scale = 1.0
 
 	if !is_on_floor():
 		velocity.y -= GRAVITY * delta
@@ -606,8 +612,8 @@ func set_warning(text):
 	elif text != "":
 		# Warning pulse
 		var tween_warn = create_tween()
-		tween_warn.tween_property($Model, "position:y", 0.2, 0.1)
-		tween_warn.tween_property($Model, "position:y", 0.0, 0.1)
+		tween_warn.tween_property($Model, "position:y", model_offset.y + 0.2, 0.1)
+		tween_warn.tween_property($Model, "position:y", model_offset.y, 0.1)
 
 func clear_warning(message_to_clear = ""):
 	emit_signal("warning_changed", "CLEAR:" + message_to_clear)
@@ -819,14 +825,14 @@ func _retarget_animation(anim: Animation, anim_name: String = ""):
 	if anim_player.has_method("force_update_cache"):
 		anim_player.force_update_cache()
 
-func play_animation(anim_name: String):
+func play_animation(anim_name: String, custom_blend: float = 0.12):
 	if !anim_player: return
 	
 	if current_anim == anim_name and anim_player.is_playing():
 		return
 	
 	if anim_player.has_animation(anim_name):
-		anim_player.play(anim_name)
+		anim_player.play(anim_name, custom_blend)
 		current_anim = anim_name
 		print("[ANIM] Playing: ", anim_name, " on ", name)
 	else:
@@ -835,7 +841,7 @@ func play_animation(anim_name: String):
 		for lib_name in anim_player.get_animation_library_list():
 			var full_name = anim_name if lib_name == "" else lib_name + "/" + anim_name
 			if anim_player.has_animation(full_name):
-				anim_player.play(full_name)
+				anim_player.play(full_name, custom_blend)
 				current_anim = anim_name
 				found = true
 				print("[ANIM] Playing from lib: ", full_name, " on ", name)

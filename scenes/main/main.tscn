@@ -8,7 +8,7 @@
 [ext_resource type="Script" uid="uid://t3xm3mhhixq0" path="res://scenes/shared_scripts/game_manager.gd" id="5_1gmgm"]
 [ext_resource type="Script" uid="uid://dbr2pcwj4k6wc" path="res://scenes/kratip/kratip_spawner.gd" id="5_4c57u"]
 [ext_resource type="PackedScene" uid="uid://2718haf4cta6" path="res://scenes/kratip/kratip.tscn" id="6_efxa6"]
-[ext_resource type="Script" uid="uid://cfgjmuv7bje58" path="res://scenes/shared_scripts/game_over_panel.gd" id="11_w48qg"]
+[ext_resource type="Script" path="res://scenes/shared_scripts/game_over_screen.gd" id="11_w48qg"]
 [ext_resource type="PackedScene" uid="uid://b2lscfy2w3ey4" path="res://scenes/ui/gameplay_hud.tscn" id="13_hud"]
 [ext_resource type="Script" path="res://scenes/skill_item/skill_item_spawner.gd" id="14_spawner"]
 
