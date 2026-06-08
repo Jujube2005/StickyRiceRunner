@@ -66,24 +66,64 @@ func _ready():
 	# Load the actual character model
 	_load_model()
 	
-	# Find and setup animations
-	# We search again because _load_model adds a new AnimationPlayer inside Model
-	anim_player = find_child("AnimationPlayer", true, false)
+	# Wait for a frame to ensure model is fully in the tree and ready
+	await get_tree().process_frame
+	
+	# In Godot 4.x, GLB imports often don't include an AnimationPlayer 
+	# if the GLB itself doesn't have animations. We need to create one.
+	anim_player = _find_animation_player()
+	
+	if !anim_player:
+		print("[ANIM] No AnimationPlayer found in GLB, creating a new one for ", name)
+		anim_player = AnimationPlayer.new()
+		anim_player.name = "AnimationPlayer"
+		add_child(anim_player)
 	
 	if anim_player:
-		print("[ANIM] Found AnimationPlayer for ", name, " at ", anim_player.get_path())
+		print("[ANIM] Using AnimationPlayer at: ", anim_player.get_path())
 		
-		# Set root node to self so that tracks like "Model/manTmodel/..." work
-		# However, our retargeting maps to bones directly, so we need to point to the skeleton
+		# Find skeleton for retargeting
+		var skeleton = find_child("Skeleton3D", true, false)
+		if !skeleton: skeleton = find_child("GeneralSkeleton", true, false)
+		
+		if skeleton:
+			anim_player.root_node = anim_player.get_path_to(skeleton.get_parent())
+			print("[ANIM] Linked AnimationPlayer to Skeleton parent: ", skeleton.get_parent().name)
+		
 		_setup_animations()
 		
 		# Import animations from files
 		if run_file: _import_anim(run_file, anim_run)
 		if stun_file: _import_anim(stun_file, anim_stun)
 		
+		# Force active and play
+		anim_player.active = true
 		play_animation(anim_run)
 	else:
-		print("[ANIM] WARNING: No AnimationPlayer found for ", name)
+		print("[ANIM] ERROR: Failed to even create an AnimationPlayer for ", name)
+
+func _find_animation_player() -> AnimationPlayer:
+	# 1. Direct search
+	var ap = find_child("AnimationPlayer", true, false)
+	if ap: return ap
+	
+	# 2. Search in Model node specifically
+	var model_node = get_node_or_null("Model")
+	if model_node:
+		ap = model_node.find_child("AnimationPlayer", true, false)
+		if ap: return ap
+	
+	# 3. List search
+	var all_aps = find_children("*", "AnimationPlayer", true, false)
+	if all_aps.size() > 0:
+		return all_aps[0]
+		
+	return null
+
+func _print_hierarchy(node: Node, indent: String = ""):
+	print(indent, "- ", node.name, " (", node.get_class(), ")")
+	for child in node.get_children():
+		_print_hierarchy(child, indent + "  ")
 	
 	if get_tree().current_scene != null:
 		var scene_root = get_tree().current_scene
@@ -505,25 +545,12 @@ func clear_warning(message_to_clear = ""):
 func _setup_animations():
 	if !anim_player: return
 	
-	# Set root node to the player node
-	anim_player.root_node = anim_player.get_path_to(self)
-	
-	# Clean up and setup libraries
-	for lib_name in anim_player.get_animation_library_list():
-		var old_lib = anim_player.get_animation_library(lib_name)
-		var lib = old_lib.duplicate()
-		anim_player.remove_animation_library(lib_name)
-		anim_player.add_animation_library(lib_name, lib)
-		
-		for anim_name in lib.get_animation_list():
-			var anim = lib.get_animation(anim_name)
-			if anim:
-				var new_anim = anim.duplicate()
-				_retarget_animation(new_anim, anim_name)
-				lib.remove_animation(anim_name)
-				lib.add_animation(anim_name, new_anim)
-	
-	if !anim_player.has_animation_library(""):
+	# Ensure we have a default library and it's unique
+	if anim_player.has_animation_library(""):
+		var old_lib = anim_player.get_animation_library("")
+		anim_player.remove_animation_library("")
+		anim_player.add_animation_library("", old_lib.duplicate())
+	else:
 		anim_player.add_animation_library("", AnimationLibrary.new())
 
 func _auto_assign_files():
@@ -549,24 +576,69 @@ func _import_anim(path: String, target_name: String):
 		var scene = res.instantiate()
 		var ap = scene.find_child("AnimationPlayer", true, false)
 		if ap:
-			var anim_names = ap.get_animation_list()
-			var source_name = ""
-			for n in anim_names:
-				if n != "RESET":
-					source_name = n
-					break
-			
-			if source_name != "":
-				var anim = ap.get_animation(source_name).duplicate()
-				_retarget_animation(anim, target_name)
+			# Get the default library from the animation file
+			var lib = ap.get_animation_library("")
+			if lib:
+				var anim_names = lib.get_animation_list()
+				var source_name = ""
+				for n in anim_names:
+					if n != "RESET":
+						source_name = n
+						break
 				
-				var lib = anim_player.get_animation_library("")
-				if lib:
-					if lib.has_animation(target_name):
-						lib.remove_animation(target_name)
-					lib.add_animation(target_name, anim)
-					anim.loop_mode = Animation.LOOP_LINEAR if target_name == anim_run else Animation.LOOP_NONE
-		scene.free() # Clean up the temporary scene instance
+				if source_name != "":
+					var anim = lib.get_animation(source_name).duplicate()
+					
+					# Simplified Retargeting: Just ensure tracks point to bones correctly
+					_apply_anim_to_player(anim, target_name)
+					print("[ANIM] Imported ", target_name, " from ", path)
+		scene.free()
+
+func _apply_anim_to_player(anim: Animation, target_name: String):
+	var lib = anim_player.get_animation_library("")
+	if lib:
+		if lib.has_animation(target_name):
+			lib.remove_animation(target_name)
+		
+		var skeleton = find_child("GeneralSkeleton", true, false)
+		if !skeleton: skeleton = find_child("Skeleton3D", true, false)
+		
+		if !skeleton:
+			print("[ANIM] ERROR: No skeleton found during apply for ", name)
+			return
+
+		# Clean up track paths to be relative to the root_node (Skeleton parent)
+		var tracks_fixed = 0
+		for i in range(anim.get_track_count()):
+			var path = str(anim.track_get_path(i))
+			if ":" in path:
+				var parts = path.split(":")
+				# Mixamo/Godot 4 track pattern: "Node/Path:BoneName" or "Node/Path:BoneName:property"
+				var bone_name = ""
+				var property = ""
+				
+				if parts.size() >= 2:
+					bone_name = parts[1]
+					if parts.size() >= 3:
+						property = parts[2]
+					
+					# Clean bone name
+					bone_name = bone_name.replace("mixamorig:", "").replace("Armature|", "")
+					
+					# Construct correct Godot 4 skeleton track path
+					var new_path = skeleton.name + ":" + bone_name
+					if property != "" and property != "position" and property != "rotation" and property != "scale" and property != "quaternion":
+						# If property is something else, append it, otherwise Godot handles transform properties automatically
+						new_path += ":" + property
+					
+					anim.track_set_path(i, NodePath(new_path))
+					tracks_fixed += 1
+		
+		lib.add_animation(target_name, anim)
+		if target_name == anim_run:
+			anim.loop_mode = Animation.LOOP_LINEAR
+		
+		print("[ANIM] Applied ", target_name, " to ", name, " (fixed ", tracks_fixed, " tracks)")
 
 func _retarget_animation(anim: Animation, anim_name: String = ""):
 	if !anim: return
@@ -577,10 +649,15 @@ func _retarget_animation(anim: Animation, anim_name: String = ""):
 		skeleton = find_child("Skeleton3D", true, false)
 	
 	if !skeleton: 
+		# If still not found, search for any Skeleton3D
+		var all_skeletons = find_children("*", "Skeleton3D", true, false)
+		if all_skeletons.size() > 0:
+			skeleton = all_skeletons[0]
+	
+	if !skeleton:
 		print("[ANIM] No skeleton found for ", name)
 		return
 	
-	# Path from the player node (self) to the skeleton
 	var skeleton_path = get_path_to(skeleton)
 	var bones = []
 	for b in range(skeleton.get_bone_count()):
@@ -594,128 +671,71 @@ func _retarget_animation(anim: Animation, anim_name: String = ""):
 		"RightShoulder": "RightShoulder", "RightArm": "RightUpperArm", "RightForeArm": "RightLowerArm", "RightHand": "RightHand",
 		"LeftUpLeg": "LeftUpperLeg", "LeftLeg": "LeftLowerLeg", "LeftFoot": "LeftFoot",
 		"RightUpLeg": "RightUpperLeg", "RightLeg": "RightLowerLeg", "RightFoot": "RightFoot",
-		"hips": "Hips", "spine": "Spine", "spine.001": "Chest", "spine.002": "UpperChest", 
-		"spine.003": "Neck", "spine.004": "Head", "spine.005": "Head",
-		"shoulder.L": "LeftShoulder", "upper_arm.L": "LeftUpperArm", "lower_arm.L": "LeftLowerArm", "hand.L": "LeftHand",
-		"shoulder.R": "RightShoulder", "upper_arm.R": "RightUpperArm", "lower_arm.R": "RightLowerArm", "hand.R": "RightHand",
-		"upper_leg.L": "LeftUpperLeg", "lower_leg.L": "LeftLowerLeg", "foot.L": "LeftFoot",
-		"upper_leg.R": "RightUpperLeg", "lower_leg.R": "RightLowerLeg", "foot.R": "RightFoot",
-		"thigh.L": "LeftUpperLeg", "shin.L": "LeftLowerLeg", "thigh.R": "RightUpperLeg", "shin.R": "RightLowerLeg",
-		"forearm.L": "LeftLowerArm", "forearm.R": "RightLowerArm",
-		"GeneralSkeleton:RightHand": "RightHand",
-		"GeneralSkeleton:LeftHand": "LeftHand",
-		"GeneralSkeleton:Hips": "Hips",
-		"GeneralSkeleton:Spine": "Spine",
-		"GeneralSkeleton:Chest": "Chest",
-		"GeneralSkeleton:UpperChest": "UpperChest",
-		"GeneralSkeleton:Neck": "Neck",
-		"GeneralSkeleton:Head": "Head",
-		"metarig/GeneralSkeleton:Neck": "Neck",
-		"metarig/GeneralSkeleton:RightHand": "RightHand",
-		"girlTmodel/metarig/GeneralSkeleton:Neck": "Neck",
-		"girlTmodel/metarig/GeneralSkeleton:RightHand": "RightHand"
-	}
-	
-	# Fallback map for when the skeleton uses spine.001 names instead of Humanoid names
-	var fallback_map = {
-		"Hips": "spine", "Spine": "spine.001", "Chest": "spine.002", "UpperChest": "spine.003",
-		"Neck": "spine.004", "Head": "spine.005",
-		"LeftShoulder": "shoulder.L", "LeftUpperArm": "upper_arm.L", "LeftLowerArm": "forearm.L", "LeftHand": "hand.L",
-		"RightShoulder": "shoulder.R", "RightUpperArm": "upper_arm.R", "RightLowerArm": "forearm.R", "RightHand": "hand.R",
-		"LeftUpperLeg": "thigh.L", "LeftLowerLeg": "shin.L", "LeftFoot": "foot.L",
-		"RightUpperLeg": "thigh.R", "RightLowerLeg": "shin.R", "RightFoot": "foot.R"
+		"spine": "Spine", "spine.001": "Chest", "spine.002": "UpperChest", "spine.003": "Neck", "spine.004": "Head",
+		"shoulder.L": "LeftShoulder", "upper_arm.L": "LeftUpperArm", "forearm.L": "LeftLowerArm", "hand.L": "LeftHand",
+		"shoulder.R": "RightShoulder", "upper_arm.R": "RightUpperArm", "forearm.R": "RightLowerArm", "hand.R": "RightHand",
+		"thigh.L": "LeftUpperLeg", "shin.L": "LeftLowerLeg", "foot.L": "LeftFoot",
+		"thigh.R": "RightUpperLeg", "shin.R": "RightLowerLeg", "foot.R": "RightFoot"
 	}
 
 	var tracks_to_remove = []
 	for i in range(anim.get_track_count()):
 		var path = anim.track_get_path(i)
 		var path_str = str(path)
-		var new_path_str = ""
 		var p_lower = path_str.to_lower()
 
 		# 0. Root Motion Removal (Fix backward jumping and rotation bugs)
-		# We want to remove forward movement (Z) but KEEP vertical movement (Y) for Stun
 		if p_lower.ends_with(":position") or p_lower.ends_with(":location"):
 			if "hips" in p_lower or "metarig" in p_lower or "armature" in p_lower or "root" in p_lower:
 				if anim_name == anim_run:
-					# For running, remove all root position to keep them in place
 					tracks_to_remove.append(i)
 					continue
-				else:
-					# For Stun, we KEEP the position track so they can fall to the floor
-					# But we may want to clean the path below
-					pass
 		
-		# Aggressively remove rotation/scale from root nodes (Root, Armature, etc.)
-		# BUT KEEP bone tracks (identified by having a colon and not being just the root node)
-		if p_lower.ends_with(":rotation") or p_lower.ends_with(":rotation_edit") or p_lower.ends_with(":scale") or p_lower.ends_with(":quaternion"):
-			if ("metarig" in p_lower or "armature" in p_lower or "root" in p_lower) and !("skeleton" in p_lower):
-				tracks_to_remove.append(i)
-				continue
+		# 1. Extract potential bone name from track path
+		var found_bone = ""
+		var property = ""
 		
-		# If it's a node track without colon (root object movement)
-		if !":" in path_str:
-			if "metarig" in p_lower or "armature" in p_lower or "root" in p_lower:
-				tracks_to_remove.append(i)
-				continue
-
 		if ":" in path_str:
 			var parts = path_str.split(":")
-			var bone_part = parts[parts.size() - 1] # Get the last part (the bone name)
 			
-			# 1. Try direct map
-			var target_bone = bone_part
-			if bone_map.has(bone_part):
-				target_bone = bone_map[bone_part]
-			
-			# Special check for full path parts in case bone_part alone isn't enough
-			if !target_bone in bones:
-				for key in bone_map.keys():
-					if key in path_str:
-						target_bone = bone_map[key]
+			# Search each part for a bone match
+			for part in parts:
+				var clean_part = part.replace("mixamorig:", "").replace("Armature|", "")
+				
+				# Try direct match
+				for b in bones:
+					if b.to_lower() == clean_part.to_lower():
+						found_bone = b
 						break
+				if found_bone != "": break
+				
+				# Try mapping
+				if bone_map.has(clean_part):
+					var mapped = bone_map[clean_part]
+					for b in bones:
+						if b.to_lower() == mapped.to_lower():
+							found_bone = b
+							break
+				if found_bone != "": break
 			
-			# 2. If not in skeleton, try fallback map (Humanoid -> spine.001)
-			if !target_bone in bones:
-				if fallback_map.has(target_bone):
-					target_bone = fallback_map[target_bone]
-			
-			# 3. Still not found? Try case-insensitive
-			if !target_bone in bones:
-				for b_name in bones:
-					if b_name.to_lower() == target_bone.to_lower() or b_name.to_lower() == bone_part.to_lower():
-						target_bone = b_name
-						break
-			
-			if target_bone in bones:
-				new_path_str = str(skeleton_path) + ":" + target_bone
+			if found_bone != "":
+				# Check if the last part is a property
+				var last_part = parts[parts.size() - 1]
+				if last_part.to_lower() in ["position", "rotation", "scale", "quaternion", "location"]:
+					property = last_part
+				
+				var new_path = str(skeleton_path) + ":" + found_bone
+				if property != "" and property != found_bone:
+					new_path += ":" + property
+				
+				anim.track_set_path(i, NodePath(new_path))
 			else:
-				# Bone not found in our skeleton, skip this track
-				# print("[ANIM] Bone not found in skeleton: ", bone_part)
 				tracks_to_remove.append(i)
-				continue
 		else:
-			# Track without colon (Node animation)
-			
-			# If the path contains the skeleton name or common rig names, try to map it to our skeleton
-			if "skeleton" in p_lower or "metarig" in p_lower or "armature" in p_lower:
-				new_path_str = str(skeleton_path)
-			elif "model" in p_lower or "rig" in p_lower:
-				var rig_node = find_child("Rig", true, false)
-				if rig_node:
-					new_path_str = str(get_path_to(rig_node))
-				else:
-					tracks_to_remove.append(i)
-					continue
-			else:
-				# Unknown node track
-				tracks_to_remove.append(i)
-				continue
-		
-		if new_path_str != "":
-			anim.track_set_path(i, NodePath(new_path_str))
+			# Node track
+			tracks_to_remove.append(i)
 	
-	# Remove tracks from end to start to avoid index shifting
+	# Remove tracks from end to start
 	tracks_to_remove.reverse()
 	for i in tracks_to_remove:
 		anim.remove_track(i)
@@ -730,13 +750,13 @@ func _retarget_animation(anim: Animation, anim_name: String = ""):
 func play_animation(anim_name: String):
 	if !anim_player: return
 	
-	# If we are already playing this, don't restart
 	if current_anim == anim_name and anim_player.is_playing():
 		return
 	
 	if anim_player.has_animation(anim_name):
 		anim_player.play(anim_name)
 		current_anim = anim_name
+		print("[ANIM] Playing: ", anim_name, " on ", name)
 	else:
 		# Check all libraries
 		var found = false
@@ -746,10 +766,11 @@ func play_animation(anim_name: String):
 				anim_player.play(full_name)
 				current_anim = anim_name
 				found = true
+				print("[ANIM] Playing from lib: ", full_name, " on ", name)
 				break
 		
 		if !found:
-			print("[ANIM] WARNING: Animation not found: ", anim_name, " in ", name, ". Available: ", anim_player.get_animation_list())
+			print("[ANIM] WARNING: Animation not found: ", anim_name, " in ", name)
 
 
 # --- DEBUG FUNCTIONS ---
