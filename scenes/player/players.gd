@@ -50,6 +50,8 @@ var current_anim : String = ""
 
 var distance := 0.0
 var start_z := 0.0
+var _cached_skeleton : Skeleton3D = null
+var _cached_spine_bone_idx := -2
 
 @export var left_action : String
 @export var right_action : String
@@ -64,6 +66,8 @@ var bot_jump_cooldown := 0.0
 var game_manager : Node = null
 
 func _ready():
+	axis_lock_angular_x = true
+	axis_lock_angular_z = true
 	start_z = global_position.z
 	_setup_shield_vfx()
 	
@@ -247,6 +251,26 @@ func _physics_process(delta):
 		if anim_player:
 			anim_player.speed_scale = 1.0
 
+	# Apply forward lean to spine bone during running
+	if current_anim == anim_run:
+		if _cached_skeleton == null:
+			_cached_skeleton = find_child("Skeleton3D", true, false)
+			if !_cached_skeleton:
+				_cached_skeleton = find_child("GeneralSkeleton", true, false)
+		
+		if _cached_skeleton:
+			if _cached_spine_bone_idx == -2:
+				_cached_spine_bone_idx = _cached_skeleton.find_bone("Spine")
+				if _cached_spine_bone_idx == -1:
+					_cached_spine_bone_idx = _cached_skeleton.find_bone("Spine1")
+				if _cached_spine_bone_idx == -1:
+					_cached_spine_bone_idx = _cached_skeleton.find_bone("Chest")
+			
+			if _cached_spine_bone_idx != -1:
+				var current_rot = _cached_skeleton.get_bone_pose_rotation(_cached_spine_bone_idx)
+				var rot_offset = Quaternion(Vector3.RIGHT, deg_to_rad(-12.0))
+				_cached_skeleton.set_bone_pose_rotation(_cached_spine_bone_idx, current_rot * rot_offset)
+
 	if !is_on_floor():
 		velocity.y -= GRAVITY * delta
 
@@ -356,6 +380,9 @@ func _physics_process(delta):
 		position.x += randf_range(-2.0, 2.0) * delta
 
 	move_and_slide()
+
+	if is_on_floor():
+		$Model.global_transform.origin.y = global_transform.origin.y + model_offset.y
 
 	if position.y < -10:
 		# No death, so teleport back to lane 0 surface
@@ -687,6 +714,7 @@ func _apply_anim_to_player(anim: Animation, target_name: String):
 
 		# Clean up track paths to be relative to the root_node (Skeleton parent)
 		var tracks_fixed = 0
+		var tracks_to_remove = []
 		for i in range(anim.get_track_count()):
 			var path = str(anim.track_get_path(i))
 			if ":" in path:
@@ -711,6 +739,15 @@ func _apply_anim_to_player(anim: Animation, target_name: String):
 					
 					anim.track_set_path(i, NodePath(new_path))
 					tracks_fixed += 1
+				else:
+					tracks_to_remove.append(i)
+			else:
+				tracks_to_remove.append(i)
+		
+		# Remove invalid/unresolved tracks (like metarig node tracks) in reverse order
+		tracks_to_remove.reverse()
+		for i in tracks_to_remove:
+			anim.remove_track(i)
 		
 		lib.add_animation(target_name, anim)
 		if target_name == anim_run:
@@ -825,7 +862,7 @@ func _retarget_animation(anim: Animation, anim_name: String = ""):
 	if anim_player.has_method("force_update_cache"):
 		anim_player.force_update_cache()
 
-func play_animation(anim_name: String, custom_blend: float = 0.12):
+func play_animation(anim_name: String, custom_blend: float = 0.15):
 	if !anim_player: return
 	
 	if current_anim == anim_name and anim_player.is_playing():
