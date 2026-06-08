@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://sh8mpi3ygefx"
-path="res://.godot/imported/skill_bangfai.png-aad85c0afd08a97ca22b8f6fdfa5b113.ctex"
+uid="uid://ddlfr5ngk7i1a"
+path="res://.godot/imported/btn_play.png-1e00decef75f275a5744ae79dbd2baf6.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/textures/UI/Buttons/skill_bangfai.png"
-dest_files=["res://.godot/imported/skill_bangfai.png-aad85c0afd08a97ca22b8f6fdfa5b113.ctex"]
+source_file="res://assets/textures/UI/Buttons/btn_play.png"
+dest_files=["res://.godot/imported/btn_play.png-1e00decef75f275a5744ae79dbd2baf6.ctex"]
 
 [params]
 

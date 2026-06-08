@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bw6tr5y5p4hog"
-path="res://.godot/imported/skill_shield.png-cc27a0d7d0ff74bc8a0437dec1be3344.ctex"
+uid="uid://b6vlevfi0brlb"
+path="res://.godot/imported/title_header.png-b85aab4768b519668ad9af3b3eb22ad2.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/textures/UI/Buttons/skill_shield.png"
-dest_files=["res://.godot/imported/skill_shield.png-cc27a0d7d0ff74bc8a0437dec1be3344.ctex"]
+source_file="res://assets/textures/UI/Buttons/title_header.png"
+dest_files=["res://.godot/imported/title_header.png-b85aab4768b519668ad9af3b3eb22ad2.ctex"]
 
 [params]
 

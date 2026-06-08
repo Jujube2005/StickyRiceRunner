@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dex6vu22q5thy"
-path="res://.godot/imported/upgrade.png-4a5475ab8a9effdb0d7be034a2dcf03c.ctex"
+uid="uid://3ibk5pytdjb4"
+path="res://.godot/imported/btn_restart.png-0db806bb2474a7690e1771cdf7337b4e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/textures/UI/Buttons/upgrade.png"
-dest_files=["res://.godot/imported/upgrade.png-4a5475ab8a9effdb0d7be034a2dcf03c.ctex"]
+source_file="res://assets/textures/UI/Buttons/btn_restart.png"
+dest_files=["res://.godot/imported/btn_restart.png-0db806bb2474a7690e1771cdf7337b4e.ctex"]
 
 [params]
 

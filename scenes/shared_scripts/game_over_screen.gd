@@ -1,352 +1,340 @@
 extends Control
 
-var player1_model_scene: PackedScene
-var player2_model_scene: PackedScene
-
 @onready var winner_label = $WinnerLabel
 @onready var final_score_label = $FinalScoreLabel
 @onready var distance_label = $DistanceLabel
 @onready var retry_button = $RetryButton
 
-var backdrop: ColorRect
-var result_card: PanelContainer
-var split_box: HBoxContainer
-var preview_frame: PanelContainer
-var preview_container: SubViewportContainer
-var preview_viewport: SubViewport
-var preview_root: Node3D
-var preview_pivot: Node3D
-var preview_camera: Camera3D
-var preview_spin_tween: Tween
-
-var info_box: VBoxContainer
-var stats_grid: GridContainer
-var menu_button: Button
-
 var font_resource: Font = preload("res://assets/textures/UI/Font/Mitr/Mitr-Bold.ttf")
 
+var board_rect: TextureRect
+var title_rect: TextureRect
+
+var p1_stats_node: Control
+var p1_avatar: TextureRect
+var p1_name_label: Label
+var p1_winner_tag: Label
+var p1_dist_bar: TextureProgressBar
+var p1_dist_val: Label
+var p1_kratib_icon: TextureRect
+var p1_kratib_val: Label
+
+var p2_stats_node: Control
+var p2_avatar: TextureRect
+var p2_name_label: Label
+var p2_winner_tag: Label
+var p2_dist_bar: TextureProgressBar
+var p2_dist_val: Label
+var p2_kratib_icon: TextureRect
+var p2_kratib_val: Label
+
+var btn_restart: TextureButton
+var btn_play: TextureButton
+var btn_menu: TextureButton
+
 func _ready():
-	player1_model_scene = load("res://assets/models/player/girlTmodel.glb")
-	player2_model_scene = load("res://assets/models/player/manTmodel.glb")
-	
 	_build_layout()
 	hide()
-	
-	# Wire up button signals
-	if retry_button:
-		retry_button.pressed.connect(on_restart_pressed)
 
 func _build_layout():
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = Control.MOUSE_FILTER_STOP
 
-	# Clean up pre-existing children
+	# Clean up pre-existing default nodes from tree
 	for node in [winner_label, final_score_label, distance_label, retry_button]:
 		if node and node.get_parent():
 			node.get_parent().remove_child(node)
 
-	# 1. Dark Backdrop
-	backdrop = ColorRect.new()
+	# 1. Dark Backdrop overlay
+	var backdrop = ColorRect.new()
 	backdrop.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	backdrop.color = Color(0.04, 0.05, 0.09, 0.85)
+	backdrop.color = Color(0.04, 0.05, 0.09, 0.75)
+	backdrop.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(backdrop)
 
-	# 2. Main Card
-	result_card = PanelContainer.new()
-	result_card.set_anchors_preset(Control.PRESET_CENTER)
-	result_card.offset_left = -460
-	result_card.offset_top = -240
-	result_card.offset_right = 460
-	result_card.offset_bottom = 240
-	result_card.mouse_filter = Control.MOUSE_FILTER_STOP
-	var card_style = StyleBoxFlat.new()
-	card_style.bg_color = Color(0.08, 0.1, 0.16, 0.95)
-	card_style.border_width_left = 3
-	card_style.border_width_top = 3
-	card_style.border_width_right = 3
-	card_style.border_width_bottom = 3
-	card_style.border_color = Color(1.0, 0.75, 0.1, 0.7)
-	card_style.shadow_size = 25
-	card_style.shadow_color = Color(0, 0, 0, 0.5)
-	card_style.set_corner_radius_all(24)
-	card_style.set_content_margin_all(24)
-	result_card.add_theme_stylebox_override("panel", card_style)
-	add_child(result_card)
+	# 2. Board Background Texture Rect (613x823)
+	board_rect = TextureRect.new()
+	board_rect.texture = load("res://assets/textures/UI/Buttons/board_bg.png")
+	board_rect.expand_mode = TextureRect.EXPAND_KEEP_SIZE
+	board_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	board_rect.set_anchors_preset(Control.PRESET_CENTER)
+	board_rect.offset_left = -306.5
+	board_rect.offset_top = -411.5
+	board_rect.offset_right = 306.5
+	board_rect.offset_bottom = 411.5
+	board_rect.pivot_offset = Vector2(306.5, 411.5)
+	board_rect.mouse_filter = Control.MOUSE_FILTER_STOP
+	add_child(board_rect)
 
-	# 3. Horizontal Split (Left: 3D model, Right: scoreboard/buttons)
-	split_box = HBoxContainer.new()
-	split_box.add_theme_constant_override("separation", 24)
-	result_card.add_child(split_box)
+	# 3. Title Header Image (869x237)
+	title_rect = TextureRect.new()
+	title_rect.texture = load("res://assets/textures/UI/Buttons/title_header.png")
+	title_rect.expand_mode = TextureRect.EXPAND_KEEP_SIZE
+	title_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	title_rect.set_anchors_preset(Control.PRESET_CENTER_TOP)
+	title_rect.offset_left = -434.5
+	title_rect.offset_top = -70.0
+	title_rect.offset_right = 434.5
+	title_rect.offset_bottom = 167.0
+	title_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	board_rect.add_child(title_rect)
 
-	# --- Left Column: 3D Model Preview ---
-	preview_frame = PanelContainer.new()
-	preview_frame.custom_minimum_size = Vector2(380, 0)
-	var preview_style = StyleBoxFlat.new()
-	preview_style.bg_color = Color(0.12, 0.15, 0.23, 0.95)
-	preview_style.border_width_left = 1
-	preview_style.border_width_top = 1
-	preview_style.border_width_right = 1
-	preview_style.border_width_bottom = 1
-	preview_style.border_color = Color(1, 1, 1, 0.08)
-	preview_style.set_corner_radius_all(18)
-	preview_frame.add_theme_stylebox_override("panel", preview_style)
-	split_box.add_child(preview_frame)
+	# 4. Label Styles
+	var player_label_settings = LabelSettings.new()
+	player_label_settings.font = font_resource
+	player_label_settings.font_size = 22
+	player_label_settings.font_color = Color(1.0, 1.0, 1.0)
+	player_label_settings.outline_size = 6
+	player_label_settings.outline_color = Color(0.25, 0.15, 0.05)
 
-	preview_container = SubViewportContainer.new()
-	preview_container.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	preview_container.stretch = true
-	preview_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	preview_frame.add_child(preview_container)
+	var text_label_settings = LabelSettings.new()
+	text_label_settings.font = font_resource
+	text_label_settings.font_size = 18
+	text_label_settings.font_color = Color(0.35, 0.22, 0.1)
 
-	preview_viewport = SubViewport.new()
-	preview_viewport.disable_3d = false
-	preview_viewport.transparent_bg = true
-	preview_viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
-	preview_viewport.size = Vector2i(380, 400)
-	preview_container.add_child(preview_viewport)
+	# --- Player 1 Layout ---
+	p1_stats_node = Control.new()
+	p1_stats_node.set_anchors_preset(Control.PRESET_TOP_WIDE)
+	p1_stats_node.offset_left = 60.0
+	p1_stats_node.offset_top = 220.0
+	p1_stats_node.offset_right = -60.0
+	p1_stats_node.offset_bottom = 400.0
+	board_rect.add_child(p1_stats_node)
 
-	preview_root = Node3D.new()
-	preview_viewport.add_child(preview_root)
+	p1_avatar = TextureRect.new()
+	p1_avatar.texture = load("res://assets/textures/UI/Buttons/avatar_yellow.png")
+	p1_avatar.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	p1_avatar.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	p1_avatar.size = Vector2(90, 90)
+	p1_avatar.position = Vector2(0, 10)
+	p1_stats_node.add_child(p1_avatar)
 
-	var environment = WorldEnvironment.new()
-	var env = Environment.new()
-	env.background_mode = Environment.BG_COLOR
-	env.background_color = Color(0, 0, 0, 0)
-	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
-	env.ambient_light_color = Color(0.5, 0.55, 0.65)
-	env.ambient_light_energy = 0.8
-	environment.environment = env
-	preview_root.add_child(environment)
+	p1_name_label = Label.new()
+	p1_name_label.text = "PLAYER 1"
+	p1_name_label.label_settings = player_label_settings
+	p1_name_label.size = Vector2(150, 35)
+	p1_name_label.position = Vector2(110, 5)
+	p1_stats_node.add_child(p1_name_label)
 
-	var key_light = DirectionalLight3D.new()
-	key_light.rotation_degrees = Vector3(-35, 35, 0)
-	key_light.light_energy = 1.3
-	preview_root.add_child(key_light)
+	p1_winner_tag = Label.new()
+	p1_winner_tag.text = "👑 WINNER"
+	var win_settings = LabelSettings.new()
+	win_settings.font = font_resource
+	win_settings.font_size = 20
+	win_settings.font_color = Color(1.0, 0.84, 0.0) # Gold
+	win_settings.outline_size = 6
+	win_settings.outline_color = Color(0.25, 0.15, 0.05)
+	p1_winner_tag.label_settings = win_settings
+	p1_winner_tag.size = Vector2(120, 35)
+	p1_winner_tag.position = Vector2(230, 5)
+	p1_winner_tag.visible = false
+	p1_stats_node.add_child(p1_winner_tag)
 
-	var fill_light = OmniLight3D.new()
-	fill_light.position = Vector3(0, 1.5, 2.0)
-	fill_light.light_energy = 0.8
-	fill_light.omni_range = 8.0
-	preview_root.add_child(fill_light)
+	p1_dist_bar = TextureProgressBar.new()
+	p1_dist_bar.texture_under = load("res://assets/textures/UI/Buttons/rice_bar_orange.png")
+	p1_dist_bar.texture_progress = load("res://assets/textures/UI/Buttons/progress_fill_orange.png")
+	p1_dist_bar.nine_patch_stretch = true
+	p1_dist_bar.size = Vector2(220, 30)
+	p1_dist_bar.position = Vector2(110, 45)
+	p1_dist_bar.max_value = 100.0
+	p1_stats_node.add_child(p1_dist_bar)
 
-	preview_camera = Camera3D.new()
-	preview_camera.position = Vector3(0, 1.3, 2.8)
-	preview_camera.current = true
-	preview_camera.fov = 34.0
-	preview_root.add_child(preview_camera)
-	preview_camera.look_at(Vector3(0, 0.9, 0), Vector3.UP)
+	p1_dist_val = Label.new()
+	p1_dist_val.text = "0m"
+	p1_dist_val.label_settings = text_label_settings
+	p1_dist_val.size = Vector2(100, 30)
+	p1_dist_val.position = Vector2(350, 45)
+	p1_stats_node.add_child(p1_dist_val)
 
-	preview_pivot = Node3D.new()
-	preview_pivot.position = Vector3(0, -0.25, 0)
-	preview_root.add_child(preview_pivot)
+	p1_kratib_icon = TextureRect.new()
+	p1_kratib_icon.texture = load("res://assets/textures/UI/Buttons/icon_katib.png")
+	p1_kratib_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	p1_kratib_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	p1_kratib_icon.size = Vector2(40, 40)
+	p1_kratib_icon.position = Vector2(110, 90)
+	p1_stats_node.add_child(p1_kratib_icon)
 
-	# --- Right Column: Scores and Buttons ---
-	info_box = VBoxContainer.new()
-	info_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	info_box.add_theme_constant_override("separation", 16)
-	split_box.add_child(info_box)
+	p1_kratib_val = Label.new()
+	p1_kratib_val.text = "0"
+	p1_kratib_val.label_settings = text_label_settings
+	p1_kratib_val.size = Vector2(100, 40)
+	p1_kratib_val.position = Vector2(160, 90)
+	p1_stats_node.add_child(p1_kratib_val)
 
-	# Winner Title
-	winner_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	winner_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	info_box.add_child(winner_label)
+	# --- Player 2 Layout ---
+	p2_stats_node = Control.new()
+	p2_stats_node.set_anchors_preset(Control.PRESET_TOP_WIDE)
+	p2_stats_node.offset_left = 60.0
+	p2_stats_node.offset_top = 450.0
+	p2_stats_node.offset_right = -60.0
+	p2_stats_node.offset_bottom = 630.0
+	board_rect.add_child(p2_stats_node)
 
-	# Stats Comparison Grid
-	stats_grid = GridContainer.new()
-	stats_grid.columns = 3
-	stats_grid.add_theme_constant_override("h_separation", 20)
-	stats_grid.add_theme_constant_override("v_separation", 10)
-	stats_grid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	stats_grid.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	info_box.add_child(stats_grid)
+	p2_avatar = TextureRect.new()
+	p2_avatar.texture = load("res://assets/textures/UI/Buttons/avatar_green.png")
+	p2_avatar.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	p2_avatar.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	p2_avatar.size = Vector2(90, 90)
+	p2_avatar.position = Vector2(0, 10)
+	p2_stats_node.add_child(p2_avatar)
 
-	# Action Buttons
+	p2_name_label = Label.new()
+	p2_name_label.text = "PLAYER 2"
+	p2_name_label.label_settings = player_label_settings
+	p2_name_label.size = Vector2(150, 35)
+	p2_name_label.position = Vector2(110, 5)
+	p2_stats_node.add_child(p2_name_label)
+
+	p2_winner_tag = Label.new()
+	p2_winner_tag.text = "👑 WINNER"
+	p2_winner_tag.label_settings = win_settings
+	p2_winner_tag.size = Vector2(120, 35)
+	p2_winner_tag.position = Vector2(230, 5)
+	p2_winner_tag.visible = false
+	p2_stats_node.add_child(p2_winner_tag)
+
+	p2_dist_bar = TextureProgressBar.new()
+	p2_dist_bar.texture_under = load("res://assets/textures/UI/Buttons/rice_bar_green.png")
+	p2_dist_bar.texture_progress = load("res://assets/textures/UI/Buttons/progress_fill_green.png")
+	p2_dist_bar.nine_patch_stretch = true
+	p2_dist_bar.size = Vector2(220, 30)
+	p2_dist_bar.position = Vector2(110, 45)
+	p2_dist_bar.max_value = 100.0
+	p2_stats_node.add_child(p2_dist_bar)
+
+	p2_dist_val = Label.new()
+	p2_dist_val.text = "0m"
+	p2_dist_val.label_settings = text_label_settings
+	p2_dist_val.size = Vector2(100, 30)
+	p2_dist_val.position = Vector2(350, 45)
+	p2_stats_node.add_child(p2_dist_val)
+
+	p2_kratib_icon = TextureRect.new()
+	p2_kratib_icon.texture = load("res://assets/textures/UI/Buttons/icon_katib.png")
+	p2_kratib_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	p2_kratib_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	p2_kratib_icon.size = Vector2(40, 40)
+	p2_kratib_icon.position = Vector2(110, 90)
+	p2_stats_node.add_child(p2_kratib_icon)
+
+	p2_kratib_val = Label.new()
+	p2_kratib_val.text = "0"
+	p2_kratib_val.label_settings = text_label_settings
+	p2_kratib_val.size = Vector2(100, 40)
+	p2_kratib_val.position = Vector2(160, 90)
+	p2_stats_node.add_child(p2_kratib_val)
+
+	# --- Bottom Action Buttons ---
 	var btn_box = HBoxContainer.new()
-	btn_box.add_theme_constant_override("separation", 16)
-	btn_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	info_box.add_child(btn_box)
+	btn_box.alignment = BoxContainer.ALIGNMENT_CENTER
+	btn_box.add_theme_constant_override("separation", 25)
+	btn_box.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
+	btn_box.offset_left = -220.0
+	btn_box.offset_top = -120.0
+	btn_box.offset_right = 220.0
+	btn_box.offset_bottom = -20.0
+	board_rect.add_child(btn_box)
 
-	# Restart Button styling
-	retry_button.text = "Play Again"
-	retry_button.custom_minimum_size = Vector2(0, 50)
-	retry_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	var btn_style = StyleBoxFlat.new()
-	btn_style.bg_color = Color(1.0, 0.75, 0.1)
-	btn_style.set_corner_radius_all(12)
-	btn_style.set_content_margin_all(12)
-	var btn_hover = btn_style.duplicate()
-	btn_hover.bg_color = Color(1.0, 0.83, 0.3)
-	var btn_pressed = btn_style.duplicate()
-	btn_pressed.bg_color = Color(0.85, 0.6, 0.05)
-	retry_button.add_theme_stylebox_override("normal", btn_style)
-	retry_button.add_theme_stylebox_override("hover", btn_hover)
-	retry_button.add_theme_stylebox_override("pressed", btn_pressed)
-	retry_button.add_theme_color_override("font_color", Color(0.06, 0.06, 0.1))
-	retry_button.add_theme_font_size_override("font_size", 18)
-	if font_resource:
-		retry_button.add_theme_font_override("font", font_resource)
-	btn_box.add_child(retry_button)
+	# 1. Restart Button
+	btn_restart = TextureButton.new()
+	btn_restart.texture_normal = load("res://assets/textures/UI/Buttons/btn_restart.png")
+	btn_restart.custom_minimum_size = Vector2(80, 80)
+	btn_restart.ignore_texture_size = true
+	btn_restart.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
+	btn_restart.pressed.connect(on_restart_pressed)
+	_setup_button_hover(btn_restart)
+	btn_box.add_child(btn_restart)
 
-	# Menu Button creation
-	menu_button = Button.new()
-	menu_button.name = "MenuButton"
-	menu_button.text = "Main Menu"
-	menu_button.custom_minimum_size = Vector2(0, 50)
-	menu_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	var menu_style = StyleBoxFlat.new()
-	menu_style.bg_color = Color(0.18, 0.22, 0.33)
-	menu_style.set_corner_radius_all(12)
-	menu_style.set_content_margin_all(12)
-	var menu_hover = menu_style.duplicate()
-	menu_hover.bg_color = Color(0.25, 0.3, 0.44)
-	var menu_pressed = menu_style.duplicate()
-	menu_pressed.bg_color = Color(0.12, 0.15, 0.24)
-	menu_button.add_theme_stylebox_override("normal", menu_style)
-	menu_button.add_theme_stylebox_override("hover", menu_hover)
-	menu_button.add_theme_stylebox_override("pressed", menu_pressed)
-	menu_button.add_theme_color_override("font_color", Color.WHITE)
-	menu_button.add_theme_font_size_override("font_size", 18)
-	if font_resource:
-		menu_button.add_theme_font_override("font", font_resource)
-	menu_button.pressed.connect(on_menu_pressed)
-	btn_box.add_child(menu_button)
+	# 2. Play/Continue Button
+	btn_play = TextureButton.new()
+	btn_play.texture_normal = load("res://assets/textures/UI/Buttons/btn_play.png")
+	btn_play.custom_minimum_size = Vector2(95, 95)
+	btn_play.ignore_texture_size = true
+	btn_play.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
+	btn_play.pressed.connect(on_restart_pressed)
+	_setup_button_hover(btn_play)
+	btn_box.add_child(btn_play)
+
+	# 3. Menu Button
+	btn_menu = TextureButton.new()
+	btn_menu.texture_normal = load("res://assets/textures/UI/Buttons/btn_menu.png")
+	btn_menu.custom_minimum_size = Vector2(80, 80)
+	btn_menu.ignore_texture_size = true
+	btn_menu.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
+	btn_menu.pressed.connect(on_menu_pressed)
+	_setup_button_hover(btn_menu)
+	btn_box.add_child(btn_menu)
+
+func _setup_button_hover(btn: TextureButton):
+	btn.pivot_offset = btn.custom_minimum_size / 2.0
+	btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	btn.mouse_entered.connect(func():
+		var tween = create_tween()
+		tween.tween_property(btn, "scale", Vector2(1.15, 1.15), 0.15).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	)
+	btn.mouse_exited.connect(func():
+		var tween = create_tween()
+		tween.tween_property(btn, "scale", Vector2(1.0, 1.0), 0.15).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	)
 
 func show_result(winner_name: String, _p1_score: int, _p2_score: int, _p1_distance: int, _p2_distance: int):
-	# Look up GameManager dynamically
+	# Find GameManager in scene
 	var scene_root = get_tree().current_scene
 	var gm = scene_root.find_child("GameManager", true, false)
-	
-	# Fetch detailed stats
+
 	var p1_kratips = 0
 	var p1_dist = 0
-	var p1_penalties = 0
-	var p1_total = 0
-	
 	var p2_kratips = 0
 	var p2_dist = 0
-	var p2_penalties = 0
-	var p2_total = 0
-	
+
 	if gm:
 		if gm.p1:
 			p1_kratips = gm.p1.kratips_collected
 			p1_dist = int(gm.p1.distance)
-			p1_penalties = gm.p1.penalties
-			if gm.has_method("calculate_final_score"):
-				p1_total = gm.calculate_final_score(1)
-			else:
-				p1_total = gm.p1.score
-				
 		if gm.p2:
 			p2_kratips = gm.p2.kratips_collected
 			p2_dist = int(gm.p2.distance)
-			p2_penalties = gm.p2.penalties
-			if gm.has_method("calculate_final_score"):
-				p2_total = gm.calculate_final_score(2)
-			else:
-				p2_total = gm.p2.score
-	
-	# Determine winner styling
-	var winner_id = "draw"
-	var title_text = "DRAW!"
-	var title_color = Color(0.85, 0.9, 1.0)
 
+	var goal_dist = 1000.0
+	if gm:
+		goal_dist = float(gm.get("GOAL_DISTANCE"))
+
+	# Update stats elements
+	if p1_dist_bar:
+		p1_dist_bar.value = clamp((float(p1_dist) / goal_dist) * 100.0, 0.0, 100.0)
+	if p1_dist_val:
+		p1_dist_val.text = "%dm" % p1_dist
+	if p1_kratib_val:
+		p1_kratib_val.text = str(p1_kratips)
+
+	if p2_dist_bar:
+		p2_dist_bar.value = clamp((float(p2_dist) / goal_dist) * 100.0, 0.0, 100.0)
+	if p2_dist_val:
+		p2_dist_val.text = "%dm" % p2_dist
+	if p2_kratib_val:
+		p2_kratib_val.text = str(p2_kratips)
+
+	# Winner configuration
 	if winner_name == "Player 1":
-		winner_id = "p1"
-		title_text = "PLAYER 1 WINS!"
-		title_color = Color(1.0, 0.8, 0.1)
+		p1_winner_tag.visible = true
+		p2_winner_tag.visible = false
 	elif winner_name == "Player 2":
-		winner_id = "p2"
-		title_text = "PLAYER 2 WINS!"
-		title_color = Color(1.0, 0.8, 0.1)
+		p1_winner_tag.visible = false
+		p2_winner_tag.visible = true
+	else:
+		p1_winner_tag.visible = false
+		p2_winner_tag.visible = false
 
-	# Update Winner Label
-	var title_settings = LabelSettings.new()
-	title_settings.font_size = 36
-	if font_resource:
-		title_settings.font = font_resource
-	title_settings.font_color = title_color
-	title_settings.outline_size = 8
-	title_settings.outline_color = Color.BLACK
-	winner_label.label_settings = title_settings
-	winner_label.text = title_text
-
-	# Clear Stats Grid
-	for child in stats_grid.get_children():
-		child.queue_free()
-
-	# Populate stats breakdown comparison
-	var headers = ["METRIC", "PLAYER 1", "PLAYER 2"]
-	for h in headers:
-		var lbl = _create_stat_label(h, true, Color(1, 0.85, 0.4) if h != "METRIC" else Color(0.7, 0.7, 0.8))
-		stats_grid.add_child(lbl)
-
-	var rows = [
-		["Kratips Count", str(p1_kratips) + " (x10)", str(p2_kratips) + " (x10)"],
-		["Distance Run", str(p1_dist) + " m", str(p2_dist) + " m"],
-		["Penalties", "-" + str(p1_penalties), "-" + str(p2_penalties)],
-		["Final Score", str(p1_total), str(p2_total)]
-	]
-
-	for row in rows:
-		var is_total = row[0] == "Final Score"
-		var color = Color(1.0, 0.9, 0.3) if is_total else Color.WHITE
-		for val in row:
-			var font_color = Color(0.95, 0.95, 1.0) if val == row[0] and !is_total else color
-			if val == row[0] and is_total:
-				font_color = Color(1.0, 0.85, 0.2)
-			var lbl = _create_stat_label(val, is_total, font_color)
-			stats_grid.add_child(lbl)
-
-	# Trigger winner 3D preview model
-	_show_winner_model(winner_id)
-
-	# Pop-in animations
-	self.modulate.a = 0
-	self.scale = Vector2(0.95, 0.95)
+	# Play pop-in animations
+	board_rect.scale = Vector2(0.9, 0.9)
+	board_rect.modulate.a = 0.0
+	self.modulate.a = 0.0
 	show()
 
 	var tween = create_tween().set_parallel(true)
-	tween.tween_property(self, "modulate:a", 1.0, 0.4)
-	tween.tween_property(self, "scale", Vector2(1.0, 1.0), 0.45).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-
-func _create_stat_label(text: String, is_bold: bool, color: Color) -> Label:
-	var label = Label.new()
-	label.text = text
-	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	
-	var settings = LabelSettings.new()
-	settings.font_size = 18 if is_bold else 15
-	if font_resource:
-		settings.font = font_resource
-	settings.font_color = color
-	settings.outline_size = 4 if is_bold else 2
-	settings.outline_color = Color.BLACK
-	label.label_settings = settings
-	return label
-
-func _show_winner_model(winner_id: String):
-	for child in preview_pivot.get_children():
-		child.queue_free()
-
-	if winner_id == "draw":
-		preview_frame.visible = false
-		return
-
-	preview_frame.visible = true
-	preview_pivot.rotation.y = PI
-	if preview_spin_tween:
-		preview_spin_tween.kill()
-
-	var model_scene: PackedScene = player1_model_scene if winner_id == "p1" else player2_model_scene
-	if model_scene:
-		var model = model_scene.instantiate()
-		preview_pivot.add_child(model)
-		preview_spin_tween = create_tween()
-		preview_spin_tween.tween_property(preview_pivot, "rotation:y", 0.0, 0.8).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
-	else:
-		push_error("Could not load winner model for: " + winner_id)
+	tween.tween_property(self, "modulate:a", 1.0, 0.3)
+	tween.tween_property(board_rect, "modulate:a", 1.0, 0.3)
+	tween.tween_property(board_rect, "scale", Vector2(1.0, 1.0), 0.45).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 
 func on_restart_pressed():
 	get_tree().reload_current_scene()
