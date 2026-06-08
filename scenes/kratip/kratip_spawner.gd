@@ -1,33 +1,39 @@
 extends Node
 
 @export var kratip_scene: PackedScene
-@export var player1: CharacterBody3D
-@export var player2: CharacterBody3D
+@export var spawn_distance := 50.0 # Distance between pattern spawns
+@export var lane_width := 3.0
 
-@export var pool_size = 20
-var kratip_pool = []
+# Pattern Definitions (Offsets from center spawn_z)
+const PATTERNS = {
+	"straight": [
+		Vector3(-3, 0.5, 0), Vector3(-3, 0.5, -4), Vector3(-3, 0.5, -8), # Left
+		Vector3(0, 0.5, 0), Vector3(0, 0.5, -4), Vector3(0, 0.5, -8),   # Center
+		Vector3(3, 0.5, 0), Vector3(3, 0.5, -4), Vector3(3, 0.5, -8)    # Right
+	],
+	"arc_jump": [
+		Vector3(-3, 0.5, 0), Vector3(-3, 1.5, -4), Vector3(-3, 0.5, -8), # Left Arc
+		Vector3(3, 0.5, 0), Vector3(3, 1.5, -4), Vector3(3, 0.5, -8)     # Right Arc
+	],
+	"zigzag": [
+		Vector3(-3, 0.5, 0), Vector3(0, 0.5, -4), Vector3(3, 0.5, -8)
+	]
+}
 
-var lanes = [-3, 0, 3]
-var spawn_z = -20
-@export var spawn_interval = 10
+var player1 = null
+var player2 = null
+var spawn_z := 0.0
+var pool = []
+var max_pool_size := 40
 
 func _ready():
-	_init_pool()
-
-func _init_pool():
-	for i in range(pool_size):
+	spawn_z = -20.0 # Start spawning ahead
+	# Pre-allocate pool
+	for i in range(max_pool_size):
 		var k = kratip_scene.instantiate()
-		k.add_to_group("kratip")
-		get_parent().add_child.call_deferred(k)
-		kratip_pool.append(k)
-
-func _get_from_pool():
-	for k in kratip_pool:
-		if !k.is_active:
-			return k
-	
-	push_warning("Kratip pool exhausted! Increase pool_size in KratipSpawner.")
-	return null
+		add_child(k)
+		k.deactivate()
+		pool.append(k)
 
 func _process(_delta):
 	if !is_instance_valid(player1) or !is_instance_valid(player2):
@@ -38,39 +44,26 @@ func _process(_delta):
 
 	var lead_z = min(player1.global_position.z, player2.global_position.z)
 	if lead_z < spawn_z + 80:
-		spawn_kratip()
-		_cleanup_old_kratips()
+		spawn_pattern()
 
-func spawn_kratip():
-	if !is_instance_valid(player1) or !is_instance_valid(player2): return
-	var used_lanes = []
-	for obstacle in get_tree().get_nodes_in_group("obstacle"):
-		if is_instance_valid(obstacle) and obstacle.is_active and abs(obstacle.global_position.z - spawn_z) < 1.0:
-			used_lanes.append(obstacle.global_position.x)
-
-	var free_lanes = []
-	for lane_x in lanes:
-		var blocked = false
-		for used in used_lanes:
-			if abs(used - lane_x) < 0.1:
-				blocked = true
-				break
-		if not blocked:
-			free_lanes.append(lane_x)
-
-	if free_lanes.size() == 0:
-		spawn_z -= spawn_interval
-		return
-
-	var lane_x = free_lanes[randi() % free_lanes.size()]
-	var k = _get_from_pool()
-	if k:
-		k.activate(Vector3(lane_x, 1.2, spawn_z))
+func spawn_pattern():
+	# Pick a random pattern
+	var p_keys = PATTERNS.keys()
+	var p_name = p_keys[randi() % p_keys.size()]
+	var offsets = PATTERNS[p_name]
 	
-	spawn_z -= spawn_interval
+	# Pick random lane multiplier (to shift whole pattern if needed)
+	# For simplicity, we use the hardcoded lane positions in offsets (-3, 0, 3)
+	
+	for offset in offsets:
+		var spawn_pos = Vector3(offset.x, offset.y, spawn_z + offset.z)
+		_get_from_pool(spawn_pos)
+	
+	spawn_z -= spawn_distance
 
-func _cleanup_old_kratips():
-	var trail_z = max(player1.global_position.z, player2.global_position.z)
-	for k in kratip_pool:
-		if k.is_active and k.global_position.z > trail_z + 20:
-			k.deactivate()
+func _get_from_pool(pos: Vector3):
+	for k in pool:
+		if !k.is_active:
+			k.activate(pos)
+			return k
+	return null

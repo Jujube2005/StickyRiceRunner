@@ -2,9 +2,11 @@ extends Control
 
 @onready var p1_rice_bar = $TopLeft/RiceBar/TextureProgressBar
 @onready var p1_distance = $TopLeft/DistanceSign/Label
+@onready var p1_score = $TopLeft/DistanceSign/Label # Temporary reuse
 
 @onready var p2_rice_bar = $TopRight/RiceBar/TextureProgressBar
 @onready var p2_distance = $TopRight/DistanceSign/Label
+@onready var p2_score = $TopRight/DistanceSign/Label # Temporary reuse
 
 @onready var p1_warning = $TopLeft/WarningLabel
 @onready var p2_warning = $TopRight/WarningLabel
@@ -78,7 +80,7 @@ func _process(_delta):
 			p1_shield_btn.disabled = p1_val < 1
 			p1_shield_btn.modulate = Color.WHITE if !p1_shield_btn.disabled else Color(0.5, 0.5, 0.5, 0.7)
 		
-		p1_distance.text = str(int(player1.get("distance") if "distance" in player1 else 0)) + "m"
+		p1_distance.text = str(int(player1.get("distance") if "distance" in player1 else 0)) + "m | Score: " + str(player1.get("score") if "score" in player1 else 0)
 	
 	# Update P2 Data
 	if player2:
@@ -94,7 +96,7 @@ func _process(_delta):
 			p2_shield_btn.disabled = p2_val < 1
 			p2_shield_btn.modulate = Color.WHITE if !p2_shield_btn.disabled else Color(0.5, 0.5, 0.5, 0.7)
 		
-		p2_distance.text = str(int(player2.get("distance") if "distance" in player2 else 0)) + "m"
+		p2_distance.text = str(int(player2.get("distance") if "distance" in player2 else 0)) + "m | Score: " + str(player2.get("score") if "score" in player2 else 0)
 
 func _input(event):
 	if event is InputEventKey and event.pressed:

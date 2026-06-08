@@ -19,7 +19,9 @@ var lane_distance = 3.0
 
 var alive = true
 var stun_timer := 0.0
-var score = 0
+var kratips_collected := 0
+var penalties := 0
+var score := 0
 var charges := 0
 var can_charge := true
 var effect_durations := {}
@@ -173,6 +175,7 @@ func _physics_process(delta):
 
 	if new_distance != distance:
 		distance = new_distance
+		_calculate_total_score() # Recalculate score based on distance
 		emit_signal("distance_changed", distance)
 
 	if stun_timer > 0:
@@ -364,14 +367,23 @@ func _has_effect(effect_name):
 	return effect_durations.has(effect_name)
 
 func add_score(amount):
-	score += amount
+	kratips_collected += amount
+	_calculate_total_score()
+
+func add_penalty(amount):
+	penalties += amount
+	_calculate_total_score()
+	print(name, " penalty: ", amount, " | Total Penalties: ", penalties)
+
+func _calculate_total_score():
+	# Formula: Total = (Kratips * 10) + Distance - Penalties
+	score = (kratips_collected * 10) + int(distance) - penalties
 	emit_signal("score_changed", score)
-	print(name, "score:", score)
+	# print(name, " score:", score, " (K:", kratips_collected, " D:", int(distance), " P:", penalties, ")")
 
 func die() -> void:
-	# Redirect die to stun if it's from obstacle, 
-	# but keep it for falling out of bounds for now or just stun.
-	# The requirement says "No death", so let's just stun.
+	# Redirect die to stun if it's from obstacle
+	add_penalty(50) # Crashing penalty
 	stun(2.0)
 
 func stun(duration: float = 2.0):
@@ -385,6 +397,7 @@ func stun(duration: float = 2.0):
 func add_charge(amount):
 	if !can_charge:
 		return
+	# Handle skill charges (Removed 5-Kratip milestone check)
 	charges = clamp(charges + amount, 0, MAX_CHARGES)
 	emit_signal("charge_changed", charges, MAX_CHARGES)
 
