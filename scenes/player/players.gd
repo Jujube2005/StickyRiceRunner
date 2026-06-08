@@ -5,6 +5,7 @@ signal distance_changed(amount)
 signal charge_changed(current, max)
 signal skill_state_changed(is_ready, skill_name)
 signal warning_changed(message)
+signal skills_changed(new_skills)
 
 const BASE_FORWARD_SPEED = 10.0
 const MAX_FORWARD_SPEED = 35.0
@@ -29,6 +30,7 @@ var effect_durations := {}
 var prepared_skill := ""
 var is_skill_ready := false
 var is_rolling_skill := false
+var skills: Array[String] = []
 
 var shield_vfx : MeshInstance3D = null
 var anim_player : AnimationPlayer = null
@@ -246,11 +248,11 @@ func _physics_process(delta):
 		if jump_action != "" and Input.is_action_just_pressed(jump_action) and is_on_floor() and !_has_effect("disable_jump"):
 			velocity.y = JUMP_FORCE
 
-		if skill_action != "" and Input.is_action_just_pressed(skill_action) and charges >= MAX_CHARGES:
-			request_skill()
+		if skill_action != "" and Input.is_action_just_pressed(skill_action):
+			use_skill_at_slot(0)
 		
-		if defend_action != "" and Input.is_action_just_pressed(defend_action) and charges >= 1:
-			try_defend()
+		if defend_action != "" and Input.is_action_just_pressed(defend_action):
+			use_skill_at_slot(1)
 
 	var move_dir = 0
 
@@ -258,11 +260,15 @@ func _physics_process(delta):
 		bot_think_timer -= delta
 		bot_jump_cooldown -= delta
 		
-		# Bot manual skill/defend logic
-		if charges >= MAX_CHARGES:
-			# Random delay for bot to use skill
-			if randf() < 0.02: # Check every physics frame (~1% chance per frame)
-				request_skill()
+		# Bot manual skill logic with dual-slot system
+		if skills.size() > 0 and randf() < 0.005: # ~0.3% chance per frame (~once every 5 seconds)
+			var chosen_slot = -1
+			for i in range(skills.size()):
+				if skills[i] != "Shield" and skills[i] != "":
+					chosen_slot = i
+					break
+			if chosen_slot != -1:
+				use_skill_at_slot(chosen_slot)
 		
 		if bot_think_timer <= 0:
 			bot_think_timer = 0.05
@@ -483,6 +489,51 @@ func _show_shield_vfx():
 		shield_vfx.material_override.albedo_color.a = 0.3
 	)
 
+func add_skill(skill_name: String) -> bool:
+	if skills.size() < 2:
+		skills.append(skill_name)
+		emit_signal("skills_changed", skills)
+		set_warning("เก็บได้: " + skill_name)
+		# Clear warning message after 1.5s
+		get_tree().create_timer(1.5).timeout.connect(func():
+			clear_warning("เก็บได้: " + skill_name)
+		)
+		return true
+	return false
+
+func use_skill_at_slot(slot_index: int):
+	if slot_index < skills.size():
+		var skill_name = skills[slot_index]
+		if skill_name != "":
+			var success = false
+			if skill_name == "Shield":
+				_show_shield_vfx()
+				if game_manager:
+					game_manager.try_block_prank(self)
+				success = true
+			else:
+				if game_manager:
+					success = game_manager.request_skill(self, skill_name)
+				else:
+					success = true
+			
+			if success:
+				print(name, " using skill: ", skill_name, " from slot ", slot_index)
+				skills.remove_at(slot_index)
+				emit_signal("skills_changed", skills)
+				
+				set_warning("ใช้สกิล: " + skill_name)
+				# Clear warning message after 1.5s
+				get_tree().create_timer(1.5).timeout.connect(func():
+					clear_warning("ใช้สกิล: " + skill_name)
+				)
+			else:
+				print(name, " skill ", skill_name, " is on global cooldown!")
+				set_warning("คูลดาวน์...")
+				get_tree().create_timer(1.0).timeout.connect(func():
+					clear_warning("คูลดาวน์...")
+				)
+
 func apply_prank(skill_name):
 	match skill_name:
 		"Slow Floor":
@@ -523,20 +574,28 @@ func on_prank_state_updated(prank):
 		4: # BLOCKED
 			set_warning("ป้องได้แล้ว!")
 			# Auto-clear block message
-			get_tree().create_timer(1.5).timeout.connect(func(): if charges >= 0: clear_warning("ป้องได้แล้ว!"))
+			get_tree().create_timer(1.5).timeout.connect(func(): clear_warning("ป้องได้แล้ว!"))
 		3: # ACTIVE (Failed to block)
 			set_warning("ป้องกันบ่ทัน")
 			# Auto-clear fail message
-			get_tree().create_timer(1.5).timeout.connect(func(): if charges >= 0: clear_warning("ป้องกันบ่ทัน"))
+			get_tree().create_timer(1.5).timeout.connect(func(): clear_warning("ป้องกันบ่ทัน"))
 
 func set_warning(text):
 	emit_signal("warning_changed", text)
 	
-	# Bot auto-defend logic
-	if is_bot and charges >= 1:
-		if "กำลังมา!" in text:
-			# Random chance to defend based on skill
-			get_tree().create_timer(randf_range(0.2, 0.5)).timeout.connect(func(): if charges >= 1: try_defend())
+	# Bot auto-defend logic (uses Shield skill in slot if available)
+	if is_bot and "กำลังมา!" in text:
+		var shield_slot = -1
+		for i in range(skills.size()):
+			if skills[i] == "Shield":
+				shield_slot = i
+				break
+		if shield_slot != -1:
+			var slot_to_use = shield_slot
+			get_tree().create_timer(randf_range(0.2, 0.5)).timeout.connect(func():
+				if slot_to_use < skills.size() and skills[slot_to_use] == "Shield":
+					use_skill_at_slot(slot_to_use)
+			)
 	
 	# Visual feedback for warning/blocking
 	if text == "ป้องได้แล้ว!":

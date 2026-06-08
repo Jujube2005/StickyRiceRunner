@@ -140,15 +140,11 @@ func _transition_prank(prank: Prank, new_state: PrankState):
 	emit_signal("prank_state_changed", prank)
 
 # --- COMMANDS ---
-func request_skill(attacker, skill_name = ""):
-	if skill_cooldown_timer > 0: return
+func request_skill(attacker, skill_name = "") -> bool:
+	if skill_cooldown_timer > 0: return false
 	
 	var target = p2 if attacker == p1 else p1
-	if !target: return
-	
-	# Deduct charges immediately (Single Source of Truth)
-	if attacker.has_method("deduct_charges"):
-		attacker.deduct_charges(attacker.MAX_CHARGES)
+	if !target: return false
 	
 	var type = skill_name if skill_name != "" else _choose_skill()
 	
@@ -163,6 +159,7 @@ func request_skill(attacker, skill_name = ""):
 	# Arm the prank
 	new_prank.timer = WARNING_DURATION
 	_transition_prank(new_prank, PrankState.ARMED)
+	return true
 
 func try_block_prank(player):
 	# Find the oldest ARMED prank targeting this player (FIFO)
@@ -189,7 +186,7 @@ func _execute_prank_effect(prank: Prank):
 
 # --- UTILS ---
 func _choose_skill():
-	var common = ["Slow Floor", "Lane Swap", "Slow Speed", "Screen Blur"]
+	var common = ["Slow Floor", "Lane Swap", "Slow Speed", "Screen Blur", "Shield"]
 	var uncommon = ["Pull to Center", "Invert Controls"]
 	var rare = ["Lane Block", "Wind Push", "Transformation Debuff"]
 	var roll = randf()

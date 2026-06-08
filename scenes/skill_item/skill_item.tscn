@@ -1,0 +1,110 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/skill_item/skill_item.gd" id="1_script"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_coll"]
+radius = 0.7
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_body"]
+albedo_color = Color(1, 0.2, 0.5, 1)
+metallic = 0.8
+roughness = 0.2
+emission_enabled = true
+emission = Color(1, 0.1, 0.4, 1)
+emission_energy_multiplier = 0.8
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_body"]
+material = SubResource("StandardMaterial3D_body")
+top_radius = 0.18
+bottom_radius = 0.18
+height = 0.7
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nose"]
+albedo_color = Color(1, 0.75, 0, 1)
+metallic = 0.9
+roughness = 0.1
+emission_enabled = true
+emission = Color(1, 0.7, 0, 1)
+emission_energy_multiplier = 1.0
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_nose"]
+material = SubResource("StandardMaterial3D_nose")
+top_radius = 0.0
+bottom_radius = 0.2
+height = 0.3
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fin"]
+albedo_color = Color(0, 0.8, 1, 1)
+metallic = 0.6
+roughness = 0.3
+
+[sub_resource type="BoxMesh" id="BoxMesh_fin"]
+material = SubResource("StandardMaterial3D_fin")
+size = Vector3(0.04, 0.2, 0.15)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sparkle"]
+transparency = 1
+blend_mode = 1
+shading_mode = 0
+albedo_color = Color(1, 0.4, 0.8, 0.8)
+billboard_mode = 3
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="QuadMesh" id="QuadMesh_sparkle"]
+material = SubResource("StandardMaterial3D_sparkle")
+size = Vector2(0.12, 0.12)
+
+[sub_resource type="Curve" id="Curve_size"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.2, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[node name="SkillItem" type="Area3D" unique_id=9928374]
+collision_layer = 16
+collision_mask = 3
+script = ExtResource("1_script")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=9928375]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35, 0)
+shape = SubResource("SphereShape3D_coll")
+
+[node name="Model" type="Node3D" parent="." unique_id=9928376]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35, 0)
+
+[node name="RocketBody" type="MeshInstance3D" parent="Model" unique_id=9928377]
+mesh = SubResource("CylinderMesh_body")
+
+[node name="RocketNose" type="MeshInstance3D" parent="Model" unique_id=9928378]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+mesh = SubResource("CylinderMesh_nose")
+
+[node name="FinLeft" type="MeshInstance3D" parent="Model" unique_id=9928379]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.22, -0.25, 0)
+mesh = SubResource("BoxMesh_fin")
+
+[node name="FinRight" type="MeshInstance3D" parent="Model" unique_id=9928380]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.22, -0.25, 0)
+mesh = SubResource("BoxMesh_fin")
+
+[node name="GlowLight" type="OmniLight3D" parent="." unique_id=9928381]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35, 0)
+light_color = Color(1, 0.2, 0.8, 1)
+light_energy = 1.5
+omni_range = 3.0
+
+[node name="CPUParticles3D" type="CPUParticles3D" parent="." unique_id=9928382]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35, 0)
+amount = 12
+lifetime = 1.0
+preprocess = 0.5
+mesh = SubResource("QuadMesh_sparkle")
+emission_shape = 1
+emission_sphere_radius = 0.4
+direction = Vector3(0, 1, 0)
+spread = 20.0
+gravity = Vector3(0, 0.2, 0)
+initial_velocity_min = 0.2
+initial_velocity_max = 0.5
+scale_amount_curve = SubResource("Curve_size")
+color = Color(1, 0.6, 0.9, 1)

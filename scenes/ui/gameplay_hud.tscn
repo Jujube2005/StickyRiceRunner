@@ -270,14 +270,14 @@ offset_bottom = -20.0
 grow_vertical = 0
 theme_override_constants/separation = 15
 
-[node name="SkillRocket" type="TextureButton" parent="BottomControls/P1Skills" unique_id=1182060587]
+[node name="Slot1" type="TextureButton" parent="BottomControls/P1Skills" unique_id=1182060587]
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
 texture_normal = ExtResource("9_rocket")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="SkillShield" type="TextureButton" parent="BottomControls/P1Skills" unique_id=128640499]
+[node name="Slot2" type="TextureButton" parent="BottomControls/P1Skills" unique_id=128640499]
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
 texture_normal = ExtResource("13_t667q")
@@ -300,16 +300,16 @@ grow_vertical = 0
 theme_override_constants/separation = 15
 alignment = 2
 
-[node name="SkillShield" type="TextureButton" parent="BottomControls/P2Skills" unique_id=1423934459]
-custom_minimum_size = Vector2(100, 100)
-layout_mode = 2
-texture_normal = ExtResource("13_t667q")
-ignore_texture_size = true
-stretch_mode = 5
-
-[node name="SkillRocket" type="TextureButton" parent="BottomControls/P2Skills" unique_id=1232434785]
+[node name="Slot1" type="TextureButton" parent="BottomControls/P2Skills" unique_id=1232434785]
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
 texture_normal = ExtResource("9_rocket")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="Slot2" type="TextureButton" parent="BottomControls/P2Skills" unique_id=1423934459]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+texture_normal = ExtResource("13_t667q")
 ignore_texture_size = true
 stretch_mode = 5

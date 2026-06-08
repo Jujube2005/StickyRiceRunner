@@ -35,6 +35,82 @@ albedo_color = Color(0.9, 0.9, 0.9, 1)
 material = SubResource("StandardMaterial3D_white")
 size = Vector3(0.2, 0.02, 20)
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ritual_path"]
+albedo_color = Color(1, 0.45, 0.1, 1)
+metallic = 0.4
+roughness = 0.5
+emission_enabled = true
+emission = Color(1, 0.3, 0, 1)
+emission_energy_multiplier = 0.45
+
+[sub_resource type="BoxMesh" id="BoxMesh_ritual_path"]
+material = SubResource("StandardMaterial3D_ritual_path")
+size = Vector3(2.8, 0.02, 20)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pole"]
+albedo_color = Color(0.45, 0.3, 0.15, 1)
+roughness = 0.9
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_pole"]
+material = SubResource("StandardMaterial3D_pole")
+top_radius = 0.04
+bottom_radius = 0.04
+height = 2.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rocket_body"]
+albedo_color = Color(0.95, 0.15, 0.25, 1)
+metallic = 0.7
+roughness = 0.2
+emission_enabled = true
+emission = Color(0.8, 0.1, 0.2, 1)
+emission_energy_multiplier = 0.3
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_rocket_body"]
+material = SubResource("StandardMaterial3D_rocket_body")
+top_radius = 0.09
+bottom_radius = 0.09
+height = 0.7
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rocket_nose"]
+albedo_color = Color(1, 0.8, 0, 1)
+metallic = 0.9
+roughness = 0.1
+emission_enabled = true
+emission = Color(1, 0.75, 0, 1)
+emission_energy_multiplier = 0.4
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_rocket_nose"]
+material = SubResource("StandardMaterial3D_rocket_nose")
+top_radius = 0.0
+bottom_radius = 0.11
+height = 0.25
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tung"]
+albedo_color = Color(1, 0.15, 0.5, 1)
+roughness = 0.8
+
+[sub_resource type="BoxMesh" id="BoxMesh_tung"]
+material = SubResource("StandardMaterial3D_tung")
+size = Vector3(0.01, 1.0, 0.25)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_spark"]
+transparency = 1
+blend_mode = 1
+shading_mode = 0
+albedo_color = Color(1, 0.65, 0.2, 0.8)
+billboard_mode = 3
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="QuadMesh" id="QuadMesh_spark"]
+material = SubResource("StandardMaterial3D_spark")
+size = Vector2(0.09, 0.09)
+
+[sub_resource type="Curve" id="Curve_spark"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.2, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
 [node name="Ground" type="StaticBody3D" unique_id=1642254633]
 collision_layer = 6
 collision_mask = 0
@@ -100,6 +176,71 @@ mesh = SubResource("BoxMesh_side_line")
 [node name="WhiteLineR" type="MeshInstance3D" parent="RoadBase" unique_id=240781250]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.4, 0.51, 0)
 mesh = SubResource("BoxMesh_side_line")
+
+[node name="RitualPath" type="MeshInstance3D" parent="RoadBase" unique_id=9928390]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.0, 0.51, 0)
+mesh = SubResource("BoxMesh_ritual_path")
+
+[node name="RitualProps" type="Node3D" parent="RoadBase" unique_id=9928391]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.35, 0.5, 0)
+
+[node name="Prop1" type="Node3D" parent="RoadBase/RitualProps" unique_id=9928392]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -6.0)
+
+[node name="Pole" type="MeshInstance3D" parent="RoadBase/RitualProps/Prop1" unique_id=9928393]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0, 0)
+mesh = SubResource("CylinderMesh_pole")
+
+[node name="Rocket" type="Node3D" parent="RoadBase/RitualProps/Prop1" unique_id=9928394]
+transform = Transform3D(1, 0, 0, 0, 0.9659258, -0.2588190, 0, 0.2588190, 0.9659258, 0, 1.8, 0)
+
+[node name="RocketBody" type="MeshInstance3D" parent="RoadBase/RitualProps/Prop1/Rocket" unique_id=9928395]
+mesh = SubResource("CylinderMesh_rocket_body")
+
+[node name="RocketNose" type="MeshInstance3D" parent="RoadBase/RitualProps/Prop1/Rocket" unique_id=9928396]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
+mesh = SubResource("CylinderMesh_rocket_nose")
+
+[node name="Tung" type="MeshInstance3D" parent="RoadBase/RitualProps/Prop1" unique_id=9928397]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 0.15)
+mesh = SubResource("BoxMesh_tung")
+
+[node name="Prop2" type="Node3D" parent="RoadBase/RitualProps" unique_id=9928398]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 6.0)
+
+[node name="Pole" type="MeshInstance3D" parent="RoadBase/RitualProps/Prop2" unique_id=9928399]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0, 0)
+mesh = SubResource("CylinderMesh_pole")
+
+[node name="Rocket" type="Node3D" parent="RoadBase/RitualProps/Prop2" unique_id=9928400]
+transform = Transform3D(1, 0, 0, 0, 0.9659258, -0.2588190, 0, 0.2588190, 0.9659258, 0, 1.8, 0)
+
+[node name="RocketBody" type="MeshInstance3D" parent="RoadBase/RitualProps/Prop2/Rocket" unique_id=9928401]
+mesh = SubResource("CylinderMesh_rocket_body")
+
+[node name="RocketNose" type="MeshInstance3D" parent="RoadBase/RitualProps/Prop2/Rocket" unique_id=9928402]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
+mesh = SubResource("CylinderMesh_rocket_nose")
+
+[node name="Tung" type="MeshInstance3D" parent="RoadBase/RitualProps/Prop2" unique_id=9928403]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 0.15)
+mesh = SubResource("BoxMesh_tung")
+
+[node name="RitualSparks" type="CPUParticles3D" parent="RoadBase" unique_id=9928404]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.0, 0.55, 0)
+amount = 14
+lifetime = 1.6
+preprocess = 0.8
+mesh = SubResource("QuadMesh_spark")
+emission_shape = 3
+emission_box_extents = Vector3(1.3, 0.1, 10.0)
+direction = Vector3(0, 1, 0)
+spread = 15.0
+gravity = Vector3(0, 0.25, 0)
+initial_velocity_min = 0.15
+initial_velocity_max = 0.4
+scale_amount_curve = SubResource("Curve_spark")
+color = Color(1, 0.75, 0.3, 0.7)
 
 [node name="SceneryPoints" type="Node3D" parent="."]
 

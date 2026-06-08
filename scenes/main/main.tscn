@@ -10,6 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://2718haf4cta6" path="res://scenes/kratip/kratip.tscn" id="6_efxa6"]
 [ext_resource type="Script" uid="uid://cfgjmuv7bje58" path="res://scenes/shared_scripts/game_over_panel.gd" id="11_w48qg"]
 [ext_resource type="PackedScene" uid="uid://b2lscfy2w3ey4" path="res://scenes/ui/gameplay_hud.tscn" id="13_hud"]
+[ext_resource type="Script" path="res://scenes/skill_item/skill_item_spawner.gd" id="14_spawner"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_sky"]
 sky_top_color = Color(0.384314, 0.454902, 0.54902, 1)
@@ -54,6 +55,7 @@ script = ExtResource("3_272bh")
 obstacle_scene = ExtResource("4_5vw27")
 
 [node name="ItemSpawner" type="Node3D" parent="." unique_id=228926545]
+script = ExtResource("14_spawner")
 
 [node name="KratipSpawner" type="Node3D" parent="." unique_id=871863492]
 script = ExtResource("5_4c57u")
