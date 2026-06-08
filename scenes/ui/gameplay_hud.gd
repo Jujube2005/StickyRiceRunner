@@ -88,6 +88,26 @@ func _process(_delta):
 		
 		p2_distance.text = str(int(player2.get("distance") if "distance" in player2 else 0)) + "m"
 
+func _input(event):
+	if event is InputEventKey and event.pressed:
+		match event.keycode:
+			KEY_F1:
+				if player1: player1.debug_add_charge(1)
+				if player2: player2.debug_add_charge(1)
+				print("[DEBUG] F1: Add 1 Charge to both players")
+			KEY_F2:
+				if player1: player1.debug_add_charge(5)
+				if player2: player2.debug_add_charge(5)
+				print("[DEBUG] F2: Add 5 Charges to both players")
+			KEY_F3:
+				if player1: player1.debug_set_distance(player1.distance + 100)
+				if player2: player2.debug_set_distance(player2.distance + 100)
+				print("[DEBUG] F3: Skip 100m distance")
+			KEY_F4:
+				if player1: player1.debug_set_distance(950)
+				if player2: player2.debug_set_distance(950)
+				print("[DEBUG] F4: Jump to 950m (Near Finish)")
+
 func _on_pause_pressed():
 	# Implement pause logic or emit signal
 	get_tree().paused = !get_tree().paused

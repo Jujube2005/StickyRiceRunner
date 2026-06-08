@@ -40,12 +40,19 @@ func _get_from_pool():
 	return null
 
 func _process(_delta):
+	if !player1 or !player2:
+		var scene = get_tree().current_scene
+		player1 = scene.find_child("Player1", true, false)
+		player2 = scene.find_child("Player2", true, false)
+		if !player1 or !player2: return
+
 	var lead_z = min(player1.global_position.z, player2.global_position.z)
 	if lead_z < spawn_z + 80:
 		spawn_obstacle()
 		_cleanup_old_obstacles()
 
 func spawn_obstacle():
+	if !player1 or !player2: return
 	var selected_lanes = []
 	for lane_x in lanes:
 		if randf() < spawn_chance:

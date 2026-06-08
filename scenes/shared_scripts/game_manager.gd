@@ -23,16 +23,15 @@ signal prank_state_changed(prank: Prank)
 signal global_cooldown_changed(active: bool)
 
 # --- CONFIGURATION ---
-@export var player1_path: NodePath = "../Players/Player1"
-@export var player2_path: NodePath = "../Players/Player2"
+@export var player_scene: PackedScene = preload("res://scenes/player/players.tscn")
 @export var skill_cooldown_min := 3.0
 @export var skill_cooldown_max := 5.0
 const WARNING_DURATION = 0.8
 const GOAL_DISTANCE = 1000
 
 # --- STATE ---
-@onready var p1 = get_node(player1_path)
-@onready var p2 = get_node(player2_path)
+var p1 = null
+var p2 = null
 @onready var ui_gameover = get_node("../UI/GameOverPanel")
 
 var active_pranks: Array[Prank] = []
@@ -42,8 +41,55 @@ var game_ended = false
 
 func _ready():
 	ui_gameover.visible = false
+	_spawn_players()
+
+func _spawn_players():
+	var players_node = get_node("../Players")
+	if !players_node:
+		players_node = Node3D.new()
+		players_node.name = "Players"
+		get_parent().add_child(players_node)
+	
+	# Spawn Player 1
+	p1 = player_scene.instantiate()
+	p1.name = "Player1"
+	p1.collision_mask = 4
+	p1.left_action = "p1_left"
+	p1.right_action = "p1_right"
+	p1.jump_action = "p1_jump"
+	p1.skill_action = "p1_skill"
+	p1.defend_action = "p1_defend"
+	p1.position = Vector3(-3, 0, 0)
+	players_node.add_child(p1)
+	
+	# Spawn Player 2
+	p2 = player_scene.instantiate()
+	p2.name = "Player2"
+	p2.collision_layer = 2
+	p2.collision_mask = 4
+	p2.left_action = "p2_left"
+	p2.right_action = "p2_right"
+	p2.jump_action = "p2_jump"
+	p2.skill_action = "p2_skill"
+	p2.defend_action = "p2_defend"
+	p2.position = Vector3(3, 0, 0)
+	players_node.add_child(p2)
+	
+	# Connect signals
 	p1.distance_changed.connect(_check_distance_goal)
 	p2.distance_changed.connect(_check_distance_goal)
+	
+	# Update Camera targets if they exist
+	var cam_p1 = get_tree().current_scene.find_child("CameraP1", true, false)
+	if cam_p1: cam_p1.target = p1
+	
+	var cam_p2 = get_tree().current_scene.find_child("CameraP2", true, false)
+	if cam_p2: cam_p2.target = p2
+	
+	# Inform HUD about new players
+	var hud = get_tree().current_scene.find_child("GameplayHUD", true, false)
+	if hud and hud.has_method("_ready"):
+		hud._ready() # Re-run ready to find players
 
 func _process(delta):
 	if game_ended: return

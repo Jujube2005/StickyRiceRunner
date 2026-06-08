@@ -37,8 +37,8 @@ var current_anim : String = ""
 @export var anim_stun : String = "stun"
 
 @export_group("Animation Files")
-@export_file("*.glb", "*.fbx") var run_file : String
-@export_file("*.glb", "*.fbx") var stun_file : String
+@export_file("*.glb") var run_file : String
+@export_file("*.glb") var stun_file : String
 
 var distance := 0.0
 var start_z := 0.0
@@ -523,7 +523,7 @@ func _auto_assign_files():
 		if !stun_file: stun_file = "res://assets/animation/manStun.glb"
 	else:
 		if !run_file: run_file = "res://assets/animation/girlRunning.glb"
-		if !stun_file: stun_file = "res://assets/animation/girlStun.fbx"
+		if !stun_file: stun_file = "res://assets/animation/girlStun.glb"
 
 func _import_anim(path: String, target_name: String):
 	if !FileAccess.file_exists(path): 
