@@ -267,10 +267,10 @@ func update_slots_ui(player, slot1_btn, slot2_btn, _key1_text, _key2_text):
 		slot1_btn.disabled = false
 		slot1_btn.modulate = Color.WHITE
 		if skill_name == "Shield":
-			slot1_btn.texture_normal = load("res://assets/textures/UI/Buttons/box_orange.png")
+			slot1_btn.texture_normal = _load_texture_safe("res://assets/textures/UI/Buttons/skill_shield.png")
 			slot1_btn.self_modulate = Color(0.2, 0.9, 0.4) # green-ish
 		else:
-			slot1_btn.texture_normal = load("res://assets/textures/UI/Buttons/box_orange.png")
+			slot1_btn.texture_normal = _load_texture_safe("res://assets/textures/UI/Buttons/skill_bangfai.png")
 			slot1_btn.self_modulate = get_skill_color(skill_name)
 		
 		var label = slot1_btn.get_node("NameLabel")
@@ -280,7 +280,7 @@ func update_slots_ui(player, slot1_btn, slot2_btn, _key1_text, _key2_text):
 		slot1_btn.disabled = true
 		slot1_btn.modulate = Color(0.3, 0.3, 0.3, 0.6) # dimmed
 		slot1_btn.self_modulate = Color.WHITE
-		slot1_btn.texture_normal = load("res://assets/textures/UI/Buttons/box_orange.png")
+		slot1_btn.texture_normal = _load_texture_safe("res://assets/textures/UI/Buttons/skill_bangfai.png")
 		var label = slot1_btn.get_node("NameLabel")
 		label.text = ""
 		label.visible = false
@@ -292,10 +292,10 @@ func update_slots_ui(player, slot1_btn, slot2_btn, _key1_text, _key2_text):
 		slot2_btn.disabled = false
 		slot2_btn.modulate = Color.WHITE
 		if skill_name == "Shield":
-			slot2_btn.texture_normal = load("res://assets/textures/UI/Buttons/box_green.png")
+			slot2_btn.texture_normal = _load_texture_safe("res://assets/textures/UI/Buttons/skill_shield.png")
 			slot2_btn.self_modulate = Color(0.2, 0.9, 0.4) # green-ish
 		else:
-			slot2_btn.texture_normal = load("res://assets/textures/UI/Buttons/box_green.png")
+			slot2_btn.texture_normal = _load_texture_safe("res://assets/textures/UI/Buttons/skill_bangfai.png")
 			slot2_btn.self_modulate = get_skill_color(skill_name)
 		
 		var label = slot2_btn.get_node("NameLabel")
@@ -305,7 +305,7 @@ func update_slots_ui(player, slot1_btn, slot2_btn, _key1_text, _key2_text):
 		slot2_btn.disabled = true
 		slot2_btn.modulate = Color(0.3, 0.3, 0.3, 0.6) # dimmed
 		slot2_btn.self_modulate = Color.WHITE
-		slot2_btn.texture_normal = load("res://assets/textures/UI/Buttons/box_green.png")
+		slot2_btn.texture_normal = _load_texture_safe("res://assets/textures/UI/Buttons/skill_shield.png")
 		var label = slot2_btn.get_node("NameLabel")
 		label.text = ""
 		label.visible = false
@@ -346,3 +346,14 @@ func get_skill_display_name(skill_name: String) -> String:
 		"Transformation Debuff": return "Morph"
 		"Shield": return "Shield"
 		_: return skill_name
+
+func _load_texture_safe(path: String, fallback_path: String = "res://assets/textures/UI/Buttons/box_orange.png") -> Texture2D:
+	if ResourceLoader.exists(path):
+		var tex = load(path)
+		if tex:
+			return tex
+	if ResourceLoader.exists(fallback_path):
+		var fall = load(fallback_path)
+		if fall:
+			return fall
+	return null
