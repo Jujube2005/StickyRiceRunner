@@ -56,7 +56,8 @@ func spawn_pattern():
 	# For simplicity, we use the hardcoded lane positions in offsets (-3, 0, 3)
 	
 	for offset in offsets:
-		var spawn_pos = Vector3(offset.x, offset.y, spawn_z + offset.z)
+		var y_pos = 0.4 if offset.y < 1.0 else offset.y
+		var spawn_pos = Vector3(offset.x, y_pos, spawn_z + offset.z)
 		_get_from_pool(spawn_pos)
 	
 	spawn_z -= spawn_distance

@@ -177,10 +177,6 @@ mesh = SubResource("BoxMesh_side_line")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.4, 0.51, 0)
 mesh = SubResource("BoxMesh_side_line")
 
-[node name="RitualPath" type="MeshInstance3D" parent="RoadBase" unique_id=9928390]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.0, 0.51, 0)
-mesh = SubResource("BoxMesh_ritual_path")
-
 [node name="RitualProps" type="Node3D" parent="RoadBase" unique_id=9928391]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.35, 0.5, 0)
 
@@ -226,21 +222,51 @@ mesh = SubResource("CylinderMesh_rocket_nose")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 0.15)
 mesh = SubResource("BoxMesh_tung")
 
-[node name="RitualSparks" type="CPUParticles3D" parent="RoadBase" unique_id=9928404]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.0, 0.55, 0)
-amount = 14
-lifetime = 1.6
-preprocess = 0.8
-mesh = SubResource("QuadMesh_spark")
-emission_shape = 3
-emission_box_extents = Vector3(1.3, 0.1, 10.0)
-direction = Vector3(0, 1, 0)
-spread = 15.0
-gravity = Vector3(0, 0.25, 0)
-initial_velocity_min = 0.15
-initial_velocity_max = 0.4
-scale_amount_curve = SubResource("Curve_spark")
-color = Color(1, 0.75, 0.3, 0.7)
+[node name="RitualPropsLeft" type="Node3D" parent="RoadBase" unique_id=9928405]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.35, 0.5, 0)
+
+[node name="Prop1" type="Node3D" parent="RoadBase/RitualPropsLeft" unique_id=9928406]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -6.0)
+
+[node name="Pole" type="MeshInstance3D" parent="RoadBase/RitualPropsLeft/Prop1" unique_id=9928407]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0, 0)
+mesh = SubResource("CylinderMesh_pole")
+
+[node name="Rocket" type="Node3D" parent="RoadBase/RitualPropsLeft/Prop1" unique_id=9928408]
+transform = Transform3D(1, 0, 0, 0, 0.9659258, -0.2588190, 0, 0.2588190, 0.9659258, 0, 1.8, 0)
+
+[node name="RocketBody" type="MeshInstance3D" parent="RoadBase/RitualPropsLeft/Prop1/Rocket" unique_id=9928409]
+mesh = SubResource("CylinderMesh_rocket_body")
+
+[node name="RocketNose" type="MeshInstance3D" parent="RoadBase/RitualPropsLeft/Prop1/Rocket" unique_id=9928410]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
+mesh = SubResource("CylinderMesh_rocket_nose")
+
+[node name="Tung" type="MeshInstance3D" parent="RoadBase/RitualPropsLeft/Prop1" unique_id=9928411]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 0.15)
+mesh = SubResource("BoxMesh_tung")
+
+[node name="Prop2" type="Node3D" parent="RoadBase/RitualPropsLeft" unique_id=9928412]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 6.0)
+
+[node name="Pole" type="MeshInstance3D" parent="RoadBase/RitualPropsLeft/Prop2" unique_id=9928413]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0, 0)
+mesh = SubResource("CylinderMesh_pole")
+
+[node name="Rocket" type="Node3D" parent="RoadBase/RitualPropsLeft/Prop2" unique_id=9928414]
+transform = Transform3D(1, 0, 0, 0, 0.9659258, -0.2588190, 0, 0.2588190, 0.9659258, 0, 1.8, 0)
+
+[node name="RocketBody" type="MeshInstance3D" parent="RoadBase/RitualPropsLeft/Prop2/Rocket" unique_id=9928415]
+mesh = SubResource("CylinderMesh_rocket_body")
+
+[node name="RocketNose" type="MeshInstance3D" parent="RoadBase/RitualPropsLeft/Prop2/Rocket" unique_id=9928416]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
+mesh = SubResource("CylinderMesh_rocket_nose")
+
+[node name="Tung" type="MeshInstance3D" parent="RoadBase/RitualPropsLeft/Prop2" unique_id=9928417]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 0.15)
+mesh = SubResource("BoxMesh_tung")
+
 
 [node name="SceneryPoints" type="Node3D" parent="."]
 
