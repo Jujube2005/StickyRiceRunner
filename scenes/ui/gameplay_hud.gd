@@ -1,12 +1,16 @@
 extends Control
 
-@onready var p1_rice_bar = $TopLeft/RiceBar/TextureProgressBar
+@onready var p1_distance_bar = $TopLeft/DistanceMeter/TextureProgressBar
 @onready var p1_distance = $TopLeft/DistanceSign/Label
-@onready var p1_score = $TopLeft/DistanceSign/Label # Temporary reuse
+@onready var p1_leader_label = $TopLeft/LeaderLabel
 
-@onready var p2_rice_bar = $TopRight/RiceBar/TextureProgressBar
+@onready var p2_distance_bar = $TopRight/DistanceMeter/TextureProgressBar
 @onready var p2_distance = $TopRight/DistanceSign/Label
-@onready var p2_score = $TopRight/DistanceSign/Label # Temporary reuse
+@onready var p2_leader_label = $TopRight/LeaderLabel
+
+var p1_current_percent: float = 0.0
+var p2_current_percent: float = 0.0
+
 
 @onready var p1_warning = $TopLeft/WarningLabel
 @onready var p2_warning = $TopRight/WarningLabel
@@ -20,8 +24,16 @@ var font_resource: Font = preload("res://assets/textures/UI/Font/Mitr/Mitr-Bold.
 
 var player1 = null
 var player2 = null
+var game_manager = null
 
 func _ready():
+	# Configure emoji fallback font
+	var emoji_font = SystemFont.new()
+	emoji_font.font_names = PackedStringArray(["Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", "Android Emoji", "Emoji"])
+	if font_resource:
+		font_resource.fallbacks.append(emoji_font)
+
+	game_manager = get_tree().current_scene.find_child("GameManager", true, false)
 	# Find players in the scene
 	player1 = get_tree().current_scene.find_child("Player1", true, false)
 	player2 = get_tree().current_scene.find_child("Player2", true, false)
@@ -64,11 +76,13 @@ func _ready():
 	
 	# Initial setup
 	if player1:
-		p1_rice_bar.max_value = player1.get("MAX_CHARGES") if "MAX_CHARGES" in player1 else 5
 		update_slots_ui(player1, p1_slot1_btn, p1_slot2_btn, "F", "G")
 	if player2:
-		p2_rice_bar.max_value = player2.get("MAX_CHARGES") if "MAX_CHARGES" in player2 else 5
 		update_slots_ui(player2, p2_slot1_btn, p2_slot2_btn, "K", "L")
+		
+	# Hide leader indicators initially
+	if p1_leader_label: p1_leader_label.visible = false
+	if p2_leader_label: p2_leader_label.visible = false
 
 func _safe_connect(node: Node, sig_name: String, callable: Callable):
 	if node and !node.is_connected(sig_name, callable):
@@ -90,18 +104,52 @@ func _on_p1_skills_changed(_new_skills):
 func _on_p2_skills_changed(_new_skills):
 	update_slots_ui(player2, p2_slot1_btn, p2_slot2_btn, "K", "L")
 
-func _process(_delta):
+func _process(delta):
+	var goal_dist = 1000.0
+	if game_manager:
+		goal_dist = float(game_manager.get("GOAL_DISTANCE"))
+		
+	var p1_target_percent = 0.0
+	var p2_target_percent = 0.0
+	
 	# Update P1 Data
 	if player1:
-		var p1_val = player1.get("charges") if "charges" in player1 else 0
-		p1_rice_bar.value = p1_val
-		p1_distance.text = str(int(player1.get("distance") if "distance" in player1 else 0)) + "m | Score: " + str(player1.get("score") if "score" in player1 else 0)
+		var p1_dist = player1.get("distance") if "distance" in player1 else 0.0
+		p1_target_percent = clamp((p1_dist / goal_dist) * 100.0, 0.0, 100.0)
+		p1_distance.text = "%dm / %dm" % [int(p1_dist), int(goal_dist)]
 	
 	# Update P2 Data
 	if player2:
-		var p2_val = player2.get("charges") if "charges" in player2 else 0
-		p2_rice_bar.value = p2_val
-		p2_distance.text = str(int(player2.get("distance") if "distance" in player2 else 0)) + "m | Score: " + str(player2.get("score") if "score" in player2 else 0)
+		var p2_dist = player2.get("distance") if "distance" in player2 else 0.0
+		p2_target_percent = clamp((p2_dist / goal_dist) * 100.0, 0.0, 100.0)
+		p2_distance.text = "%dm / %dm" % [int(p2_dist), int(goal_dist)]
+		
+	# Smoothly interpolate progress bar values
+	p1_current_percent = lerp(p1_current_percent, p1_target_percent, 5.0 * delta)
+	p2_current_percent = lerp(p2_current_percent, p2_target_percent, 5.0 * delta)
+	
+	if p1_distance_bar:
+		p1_distance_bar.value = p1_current_percent
+	if p2_distance_bar:
+		p2_distance_bar.value = p2_current_percent
+		
+	# Compare distances and update LEADING indicators
+	if player1 and player2:
+		var p1_dist = player1.get("distance") if "distance" in player1 else 0.0
+		var p2_dist = player2.get("distance") if "distance" in player2 else 0.0
+		
+		if p1_dist > p2_dist:
+			if p1_leader_label: p1_leader_label.visible = true
+			if p2_leader_label: p2_leader_label.visible = false
+		elif p2_dist > p1_dist:
+			if p1_leader_label: p1_leader_label.visible = false
+			if p2_leader_label: p2_leader_label.visible = true
+		else:
+			if p1_leader_label: p1_leader_label.visible = false
+			if p2_leader_label: p2_leader_label.visible = false
+	else:
+		if p1_leader_label: p1_leader_label.visible = false
+		if p2_leader_label: p2_leader_label.visible = false
 
 func _input(event):
 	if event is InputEventKey and event.pressed:

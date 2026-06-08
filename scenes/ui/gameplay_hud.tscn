@@ -7,12 +7,23 @@
 [ext_resource type="Texture2D" uid="uid://dttul3r8f2cal" path="res://assets/textures/UI/Buttons/progress_fill_green.png" id="5_bar_fill_green"]
 [ext_resource type="Texture2D" uid="uid://b4k3irenw8bi0" path="res://assets/textures/UI/Buttons/distance_sign.png" id="6_sign"]
 [ext_resource type="Texture2D" uid="uid://bxf60ib60m68i" path="res://assets/textures/UI/Buttons/pause.png" id="7_pause"]
+[ext_resource type="Texture2D" uid="uid://cvaugs5xtglql" path="res://assets/textures/UI/Buttons/P1.png" id="8_3y74m"]
 [ext_resource type="Texture2D" uid="uid://b3nrbryfblcqo" path="res://assets/textures/UI/Buttons/rice_bar_green.png" id="8_noor6"]
 [ext_resource type="Texture2D" uid="uid://u6uemxeq3the" path="res://assets/textures/UI/Buttons/settings.png" id="8_settings"]
-[ext_resource type="Texture2D" uid="uid://sh8mpi3ygefx" path="res://assets/textures/UI/Buttons/skill_bangfai.png" id="9_rocket"]
+[ext_resource type="Texture2D" uid="uid://xjdny1cp4333" path="res://assets/textures/UI/Buttons/P2.png" id="9_cqn7g"]
 [ext_resource type="Texture2D" uid="uid://bfdspjmjgwjm1" path="res://assets/textures/UI/Buttons/down.png" id="10_down"]
 [ext_resource type="FontFile" uid="uid://2d6rvw7lnbb6" path="res://assets/textures/UI/Font/Mitr/Mitr-Bold.ttf" id="11_font"]
-[ext_resource type="Texture2D" uid="uid://bw6tr5y5p4hog" path="res://assets/textures/UI/Buttons/skill_shield.png" id="13_t667q"]
+[ext_resource type="Texture2D" uid="uid://hpiegj4jiilm" path="res://assets/textures/UI/Buttons/box_orange.png" id="12_noor6"]
+[ext_resource type="Texture2D" uid="uid://b7qy8qpe0n5uv" path="res://assets/textures/UI/Buttons/box_green.png" id="13_t667q"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_leader"]
+font = ExtResource("11_font")
+font_size = 18
+font_color = Color(1, 0.843137, 0, 1)
+outline_size = 6
+outline_color = Color(0.2, 0.1, 0, 1)
+shadow_size = 4
+shadow_color = Color(0, 0, 0, 0.6)
 
 [sub_resource type="LabelSettings" id="LabelSettings_sign"]
 font = ExtResource("11_font")
@@ -27,6 +38,8 @@ layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_top = -4.0
+offset_bottom = -4.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
@@ -56,7 +69,18 @@ offset_top = 40.0
 offset_right = 300.0
 offset_bottom = 150.0
 
-[node name="RiceBar" type="Control" parent="TopLeft" unique_id=2051846702]
+[node name="LeaderLabel" type="Label" parent="TopLeft" unique_id=1103878908]
+layout_mode = 0
+offset_left = 246.0
+offset_top = 18.0
+offset_right = 446.0
+offset_bottom = 48.0
+text = "🏆 LEADING"
+label_settings = SubResource("LabelSettings_leader")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="DistanceMeter" type="Control" parent="TopLeft" unique_id=2051846702]
 layout_mode = 1
 anchors_preset = 0
 offset_left = 60.0
@@ -64,7 +88,7 @@ offset_top = 10.0
 offset_right = 260.0
 offset_bottom = 60.0
 
-[node name="TextureProgressBar" type="TextureProgressBar" parent="TopLeft/RiceBar" unique_id=1661059065]
+[node name="TextureProgressBar" type="TextureProgressBar" parent="TopLeft/DistanceMeter" unique_id=1661059065]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -75,8 +99,7 @@ offset_right = 21.0
 offset_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-value = 0.0
-step = 1.0
+step = 0.01
 nine_patch_stretch = true
 texture_under = ExtResource("3_bar_bg")
 texture_progress = ExtResource("4_bar_fill_orange")
@@ -103,24 +126,42 @@ stretch_mode = 5
 
 [node name="Label" type="Label" parent="TopLeft/DistanceSign" unique_id=317986312]
 layout_mode = 0
-offset_left = 115.0
-offset_top = 15.0
-offset_right = 235.0
-offset_bottom = 65.0
+offset_left = 118.0
+offset_top = -21.0
+offset_right = 353.0
+offset_bottom = 59.0
 text = "0m"
 label_settings = SubResource("LabelSettings_sign")
 vertical_alignment = 1
 
 [node name="WarningLabel" type="Label" parent="TopLeft" unique_id=1204887980]
 layout_mode = 0
-offset_left = 60.0
-offset_top = 160.0
-offset_right = 260.0
-offset_bottom = 183.0
+offset_left = 86.0
+offset_top = 120.0
+offset_right = 286.0
+offset_bottom = 146.0
 theme_override_colors/font_color = Color(1, 0, 0, 1)
 theme_override_fonts/font = ExtResource("11_font")
 text = "Warning!"
 horizontal_alignment = 1
+
+[node name="P1" type="TextureRect" parent="TopLeft" unique_id=1619626942]
+layout_mode = 0
+offset_left = 87.0
+offset_top = -24.0
+offset_right = 115.0
+offset_bottom = 4.0
+texture = ExtResource("8_3y74m")
+expand_mode = 1
+
+[node name="P2" type="TextureRect" parent="TopLeft" unique_id=836701945]
+layout_mode = 0
+offset_left = 953.0
+offset_top = -27.0
+offset_right = 982.0
+offset_bottom = 2.0
+texture = ExtResource("9_cqn7g")
+expand_mode = 1
 
 [node name="TopRight" type="Control" parent="." unique_id=29065968]
 layout_mode = 1
@@ -133,7 +174,22 @@ offset_right = -40.0
 offset_bottom = 150.0
 grow_horizontal = 0
 
-[node name="RiceBar" type="Control" parent="TopRight" unique_id=561687972]
+[node name="LeaderLabel" type="Label" parent="TopRight" unique_id=1238370012]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -446.0
+offset_top = 18.0
+offset_right = -246.0
+offset_bottom = 48.0
+grow_horizontal = 0
+text = "🏆 LEADING"
+label_settings = SubResource("LabelSettings_leader")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="DistanceMeter" type="Control" parent="TopRight" unique_id=561687972]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
@@ -144,19 +200,18 @@ offset_right = -60.0
 offset_bottom = 60.0
 grow_horizontal = 0
 
-[node name="TextureProgressBar" type="TextureProgressBar" parent="TopRight/RiceBar" unique_id=921897046]
+[node name="TextureProgressBar" type="TextureProgressBar" parent="TopRight/DistanceMeter" unique_id=921897046]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -23.0
-offset_top = 2.0
-offset_right = -23.0
-offset_bottom = 2.0
+offset_left = -21.0
+offset_top = 1.0
+offset_right = -21.0
+offset_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-value = 0.0
-step = 1.0
+step = 0.01
 fill_mode = 1
 nine_patch_stretch = true
 texture_under = ExtResource("8_noor6")
@@ -181,10 +236,10 @@ layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -110.0
-offset_top = 70.0
-offset_right = 10.0
-offset_bottom = 150.0
+offset_left = -95.0
+offset_top = 73.0
+offset_right = 32.0
+offset_bottom = 168.0
 grow_horizontal = 0
 texture = ExtResource("6_sign")
 expand_mode = 1
@@ -195,10 +250,10 @@ layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -235.0
-offset_top = 15.0
-offset_right = -115.0
-offset_bottom = 65.0
+offset_left = -353.0
+offset_top = -21.0
+offset_right = -118.0
+offset_bottom = 59.0
 grow_horizontal = 0
 text = "0m"
 label_settings = SubResource("LabelSettings_sign")
@@ -210,10 +265,10 @@ layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -260.0
-offset_top = 160.0
-offset_right = -60.0
-offset_bottom = 183.0
+offset_left = -286.0
+offset_top = 120.0
+offset_right = -86.0
+offset_bottom = 146.0
 grow_horizontal = 0
 theme_override_colors/font_color = Color(1, 0, 0, 1)
 theme_override_fonts/font = ExtResource("11_font")
@@ -265,22 +320,22 @@ anchor_top = 1.0
 anchor_bottom = 1.0
 offset_left = 40.0
 offset_top = -100.0
-offset_right = 240.0
+offset_right = 215.0
 offset_bottom = -20.0
 grow_vertical = 0
 theme_override_constants/separation = 15
 
 [node name="Slot1" type="TextureButton" parent="BottomControls/P1Skills" unique_id=1182060587]
-custom_minimum_size = Vector2(100, 100)
+custom_minimum_size = Vector2(80, 80)
 layout_mode = 2
-texture_normal = ExtResource("9_rocket")
+texture_normal = ExtResource("12_noor6")
 ignore_texture_size = true
 stretch_mode = 5
 
 [node name="Slot2" type="TextureButton" parent="BottomControls/P1Skills" unique_id=128640499]
-custom_minimum_size = Vector2(100, 100)
+custom_minimum_size = Vector2(80, 80)
 layout_mode = 2
-texture_normal = ExtResource("13_t667q")
+texture_normal = ExtResource("12_noor6")
 ignore_texture_size = true
 stretch_mode = 5
 
@@ -291,24 +346,24 @@ anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -240.0
-offset_top = -100.0
+offset_left = -230.0
+offset_top = -97.5
 offset_right = -40.0
-offset_bottom = -20.0
+offset_bottom = -2.5
 grow_horizontal = 0
 grow_vertical = 0
-theme_override_constants/separation = 15
+theme_override_constants/separation = 0
 alignment = 2
 
 [node name="Slot1" type="TextureButton" parent="BottomControls/P2Skills" unique_id=1232434785]
-custom_minimum_size = Vector2(100, 100)
+custom_minimum_size = Vector2(95, 95)
 layout_mode = 2
-texture_normal = ExtResource("9_rocket")
+texture_normal = ExtResource("13_t667q")
 ignore_texture_size = true
 stretch_mode = 5
 
 [node name="Slot2" type="TextureButton" parent="BottomControls/P2Skills" unique_id=1423934459]
-custom_minimum_size = Vector2(100, 100)
+custom_minimum_size = Vector2(95, 95)
 layout_mode = 2
 texture_normal = ExtResource("13_t667q")
 ignore_texture_size = true
