@@ -37,6 +37,7 @@ var current_anim : String = ""
 @export var anim_stun : String = "stun"
 
 @export_group("Animation Files")
+@export_file("*.glb") var model_file : String
 @export_file("*.glb") var run_file : String
 @export_file("*.glb") var stun_file : String
 
@@ -59,11 +60,27 @@ func _ready():
 	start_z = global_position.z
 	_setup_shield_vfx()
 	
+	# Auto-assign files based on character type if not set
+	_auto_assign_files()
+	
+	# Load the actual character model
+	_load_model()
+	
 	# Find and setup animations
+	# We search again because _load_model adds a new AnimationPlayer inside Model
 	anim_player = find_child("AnimationPlayer", true, false)
+	
 	if anim_player:
 		print("[ANIM] Found AnimationPlayer for ", name, " at ", anim_player.get_path())
+		
+		# Set root node to self so that tracks like "Model/manTmodel/..." work
+		# However, our retargeting maps to bones directly, so we need to point to the skeleton
 		_setup_animations()
+		
+		# Import animations from files
+		if run_file: _import_anim(run_file, anim_run)
+		if stun_file: _import_anim(stun_file, anim_stun)
+		
 		play_animation(anim_run)
 	else:
 		print("[ANIM] WARNING: No AnimationPlayer found for ", name)
@@ -72,6 +89,26 @@ func _ready():
 		var scene_root = get_tree().current_scene
 		if scene_root and scene_root.has_node("GameManager"):
 			game_manager = scene_root.get_node("GameManager")
+
+func _load_model():
+	if !model_file:
+		return
+		
+	if !FileAccess.file_exists(model_file):
+		print("[MODEL] File not found: ", model_file)
+		return
+		
+	var res = load(model_file)
+	if res:
+		var model_instance = res.instantiate()
+		var model_node = get_node("Model")
+		if model_node:
+			# Clear existing models immediately
+			for child in model_node.get_children():
+				model_node.remove_child(child)
+				child.queue_free()
+			model_node.add_child(model_instance)
+			print("[MODEL] Loaded ", model_file, " into ", name)
 
 func _setup_shield_vfx():
 	shield_vfx = MeshInstance3D.new()
@@ -108,17 +145,12 @@ func _physics_process(delta):
 		# Play stun animation
 		play_animation(anim_stun)
 		
-		# Ensure model is positioned correctly during stun
-		$Model.position.x = 0
-		$Model.position.z = 0
-		$Model.scale = Vector3.ONE
-		
 		# Apply X -90 rotation and slightly raise Y to prevent sinking into the road
 		$Model.rotation.x = deg_to_rad(-90)
-		$Model.position.y = 0.2 # Adjusted slightly up as requested
+		$Model.position.y = 0.2
 		return
 	elif current_anim == anim_stun:
-		# Just finished stun, go straight to run
+		# Just finished stun, reset model orientation
 		$Model.position.y = 0.0
 		$Model.rotation.x = 0.0
 		play_animation(anim_run)
@@ -473,55 +505,37 @@ func clear_warning(message_to_clear = ""):
 func _setup_animations():
 	if !anim_player: return
 	
-	# Set root node to the player node AFTER fixing animations
+	# Set root node to the player node
 	anim_player.root_node = anim_player.get_path_to(self)
 	
-	# Clean up ALL existing animations in ALL libraries to prevent "metarig" warnings
-	var libs_to_process = []
+	# Clean up and setup libraries
 	for lib_name in anim_player.get_animation_library_list():
-		libs_to_process.append(lib_name)
-		
-	for lib_name in libs_to_process:
 		var old_lib = anim_player.get_animation_library(lib_name)
-		# Duplicate library to make it unique to this instance
 		var lib = old_lib.duplicate()
 		anim_player.remove_animation_library(lib_name)
 		anim_player.add_animation_library(lib_name, lib)
 		
-		var anims_to_fix = []
 		for anim_name in lib.get_animation_list():
-			anims_to_fix.append(anim_name)
-			
-		for anim_name in anims_to_fix:
 			var anim = lib.get_animation(anim_name)
 			if anim:
 				var new_anim = anim.duplicate()
-				_retarget_animation(new_anim)
+				_retarget_animation(new_anim, anim_name)
 				lib.remove_animation(anim_name)
 				lib.add_animation(anim_name, new_anim)
 	
-	# Ensure we have a default library
 	if !anim_player.has_animation_library(""):
 		anim_player.add_animation_library("", AnimationLibrary.new())
-	
-	# Set root node to the player node AFTER fixing animations
-	anim_player.root_node = anim_player.get_path_to(self)
-	
-	# Auto-assign files based on character type if not set
-	_auto_assign_files()
-	
-	# Import animations from files
-	if run_file: _import_anim(run_file, anim_run)
-	if stun_file: _import_anim(stun_file, anim_stun)
 
 func _auto_assign_files():
 	# Simple check: if we have "man" in the name, use man animations
 	var is_male = "man" in name.to_lower() or (get_parent() and "Player1" in name)
 	
 	if is_male:
+		if !model_file: model_file = "res://assets/models/player/manTmodel.glb"
 		if !run_file: run_file = "res://assets/animation/manRunning.glb"
 		if !stun_file: stun_file = "res://assets/animation/manStun.glb"
 	else:
+		if !model_file: model_file = "res://assets/models/player/girlTmodel.glb"
 		if !run_file: run_file = "res://assets/animation/girlRunning.glb"
 		if !stun_file: stun_file = "res://assets/animation/girlStun.glb"
 
@@ -530,36 +544,29 @@ func _import_anim(path: String, target_name: String):
 		print("[ANIM] File not found: ", path)
 		return
 		
-	var glb = load(path)
-	if glb:
-		var scene = glb.instantiate()
+	var res = load(path)
+	if res is PackedScene:
+		var scene = res.instantiate()
 		var ap = scene.find_child("AnimationPlayer", true, false)
 		if ap:
 			var anim_names = ap.get_animation_list()
-			print("[ANIM] Found in ", path, ": ", anim_names)
-			if anim_names.size() > 0:
-				# Mixamo usually has "mixamo.com" or the first animation is the one we want
-				var source_name = ""
-				for n in anim_names:
-					if n != "RESET":
-						source_name = n
-						break
+			var source_name = ""
+			for n in anim_names:
+				if n != "RESET":
+					source_name = n
+					break
+			
+			if source_name != "":
+				var anim = ap.get_animation(source_name).duplicate()
+				_retarget_animation(anim, target_name)
 				
-				if source_name != "":
-					var anim = ap.get_animation(source_name).duplicate()
-					_retarget_animation(anim, target_name)
-					
-					var lib = anim_player.get_animation_library("")
-					if lib:
-						if lib.has_animation(target_name):
-							lib.remove_animation(target_name)
-						lib.add_animation(target_name, anim)
-						
-						# Set loop mode for running
-						if target_name == anim_run:
-							anim.loop_mode = Animation.LOOP_LINEAR
-						else:
-							anim.loop_mode = Animation.LOOP_NONE
+				var lib = anim_player.get_animation_library("")
+				if lib:
+					if lib.has_animation(target_name):
+						lib.remove_animation(target_name)
+					lib.add_animation(target_name, anim)
+					anim.loop_mode = Animation.LOOP_LINEAR if target_name == anim_run else Animation.LOOP_NONE
+		scene.free() # Clean up the temporary scene instance
 
 func _retarget_animation(anim: Animation, anim_name: String = ""):
 	if !anim: return
@@ -640,8 +647,9 @@ func _retarget_animation(anim: Animation, anim_name: String = ""):
 					pass
 		
 		# Aggressively remove rotation/scale from root nodes (Root, Armature, etc.)
+		# BUT KEEP bone tracks (identified by having a colon and not being just the root node)
 		if p_lower.ends_with(":rotation") or p_lower.ends_with(":rotation_edit") or p_lower.ends_with(":scale") or p_lower.ends_with(":quaternion"):
-			if "metarig" in p_lower or "armature" in p_lower or "root" in p_lower or "hips" in p_lower:
+			if ("metarig" in p_lower or "armature" in p_lower or "root" in p_lower) and !("skeleton" in p_lower):
 				tracks_to_remove.append(i)
 				continue
 		
@@ -720,16 +728,29 @@ func _retarget_animation(anim: Animation, anim_name: String = ""):
 		anim_player.force_update_cache()
 
 func play_animation(anim_name: String):
-	if !anim_player or current_anim == anim_name: return
+	if !anim_player: return
+	
+	# If we are already playing this, don't restart
+	if current_anim == anim_name and anim_player.is_playing():
+		return
 	
 	if anim_player.has_animation(anim_name):
-		# Reset any offsets or rotations if we are switching away from stun
-		if current_anim == anim_stun and anim_name != anim_stun:
-			$Model.position.y = 0.0
-			$Model.rotation.x = 0.0
-			
 		anim_player.play(anim_name)
 		current_anim = anim_name
+	else:
+		# Check all libraries
+		var found = false
+		for lib_name in anim_player.get_animation_library_list():
+			var full_name = anim_name if lib_name == "" else lib_name + "/" + anim_name
+			if anim_player.has_animation(full_name):
+				anim_player.play(full_name)
+				current_anim = anim_name
+				found = true
+				break
+		
+		if !found:
+			print("[ANIM] WARNING: Animation not found: ", anim_name, " in ", name, ". Available: ", anim_player.get_animation_list())
+
 
 # --- DEBUG FUNCTIONS ---
 func debug_set_distance(value: float):

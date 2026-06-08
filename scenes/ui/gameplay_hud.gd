@@ -22,32 +22,40 @@ func _ready():
 	player1 = get_tree().current_scene.find_child("Player1", true, false)
 	player2 = get_tree().current_scene.find_child("Player2", true, false)
 	
-	# Connect signals if needed (e.g. for skills)
-	$CenterTop/PauseBtn.pressed.connect(_on_pause_pressed)
-	$CenterTop/SettingsBtn.pressed.connect(_on_settings_pressed)
+	# Connect signals safely
+	_safe_connect($CenterTop/PauseBtn, "pressed", _on_pause_pressed)
+	_safe_connect($CenterTop/SettingsBtn, "pressed", _on_settings_pressed)
 	
 	# P1 Skills
-	if p1_rocket_btn: p1_rocket_btn.pressed.connect(_on_p1_skill_rocket_pressed)
-	if p1_shield_btn: p1_shield_btn.pressed.connect(_on_p1_skill_shield_pressed)
+	if p1_rocket_btn: _safe_connect(p1_rocket_btn, "pressed", _on_p1_skill_rocket_pressed)
+	if p1_shield_btn: _safe_connect(p1_shield_btn, "pressed", _on_p1_skill_shield_pressed)
 	
 	# P2 Skills
-	if p2_rocket_btn: p2_rocket_btn.pressed.connect(_on_p2_skill_rocket_pressed)
-	if p2_shield_btn: p2_shield_btn.pressed.connect(_on_p2_skill_shield_pressed)
+	if p2_rocket_btn: _safe_connect(p2_rocket_btn, "pressed", _on_p2_skill_rocket_pressed)
+	if p2_shield_btn: _safe_connect(p2_shield_btn, "pressed", _on_p2_skill_shield_pressed)
 	
 	# Connect warning signals
 	if player1 and player1.has_signal("warning_changed"):
-		player1.warning_changed.connect(func(msg): 
-			if p1_warning:
-				p1_warning.text = msg
-				p1_warning.visible = msg != ""
-		)
+		if !player1.warning_changed.is_connected(_on_p1_warning_changed):
+			player1.warning_changed.connect(_on_p1_warning_changed)
 	
 	if player2 and player2.has_signal("warning_changed"):
-		player2.warning_changed.connect(func(msg): 
-			if p2_warning:
-				p2_warning.text = msg
-				p2_warning.visible = msg != ""
-		)
+		if !player2.warning_changed.is_connected(_on_p2_warning_changed):
+			player2.warning_changed.connect(_on_p2_warning_changed)
+
+func _safe_connect(node: Node, sig_name: String, callable: Callable):
+	if node and !node.is_connected(sig_name, callable):
+		node.connect(sig_name, callable)
+
+func _on_p1_warning_changed(msg):
+	if p1_warning:
+		p1_warning.text = msg
+		p1_warning.visible = msg != ""
+
+func _on_p2_warning_changed(msg):
+	if p2_warning:
+		p2_warning.text = msg
+		p2_warning.visible = msg != ""
 	
 	# Initial setup
 	if player1:

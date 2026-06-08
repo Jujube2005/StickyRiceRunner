@@ -18,10 +18,16 @@ func _ready():
 
 func _process(_delta):
 	# เช็กตำแหน่งผู้เล่นทั้งคู่
+	if !is_instance_valid(player1) or !is_instance_valid(player2):
+		var scene = get_tree().current_scene
+		player1 = scene.find_child("Player1", true, false)
+		player2 = scene.find_child("Player2", true, false)
+		if !is_instance_valid(player1) or !is_instance_valid(player2): return
+
 	var lead_z = min(player1.global_position.z, player2.global_position.z)
 	var trail_z = max(player1.global_position.z, player2.global_position.z)
 	
-	while spawn_z > lead_z - 200.0:
+	while spawn_z > lead_z - 200.0 and pool.size() > 0:
 		# ถ้าถนนข้างหน้าสั้นไป ให้พยายาม Recycle แผ่นที่อยู่หลังสุดมาวางข้างหน้าทันที
 		var oldest_tile = pool[0]
 		if oldest_tile.global_position.z > trail_z + despawn_threshold:

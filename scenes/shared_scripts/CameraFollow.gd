@@ -12,7 +12,7 @@ func _ready():
 	fov = fov_target
 
 func _process(delta):
-	if target == null:
+	if !is_instance_valid(target):
 		return
 
 	# Smooth Position
