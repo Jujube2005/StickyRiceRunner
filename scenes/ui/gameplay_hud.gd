@@ -190,7 +190,12 @@ func _input(event):
 					print("[DEBUG] F6: Added random skills to Player 2: ", s1, ", ", s2)
 
 func _on_pause_pressed():
-	get_tree().paused = !get_tree().paused
+	var pause_panel = get_tree().current_scene.find_child("PausePanel", true, false)
+	if pause_panel and pause_panel.has_method("show_pause"):
+		get_tree().paused = true
+		pause_panel.show_pause()
+	else:
+		get_tree().paused = !get_tree().paused
 
 func _on_settings_pressed():
 	pass

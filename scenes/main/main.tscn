@@ -11,6 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://ben6hcwjmvht2" path="res://scenes/ui/game_over_screen.tscn" id="11_game_over_screen"]
 [ext_resource type="PackedScene" uid="uid://b2lscfy2w3ey4" path="res://scenes/ui/gameplay_hud.tscn" id="13_hud"]
 [ext_resource type="Script" uid="uid://c3xwdt8ewoc5w" path="res://scenes/skill_item/skill_item_spawner.gd" id="14_spawner"]
+[ext_resource type="PackedScene" uid="uid://pause_screen_tscn" path="res://scenes/ui/pause_screen.tscn" id="15_pause_screen"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_sky"]
 sky_top_color = Color(0.384314, 0.454902, 0.54902, 1)
@@ -118,6 +119,8 @@ offset_top = 0.0
 offset_bottom = 0.0
 
 [node name="GameOverPanel" parent="UI" unique_id=1748702769 instance=ExtResource("11_game_over_screen")]
+
+[node name="PausePanel" parent="UI" unique_id=2847391023 instance=ExtResource("15_pause_screen")]
 
 [node name="GameManager" type="Node3D" parent="." unique_id=184800071]
 script = ExtResource("5_1gmgm")
