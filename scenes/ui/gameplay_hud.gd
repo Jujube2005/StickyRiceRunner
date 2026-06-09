@@ -198,7 +198,13 @@ func _on_pause_pressed():
 		get_tree().paused = !get_tree().paused
 
 func _on_settings_pressed():
-	pass
+	# Prevent opening multiple times
+	if get_tree().current_scene.find_child("SettingsPopup", true, false):
+		return
+	var settings_scene = preload("res://scenes/ui/settings_popup.tscn")
+	var settings = settings_scene.instantiate()
+	get_parent().add_child(settings)  # Add to UI CanvasLayer
+	get_tree().paused = true
 
 func _on_p1_slot1_pressed():
 	if player1 and player1.has_method("use_skill_at_slot"):

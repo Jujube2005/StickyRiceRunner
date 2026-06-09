@@ -1,0 +1,139 @@
+[gd_scene format=3 uid="uid://b2bf1386hh8a7"]
+
+[ext_resource type="Script" uid="uid://cpryia3hn8smk" path="res://scenes/shared_scripts/settings_popup.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://o60phmi31ppl" path="res://assets/textures/UI/Buttons/setting_popup.png" id="2_bg"]
+[ext_resource type="Texture2D" uid="uid://hasfww1lxfdx" path="res://assets/textures/UI/Buttons/ok.png" id="8_ok"]
+[ext_resource type="Texture2D" uid="uid://bx1bvstpk3k0k" path="res://assets/textures/UI/Buttons/btn_menu.png" id="9_menu"]
+
+[node name="SettingsPopup" type="Control" unique_id=1629625829]
+process_mode = 3
+z_index = 25
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_script")
+
+[node name="Backdrop" type="ColorRect" parent="." unique_id=59358279]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.04, 0.05, 0.09, 0.6)
+
+[node name="Board" type="TextureRect" parent="." unique_id=377740891]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -230.0
+offset_top = -250.0
+offset_right = 230.0
+offset_bottom = 250.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(230, 250)
+texture = ExtResource("2_bg")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Content" type="VBoxContainer" parent="Board" unique_id=1355683809]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -103.0
+offset_top = -103.999985
+offset_right = 164.0
+offset_bottom = 36.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.9063848, 0.9063848)
+theme_override_constants/separation = 20
+
+[node name="Master" type="HBoxContainer" parent="Board/Content" unique_id=724954978]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="MasterSlider" type="HSlider" parent="Board/Content/Master" unique_id=1918960321]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+max_value = 1.0
+step = 0.05
+value = 0.8
+
+[node name="Music" type="HBoxContainer" parent="Board/Content" unique_id=184135014]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="MusicSlider" type="HSlider" parent="Board/Content/Music" unique_id=86726120]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+max_value = 1.0
+step = 0.05
+value = 0.8
+
+[node name="SFX" type="HBoxContainer" parent="Board/Content" unique_id=1861993759]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="SFXSlider" type="HSlider" parent="Board/Content/SFX" unique_id=1931771961]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+max_value = 1.0
+step = 0.05
+value = 0.8
+
+[node name="Screen" type="HBoxContainer" parent="Board/Content" unique_id=860895379]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="FullscreenSwitch" type="TextureButton" parent="Board/Content/Screen" unique_id=1867716292]
+custom_minimum_size = Vector2(80, 32)
+layout_mode = 2
+size_flags_vertical = 4
+toggle_mode = true
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="ButtonBox" type="HBoxContainer" parent="Board" unique_id=1074716930]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -107.0
+offset_top = -160.0
+offset_right = 93.0
+offset_bottom = -70.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="BtnOk" type="TextureButton" parent="Board/ButtonBox" unique_id=686308985]
+custom_minimum_size = Vector2(75, 75)
+layout_mode = 2
+texture_normal = ExtResource("8_ok")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="BtnClose" type="TextureButton" parent="Board/ButtonBox" unique_id=327388154]
+custom_minimum_size = Vector2(75, 75)
+layout_mode = 2
+texture_normal = ExtResource("9_menu")
+ignore_texture_size = true
+stretch_mode = 5
