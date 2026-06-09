@@ -8,9 +8,9 @@
 [ext_resource type="Script" uid="uid://t3xm3mhhixq0" path="res://scenes/shared_scripts/game_manager.gd" id="5_1gmgm"]
 [ext_resource type="Script" uid="uid://dbr2pcwj4k6wc" path="res://scenes/kratip/kratip_spawner.gd" id="5_4c57u"]
 [ext_resource type="PackedScene" uid="uid://2718haf4cta6" path="res://scenes/kratip/kratip.tscn" id="6_efxa6"]
-[ext_resource type="PackedScene" path="res://scenes/ui/game_over_screen.tscn" id="11_game_over_screen"]
+[ext_resource type="PackedScene" uid="uid://ben6hcwjmvht2" path="res://scenes/ui/game_over_screen.tscn" id="11_game_over_screen"]
 [ext_resource type="PackedScene" uid="uid://b2lscfy2w3ey4" path="res://scenes/ui/gameplay_hud.tscn" id="13_hud"]
-[ext_resource type="Script" path="res://scenes/skill_item/skill_item_spawner.gd" id="14_spawner"]
+[ext_resource type="Script" uid="uid://c3xwdt8ewoc5w" path="res://scenes/skill_item/skill_item_spawner.gd" id="14_spawner"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_sky"]
 sky_top_color = Color(0.384314, 0.454902, 0.54902, 1)
@@ -114,9 +114,10 @@ environment = SubResource("Environment_glow")
 
 [node name="GameplayHUD" parent="UI" unique_id=1361232565 instance=ExtResource("13_hud")]
 z_index = 5
+offset_top = 0.0
+offset_bottom = 0.0
 
 [node name="GameOverPanel" parent="UI" unique_id=1748702769 instance=ExtResource("11_game_over_screen")]
-z_index = 10
 
 [node name="GameManager" type="Node3D" parent="." unique_id=184800071]
 script = ExtResource("5_1gmgm")

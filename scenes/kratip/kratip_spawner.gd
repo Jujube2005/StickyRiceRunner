@@ -24,7 +24,7 @@ var player1 = null
 var player2 = null
 var spawn_z := 0.0
 var pool = []
-var max_pool_size := 40
+var max_pool_size := 80
 
 func _ready():
 	spawn_z = -20.0 # Start spawning ahead
@@ -43,6 +43,13 @@ func _process(_delta):
 		if !is_instance_valid(player1) or !is_instance_valid(player2): return
 
 	var lead_z = min(player1.global_position.z, player2.global_position.z)
+
+	# Auto-recycle kratips that are far behind both players (passed and uncollected)
+	var recycle_z = max(player1.global_position.z, player2.global_position.z) + 30.0
+	for k in pool:
+		if k.is_active and k.global_position.z > recycle_z:
+			k.deactivate()
+
 	if lead_z < spawn_z + 80:
 		spawn_pattern()
 

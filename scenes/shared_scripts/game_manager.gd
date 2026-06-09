@@ -59,6 +59,7 @@ func _spawn_players():
 	p1.jump_action = "p1_jump"
 	p1.skill_action = "p1_skill"
 	p1.defend_action = "p1_defend"
+	p1.game_manager = self
 	p1.position = Vector3(-3, 0, 0)
 	players_node.add_child(p1)
 	
@@ -72,6 +73,7 @@ func _spawn_players():
 	p2.jump_action = "p2_jump"
 	p2.skill_action = "p2_skill"
 	p2.defend_action = "p2_defend"
+	p2.game_manager = self
 	p2.position = Vector3(3, 0, 0)
 	players_node.add_child(p2)
 	

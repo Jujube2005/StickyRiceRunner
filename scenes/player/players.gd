@@ -71,6 +71,10 @@ func _ready():
 	start_z = global_position.z
 	_setup_shield_vfx()
 	
+	# Dynamically locate GameManager as fallback
+	if !game_manager and get_tree() and get_tree().current_scene:
+		game_manager = get_tree().current_scene.find_child("GameManager", true, false)
+	
 	# Auto-assign files based on character type if not set
 	_auto_assign_files()
 	

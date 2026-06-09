@@ -1,8 +1,40 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene format=3 uid="uid://ben6hcwjmvht2"]
 
-[ext_resource type="Script" path="res://scenes/shared_scripts/game_over_screen.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://clcvhvxnbq1a4" path="res://scenes/shared_scripts/game_over_screen.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://dqrq1t641d6eb" path="res://assets/textures/UI/Buttons/board_bg.png" id="2_board_bg"]
+[ext_resource type="Texture2D" uid="uid://4c3xqcv20k8" path="res://assets/textures/UI/Buttons/table.png" id="3_6cl0s"]
+[ext_resource type="Texture2D" uid="uid://b6vlevfi0brlb" path="res://assets/textures/UI/Buttons/title_header.png" id="3_title_header"]
+[ext_resource type="Texture2D" uid="uid://bd31mp72gxydr" path="res://assets/textures/UI/Buttons/avatar_yellow.png" id="4_avatar_yellow"]
+[ext_resource type="Texture2D" uid="uid://dq7xbn86me4qp" path="res://assets/textures/UI/Buttons/rice_bar_orange.png" id="5_rice_bar_orange"]
+[ext_resource type="Texture2D" uid="uid://dmrs23yo316wc" path="res://assets/textures/UI/Buttons/progress_fill_orange.png" id="6_progress_fill_orange"]
+[ext_resource type="Texture2D" uid="uid://cs168omiukq53" path="res://assets/textures/UI/Buttons/avatar_green.png" id="8_avatar_green"]
+[ext_resource type="Texture2D" uid="uid://b3nrbryfblcqo" path="res://assets/textures/UI/Buttons/rice_bar_green.png" id="9_rice_bar_green"]
+[ext_resource type="Texture2D" uid="uid://bccy3dy3l2ofr" path="res://assets/textures/UI/Backgrounds/kratib.png" id="9_w1p06"]
+[ext_resource type="Texture2D" uid="uid://dttul3r8f2cal" path="res://assets/textures/UI/Buttons/progress_fill_green.png" id="10_progress_fill_green"]
+[ext_resource type="Texture2D" uid="uid://3ibk5pytdjb4" path="res://assets/textures/UI/Buttons/btn_restart.png" id="11_btn_restart"]
+[ext_resource type="Texture2D" uid="uid://ddlfr5ngk7i1a" path="res://assets/textures/UI/Buttons/btn_play.png" id="12_btn_play"]
+[ext_resource type="Texture2D" uid="uid://bx1bvstpk3k0k" path="res://assets/textures/UI/Buttons/btn_menu.png" id="13_btn_menu"]
+[ext_resource type="FontFile" uid="uid://2d6rvw7lnbb6" path="res://assets/textures/UI/Font/Mitr/Mitr-Bold.ttf" id="14_font"]
 
-[node name="GameOverPanel" type="Panel"]
+[sub_resource type="LabelSettings" id="LabelSettings_player"]
+font = ExtResource("14_font")
+font_size = 22
+outline_size = 6
+outline_color = Color(0.25, 0.15, 0.05, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_winner"]
+font = ExtResource("14_font")
+font_size = 20
+font_color = Color(1, 0.84, 0, 1)
+outline_size = 6
+outline_color = Color(0.25, 0.15, 0.05, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_text"]
+font = ExtResource("14_font")
+font_size = 18
+font_color = Color(0.35, 0.22, 0.1, 1)
+
+[node name="GameOverPanel" type="Panel" unique_id=1660862255]
 z_index = 10
 anchors_preset = 15
 anchor_right = 1.0
@@ -11,61 +43,250 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_script")
 
-[node name="WinnerLabel" type="Label" parent="."]
+[node name="Backdrop" type="ColorRect" parent="." unique_id=687387598]
 layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.5
-anchor_top = 0.25
-anchor_right = 0.5
-anchor_bottom = 0.25
-offset_left = -150.0
-offset_top = -20.0
-offset_right = 150.0
-offset_bottom = 20.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
+color = Color(0.04, 0.05, 0.09, 0.75)
 
-[node name="FinalScoreLabel" type="Label" parent="."]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.5
-anchor_top = 0.4
-anchor_right = 0.5
-anchor_bottom = 0.4
-offset_left = -200.0
-offset_top = -15.0
-offset_right = 200.0
-offset_bottom = 15.0
-grow_horizontal = 2
-grow_vertical = 2
-text = "P1 Score: 0   P2 Score: 0"
-
-[node name="DistanceLabel" type="Label" parent="."]
+[node name="Board" type="TextureRect" parent="." unique_id=1056395732]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -200.0
-offset_top = -15.0
-offset_right = 200.0
-offset_bottom = 15.0
+offset_left = -304.0
+offset_top = -424.0
+offset_right = 309.0
+offset_bottom = 399.0
 grow_horizontal = 2
 grow_vertical = 2
-text = "P1 Distance: 0 m   P2 Distance: 0 m"
+scale = Vector2(0.51472116, 0.5135314)
+pivot_offset = Vector2(306.5, 411.5)
+size_flags_horizontal = 4
+texture = ExtResource("2_board_bg")
+stretch_mode = 5
 
-[node name="RetryButton" type="Button" parent="."]
+[node name="TextureRect" type="TextureRect" parent="Board" unique_id=908415128]
+layout_mode = 0
+offset_left = 13.544189
+offset_top = 32.651695
+offset_right = 893.27185
+offset_bottom = 981.6517
+scale = Vector2(0.62417054, 0.6441224)
+texture = ExtResource("3_6cl0s")
+
+[node name="TitleHeader" type="TextureRect" parent="Board" unique_id=287351257]
 layout_mode = 1
-anchors_preset = -1
+anchors_preset = 5
 anchor_left = 0.5
-anchor_top = 0.7
 anchor_right = 0.5
-anchor_bottom = 0.7
-offset_left = -80.0
-offset_top = -20.0
-offset_right = 80.0
-offset_bottom = 20.0
+offset_left = -434.5
+offset_top = -40.0
+offset_right = 434.5
+offset_bottom = 197.0
 grow_horizontal = 2
-grow_vertical = 2
-text = "Retry"
+mouse_filter = 2
+texture = ExtResource("3_title_header")
+stretch_mode = 5
+
+[node name="P1Stats" type="Control" parent="Board" unique_id=2074170458]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 65.693565
+offset_top = 196.76816
+offset_right = -54.306458
+offset_bottom = 376.76816
+grow_horizontal = 2
+
+[node name="Avatar" type="TextureRect" parent="Board/P1Stats" unique_id=553038503]
+layout_mode = 0
+offset_left = -19.939209
+offset_top = 10.0
+offset_right = 70.06079
+offset_bottom = 100.0
+texture = ExtResource("4_avatar_yellow")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Name" type="Label" parent="Board/P1Stats" unique_id=1559667989]
+layout_mode = 0
+offset_left = 90.06079
+offset_top = 5.0
+offset_right = 240.06079
+offset_bottom = 41.0
+text = "PLAYER 1"
+label_settings = SubResource("LabelSettings_player")
+
+[node name="WinnerTag" type="Label" parent="Board/P1Stats" unique_id=1106040717]
+visible = false
+layout_mode = 0
+offset_left = 230.0
+offset_top = 5.0
+offset_right = 350.0
+offset_bottom = 40.0
+text = "👑 WINNER"
+label_settings = SubResource("LabelSettings_winner")
+
+[node name="DistBar" type="TextureProgressBar" parent="Board/P1Stats" unique_id=142551815]
+layout_mode = 0
+offset_left = 90.06079
+offset_top = 45.0
+offset_right = 310.0608
+offset_bottom = 75.0
+scale = Vector2(1.3574485, 1.3574485)
+nine_patch_stretch = true
+texture_under = ExtResource("5_rice_bar_orange")
+texture_progress = ExtResource("6_progress_fill_orange")
+
+[node name="DistVal" type="Label" parent="Board/P1Stats" unique_id=1243865507]
+layout_mode = 0
+offset_left = 405.21698
+offset_top = 49.60141
+offset_right = 505.21698
+offset_bottom = 79.60141
+text = "0m"
+label_settings = SubResource("LabelSettings_text")
+
+[node name="KratibIcon" type="TextureRect" parent="Board/P1Stats" unique_id=281930284]
+layout_mode = 0
+offset_left = 90.06056
+offset_top = 90.0
+offset_right = 130.06056
+offset_bottom = 130.0
+scale = Vector2(2.3094106, 2.3094106)
+texture = ExtResource("9_w1p06")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="KratibVal" type="Label" parent="Board/P1Stats" unique_id=61254616]
+layout_mode = 0
+offset_left = 194.17923
+offset_top = 121.2614
+offset_right = 294.17923
+offset_bottom = 161.2614
+text = "0"
+label_settings = SubResource("LabelSettings_text")
+
+[node name="P2Stats" type="Control" parent="Board" unique_id=2021971595]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 65.693565
+offset_top = 426.76816
+offset_right = -54.306458
+offset_bottom = 606.7682
+grow_horizontal = 2
+
+[node name="Avatar" type="TextureRect" parent="Board/P2Stats" unique_id=737590549]
+layout_mode = 0
+offset_left = -19.939209
+offset_top = -14.5407715
+offset_right = 70.06079
+offset_bottom = 75.45923
+texture = ExtResource("8_avatar_green")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Name" type="Label" parent="Board/P2Stats" unique_id=593905599]
+layout_mode = 0
+offset_left = 90.06079
+offset_top = -19.540833
+offset_right = 240.06079
+offset_bottom = 16.459167
+text = "PLAYER 2"
+label_settings = SubResource("LabelSettings_player")
+
+[node name="WinnerTag" type="Label" parent="Board/P2Stats" unique_id=1829087179]
+visible = false
+layout_mode = 0
+offset_left = 230.0
+offset_top = 5.0
+offset_right = 350.0
+offset_bottom = 40.0
+text = "👑 WINNER"
+label_settings = SubResource("LabelSettings_winner")
+
+[node name="DistBar" type="TextureProgressBar" parent="Board/P2Stats" unique_id=1081663879]
+layout_mode = 0
+offset_left = 90.06055
+offset_top = 20.459229
+offset_right = 310.06055
+offset_bottom = 50.45923
+scale = Vector2(1.3681154, 1.3681154)
+nine_patch_stretch = true
+texture_under = ExtResource("9_rice_bar_green")
+texture_progress = ExtResource("10_progress_fill_green")
+
+[node name="DistVal" type="Label" parent="Board/P2Stats" unique_id=2058328956]
+layout_mode = 0
+offset_left = 406.7508
+offset_top = 25.060638
+offset_right = 506.7508
+offset_bottom = 55.06064
+text = "0m"
+label_settings = SubResource("LabelSettings_text")
+
+[node name="KratibIcon" type="TextureRect" parent="Board/P2Stats" unique_id=84706776]
+layout_mode = 0
+offset_left = 90.06076
+offset_top = 65.45917
+offset_right = 130.06076
+offset_bottom = 105.45917
+scale = Vector2(2.3168194, 2.3168194)
+texture = ExtResource("9_w1p06")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="KratibVal" type="Label" parent="Board/P2Stats" unique_id=471393713]
+layout_mode = 0
+offset_left = 194.17923
+offset_top = 99.62252
+offset_right = 294.17923
+offset_bottom = 139.62253
+text = "0"
+label_settings = SubResource("LabelSettings_text")
+
+[node name="ButtonBox" type="HBoxContainer" parent="Board" unique_id=1051761361]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -306.7598
+offset_top = -190.633
+offset_right = 133.2402
+offset_bottom = -95.632996
+grow_horizontal = 2
+grow_vertical = 0
+scale = Vector2(1.3681117, 1.3681117)
+theme_override_constants/separation = 25
+alignment = 1
+
+[node name="BtnRestart" type="TextureButton" parent="Board/ButtonBox" unique_id=1915581035]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 2
+texture_normal = ExtResource("11_btn_restart")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="BtnPlay" type="TextureButton" parent="Board/ButtonBox" unique_id=987187520]
+custom_minimum_size = Vector2(95, 95)
+layout_mode = 2
+texture_normal = ExtResource("12_btn_play")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="BtnMenu" type="TextureButton" parent="Board/ButtonBox" unique_id=2112145401]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 2
+texture_normal = ExtResource("13_btn_menu")
+ignore_texture_size = true
+stretch_mode = 5
