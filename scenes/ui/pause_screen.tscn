@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://b6ihn6elg6lrm" path="res://scenes/shared_scripts/pause_screen.gd" id="1_script"]
 [ext_resource type="Texture2D" uid="uid://dr4g0lewx4iau" path="res://assets/textures/UI/Buttons/popup_paused.png" id="2_bg"]
 [ext_resource type="Texture2D" uid="uid://ddlfr5ngk7i1a" path="res://assets/textures/UI/Buttons/btn_play.png" id="3_resume"]
+[ext_resource type="FontFile" uid="uid://2d6rvw7lnbb6" path="res://assets/textures/UI/Font/Mitr/Mitr-Bold.ttf" id="3_wrw5x"]
 [ext_resource type="Texture2D" uid="uid://bx1bvstpk3k0k" path="res://assets/textures/UI/Buttons/btn_menu.png" id="4_menu"]
 
 [node name="PausePanel" type="Control" unique_id=2099992426]
@@ -43,6 +44,19 @@ pivot_offset = Vector2(190, 200)
 texture = ExtResource("2_bg")
 expand_mode = 1
 stretch_mode = 5
+
+[node name="Label" type="Label" parent="Board" unique_id=87234942]
+layout_mode = 0
+offset_left = 63.0
+offset_top = 156.0
+offset_right = 300.0
+offset_bottom = 223.0
+theme_override_colors/font_color = Color(0.35686275, 0.21176471, 0.101960786, 1)
+theme_override_colors/font_outline_color = Color(0.35686275, 0.21176471, 0.101960786, 1)
+theme_override_constants/outline_size = 1
+theme_override_fonts/font = ExtResource("3_wrw5x")
+theme_override_font_sizes/font_size = 42
+text = "Rice Break!"
 
 [node name="ButtonBox" type="HBoxContainer" parent="Board" unique_id=22647290]
 layout_mode = 0

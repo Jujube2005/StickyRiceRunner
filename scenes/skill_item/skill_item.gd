@@ -52,6 +52,6 @@ func _on_body_entered(body):
 	var skill_added: bool = body.add_skill(skill_name)
 	if skill_added:
 		# VFX + SFX
-		VfxManager.spawn("skill_use", global_position)
+		#VfxManager.spawn("skill_use", global_position)
 		AudioManager.play_sfx("skill_pickup")
 		deactivate()

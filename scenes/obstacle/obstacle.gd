@@ -46,7 +46,7 @@ func _on_body_entered(body) -> void:
 	if node_body and node_body.has_method("stun"):
 		node_body.call("stun", 2.0)
 		# VFX at player's chest position
-		VfxManager.spawn("obstacle_hit", node_body.global_position + Vector3(0, 1.0, 0))
+		#VfxManager.spawn("obstacle_hit", node_body.global_position + Vector3(0, 1.0, 0))
 		AudioManager.play_sfx("obstacle_hit")
 		# Instead of queue_free, we deactivate
 		deactivate()

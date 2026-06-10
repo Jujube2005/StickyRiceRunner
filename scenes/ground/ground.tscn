@@ -1,283 +1,57 @@
 [gd_scene format=3 uid="uid://cfi32xwqvv463"]
 
+[ext_resource type="PackedScene" uid="uid://5puofchkhk8s" path="res://assets/models/ground/road01.glb" id="1_au3k8"]
+[ext_resource type="PackedScene" uid="uid://shvkfhn332ud" path="res://assets/models/ground/isanthaihouse.glb" id="2_rrkwn"]
+[ext_resource type="PackedScene" uid="uid://cj53l3mrnwg41" path="res://assets/models/ground/homekorat.glb" id="3_xmv3o"]
+
 [sub_resource type="BoxShape3D" id="BoxShape3D_lv0v5"]
-size = Vector3(60, 1, 20)
+size = Vector3(30, 2, 10.4)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_asphalt"]
-albedo_color = Color(0.12, 0.12, 0.12, 1)
-roughness = 0.8
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dirt"]
+albedo_color = Color(0.42, 0.33, 0.22, 1)
 
-[sub_resource type="BoxMesh" id="BoxMesh_asphalt"]
-material = SubResource("StandardMaterial3D_asphalt")
-size = Vector3(9, 1, 20)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_grass"]
-albedo_color = Color(0.15, 0.35, 0.1, 1)
-
-[sub_resource type="BoxMesh" id="BoxMesh_grass"]
-material = SubResource("StandardMaterial3D_grass")
-size = Vector3(30, 0.8, 20)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yellow"]
-albedo_color = Color(1, 0.8, 0, 1)
-emission_enabled = true
-emission = Color(1, 0.8, 0, 1)
-emission_energy_multiplier = 0.2
-
-[sub_resource type="BoxMesh" id="BoxMesh_line"]
-material = SubResource("StandardMaterial3D_yellow")
-size = Vector3(0.15, 0.02, 2)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_white"]
-albedo_color = Color(0.9, 0.9, 0.9, 1)
-
-[sub_resource type="BoxMesh" id="BoxMesh_side_line"]
-material = SubResource("StandardMaterial3D_white")
-size = Vector3(0.2, 0.02, 20)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ritual_path"]
-albedo_color = Color(1, 0.45, 0.1, 1)
-metallic = 0.4
-roughness = 0.5
-emission_enabled = true
-emission = Color(1, 0.3, 0, 1)
-emission_energy_multiplier = 0.45
-
-[sub_resource type="BoxMesh" id="BoxMesh_ritual_path"]
-material = SubResource("StandardMaterial3D_ritual_path")
-size = Vector3(2.8, 0.02, 20)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pole"]
-albedo_color = Color(0.45, 0.3, 0.15, 1)
-roughness = 0.9
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_pole"]
-material = SubResource("StandardMaterial3D_pole")
-top_radius = 0.04
-bottom_radius = 0.04
-height = 2.0
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rocket_body"]
-albedo_color = Color(0.95, 0.15, 0.25, 1)
-metallic = 0.7
-roughness = 0.2
-emission_enabled = true
-emission = Color(0.8, 0.1, 0.2, 1)
-emission_energy_multiplier = 0.3
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_rocket_body"]
-material = SubResource("StandardMaterial3D_rocket_body")
-top_radius = 0.09
-bottom_radius = 0.09
-height = 0.7
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rocket_nose"]
-albedo_color = Color(1, 0.8, 0, 1)
-metallic = 0.9
-roughness = 0.1
-emission_enabled = true
-emission = Color(1, 0.75, 0, 1)
-emission_energy_multiplier = 0.4
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_rocket_nose"]
-material = SubResource("StandardMaterial3D_rocket_nose")
-top_radius = 0.0
-bottom_radius = 0.11
-height = 0.25
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tung"]
-albedo_color = Color(1, 0.15, 0.5, 1)
-roughness = 0.8
-
-[sub_resource type="BoxMesh" id="BoxMesh_tung"]
-material = SubResource("StandardMaterial3D_tung")
-size = Vector3(0.01, 1.0, 0.25)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_spark"]
-transparency = 1
-blend_mode = 1
-shading_mode = 0
-albedo_color = Color(1, 0.65, 0.2, 0.8)
-billboard_mode = 3
-particles_anim_h_frames = 1
-particles_anim_v_frames = 1
-particles_anim_loop = false
-
-[sub_resource type="QuadMesh" id="QuadMesh_spark"]
-material = SubResource("StandardMaterial3D_spark")
-size = Vector2(0.09, 0.09)
-
-[sub_resource type="Curve" id="Curve_spark"]
-_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.2, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
-point_count = 3
+[sub_resource type="BoxMesh" id="BoxMesh_dirt"]
+material = SubResource("StandardMaterial3D_dirt")
+size = Vector3(15, 0.5, 10.4)
 
 [node name="Ground" type="StaticBody3D" unique_id=1642254633]
 collision_layer = 6
 collision_mask = 0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1372169769]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
 shape = SubResource("BoxShape3D_lv0v5")
 
-[node name="RoadBase" type="MeshInstance3D" parent="." unique_id=616486246]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
-mesh = SubResource("BoxMesh_asphalt")
+[node name="road01" parent="." unique_id=1049326560 instance=ExtResource("1_au3k8")]
+transform = Transform3D(-3.715468e-07, 0, 6, 0, 6, 0, -8.5, 0, -2.6226832e-07, -1.95, 0, 0)
 
-[node name="GrassLeft" type="MeshInstance3D" parent="RoadBase"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19.5, -0.1, 0)
-mesh = SubResource("BoxMesh_grass")
+[node name="road02" parent="." unique_id=764681803 instance=ExtResource("1_au3k8")]
+transform = Transform3D(-3.715468e-07, 0, 6, 0, 6, 0, -8.5, 0, -2.6226832e-07, 2, 0, 0)
 
-[node name="GrassRight" type="MeshInstance3D" parent="RoadBase"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.5, -0.1, 0)
-mesh = SubResource("BoxMesh_grass")
+[node name="SideGroundLeft" type="MeshInstance3D" parent="." unique_id=888888881]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1.6, -11.554779, -0.25, 0)
+mesh = SubResource("BoxMesh_dirt")
 
-[node name="YellowLinesL" type="Node3D" parent="RoadBase" unique_id=2053231936]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 0.5, 0)
+[node name="SideGroundRight" type="MeshInstance3D" parent="." unique_id=888888882]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1.6, 11.5, -0.25, 0)
+mesh = SubResource("BoxMesh_dirt")
 
-[node name="Line1" type="MeshInstance3D" parent="RoadBase/YellowLinesL" unique_id=446001168]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, -7.5)
-mesh = SubResource("BoxMesh_line")
+[node name="SceneryPoints" type="Node3D" parent="." unique_id=1760085451]
 
-[node name="Line2" type="MeshInstance3D" parent="RoadBase/YellowLinesL" unique_id=2132403501]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, -2.5)
-mesh = SubResource("BoxMesh_line")
+[node name="Left" type="Node3D" parent="SceneryPoints" unique_id=2126371196]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0, 0)
 
-[node name="Line3" type="MeshInstance3D" parent="RoadBase/YellowLinesL" unique_id=1008002381]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, 2.5)
-mesh = SubResource("BoxMesh_line")
+[node name="Right" type="Node3D" parent="SceneryPoints" unique_id=39167907]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0, 0)
 
-[node name="Line4" type="MeshInstance3D" parent="RoadBase/YellowLinesL" unique_id=2115668814]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, 7.5)
-mesh = SubResource("BoxMesh_line")
+[node name="LeftFar" type="Node3D" parent="SceneryPoints" unique_id=2427372]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18, 0, 0)
 
-[node name="YellowLinesR" type="Node3D" parent="RoadBase" unique_id=873221839]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0.5, 0)
+[node name="RightFar" type="Node3D" parent="SceneryPoints" unique_id=651211548]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 0, 0)
 
-[node name="Line1" type="MeshInstance3D" parent="RoadBase/YellowLinesR" unique_id=827852663]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, -7.5)
-mesh = SubResource("BoxMesh_line")
+[node name="Sketchfab_Scene2" parent="." unique_id=667169679 instance=ExtResource("2_rrkwn")]
+transform = Transform3D(-0.65314233, 0, -7.853694e-08, 0, 1.4577296, 0, 5.7099516e-08, 0, -0.8983579, 7.307415, -0.17298007, 4.8100424)
 
-[node name="Line2" type="MeshInstance3D" parent="RoadBase/YellowLinesR" unique_id=1148135353]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, -2.5)
-mesh = SubResource("BoxMesh_line")
-
-[node name="Line3" type="MeshInstance3D" parent="RoadBase/YellowLinesR" unique_id=494062464]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, 2.5)
-mesh = SubResource("BoxMesh_line")
-
-[node name="Line4" type="MeshInstance3D" parent="RoadBase/YellowLinesR" unique_id=1232128165]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, 7.5)
-mesh = SubResource("BoxMesh_line")
-
-[node name="WhiteLineL" type="MeshInstance3D" parent="RoadBase" unique_id=1319512345]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.4, 0.51, 0)
-mesh = SubResource("BoxMesh_side_line")
-
-[node name="WhiteLineR" type="MeshInstance3D" parent="RoadBase" unique_id=240781250]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.4, 0.51, 0)
-mesh = SubResource("BoxMesh_side_line")
-
-[node name="RitualProps" type="Node3D" parent="RoadBase" unique_id=9928391]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.35, 0.5, 0)
-
-[node name="Prop1" type="Node3D" parent="RoadBase/RitualProps" unique_id=9928392]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -6.0)
-
-[node name="Pole" type="MeshInstance3D" parent="RoadBase/RitualProps/Prop1" unique_id=9928393]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0, 0)
-mesh = SubResource("CylinderMesh_pole")
-
-[node name="Rocket" type="Node3D" parent="RoadBase/RitualProps/Prop1" unique_id=9928394]
-transform = Transform3D(1, 0, 0, 0, 0.9659258, -0.2588190, 0, 0.2588190, 0.9659258, 0, 1.8, 0)
-
-[node name="RocketBody" type="MeshInstance3D" parent="RoadBase/RitualProps/Prop1/Rocket" unique_id=9928395]
-mesh = SubResource("CylinderMesh_rocket_body")
-
-[node name="RocketNose" type="MeshInstance3D" parent="RoadBase/RitualProps/Prop1/Rocket" unique_id=9928396]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
-mesh = SubResource("CylinderMesh_rocket_nose")
-
-[node name="Tung" type="MeshInstance3D" parent="RoadBase/RitualProps/Prop1" unique_id=9928397]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 0.15)
-mesh = SubResource("BoxMesh_tung")
-
-[node name="Prop2" type="Node3D" parent="RoadBase/RitualProps" unique_id=9928398]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 6.0)
-
-[node name="Pole" type="MeshInstance3D" parent="RoadBase/RitualProps/Prop2" unique_id=9928399]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0, 0)
-mesh = SubResource("CylinderMesh_pole")
-
-[node name="Rocket" type="Node3D" parent="RoadBase/RitualProps/Prop2" unique_id=9928400]
-transform = Transform3D(1, 0, 0, 0, 0.9659258, -0.2588190, 0, 0.2588190, 0.9659258, 0, 1.8, 0)
-
-[node name="RocketBody" type="MeshInstance3D" parent="RoadBase/RitualProps/Prop2/Rocket" unique_id=9928401]
-mesh = SubResource("CylinderMesh_rocket_body")
-
-[node name="RocketNose" type="MeshInstance3D" parent="RoadBase/RitualProps/Prop2/Rocket" unique_id=9928402]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
-mesh = SubResource("CylinderMesh_rocket_nose")
-
-[node name="Tung" type="MeshInstance3D" parent="RoadBase/RitualProps/Prop2" unique_id=9928403]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 0.15)
-mesh = SubResource("BoxMesh_tung")
-
-[node name="RitualPropsLeft" type="Node3D" parent="RoadBase" unique_id=9928405]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.35, 0.5, 0)
-
-[node name="Prop1" type="Node3D" parent="RoadBase/RitualPropsLeft" unique_id=9928406]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -6.0)
-
-[node name="Pole" type="MeshInstance3D" parent="RoadBase/RitualPropsLeft/Prop1" unique_id=9928407]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0, 0)
-mesh = SubResource("CylinderMesh_pole")
-
-[node name="Rocket" type="Node3D" parent="RoadBase/RitualPropsLeft/Prop1" unique_id=9928408]
-transform = Transform3D(1, 0, 0, 0, 0.9659258, -0.2588190, 0, 0.2588190, 0.9659258, 0, 1.8, 0)
-
-[node name="RocketBody" type="MeshInstance3D" parent="RoadBase/RitualPropsLeft/Prop1/Rocket" unique_id=9928409]
-mesh = SubResource("CylinderMesh_rocket_body")
-
-[node name="RocketNose" type="MeshInstance3D" parent="RoadBase/RitualPropsLeft/Prop1/Rocket" unique_id=9928410]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
-mesh = SubResource("CylinderMesh_rocket_nose")
-
-[node name="Tung" type="MeshInstance3D" parent="RoadBase/RitualPropsLeft/Prop1" unique_id=9928411]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 0.15)
-mesh = SubResource("BoxMesh_tung")
-
-[node name="Prop2" type="Node3D" parent="RoadBase/RitualPropsLeft" unique_id=9928412]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 6.0)
-
-[node name="Pole" type="MeshInstance3D" parent="RoadBase/RitualPropsLeft/Prop2" unique_id=9928413]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0, 0)
-mesh = SubResource("CylinderMesh_pole")
-
-[node name="Rocket" type="Node3D" parent="RoadBase/RitualPropsLeft/Prop2" unique_id=9928414]
-transform = Transform3D(1, 0, 0, 0, 0.9659258, -0.2588190, 0, 0.2588190, 0.9659258, 0, 1.8, 0)
-
-[node name="RocketBody" type="MeshInstance3D" parent="RoadBase/RitualPropsLeft/Prop2/Rocket" unique_id=9928415]
-mesh = SubResource("CylinderMesh_rocket_body")
-
-[node name="RocketNose" type="MeshInstance3D" parent="RoadBase/RitualPropsLeft/Prop2/Rocket" unique_id=9928416]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
-mesh = SubResource("CylinderMesh_rocket_nose")
-
-[node name="Tung" type="MeshInstance3D" parent="RoadBase/RitualPropsLeft/Prop2" unique_id=9928417]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 0.15)
-mesh = SubResource("BoxMesh_tung")
-
-
-[node name="SceneryPoints" type="Node3D" parent="."]
-
-[node name="Left" type="Marker3D" parent="SceneryPoints"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 1, 0)
-
-[node name="Right" type="Marker3D" parent="SceneryPoints"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 1, 0)
-
-[node name="LeftFar" type="Marker3D" parent="SceneryPoints"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 1, -5)
-
-[node name="RightFar" type="Marker3D" parent="SceneryPoints"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 1, 5)
+[node name="Sketchfab_Scene3" parent="." unique_id=113104191 instance=ExtResource("3_xmv3o")]
+transform = Transform3D(0.00018482498, -0.44226477, -0.00016848404, -0.0004775619, -7.777e-05, 0.9587385, -0.90344095, -9.043628e-05, -0.00050682743, 0.7646651, -0.20652199, 14.499462)

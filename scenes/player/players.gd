@@ -19,6 +19,7 @@ var lane = 0
 var lane_distance = 3.0
 
 var alive = true
+var finished = false
 var stun_timer := 0.0
 var kratips_collected := 0
 var penalties := 0
@@ -214,6 +215,15 @@ func _physics_process(delta):
 	if !alive:
 		return
 
+	if finished:
+		velocity.z = 0
+		if !is_on_floor():
+			velocity.y -= GRAVITY * delta
+		move_and_slide()
+		if anim_player:
+			anim_player.active = false
+		return
+
 	_update_effects(delta)
 
 	var speed_factor = 1.0
@@ -380,9 +390,21 @@ func _physics_process(delta):
 		$Model.global_transform.origin.y = global_transform.origin.y + model_offset.y
 
 	if position.y < -10:
-		# No death, so teleport back to lane 0 surface
+		# Teleport back to lane 0 surface
 		position.y = 2.0
 		position.x = 0.0
+		
+		# Catch up to the other player to prevent falling into an infinite void loop
+		# which would permanently freeze the road spawner!
+		var other_player = null
+		if name == "Player1" and get_tree().current_scene:
+			other_player = get_tree().current_scene.find_child("Player2", true, false)
+		elif name == "Player2" and get_tree().current_scene:
+			other_player = get_tree().current_scene.find_child("Player1", true, false)
+			
+		if is_instance_valid(other_player) and global_position.z > other_player.global_position.z + 10.0:
+			global_position.z = other_player.global_position.z + 10.0
+			
 		stun(2.0)
 
 func _update_effects(delta):
@@ -522,9 +544,7 @@ func add_skill(skill_name: String) -> bool:
 		emit_signal("skills_changed", skills)
 		set_warning("เก็บได้: " + skill_name)
 		# Clear warning message after 1.5s
-		get_tree().create_timer(1.5).timeout.connect(func():
-			clear_warning("เก็บได้: " + skill_name)
-		)
+		get_tree().create_timer(1.5).timeout.connect(clear_warning.bind("เก็บได้: " + skill_name))
 		return true
 	return false
 
@@ -556,18 +576,14 @@ func use_skill_at_slot(slot_index: int):
 					"Pha Khao Ma":          AudioManager.play_sfx("shield_block")
 					_:                      AudioManager.play_sfx("skill_use")
 				# VFX
-				VfxManager.spawn("skill_use", global_position)
+				#VfxManager.spawn("skill_use", global_position)
 				set_warning("ใช้สกิล: " + skill_name)
 				# Clear warning message after 1.5s
-				get_tree().create_timer(1.5).timeout.connect(func():
-					clear_warning("ใช้สกิล: " + skill_name)
-				)
+				get_tree().create_timer(1.5).timeout.connect(clear_warning.bind("ใช้สกิล: " + skill_name))
 			else:
 				print(name, " skill ", skill_name, " is on global cooldown!")
 				set_warning("คูลดาวน์...")
-				get_tree().create_timer(1.0).timeout.connect(func():
-					clear_warning("คูลดาวน์...")
-				)
+				get_tree().create_timer(1.0).timeout.connect(clear_warning.bind("คูลดาวน์..."))
 
 func apply_prank(skill_name):
 	match skill_name:
@@ -616,11 +632,11 @@ func on_prank_state_updated(prank):
 		4: # BLOCKED
 			set_warning("ป้องได้แล้ว!")
 			# Auto-clear block message
-			get_tree().create_timer(1.5).timeout.connect(func(): clear_warning("ป้องได้แล้ว!"))
+			get_tree().create_timer(1.5).timeout.connect(clear_warning.bind("ป้องได้แล้ว!"))
 		3: # ACTIVE (Failed to block)
 			set_warning("ป้องกันบ่ทัน")
 			# Auto-clear fail message
-			get_tree().create_timer(1.5).timeout.connect(func(): clear_warning("ป้องกันบ่ทัน"))
+			get_tree().create_timer(1.5).timeout.connect(clear_warning.bind("ป้องกันบ่ทัน"))
 
 func set_warning(text):
 	emit_signal("warning_changed", text)
@@ -634,10 +650,7 @@ func set_warning(text):
 				break
 		if shield_slot != -1:
 			var slot_to_use = shield_slot
-			get_tree().create_timer(randf_range(0.2, 0.5)).timeout.connect(func():
-				if slot_to_use < skills.size() and skills[slot_to_use] == "Pha Khao Ma":
-					use_skill_at_slot(slot_to_use)
-			)
+			get_tree().create_timer(randf_range(0.2, 0.5)).timeout.connect(_bot_use_shield_delayed.bind(slot_to_use))
 	
 	# Visual feedback for warning/blocking
 	if text == "ป้องได้แล้ว!":
@@ -651,8 +664,12 @@ func set_warning(text):
 		tween_warn.tween_property($Model, "position:y", model_offset.y + 0.2, 0.1)
 		tween_warn.tween_property($Model, "position:y", model_offset.y, 0.1)
 
-func clear_warning(message_to_clear = ""):
-	emit_signal("warning_changed", "CLEAR:" + message_to_clear)
+func clear_warning(_message_to_clear = ""):
+	emit_signal("warning_changed", "")
+
+func _bot_use_shield_delayed(slot_to_use: int):
+	if slot_to_use < skills.size() and skills[slot_to_use] == "Pha Khao Ma":
+		use_skill_at_slot(slot_to_use)
 
 # --- Animation Helpers ---
 

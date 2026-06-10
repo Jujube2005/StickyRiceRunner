@@ -59,7 +59,7 @@ func _on_body_entered(body):
 			body.add_charge(value)
 		
 		# VFX + SFX
-		VfxManager.spawn("kratib_pickup", global_position)
+		#VfxManager.spawn("kratib_pickup", global_position)
 		AudioManager.play_sfx("pickup")
 		
 		# Pulse effect before deactivating (optional juice)

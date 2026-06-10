@@ -5,10 +5,10 @@
 [ext_resource type="Texture2D" uid="uid://dh6oan0e5pc1n" path="res://assets/textures/UI/Buttons/howtoplay_header.png" id="3_header"]
 [ext_resource type="Texture2D" uid="uid://e26vfcqmahao" path="res://assets/textures/UI/Buttons/howto_P1.png" id="4_p1"]
 [ext_resource type="Texture2D" uid="uid://efmvnl3q6xm8" path="res://assets/textures/UI/Buttons/howto_P2.png" id="5_p2"]
-[ext_resource type="Texture2D" uid="uid://2m440y1sbbdp" path="res://assets/textures/UI/Buttons/btn_back.png" id="6_btn_back"]
-
 [ext_resource type="FontFile" uid="uid://2d6rvw7lnbb6" path="res://assets/textures/UI/Font/Mitr/Mitr-Bold.ttf" id="7_font"]
+[ext_resource type="Texture2D" uid="uid://doahc1rh6sr4w" path="res://assets/textures/UI/Buttons/btn.png" id="7_lx1mu"]
 [ext_resource type="Texture2D" uid="uid://bwu1pxobu8j8i" path="res://assets/textures/UI/Backgrounds/BG.png" id="8_bg_main"]
+[ext_resource type="FontFile" uid="uid://iqch0hhb2rhf" path="res://assets/textures/UI/Font/Mitr/Mitr-Regular.ttf" id="9_ej186"]
 
 [node name="HowToPlay" type="Control" unique_id=946935040]
 layout_mode = 3
@@ -19,7 +19,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_script")
 
-[node name="Background" type="TextureRect" parent="."]
+[node name="Background" type="TextureRect" parent="." unique_id=919388117]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -74,12 +74,13 @@ anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-offset_left = -940.0
-offset_top = -166.5
-offset_bottom = 193.5
+offset_left = -1005.0
+offset_top = -180.5
+offset_right = -65.0
+offset_bottom = 179.5
 grow_horizontal = 0
 grow_vertical = 2
-scale = Vector2(0.777633, 0.777633)
+scale = Vector2(0.9116289, 0.9116289)
 theme_override_constants/separation = 40
 alignment = 1
 
@@ -129,6 +130,107 @@ alignment = 1
 unique_name_in_owner = true
 custom_minimum_size = Vector2(220, 80)
 layout_mode = 2
-texture_normal = ExtResource("6_btn_back")
+texture_normal = ExtResource("7_lx1mu")
 ignore_texture_size = true
 stretch_mode = 5
+
+[node name="Label" type="Label" parent="Panel/Footer" unique_id=1787513645]
+layout_mode = 0
+offset_left = 538.0
+offset_top = 34.0
+offset_right = 630.0
+offset_bottom = 89.0
+theme_override_colors/font_color = Color(0.9882353, 0.95686275, 0.8901961, 1)
+theme_override_colors/font_outline_color = Color(0.2901961, 0.15294118, 0.06666667, 1)
+theme_override_constants/outline_size = 20
+theme_override_fonts/font = ExtResource("7_font")
+theme_override_font_sizes/font_size = 32
+text = "BACK"
+
+[node name="Label" type="Label" parent="." unique_id=585754163]
+layout_mode = 0
+offset_left = 238.0
+offset_top = 287.0
+offset_right = 309.0
+offset_bottom = 328.0
+theme_override_colors/font_color = Color(0.29411766, 0.15686275, 0.06666667, 1)
+theme_override_fonts/font = ExtResource("7_font")
+theme_override_font_sizes/font_size = 26
+text = "MOVE"
+
+[node name="Label2" type="Label" parent="." unique_id=1651957185]
+layout_mode = 0
+offset_left = 237.0
+offset_top = 333.0
+offset_right = 308.0
+offset_bottom = 374.0
+theme_override_colors/font_color = Color(0.29411766, 0.15686275, 0.06666667, 1)
+theme_override_fonts/font = ExtResource("7_font")
+theme_override_font_sizes/font_size = 26
+text = "JUMP"
+
+[node name="Label3" type="Label" parent="." unique_id=1053174118]
+layout_mode = 0
+offset_left = 237.0
+offset_top = 375.0
+offset_right = 308.0
+offset_bottom = 416.0
+theme_override_colors/font_color = Color(0.29411766, 0.15686275, 0.06666667, 1)
+theme_override_fonts/font = ExtResource("7_font")
+theme_override_font_sizes/font_size = 26
+text = "Use Skill"
+
+[node name="Label4" type="Label" parent="." unique_id=1048431988]
+layout_mode = 0
+offset_left = 681.0
+offset_top = 288.0
+offset_right = 752.0
+offset_bottom = 329.0
+theme_override_colors/font_color = Color(0.29411766, 0.15686275, 0.06666667, 1)
+theme_override_fonts/font = ExtResource("7_font")
+theme_override_font_sizes/font_size = 26
+text = "MOVE"
+
+[node name="Label5" type="Label" parent="." unique_id=1920386946]
+layout_mode = 0
+offset_left = 680.0
+offset_top = 334.0
+offset_right = 751.0
+offset_bottom = 375.0
+theme_override_colors/font_color = Color(0.29411766, 0.15686275, 0.06666667, 1)
+theme_override_fonts/font = ExtResource("7_font")
+theme_override_font_sizes/font_size = 26
+text = "JUMP"
+
+[node name="Label6" type="Label" parent="." unique_id=1648923188]
+layout_mode = 0
+offset_left = 680.0
+offset_top = 376.0
+offset_right = 791.0
+offset_bottom = 417.0
+theme_override_colors/font_color = Color(0.29411766, 0.15686275, 0.06666667, 1)
+theme_override_fonts/font = ExtResource("7_font")
+theme_override_font_sizes/font_size = 26
+text = "Use Skill"
+
+[node name="Label7" type="Label" parent="." unique_id=1520117322]
+layout_mode = 0
+offset_left = 198.0
+offset_top = 467.0
+offset_right = 513.0
+offset_bottom = 492.0
+theme_override_colors/font_color = Color(0.9882353, 0.95686275, 0.8901961, 1)
+theme_override_fonts/font = ExtResource("9_ej186")
+theme_override_font_sizes/font_size = 14
+text = "Collect Sticky Rice Baskets to use your skill."
+
+[node name="Label8" type="Label" parent="." unique_id=994338531]
+layout_mode = 0
+offset_left = 645.0
+offset_top = 468.0
+offset_right = 960.0
+offset_bottom = 493.0
+theme_override_colors/font_color = Color(0.9882353, 0.95686275, 0.8901961, 1)
+theme_override_fonts/font = ExtResource("9_ej186")
+theme_override_font_sizes/font_size = 14
+text = "Collect Sticky Rice Baskets to use your skill."

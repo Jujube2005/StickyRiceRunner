@@ -238,5 +238,6 @@ func game_over(winner_text: String):
 	var players_root = get_parent().get_node("Players")
 	if players_root:
 		for child in players_root.get_children():
+			child.set("finished", true)
 			if child.has_method("set_process"): child.set_process(false)
 	ui_gameover.show_result(winner_text, calculate_final_score(1), calculate_final_score(2), int(p1.distance), int(p2.distance))
