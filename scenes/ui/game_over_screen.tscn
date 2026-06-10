@@ -3,7 +3,6 @@
 [ext_resource type="Script" uid="uid://clcvhvxnbq1a4" path="res://scenes/shared_scripts/game_over_screen.gd" id="1_script"]
 [ext_resource type="Texture2D" uid="uid://dqrq1t641d6eb" path="res://assets/textures/UI/Buttons/board_bg.png" id="2_board_bg"]
 [ext_resource type="Texture2D" uid="uid://4c3xqcv20k8" path="res://assets/textures/UI/Buttons/table.png" id="3_6cl0s"]
-[ext_resource type="Texture2D" uid="uid://b6vlevfi0brlb" path="res://assets/textures/UI/Buttons/title_header.png" id="3_title_header"]
 [ext_resource type="Texture2D" uid="uid://bd31mp72gxydr" path="res://assets/textures/UI/Buttons/avatar_yellow.png" id="4_avatar_yellow"]
 [ext_resource type="Texture2D" uid="uid://dq7xbn86me4qp" path="res://assets/textures/UI/Buttons/rice_bar_orange.png" id="5_rice_bar_orange"]
 [ext_resource type="Texture2D" uid="uid://dmrs23yo316wc" path="res://assets/textures/UI/Buttons/progress_fill_orange.png" id="6_progress_fill_orange"]
@@ -81,28 +80,51 @@ offset_bottom = 981.6517
 scale = Vector2(0.62417054, 0.6441224)
 texture = ExtResource("3_6cl0s")
 
-[node name="TitleHeader" type="TextureRect" parent="Board" unique_id=287351257]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -434.5
-offset_top = -40.0
-offset_right = 434.5
-offset_bottom = 197.0
-grow_horizontal = 2
-mouse_filter = 2
-texture = ExtResource("3_title_header")
+[node name="KratibIcon" type="TextureRect" parent="Board" unique_id=1607637804]
+layout_mode = 0
+offset_left = 260.84418
+offset_top = -87.98262
+offset_right = 300.84418
+offset_bottom = -47.98259
+scale = Vector2(4.2217693, 4.2217693)
+texture = ExtResource("9_w1p06")
+expand_mode = 1
 stretch_mode = 5
+
+[node name="TitleHeader" type="Label" parent="Board" unique_id=104674508]
+layout_mode = 0
+offset_left = 23.822643
+offset_top = 19.11893
+offset_right = 633.82263
+offset_bottom = 176.11893
+theme_override_colors/font_color = Color(0.9254902, 0.69411767, 0.20392157, 1)
+theme_override_colors/font_outline_color = Color(0.41960785, 0.22745098, 0.07058824, 1)
+theme_override_constants/outline_size = 45
+theme_override_fonts/font = ExtResource("14_font")
+theme_override_font_sizes/font_size = 100
+text = "CHAMPION"
+
+[node name="TitleHeader2" type="Label" parent="Board" unique_id=719310685]
+layout_mode = 0
+offset_left = -20.861748
+offset_top = -58.77311
+offset_right = 589.13824
+offset_bottom = 98.22689
+theme_override_colors/font_color = Color(1, 0.95686275, 0.8666667, 1)
+theme_override_colors/font_outline_color = Color(0.41960785, 0.22745098, 0.07058824, 1)
+theme_override_constants/outline_size = 45
+theme_override_fonts/font = ExtResource("14_font")
+theme_override_font_sizes/font_size = 100
+text = "STICKY RICE"
 
 [node name="P1Stats" type="Control" parent="Board" unique_id=2074170458]
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
-offset_left = 65.693565
-offset_top = 196.76816
-offset_right = -54.306458
-offset_bottom = 376.76816
+offset_left = 58.792984
+offset_top = 182.6922
+offset_right = -61.20703
+offset_bottom = 362.6922
 grow_horizontal = 2
 
 [node name="Avatar" type="TextureRect" parent="Board/P1Stats" unique_id=553038503]
@@ -178,10 +200,10 @@ label_settings = SubResource("LabelSettings_text")
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
-offset_left = 65.693565
-offset_top = 426.76816
-offset_right = -54.306458
-offset_bottom = 606.7682
+offset_left = 58.792984
+offset_top = 412.69214
+offset_right = -61.20703
+offset_bottom = 592.6922
 grow_horizontal = 2
 
 [node name="Avatar" type="TextureRect" parent="Board/P2Stats" unique_id=737590549]

@@ -36,25 +36,22 @@ func deactivate():
 func _on_body_entered(body):
 	if !is_active: return
 	
-	if body.is_in_group("player"):
-		var skill_added = false
-		if body.has_method("add_skill"):
-			var gm = get_tree().current_scene.find_child("GameManager", true, false)
-			var skill_name = ""
-			if gm and gm.has_method("_choose_skill"):
-				skill_name = gm._choose_skill()
-			elif gm and gm.has_method("get_random_skill"):
-				skill_name = gm.get_random_skill()
-			else:
-				# Fallback
-				var fallbacks = ["Rice Yard Dust", "Boon Bang Fai", "Pha Khao Ma", "Field Wind", "Screen Blur"]
-				skill_name = fallbacks[randi() % fallbacks.size()]
-				
-			skill_added = body.add_skill(skill_name)
-			
-		if skill_added:
-			deactivate()
-			
-			# Play pickup sound/effect if any
-			if has_node("PickupSound"):
-				$PickupSound.play()
+	# Detect player by capability, not group (players.gd may not be in "player" group)
+	if not body.has_method("add_skill"):
+		return
+	
+	var gm = get_tree().current_scene.find_child("GameManager", true, false)
+	var skill_name := ""
+	
+	if gm and gm.has_method("get_random_skill"):
+		skill_name = gm.get_random_skill()
+	else:
+		var fallbacks = ["Rice Yard Dust", "Boon Bang Fai", "Pha Khao Ma", "Field Wind", "Screen Blur"]
+		skill_name = fallbacks[randi() % fallbacks.size()]
+	
+	var skill_added: bool = body.add_skill(skill_name)
+	if skill_added:
+		# VFX + SFX
+		VfxManager.spawn("skill_use", global_position)
+		AudioManager.play_sfx("skill_pickup")
+		deactivate()

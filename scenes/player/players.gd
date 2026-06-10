@@ -548,7 +548,15 @@ func use_skill_at_slot(slot_index: int):
 				print(name, " using skill: ", skill_name, " from slot ", slot_index)
 				skills.remove_at(slot_index)
 				emit_signal("skills_changed", skills)
-				
+				# Play per-skill SFX
+				match skill_name:
+					"Boon Bang Fai":        AudioManager.play_sfx("skill_bang_fai")
+					"Rice Yard Dust":       AudioManager.play_sfx("skill_dust")
+					"Field Wind", "Wind Push": AudioManager.play_sfx("skill_wind")
+					"Pha Khao Ma":          AudioManager.play_sfx("shield_block")
+					_:                      AudioManager.play_sfx("skill_use")
+				# VFX
+				VfxManager.spawn("skill_use", global_position)
 				set_warning("ใช้สกิล: " + skill_name)
 				# Clear warning message after 1.5s
 				get_tree().create_timer(1.5).timeout.connect(func():

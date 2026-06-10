@@ -1,7 +1,7 @@
 extends Control
 
 @onready var board_rect: TextureRect = $Board
-@onready var title_rect: TextureRect = $Board/TitleHeader
+@onready var title_rect: Label = $Board/TitleHeader
 @onready var default_scale: Vector2 = board_rect.scale
 
 @onready var p1_winner_tag: Label = $Board/P1Stats/WinnerTag
@@ -13,6 +13,14 @@ extends Control
 @onready var p2_dist_bar: TextureProgressBar = $Board/P2Stats/DistBar
 @onready var p2_dist_val: Label = $Board/P2Stats/DistVal
 @onready var p2_kratib_val: Label = $Board/P2Stats/KratibVal
+
+@onready var p1_avatar: TextureRect = $Board/P1Stats/Avatar
+@onready var p2_avatar: TextureRect = $Board/P2Stats/Avatar
+
+var tex_p1_win = preload("res://assets/textures/UI/avatarPlayer/avatarP1_win.png")
+var tex_p1_lose = preload("res://assets/textures/UI/avatarPlayer/avatarP1_lose.png")
+var tex_p2_win = preload("res://assets/textures/UI/avatarPlayer/avatarP2_win.png")
+var tex_p2_lose = preload("res://assets/textures/UI/avatarPlayer/avatarP2_lose.png")
 
 @onready var btn_restart: TextureButton = $Board/ButtonBox/BtnRestart
 @onready var btn_play: TextureButton = $Board/ButtonBox/BtnPlay
@@ -81,16 +89,22 @@ func show_result(winner_name: String, _p1_score: int, _p2_score: int, _p1_distan
 		# Total = (Kratib × 100) + Distance
 		p2_kratib_val.text = str((p2_kratips * 100) + p2_dist)
 
-	# Winner crowns configuration
+	# Winner crowns configuration & Avatar switching
 	if winner_name == "Player 1":
 		if p1_winner_tag: p1_winner_tag.visible = true
 		if p2_winner_tag: p2_winner_tag.visible = false
+		if p1_avatar: p1_avatar.texture = tex_p1_win
+		if p2_avatar: p2_avatar.texture = tex_p2_lose
 	elif winner_name == "Player 2":
 		if p1_winner_tag: p1_winner_tag.visible = false
 		if p2_winner_tag: p2_winner_tag.visible = true
+		if p1_avatar: p1_avatar.texture = tex_p1_lose
+		if p2_avatar: p2_avatar.texture = tex_p2_win
 	else:
 		if p1_winner_tag: p1_winner_tag.visible = false
 		if p2_winner_tag: p2_winner_tag.visible = false
+		if p1_avatar: p1_avatar.texture = tex_p1_lose
+		if p2_avatar: p2_avatar.texture = tex_p2_lose
 
 	# Play pop-in animation using the editor-defined scale
 	board_rect.scale = default_scale * 0.9

@@ -161,9 +161,9 @@ expand_mode = 1
 
 [node name="P2" type="TextureRect" parent="TopLeft" unique_id=836701945]
 layout_mode = 0
-offset_left = 1022.2532
+offset_left = 1097.9032
 offset_top = -27.000002
-offset_right = 1051.2532
+offset_right = 1126.9032
 offset_bottom = 1.9999981
 texture = ExtResource("9_cqn7g")
 expand_mode = 1
@@ -184,9 +184,9 @@ layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -446.0
+offset_left = -447.1125
 offset_top = 18.0
-offset_right = -246.0
+offset_right = -247.11249
 offset_bottom = 48.0
 grow_horizontal = 0
 text = "🏆 LEADING"
