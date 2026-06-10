@@ -58,6 +58,10 @@ func _on_body_entered(body):
 		if body.has_method("add_charge"):
 			body.add_charge(value)
 		
+		# VFX + SFX
+		VfxManager.spawn("kratib_pickup", global_position)
+		AudioManager.play_sfx("pickup")
+		
 		# Pulse effect before deactivating (optional juice)
 		var tween = create_tween()
 		tween.tween_property($Model, "scale", Vector3(1.5, 1.5, 1.5), 0.1)

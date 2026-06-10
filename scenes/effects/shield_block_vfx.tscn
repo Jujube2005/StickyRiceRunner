@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://efshield01"]
+
+[node name="ShieldBlockVFX" type="CPUParticles3D"]
+emitting = false
+amount = 22
+lifetime = 0.45
+one_shot = true
+explosiveness = 1.0
+randomness = 0.2
+visibility_aabb = AABB(-5, -5, -5, 10, 10, 10)
+color = Color(1.0, 0.88, 0.1, 1.0)
+emission_shape = 1
+emission_sphere_radius = 0.9
+direction = Vector3(0, 0, 0)
+spread = 180.0
+gravity = Vector3(0, 0, 0)
+initial_velocity_min = 2.5
+initial_velocity_max = 5.0
+radial_accel_min = 4.0
+radial_accel_max = 8.0
+scale_amount_min = 0.05
+scale_amount_max = 0.12
+damping_min = 6.0
+damping_max = 12.0

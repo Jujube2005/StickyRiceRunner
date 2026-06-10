@@ -11,19 +11,21 @@ extends Control
 const FONT_BOLD = "res://assets/textures/UI/Font/Mitr/Mitr-Bold.ttf"
 const FONT_REGULAR = "res://assets/textures/UI/Font/Mitr/Mitr-Regular.ttf"
 
-const TEX_BOX_MENU = "res://assets/textures/UI/Buttons/boxMenu.png"
+const TEX_BOX_MENU = "res://assets/textures/UI/Buttons/board_bg.png"
 const TEX_BTN_ORANGE = "res://assets/textures/UI/Buttons/buttonOrange.png"
 const TEX_BTN_YELLOW = "res://assets/textures/UI/Buttons/buttonYellow.png"
 
 func _ready():
 	_setup_ui_styles()
 	_animate_entrance()
+	_update_button_texts()
 	
 	# Connect Signals
 	$MenuContainer/ButtonList/PlayBtn.pressed.connect(_on_play_pressed)
 	$MenuContainer/ButtonList/QuitBtn.pressed.connect(_on_quit_pressed)
 	$MenuContainer/ButtonList/SettingsBtn.pressed.connect(_on_settings_pressed)
 	$MenuContainer/ButtonList/HowToBtn.pressed.connect(_on_how_to_pressed)
+	LanguageManager.language_changed.connect(func(_l): _update_button_texts())
 
 func _setup_ui_styles():
 	# Ensure Logo does not block mouse clicks even if it overlaps
@@ -39,10 +41,10 @@ func _setup_ui_styles():
 	var menu_style = StyleBoxTexture.new()
 	menu_style.texture = load(TEX_BOX_MENU)
 	# Set margins for 9-patch scaling if needed, otherwise keep default
-	menu_style.content_margin_left = 30
-	menu_style.content_margin_right = 30
-	menu_style.content_margin_top = 30
-	menu_style.content_margin_bottom = 30
+	menu_style.content_margin_left = 40
+	menu_style.content_margin_right = 40
+	menu_style.content_margin_top = 40
+	menu_style.content_margin_bottom = 40
 	menu_container.add_theme_stylebox_override("panel", menu_style)
 	
 	# Button Styles
@@ -99,6 +101,14 @@ func _animate_button_hover(btn: Button, is_hover: bool):
 		tween.tween_property(btn, "scale", Vector2(1.05, 1.05), 0.2)
 	else:
 		tween.tween_property(btn, "scale", Vector2(1.0, 1.0), 0.2)
+
+func _update_button_texts():
+	$MenuContainer/ButtonList/PlayBtn.text = LanguageManager.t("BTN_PLAY")
+	$MenuContainer/ButtonList/SettingsBtn.text = LanguageManager.t("BTN_SETTINGS")
+	$MenuContainer/ButtonList/HowToBtn.text = LanguageManager.t("BTN_HOW_TO")
+	$MenuContainer/ButtonList/QuitBtn.text = LanguageManager.t("BTN_QUIT")
+	if version_label:
+		version_label.text = LanguageManager.t("VERSION_LABEL")
 
 # --- CALLBACKS ---
 func _on_play_pressed():

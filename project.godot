@@ -15,6 +15,12 @@ run/main_scene="uid://crp1rsbj8p8ft"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://assets/icon.svg"
 
+[autoload]
+
+LanguageManager="*res://scenes/shared_scripts/language_manager.gd"
+AudioManager="*res://scenes/shared_scripts/audio_manager.gd"
+VfxManager="*res://scenes/shared_scripts/vfx_manager.gd"
+
 [display]
 
 window/stretch/mode="canvas_items"

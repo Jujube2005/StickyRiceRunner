@@ -452,7 +452,7 @@ func _prepare_skill():
 	
 	is_rolling_skill = true
 	emit_signal("skill_state_changed", false, "ROLLING")
-	emit_signal("warning_changed", "🎆 ลุ้นเครื่องรางเทศกาล...")
+	emit_signal("warning_changed", LanguageManager.t("HUD_ROLLING_SKILL"))
 	
 	# Build anticipation
 	var roll_timer = get_tree().create_timer(1.2)
@@ -463,7 +463,7 @@ func _prepare_skill():
 		is_skill_ready = true
 		is_rolling_skill = false
 		emit_signal("skill_state_changed", true, prepared_skill)
-		emit_signal("warning_changed", "ได้: " + prepared_skill)
+		emit_signal("warning_changed", LanguageManager.t("HUD_GOT_SKILL") + LanguageManager.skill_name(prepared_skill))
 
 func request_skill():
 	if charges < MAX_CHARGES:

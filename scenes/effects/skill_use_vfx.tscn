@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://efskill01"]
+
+[node name="SkillUseVFX" type="CPUParticles3D"]
+emitting = false
+amount = 18
+lifetime = 0.7
+one_shot = true
+explosiveness = 0.85
+randomness = 0.3
+visibility_aabb = AABB(-5, -5, -5, 10, 10, 10)
+color = Color(0.65, 0.15, 1.0, 1.0)
+direction = Vector3(0, 1, 0)
+spread = 55.0
+gravity = Vector3(0, 1.5, 0)
+initial_velocity_min = 2.0
+initial_velocity_max = 5.5
+scale_amount_min = 0.05
+scale_amount_max = 0.13
+hue_variation_min = -0.15
+hue_variation_max = 0.15

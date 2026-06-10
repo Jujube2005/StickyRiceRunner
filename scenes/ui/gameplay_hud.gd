@@ -343,17 +343,7 @@ func get_skill_color(skill_name: String) -> Color:
 			return Color.WHITE
 
 func get_skill_display_name(skill_name: String) -> String:
-	match skill_name:
-		"Rice Yard Dust": return "ฝุ่นลาน"
-		"Boon Bang Fai":  return "บั้งไฟ"
-		"Field Wind":     return "ลมทุ่ง"
-		"Wind Push":      return "ลมผลัก"
-		"Lane Swap":      return "สลับเลน"
-		"Screen Blur":    return "หมอกควัน"
-		"Pull to Center": return "ดึงกลาง"
-		"Lane Block":     return "กีดขวาง"
-		"Pha Khao Ma":   return "ผ้าขาวม้า"
-		_: return skill_name
+	return LanguageManager.skill_name(skill_name)
 
 func _load_texture_safe(path: String, fallback_path: String = "res://assets/textures/UI/Buttons/box_orange.png") -> Texture2D:
 	if ResourceLoader.exists(path):

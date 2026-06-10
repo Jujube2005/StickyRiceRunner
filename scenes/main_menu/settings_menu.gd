@@ -23,6 +23,7 @@ func _ready():
 	_setup_visuals()
 	_load_current_settings()
 	_animate_in()
+	_update_label_texts()
 	
 	# Connect Signals
 	master_slider.value_changed.connect(_on_master_volume_changed)
@@ -32,6 +33,7 @@ func _ready():
 	lang_btn.item_selected.connect(_on_lang_selected)
 	back_btn.pressed.connect(_on_close_pressed)
 	ok_btn.pressed.connect(_on_close_pressed)
+	LanguageManager.language_changed.connect(func(_l): _update_label_texts())
 
 func _setup_visuals():
 	# Setup Sliders Style
@@ -110,15 +112,16 @@ func _setup_visuals():
 func _load_current_settings():
 	# Audio
 	master_slider.value = db_to_linear(AudioServer.get_bus_volume_db(AudioServer.get_bus_index("Master")))
-	# (Assuming you have Music and SFX buses, else fallback to Master)
 	var music_bus = AudioServer.get_bus_index("Music")
 	if music_bus != -1: music_slider.value = db_to_linear(AudioServer.get_bus_volume_db(music_bus))
-	
 	var sfx_bus = AudioServer.get_bus_index("SFX")
 	if sfx_bus != -1: sfx_slider.value = db_to_linear(AudioServer.get_bus_volume_db(sfx_bus))
 	
 	# Fullscreen
 	fullscreen_switch.button_pressed = ((get_window().mode == Window.MODE_EXCLUSIVE_FULLSCREEN) or (get_window().mode == Window.MODE_FULLSCREEN))
+	
+	# Language dropdown — set to current locale
+	lang_btn.selected = LanguageManager.get_lang_index()
 
 func _update_switch_visual(is_on: bool):
 	fullscreen_switch.texture_normal = TEX_SWITCH_ON if is_on else TEX_SWITCH_OFF
@@ -143,9 +146,26 @@ func _on_fullscreen_toggled(is_on: bool):
 		get_window().mode = Window.MODE_WINDOWED
 
 func _on_lang_selected(index: int):
-	# Handle language change here
-	print("Selected language index: ", index)
-	# Example: TranslationServer.set_locale("th" if index == 0 else "en")
+	var locale = "th" if index == 0 else "en"
+	LanguageManager.set_language(locale)
+
+func _update_label_texts():
+	# Update settings panel labels dynamically
+	var content = $Panel/Content
+	if content:
+		var label_map = {
+			"Master": "LBL_MASTER_VOL",
+			"Music":  "LBL_MUSIC_VOL",
+			"SFX":    "LBL_SFX_VOL",
+			"Language": "LBL_LANGUAGE",
+			"Screen": "LBL_FULLSCREEN",
+		}
+		for row_name in label_map:
+			var row = content.get_node_or_null(row_name)
+			if row:
+				var lbl = row.get_node_or_null("Label")
+				if lbl:
+					lbl.text = LanguageManager.t(label_map[row_name])
 
 func _animate_in():
 	overlay.modulate.a = 0
