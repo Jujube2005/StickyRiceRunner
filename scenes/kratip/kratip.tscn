@@ -14,13 +14,13 @@ collision_mask = 3
 script = ExtResource("1_x575a")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1749946054]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.03489822, 0.34210324, -0.06388092)
+transform = Transform3D(0.99999976, 0, 0, 0, 0.99999976, 0, 0, 0, 0.99999976, -0.15499304, 0.29951042, -0.06388092)
 shape = SubResource("CapsuleShape3D_3d750")
 
 [node name="Model" type="Node3D" parent="." unique_id=134852010]
 
-[node name="Rice" parent="Model" unique_id=1220485313 instance=ExtResource("1_w36du")]
-transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+[node name="Rice2" parent="Model" unique_id=1205677007 instance=ExtResource("1_w36du")]
+transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, 0, 0, 2.5, 0, 0, 0)
 
 [node name="GlowLight" type="OmniLight3D" parent="." unique_id=20240529]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0.4, 0)
