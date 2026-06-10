@@ -4,7 +4,7 @@ extends Node
 @export var player1: CharacterBody3D
 @export var player2: CharacterBody3D
 
-@export var pool_size = 40
+@export var pool_size = 60
 var obstacle_pool = []
 
 var lanes = [-3, 0, 3]
@@ -35,8 +35,15 @@ func _get_from_pool():
 		if !obs.is_active:
 			return obs
 	
-	# Pool is empty: push warning and return null to skip spawning
-	push_warning("Obstacle pool exhausted! Increase pool_size in ObstacleSpawner.")
+	# Pool exhausted — grow dynamically instead of skipping
+	push_warning("Obstacle pool exhausted! Growing pool dynamically.")
+	if obstacle_scene:
+		var obs = obstacle_scene.instantiate()
+		obs.set_script(load("res://scenes/obstacle/obstacle.gd"))
+		obs.add_to_group("obstacle")
+		get_parent().add_child(obs)
+		obstacle_pool.append(obs)
+		return obs
 	return null
 
 func _process(_delta):

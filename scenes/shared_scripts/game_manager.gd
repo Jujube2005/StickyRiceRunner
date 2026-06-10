@@ -1,6 +1,6 @@
 extends Node3D
 
-# --- PRANK SYSTEM ENGINE (SINGLE SOURCE OF TRUTH) ---
+# --- FESTIVAL CHARM SYSTEM ENGINE (SINGLE SOURCE OF TRUTH) ---
 enum PrankState { QUEUED, PREPARED, ARMED, ACTIVE, BLOCKED, FINISHED, CANCELLED }
 
 class Prank:
@@ -188,8 +188,9 @@ func _execute_prank_effect(prank: Prank):
 
 # --- UTILS ---
 func _choose_skill():
-	var common = ["Slow Floor", "Lane Swap", "Slow Speed", "Screen Blur", "Shield"]
-	var uncommon = ["Pull to Center", "Invert Controls"]
+	# Festival Charms — ธัมม์เทศกาล
+	var common = ["Rice Yard Dust", "Boon Bang Fai", "Field Wind", "Screen Blur", "Pha Khao Ma"]
+	var uncommon = ["Pull to Center", "Invert Controls", "Lane Swap"]
 	var rare = ["Lane Block", "Wind Push", "Transformation Debuff"]
 	var roll = randf()
 	if roll < 0.6: return common[randi() % common.size()]
@@ -218,7 +219,8 @@ func calculate_final_score(player_id: int) -> int:
 	var dist = player.distance if "distance" in player else 0.0
 	var pens = player.penalties if "penalties" in player else 0
 	
-	return int((kratips * 10) + dist - pens)
+	# Total = (Kratib × 100) + Distance – Penalties
+	return int((kratips * 100) + dist - pens)
 
 func _determine_winner_by_score():
 	var winner = "Draw"

@@ -120,7 +120,7 @@ offset_bottom = 0.0
 
 [node name="GameOverPanel" parent="UI" unique_id=1748702769 instance=ExtResource("11_game_over_screen")]
 
-[node name="PausePanel" parent="UI" unique_id=2847391023 instance=ExtResource("15_pause_screen")]
+[node name="PausePanel" parent="UI" unique_id=-1447576273 instance=ExtResource("15_pause_screen")]
 
 [node name="GameManager" type="Node3D" parent="." unique_id=184800071]
 script = ExtResource("5_1gmgm")

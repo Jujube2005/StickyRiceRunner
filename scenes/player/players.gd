@@ -419,14 +419,13 @@ func add_penalty(amount):
 	print(name, " penalty: ", amount, " | Total Penalties: ", penalties)
 
 func _calculate_total_score():
-	# Formula: Total = (Kratips * 10) + Distance - Penalties
-	score = (kratips_collected * 10) + int(distance) - penalties
+	# Total = (Kratib × 100) + Distance – Penalties
+	score = (kratips_collected * 100) + int(distance) - penalties
 	emit_signal("score_changed", score)
-	# print(name, " score:", score, " (K:", kratips_collected, " D:", int(distance), " P:", penalties, ")")
 
 func die() -> void:
 	# Redirect die to stun if it's from obstacle
-	add_penalty(50) # Crashing penalty
+	add_penalty(100) # Crashing penalty
 	stun(2.0)
 
 func stun(duration: float = 2.0):
@@ -462,7 +461,7 @@ func _prepare_skill():
 	
 	is_rolling_skill = true
 	emit_signal("skill_state_changed", false, "ROLLING")
-	emit_signal("warning_changed", "🎆 ลุ้นบั้งไฟ...")
+	emit_signal("warning_changed", "🎆 ลุ้นเครื่องรางเทศกาล...")
 	
 	# Build anticipation
 	var roll_timer = get_tree().create_timer(1.2)
@@ -473,7 +472,7 @@ func _prepare_skill():
 		is_skill_ready = true
 		is_rolling_skill = false
 		emit_signal("skill_state_changed", true, prepared_skill)
-		emit_signal("warning_changed", "พร้อมแล้ว: " + prepared_skill)
+		emit_signal("warning_changed", "ได้: " + prepared_skill)
 
 func request_skill():
 	if charges < MAX_CHARGES:
@@ -543,7 +542,7 @@ func use_skill_at_slot(slot_index: int):
 		var skill_name = skills[slot_index]
 		if skill_name != "":
 			var success = false
-			if skill_name == "Shield":
+			if skill_name == "Pha Khao Ma":
 				_show_shield_vfx()
 				if game_manager:
 					game_manager.try_block_prank(self)
@@ -573,28 +572,39 @@ func use_skill_at_slot(slot_index: int):
 
 func apply_prank(skill_name):
 	match skill_name:
-		"Slow Floor":
+		"Rice Yard Dust":
+			# ฝุ่นลานข้าว — ช้าลงทั้งเสี๚ระยะการเปลี่ยนเลน
 			effect_durations["slow_floor"] = 4.0
 		"Lane Swap":
-			lane = -1 if lane >= 0 else 1 # Actual swap
-		"Slow Speed":
+			lane = -1 if lane >= 0 else 1
+		"Boon Bang Fai":
+			# บั้งไฟ — ทำให้สะดุ้งชั่วคราว
 			effect_durations["slow_speed"] = 4.0
 		"Screen Blur":
+			# หมอกควัน — ชั่วคราวมองไม่ชัด
 			effect_durations["screen_blur"] = 4.0
 		"Pull to Center":
+			# ดึงกลาง
 			lane = 0
-			velocity.y = 5.0 # Hop when pulled
+			velocity.y = 5.0
 		"Knockback":
 			global_position.z += 6.0
-			velocity.y = 5.0 # Hop when knocked back
+			velocity.y = 5.0
 		"Invert Controls":
+			# กลับทาง
 			effect_durations["invert_controls"] = 4.5
 		"Lane Block":
+			# กีดขวาง
 			if game_manager:
 				game_manager.spawn_lane_block(self)
+		"Field Wind":
+			# ลมทุ่ง — ผลักซ้ายขวา
+			effect_durations["wind_push"] = 3.0
 		"Wind Push":
+			# Legacy alias
 			effect_durations["wind_push"] = 3.0
 		"Transformation Debuff":
+			# แปลงร่าง
 			effect_durations["transformation"] = 4.0
 			effect_durations["disable_jump"] = 4.0
 		_:
@@ -620,17 +630,17 @@ func on_prank_state_updated(prank):
 func set_warning(text):
 	emit_signal("warning_changed", text)
 	
-	# Bot auto-defend logic (uses Shield skill in slot if available)
+	# Bot auto-defend logic (uses Pha Khao Ma skill in slot if available)
 	if is_bot and "กำลังมา!" in text:
 		var shield_slot = -1
 		for i in range(skills.size()):
-			if skills[i] == "Shield":
+			if skills[i] == "Pha Khao Ma":
 				shield_slot = i
 				break
 		if shield_slot != -1:
 			var slot_to_use = shield_slot
 			get_tree().create_timer(randf_range(0.2, 0.5)).timeout.connect(func():
-				if slot_to_use < skills.size() and skills[slot_to_use] == "Shield":
+				if slot_to_use < skills.size() and skills[slot_to_use] == "Pha Khao Ma":
 					use_skill_at_slot(slot_to_use)
 			)
 	
