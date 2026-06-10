@@ -219,19 +219,12 @@ func _physics_process(delta):
 	var speed_factor = 1.0
 	if _has_effect("slow_speed"):
 		speed_factor *= 0.7
-	if _has_effect("transformation"):
-		speed_factor *= 0.65
 		
-	# Visual feedback for transformation/debuffs
-	if _has_effect("transformation"):
-		$Model.scale = Vector3(0.4, 0.4, 0.4)
-		$Model.rotation.y += delta * 15.0 # Spin while small
-	else:
-		$Model.scale = Vector3(1.0, 1.0, 1.0)
-		$Model.rotation.y = PI
+	$Model.scale = Vector3(1.0, 1.0, 1.0)
+	$Model.rotation.y = PI
 		
 	# Visual feedback for screen blur / confusion
-	if _has_effect("screen_blur") or _has_effect("invert_controls"):
+	if _has_effect("screen_blur"):
 		$Model.position = model_offset + Vector3(randf_range(-0.2, 0.2), randf_range(0.0, 0.2), 0.0)
 	else:
 		$Model.position = model_offset
@@ -369,8 +362,6 @@ func _physics_process(delta):
 		if right_action != "" and Input.is_action_just_pressed(right_action):
 			move_dir += 1
 
-	if _has_effect("invert_controls"):
-		move_dir *= -1
 
 	lane += move_dir
 
@@ -603,10 +594,6 @@ func apply_prank(skill_name):
 		"Wind Push":
 			# Legacy alias
 			effect_durations["wind_push"] = 3.0
-		"Transformation Debuff":
-			# แปลงร่าง
-			effect_durations["transformation"] = 4.0
-			effect_durations["disable_jump"] = 4.0
 		_:
 			pass
 

@@ -190,8 +190,8 @@ func _execute_prank_effect(prank: Prank):
 func _choose_skill():
 	# Festival Charms — ธัมม์เทศกาล
 	var common = ["Rice Yard Dust", "Boon Bang Fai", "Field Wind", "Screen Blur", "Pha Khao Ma"]
-	var uncommon = ["Pull to Center", "Invert Controls", "Lane Swap"]
-	var rare = ["Lane Block", "Wind Push", "Transformation Debuff"]
+	var uncommon = ["Pull to Center", "Lane Swap"]
+	var rare = ["Lane Block", "Wind Push"]
 	var roll = randf()
 	if roll < 0.6: return common[randi() % common.size()]
 	elif roll < 0.9: return uncommon[randi() % uncommon.size()]
