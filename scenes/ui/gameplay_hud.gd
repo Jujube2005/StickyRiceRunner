@@ -8,6 +8,8 @@ extends Control
 @onready var p2_distance = $TopRight/DistanceSign/Label
 @onready var p2_leader_label = $TopRight/LeaderLabel
 
+@onready var coin_popup_anchor: Control = $CoinPopupAnchor
+
 var p1_current_percent: float = 0.0
 var p2_current_percent: float = 0.0
 
@@ -146,15 +148,25 @@ func _create_kratip_label(parent_node: Control) -> Label:
 	return lbl
 
 func show_coin_fly_in(player_name: String, coin_name: String, is_new: bool):
-	# Center screen start
-	var start_pos = Vector2(size.x / 2.0, size.y / 2.0)
+	# Use anchor node position set in .tscn editor
+	var start_pos: Vector2
+	if coin_popup_anchor:
+		start_pos = coin_popup_anchor.global_position
+	else:
+		start_pos = Vector2(size.x / 2.0, size.y / 2.0)
 	
 	# Determine target pos based on player
 	var target_pos = Vector2.ZERO
 	if player_name == "Player1":
-		target_pos = $TopLeft/KratibIcon.global_position
+		if has_node("TopLeft/KratibIcon"):
+			target_pos = $TopLeft/KratibIcon.global_position
+		else:
+			target_pos = Vector2(80, 80)
 	else:
-		target_pos = $TopRight/KratibIcon.global_position
+		if has_node("TopRight/KratibIcon"):
+			target_pos = $TopRight/KratibIcon.global_position
+		else:
+			target_pos = Vector2(size.x - 80, 80)
 		
 	# Create cinematic coin label
 	var coin_lbl = Label.new()
@@ -166,10 +178,17 @@ func show_coin_fly_in(player_name: String, coin_name: String, is_new: bool):
 	ls.outline_size = 8
 	ls.outline_color = Color.BLACK
 	coin_lbl.label_settings = ls
+	coin_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	
-	coin_lbl.global_position = start_pos - Vector2(100, 50) # center roughly
-	coin_lbl.scale = Vector2.ZERO
 	add_child(coin_lbl)
+	
+	# Wait 1 frame for Godot to calculate label size
+	await get_tree().process_frame
+	
+	# Position centered on the anchor using pivot
+	coin_lbl.pivot_offset = coin_lbl.size / 2.0
+	coin_lbl.global_position = start_pos - coin_lbl.size / 2.0
+	coin_lbl.scale = Vector2.ZERO
 	
 	var tween = create_tween()
 	# Pop in center
@@ -197,16 +216,25 @@ func show_coin_unlock(coin_name: String):
 	ls.outline_size = 6
 	ls.outline_color = Color.BLACK
 	popup.label_settings = ls
-	
-	# Center top
-	popup.set_anchors_preset(Control.PRESET_CENTER_TOP)
-	popup.position.y = 120
-	popup.position.x = -150
+	popup.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	
 	add_child(popup)
 	
+	# Wait 1 frame for label size
+	await get_tree().process_frame
+	
+	# Use anchor node for position if available
+	var anchor_pos: Vector2
+	if coin_popup_anchor:
+		anchor_pos = coin_popup_anchor.global_position
+	else:
+		anchor_pos = Vector2(size.x / 2.0, 120)
+	
+	popup.pivot_offset = popup.size / 2.0
+	popup.global_position = anchor_pos - popup.size / 2.0
+	
 	var tween = create_tween()
-	tween.tween_property(popup, "position:y", 80.0, 0.5).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	tween.tween_property(popup, "global_position:y", anchor_pos.y - popup.size.y / 2.0 - 40.0, 0.5).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	tween.tween_interval(2.0)
 	tween.tween_property(popup, "modulate:a", 0.0, 0.5)
 	tween.tween_callback(popup.queue_free)
