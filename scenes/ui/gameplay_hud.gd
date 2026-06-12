@@ -20,6 +20,9 @@ var p2_current_percent: float = 0.0
 @onready var p2_slot1_btn = $BottomControls/P2Skills/Slot1
 @onready var p2_slot2_btn = $BottomControls/P2Skills/Slot2
 
+var p1_kratip_label: Label = null
+var p2_kratip_label: Label = null
+
 var font_resource: Font = preload("res://assets/textures/UI/Font/Mitr/Mitr-Bold.ttf")
 
 var player1 = null
@@ -73,12 +76,24 @@ func _ready():
 	if player2 and player2.has_signal("skills_changed"):
 		if !player2.skills_changed.is_connected(_on_p2_skills_changed):
 			player2.skills_changed.connect(_on_p2_skills_changed)
+			
+	# Connect kratip count signals
+	if player1 and player1.has_signal("kratip_count_changed"):
+		player1.kratip_count_changed.connect(_on_p1_kratip_changed)
+	if player2 and player2.has_signal("kratip_count_changed"):
+		player2.kratip_count_changed.connect(_on_p2_kratip_changed)
+	
+	# Create Kratip Labels dynamically
+	p1_kratip_label = _create_kratip_label($TopLeft/KratibIcon)
+	p2_kratip_label = _create_kratip_label($TopRight/KratibIcon)
 	
 	# Initial setup
 	if player1:
 		update_slots_ui(player1, p1_slot1_btn, p1_slot2_btn, "F", "G")
+		_on_p1_kratip_changed(0, 10)
 	if player2:
 		update_slots_ui(player2, p2_slot1_btn, p2_slot2_btn, "K", "L")
+		_on_p2_kratip_changed(0, 10)
 		
 	# Hide leader indicators initially
 	if p1_leader_label: p1_leader_label.visible = false
@@ -103,6 +118,56 @@ func _on_p1_skills_changed(_new_skills):
 
 func _on_p2_skills_changed(_new_skills):
 	update_slots_ui(player2, p2_slot1_btn, p2_slot2_btn, "K", "L")
+
+func _on_p1_kratip_changed(current: int, needed: int):
+	if p1_kratip_label:
+		p1_kratip_label.text = str(current) + "/" + str(needed)
+
+func _on_p2_kratip_changed(current: int, needed: int):
+	if p2_kratip_label:
+		p2_kratip_label.text = str(current) + "/" + str(needed)
+
+func _create_kratip_label(parent_node: Control) -> Label:
+	if !parent_node: return null
+	var lbl = Label.new()
+	lbl.name = "CountLabel"
+	
+	var ls = LabelSettings.new()
+	ls.font_size = 20
+	if font_resource: ls.font = font_resource
+	ls.font_color = Color.WHITE
+	ls.outline_size = 4
+	ls.outline_color = Color.BLACK
+	lbl.label_settings = ls
+	
+	# Position to the right of the kratip icon
+	lbl.position = Vector2(parent_node.size.x + 5, parent_node.size.y / 2.0 - 15)
+	parent_node.add_child(lbl)
+	return lbl
+
+func show_coin_unlock(coin_name: String):
+	var popup = Label.new()
+	popup.text = "🎉 ปลดล็อก: " + coin_name + "!"
+	var ls = LabelSettings.new()
+	ls.font_size = 28
+	if font_resource: ls.font = font_resource
+	ls.font_color = Color(1.0, 0.8, 0.1)
+	ls.outline_size = 6
+	ls.outline_color = Color.BLACK
+	popup.label_settings = ls
+	
+	# Center top
+	popup.set_anchors_preset(Control.PRESET_CENTER_TOP)
+	popup.position.y = 120
+	popup.position.x = -150
+	
+	add_child(popup)
+	
+	var tween = create_tween()
+	tween.tween_property(popup, "position:y", 80.0, 0.5).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	tween.tween_interval(2.0)
+	tween.tween_property(popup, "modulate:a", 0.0, 0.5)
+	tween.tween_callback(popup.queue_free)
 
 func _process(delta):
 	var goal_dist = 1000.0

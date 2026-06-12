@@ -1,19 +1,24 @@
 [gd_scene format=3 uid="uid://dcyl0is0fe4wr"]
 
+[ext_resource type="PackedScene" uid="uid://ci5pjx4kyrmpp" path="res://assets/models/obstacle/firewood_low_poly.glb" id="1_firewood"]
+
 [sub_resource type="BoxShape3D" id="BoxShape3D_qcbvg"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qcbvg"]
-albedo_color = Color(0.8644015, 0.43233383, 0.2577288, 0.99607843)
-
-[sub_resource type="BoxMesh" id="BoxMesh_sl1jc"]
-material = SubResource("StandardMaterial3D_qcbvg")
+size = Vector3(1.1801147, 0.6231079, 1)
 
 [node name="Obstacle" type="Area3D" unique_id=382382366]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 1.0229689, 0)
 collision_layer = 8
 collision_mask = 3
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=390459932]
+transform = Transform3D(1, 0, 0, 0, 0.9999931, -0.0037175426, 0, 0.0037175426, 0.9999931, 0.033843994, -0.2977596, -0.00020318966)
 shape = SubResource("BoxShape3D_qcbvg")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1332997309]
-mesh = SubResource("BoxMesh_sl1jc")
+[node name="firewood_low_poly" parent="." unique_id=1332997309 instance=ExtResource("1_firewood")]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, -0.3601904, 0)
+
+[node name="firewood_mid" parent="." instance=ExtResource("1_firewood")]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 0.24, 0)
+
+[node name="firewood_top" parent="." instance=ExtResource("1_firewood")]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 0.84, 0)

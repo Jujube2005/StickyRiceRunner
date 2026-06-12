@@ -200,6 +200,26 @@ func _choose_skill():
 func get_random_skill():
 	return _choose_skill()
 
+func spawn_coin_for_player(target):
+	"""Spawns a Luang Por Khoon coin ahead of the player when they collect 10 Kratips."""
+	var COIN_SCENE = load("res://scenes/coin/coin.tscn")
+	var coin = COIN_SCENE.instantiate()
+	var spawn_parent = get_parent().get_node_or_null("Obstacles")
+	if !spawn_parent:
+		spawn_parent = get_parent()
+	spawn_parent.add_child(coin)
+	
+	# Spawn about 35 units ahead of the player in their current lane
+	var spawn_z = target.global_position.z - 35.0
+	var spawn_x = target.lane * 3.0
+	var pos = Vector3(spawn_x, 0.5, spawn_z)
+	
+	# Get a random coin type from CollectionManager
+	var coin_data = CollectionManager.roll_random_coin()
+	
+	coin.activate(pos, coin_data)
+	print("[GAME MANAGER] Spawned ", coin_data["name"], " for ", target.name, " at Z:", int(spawn_z))
+
 func spawn_lane_block(target):
 	var spawner = get_parent().get_node("ObstacleSpawner")
 	if spawner and spawner.has_method("spawn_block_in_lane"):

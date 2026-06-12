@@ -6,6 +6,7 @@ signal charge_changed(current, max)
 signal skill_state_changed(is_ready, skill_name)
 signal warning_changed(message)
 signal skills_changed(new_skills)
+signal kratip_count_changed(current: int, needed: int)  # For HUD kratip counter
 
 const BASE_FORWARD_SPEED = 10.0
 const MAX_FORWARD_SPEED = 35.0
@@ -21,12 +22,16 @@ var lane_distance = 3.0
 var alive = true
 var finished = false
 var stun_timer := 0.0
-var kratips_collected := 0
+var kratips_collected := 0      # Total kratips (for scoring)
+var kratip_milestone_count := 0 # Kratips toward next coin (0-9, resets at 10)
 var penalties := 0
 var score := 0
 var charges := 0
 var can_charge := true
 var effect_durations := {}
+
+const COIN_PROTECTION_DURATION := 5.0
+var coin_protection_timer := 0.0  # > 0 means protection is active
 
 var prepared_skill := ""
 var is_skill_ready := false
@@ -47,7 +52,11 @@ var current_anim : String = ""
 @export_file("*.glb") var stun_file : String
 
 @export_group("Model Offset")
+# Y offset: compensates for GLB pivot not being at feet.
+# manTmodel.glb (Blender rig) origin is at hip-center, so we pull it down.
+# Adjust this value if the character still sinks or floats.
 @export var model_offset := Vector3(0.0, 0.0, 0.0)
+@export var model_y_offset : float = 0.0  # Fine-tune Y separately per character
 
 var distance := 0.0
 var start_z := 0.0
@@ -117,6 +126,11 @@ func _ready():
 		play_animation(anim_run)
 	else:
 		print("[ANIM] ERROR: Failed to even create an AnimationPlayer for ", name)
+	
+	# Auto-correct model Y so mesh feet sit exactly on the floor (Y=0 local)
+	# This fixes the "character sinks into ground" issue caused by GLB pivot offset
+	await get_tree().process_frame
+	_auto_fix_model_y_offset()
 
 func _find_animation_player() -> AnimationPlayer:
 	# 1. Direct search
@@ -166,6 +180,46 @@ func _load_model():
 			model_node.add_child(model_instance)
 			print("[MODEL] Loaded ", model_file, " into ", name)
 
+func _auto_fix_model_y_offset():
+	# Only auto-fix if the designer hasn't set a manual override
+	if model_y_offset != 0.0:
+		print("[MODEL] model_y_offset already set to ", model_y_offset, " — skipping auto-fix")
+		return
+	
+	var model_node = get_node_or_null("Model")
+	if !model_node:
+		return
+	
+	# Collect combined AABB from all mesh instances (in Model's local space)
+	var combined_aabb : AABB
+	var has_mesh := false
+	var meshes = model_node.find_children("*", "MeshInstance3D", true, false)
+	
+	for mi in meshes:
+		if mi.mesh == null:
+			continue
+		# Get the mesh AABB transformed into Model node local space
+		var local_aabb = model_node.global_transform.inverse() * (mi.global_transform * mi.mesh.get_aabb())
+		if !has_mesh:
+			combined_aabb = local_aabb
+			has_mesh = true
+		else:
+			combined_aabb = combined_aabb.merge(local_aabb)
+	
+	if !has_mesh:
+		print("[MODEL] No meshes found for Y auto-fix on ", name)
+		return
+	
+	# The bottom of the mesh in Model-local space
+	var mesh_bottom_y = combined_aabb.position.y
+	
+	# We want mesh_bottom_y + model_y_offset = 0 (feet at floor)
+	# So: model_y_offset = -mesh_bottom_y
+	model_y_offset = -mesh_bottom_y
+	print("[MODEL] Auto Y-offset for ", name, ": mesh_bottom=", mesh_bottom_y, " → model_y_offset=", model_y_offset)
+
+
+
 func _setup_shield_vfx():
 	shield_vfx = MeshInstance3D.new()
 	var sphere = SphereMesh.new()
@@ -183,6 +237,16 @@ func _setup_shield_vfx():
 	
 	add_child(shield_vfx)
 	shield_vfx.visible = false
+
+func _sync_model_to_body():
+	# Always keep the Model node at the correct local offset.
+	# The CharacterBody3D origin is at its FEET (capsule bottom) after move_and_slide,
+	# so we only apply the designer-tuned model_offset here, not global Y.
+	var model_node = get_node_or_null("Model")
+	if model_node:
+		model_node.position.x = model_offset.x
+		model_node.position.y = model_offset.y + model_y_offset
+		model_node.position.z = model_offset.z
 
 func _physics_process(delta):
 	var new_distance = int(abs(global_position.z - start_z))
@@ -202,13 +266,12 @@ func _physics_process(delta):
 		# Play stun animation
 		play_animation(anim_stun)
 		
-		# Apply X -90 rotation and slightly raise Y to prevent sinking into the road
+		# Stun: lay flat (-90°) and keep pinned to body
 		$Model.rotation.x = deg_to_rad(-90)
-		$Model.position = model_offset + Vector3(0.0, 0.2, 0.0)
+		_sync_model_to_body()
 		return
 	elif current_anim == anim_stun:
-		# Just finished stun, reset model orientation
-		$Model.position = model_offset
+		# Just finished stun — reset orientation
 		$Model.rotation.x = 0.0
 		play_animation(anim_run)
 
@@ -226,6 +289,20 @@ func _physics_process(delta):
 
 	_update_effects(delta)
 
+	if coin_protection_timer > 0:
+		coin_protection_timer -= delta
+		if coin_protection_timer <= 0:
+			if shield_vfx and shield_vfx.visible:
+				# Use fade-out logic similar to try_defend's shield
+				var fade_tween = create_tween()
+				fade_tween.tween_property(shield_vfx, "scale", Vector3(1.5, 1.5, 1.5), 0.2)
+				fade_tween.parallel().tween_property(shield_vfx, "material_override:albedo_color:a", 0.0, 0.2)
+				fade_tween.tween_callback(func(): 
+					shield_vfx.visible = false
+					shield_vfx.scale = Vector3.ONE
+					shield_vfx.material_override.albedo_color.a = 0.3
+				)
+
 	var speed_factor = 1.0
 	if _has_effect("slow_speed"):
 		speed_factor *= 0.7
@@ -233,11 +310,12 @@ func _physics_process(delta):
 	$Model.scale = Vector3(1.0, 1.0, 1.0)
 	$Model.rotation.y = PI
 		
-	# Visual feedback for screen blur / confusion
+	# Pin model to body every frame (fixes sinking)
+	_sync_model_to_body()
+	
+	# Visual feedback for screen blur / confusion (X offset only, Y managed by sync)
 	if _has_effect("screen_blur"):
-		$Model.position = model_offset + Vector3(randf_range(-0.2, 0.2), randf_range(0.0, 0.2), 0.0)
-	else:
-		$Model.position = model_offset
+		$Model.position.x = model_offset.x + randf_range(-0.2, 0.2)
 
 	# Flash or shake when hit by something
 	if _has_effect("slow_speed") or _has_effect("slow_floor") or _has_effect("wind_push"):
@@ -385,9 +463,7 @@ func _physics_process(delta):
 		position.x += randf_range(-2.0, 2.0) * delta
 
 	move_and_slide()
-
-	if is_on_floor():
-		$Model.global_transform.origin.y = global_transform.origin.y + model_offset.y
+	# (Model Y is always synced via _sync_model_to_body — no global Y override needed)
 
 	if position.y < -10:
 		# Teleport back to lane 0 surface
@@ -423,8 +499,28 @@ func _has_effect(effect_name):
 	return effect_durations.has(effect_name)
 
 func add_score(amount):
+	# Called by kratip.gd on collect — routes through add_kratip
+	add_kratip(amount)
+
+func add_kratip(amount: int = 1):
 	kratips_collected += amount
+	kratip_milestone_count += amount
 	_calculate_total_score()
+	emit_signal("kratip_count_changed", kratip_milestone_count, 10)
+	
+	# Every 10 kratips → spawn a Luang Por Khoon coin
+	if kratip_milestone_count >= 10:
+		kratip_milestone_count = 0
+		emit_signal("kratip_count_changed", 0, 10)
+		if game_manager and game_manager.has_method("spawn_coin_for_player"):
+			game_manager.spawn_coin_for_player(self)
+
+func grant_coin_protection():
+	"""Grant or refresh the 5-second collision-immunity from a Luang Por Khoon coin."""
+	coin_protection_timer = COIN_PROTECTION_DURATION
+	set_warning("🛡️ หลวงพ่อคูณคุ้มครอง!")
+	get_tree().create_timer(1.5).timeout.connect(clear_warning.bind("🛡️ หลวงพ่อคูณคุ้มครอง!"))
+	_show_shield_vfx()
 
 func add_penalty(amount):
 	penalties += amount
@@ -437,7 +533,16 @@ func _calculate_total_score():
 	emit_signal("score_changed", score)
 
 func die() -> void:
-	# Redirect die to stun if it's from obstacle
+	# If coin-protection is active, block the hit entirely
+	if coin_protection_timer > 0.0:
+		set_warning("🛡️ ป้องกันได้!")
+		get_tree().create_timer(1.2).timeout.connect(clear_warning.bind("🛡️ ป้องกันได้!"))
+		# Light flash instead of stun
+		var tween = create_tween()
+		tween.tween_property($Model, "scale", Vector3(1.3, 1.3, 1.3), 0.08)
+		tween.tween_property($Model, "scale", Vector3(1.0, 1.0, 1.0), 0.12)
+		return
+	# Normal crash
 	add_penalty(100) # Crashing penalty
 	stun(2.0)
 
@@ -659,10 +764,11 @@ func set_warning(text):
 		tween_block.tween_property($Model, "scale", Vector3(1.5, 1.5, 1.5), 0.1)
 		tween_block.tween_property($Model, "scale", Vector3(1.0, 1.0, 1.0), 0.1)
 	elif text != "":
-		# Warning pulse
+		# Warning pulse (bounce slightly up from rest Y)
 		var tween_warn = create_tween()
-		tween_warn.tween_property($Model, "position:y", model_offset.y + 0.2, 0.1)
-		tween_warn.tween_property($Model, "position:y", model_offset.y, 0.1)
+		var rest_y = model_offset.y + model_y_offset
+		tween_warn.tween_property($Model, "position:y", rest_y + 0.2, 0.1)
+		tween_warn.tween_property($Model, "position:y", rest_y, 0.1)
 
 func clear_warning(_message_to_clear = ""):
 	emit_signal("warning_changed", "")

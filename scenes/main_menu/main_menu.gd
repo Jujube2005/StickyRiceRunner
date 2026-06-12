@@ -20,11 +20,18 @@ func _ready():
 	_animate_entrance()
 	_update_button_texts()
 	
+	# Inject Collection button
+	var collection_btn = Button.new()
+	collection_btn.name = "CollectionBtn"
+	button_list.add_child(collection_btn)
+	button_list.move_child(collection_btn, button_list.get_child_count() - 2) # Before Settings/Quit
+	
 	# Connect Signals
 	$MenuContainer/ButtonList/PlayBtn.pressed.connect(_on_play_pressed)
 	$MenuContainer/ButtonList/QuitBtn.pressed.connect(_on_quit_pressed)
 	$MenuContainer/ButtonList/SettingsBtn.pressed.connect(_on_settings_pressed)
 	$MenuContainer/ButtonList/HowToBtn.pressed.connect(_on_how_to_pressed)
+	collection_btn.pressed.connect(_on_collection_pressed)
 	LanguageManager.language_changed.connect(func(_l): _update_button_texts())
 
 func _setup_ui_styles():
@@ -104,6 +111,8 @@ func _animate_button_hover(btn: Button, is_hover: bool):
 
 func _update_button_texts():
 	$MenuContainer/ButtonList/PlayBtn.text = LanguageManager.t("BTN_PLAY")
+	if $MenuContainer/ButtonList.has_node("CollectionBtn"):
+		$MenuContainer/ButtonList/CollectionBtn.text = "ของขลังสะสม"
 	$MenuContainer/ButtonList/SettingsBtn.text = LanguageManager.t("BTN_SETTINGS")
 	$MenuContainer/ButtonList/HowToBtn.text = LanguageManager.t("BTN_HOW_TO")
 	$MenuContainer/ButtonList/QuitBtn.text = LanguageManager.t("BTN_QUIT")
@@ -136,6 +145,14 @@ func _on_how_to_pressed():
 	var how_to_instance = how_to_scene.instantiate()
 	how_to_instance.name = "HowToPlay"
 	add_child(how_to_instance)
+
+func _on_collection_pressed():
+	if has_node("CollectionMenu"):
+		return
+	var collection_scene = load("res://scenes/main_menu/collection_menu.tscn")
+	var collection_instance = collection_scene.instantiate()
+	collection_instance.name = "CollectionMenu"
+	add_child(collection_instance)
 
 func _on_quit_pressed():
 	get_tree().quit()

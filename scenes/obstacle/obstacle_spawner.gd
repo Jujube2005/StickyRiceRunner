@@ -80,10 +80,10 @@ func spawn_obstacle():
 func _spawn_obstacle_from_pool(lane_x: float, z: float):
 	var obs = _get_from_pool()
 	if obs:
-		var is_high = randf() < 0.6
-		var random_height = randf_range(1.8, 2.2) if is_high else randf_range(0.8, 1.0)
-		var pos = Vector3(lane_x, random_height * 0.5, z)
-		obs.activate(pos, random_height, is_high)
+		var is_high = randf() < 0.5
+		# Set Y to 1.0 so the base firewood_low_poly sits exactly on the ground
+		var pos = Vector3(lane_x, 1.0, z)
+		obs.activate(pos, 1.0, is_high)
 
 func _cleanup_old_obstacles():
 	var trail_z = max(player1.global_position.z, player2.global_position.z)
@@ -94,6 +94,5 @@ func _cleanup_old_obstacles():
 func spawn_block_in_lane(lane_x: float, from_z: float):
 	var obs = _get_from_pool()
 	if obs:
-		var h = 2.0
-		var pos = Vector3(lane_x, h * 0.5, from_z - 10)
-		obs.activate(pos, h, true)
+		var pos = Vector3(lane_x, 1.0, from_z - 10)
+		obs.activate(pos, 1.0, true)
