@@ -66,10 +66,14 @@ func _create_pool_tile():
 		if child.name in preserve_names:
 			continue
 		
-		# 25% chance to spawn each decoration, 75% chance to delete it for this block
-		if randf() > 0.25:
+		# 55% chance to spawn each decoration, 45% chance to delete it
+		if randf() > 0.55:
 			child.queue_free()
 	
+	# 50% chance to rotate the block 180 degrees. This perfectly swaps the left and right sides!
+	if randf() > 0.5:
+		ground.rotation.y = PI
+		
 	ground.position = Vector3(0, 0, spawn_z)
 	get_parent().get_node("World").add_child(ground)
 	pool.append(ground)
