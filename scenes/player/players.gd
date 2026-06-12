@@ -622,15 +622,6 @@ func request_skill():
 		prepared_skill = ""
 		emit_signal("skill_state_changed", false, "")
 
-func try_defend():
-	if charges < 1:
-		return
-	
-	deduct_charges(1)
-	_show_shield_vfx()
-	
-	if game_manager:
-		game_manager.try_block_prank(self)
 
 func _show_shield_vfx():
 	if !shield_vfx: return
@@ -676,16 +667,10 @@ func use_skill_at_slot(slot_index: int):
 		var skill_name = skills[slot_index]
 		if skill_name != "":
 			var success = false
-			if skill_name == "Pha Khao Ma":
-				_show_shield_vfx()
-				if game_manager:
-					game_manager.try_block_prank(self)
-				success = true
+			if game_manager:
+				success = game_manager.request_skill(self, skill_name)
 			else:
-				if game_manager:
-					success = game_manager.request_skill(self, skill_name)
-				else:
-					success = true
+				success = true
 			
 			if success:
 				print(name, " using skill: ", skill_name, " from slot ", slot_index)
@@ -696,7 +681,6 @@ func use_skill_at_slot(slot_index: int):
 					"Boon Bang Fai":        AudioManager.play_sfx("skill_bang_fai")
 					"Rice Yard Dust":       AudioManager.play_sfx("skill_dust")
 					"Field Wind", "Wind Push": AudioManager.play_sfx("skill_wind")
-					"Pha Khao Ma":          AudioManager.play_sfx("shield_block")
 					_:                      AudioManager.play_sfx("skill_use")
 				# VFX
 				#VfxManager.spawn("skill_use", global_position)

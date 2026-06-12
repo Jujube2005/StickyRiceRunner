@@ -163,17 +163,7 @@ func request_skill(attacker, skill_name = "") -> bool:
 	_transition_prank(new_prank, PrankState.ARMED)
 	return true
 
-func try_block_prank(player):
-	# Find the oldest ARMED prank targeting this player (FIFO)
-	for prank in active_pranks:
-		if prank.target == player and prank.state == PrankState.ARMED:
-			_transition_prank(prank, PrankState.BLOCKED)
-			return true
-	
-	# Missed block feedback
-	if player.has_method("set_warning"):
-		player.set_warning("บ่มีหยังให้ป้อง")
-	return false
+
 
 # --- EFFECT RESOLUTION ---
 func _execute_prank_effect(prank: Prank):
@@ -189,7 +179,7 @@ func _execute_prank_effect(prank: Prank):
 # --- UTILS ---
 func _choose_skill():
 	# Festival Charms — ธัมม์เทศกาล
-	var common = ["Rice Yard Dust", "Boon Bang Fai", "Field Wind", "Screen Blur", "Pha Khao Ma"]
+	var common = ["Rice Yard Dust", "Boon Bang Fai", "Field Wind", "Screen Blur"]
 	var uncommon = ["Pull to Center", "Lane Swap"]
 	var rare = ["Lane Block", "Wind Push"]
 	var roll = randf()
