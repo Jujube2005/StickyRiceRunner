@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://b2l6p52b2af6q"]
 
 [ext_resource type="PackedScene" uid="uid://5puofchkhk8s" path="res://assets/models/ground/road01.glb" id="1_au3k8"]
-[ext_resource type="PackedScene" uid="uid://cl6t0nmfe0gig" path="res://assets/models/ground/Phimai.glb" id="2_mdsb6"]
+[ext_resource type="PackedScene" uid="uid://drum62fjddmk6" path="res://assets/models/ground/ruinancienttemple.glb" id="3_ruin"]
 [ext_resource type="PackedScene" uid="uid://c3wl2hoenmsmt" path="res://assets/models/ground/rock.glb" id="5_rock"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_lv0v5"]
@@ -50,14 +50,26 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18, 0, 0)
 [node name="RightFar" type="Node3D" parent="SceneryPoints" unique_id=651211548]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 0, 0)
 
-[node name="Phimai" parent="." unique_id=220114011 instance=ExtResource("2_mdsb6")]
-transform = Transform3D(-2.1855695e-07, 0, 5, 0, 5, 0, -5, 0, -2.1855695e-07, -7.359506, 2.520605, 0.035470724)
-
-[node name="rock" parent="." unique_id=650522813 instance=ExtResource("5_rock")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.7286983, 0, 4.611256)
-
 [node name="rock2" parent="." unique_id=1289991719 instance=ExtResource("5_rock")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.7412148, 0.15462491, 4.448049)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.076768, 0.15462491, 4.833752)
+
+[node name="rock2" parent="rock2" unique_id=650522813 instance=ExtResource("5_rock")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.759015, 0.050601035, -8.835115)
 
 [node name="rock3" parent="." unique_id=1672746411 instance=ExtResource("5_rock")]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 5.09824, 0.15462539, -0.06808376)
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -5.780376, 0.15462539, -3.8597534)
+
+[node name="rock3" parent="rock3" unique_id=465782518 instance=ExtResource("5_rock")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.3163977, 0.11205277, 6.7621164)
+
+[node name="ruinancienttemple" parent="." unique_id=961615340 instance=ExtResource("3_ruin")]
+transform = Transform3D(-5.4201212e-08, 0, 0.71569526, 0, 1, 0, -1.2399791, 0, -3.1284035e-08, -6.8819776, 4.7683716e-07, 2.974868)
+
+[node name="ruinancienttemple" parent="ruinancienttemple" unique_id=1713107696 instance=ExtResource("3_ruin")]
+transform = Transform3D(1.24, 0, 0, 0, 0.99999994, 0, 0, 0, 0.7099999, 11.535988, 0.0045731068, 0.32596493)
+
+[node name="ruinancienttemple2" parent="ruinancienttemple" unique_id=1036354889 instance=ExtResource("3_ruin")]
+transform = Transform3D(1.2399787, 0, 0, 0, 1, 0, 0, 0, 0.715695, -12.290699, 0.14272404, 17.567348)
+
+[node name="ruinancienttemple" parent="ruinancienttemple/ruinancienttemple2" unique_id=1935036285 instance=ExtResource("3_ruin")]
+transform = Transform3D(1.24, 0, 8.881784e-16, 0, 0.99999994, 0, 0, 0, 0.70999986, 11.535988, -0.23958802, 0.32596588)
