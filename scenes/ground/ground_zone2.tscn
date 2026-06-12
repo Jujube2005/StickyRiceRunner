@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://b2l6p52b2af6q"]
 
 [ext_resource type="PackedScene" uid="uid://5puofchkhk8s" path="res://assets/models/ground/road01.glb" id="1_au3k8"]
+[ext_resource type="PackedScene" uid="uid://cl6t0nmfe0gig" path="res://assets/models/ground/Phimai.glb" id="2_mdsb6"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_lv0v5"]
 size = Vector3(30, 2, 10.4)
@@ -47,3 +48,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18, 0, 0)
 
 [node name="RightFar" type="Node3D" parent="SceneryPoints" unique_id=651211548]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 0, 0)
+
+[node name="Phimai" parent="." unique_id=220114011 instance=ExtResource("2_mdsb6")]
+transform = Transform3D(-2.1855695e-07, 0, 5, 0, 5, 0, -5, 0, -2.1855695e-07, -7.359506, 2.520605, 0.035470724)

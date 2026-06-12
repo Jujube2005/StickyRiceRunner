@@ -2,20 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bac2yikiey1pi"
-path.s3tc="res://.godot/imported/Rice_Image_3.webp-f95ce35d5ae1cab5cd9296706dbec23f.s3tc.ctex"
+uid="uid://dk7igtf2neb1v"
+path.s3tc="res://.godot/imported/ruinancienttemple_Image_0.webp-a490e49361521e6d1ba2bf4a9f6843e7.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 generator_parameters={
-"md5": "4fde74763306bc3e38cb6305231856c0"
+"md5": "a3aab7609a21d8556b9f32d219cf14fd"
 }
 
 [deps]
 
-source_file="res://assets/models/kratip/Rice_Image_3.webp"
-dest_files=["res://.godot/imported/Rice_Image_3.webp-f95ce35d5ae1cab5cd9296706dbec23f.s3tc.ctex"]
+source_file="res://assets/models/ground/ruinancienttemple_Image_0.webp"
+dest_files=["res://.godot/imported/ruinancienttemple_Image_0.webp-a490e49361521e6d1ba2bf4a9f6843e7.s3tc.ctex"]
 
 [params]
 

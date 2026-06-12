@@ -1,6 +1,5 @@
 [gd_scene format=3 uid="uid://2718haf4cta6"]
 
-[ext_resource type="PackedScene" uid="uid://ds74d8js55pum" path="res://assets/models/kratip/Rice.glb" id="1_w36du"]
 [ext_resource type="Script" uid="uid://d2imbcdekhnj2" path="res://scenes/kratip/kratip.gd" id="1_x575a"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_3d750"]
@@ -18,9 +17,6 @@ transform = Transform3D(0.99999976, 0, 0, 0, 0.99999976, 0, 0, 0, 0.99999976, -0
 shape = SubResource("CapsuleShape3D_3d750")
 
 [node name="Model" type="Node3D" parent="." unique_id=134852010]
-
-[node name="Rice2" parent="Model" unique_id=1205677007 instance=ExtResource("1_w36du")]
-transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, 0, 0, 2.5, 0, 0, 0)
 
 [node name="GlowLight" type="OmniLight3D" parent="." unique_id=20240529]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0.4, 0)

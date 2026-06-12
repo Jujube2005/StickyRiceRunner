@@ -1,6 +1,8 @@
 [gd_scene format=3 uid="uid://bn4llccpeimf"]
 
 [ext_resource type="PackedScene" uid="uid://5puofchkhk8s" path="res://assets/models/ground/road01.glb" id="1_au3k8"]
+[ext_resource type="PackedScene" uid="uid://ct7xe23k0up5g" path="res://assets/models/ground/Yamo.glb" id="2_vxqig"]
+[ext_resource type="PackedScene" uid="uid://c8qep0b2v1omo" path="res://assets/models/ground/amphitheater.glb" id="3_emaaf"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_lv0v5"]
 size = Vector3(30, 2, 10.4)
@@ -47,3 +49,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18, 0, 0)
 
 [node name="RightFar" type="Node3D" parent="SceneryPoints" unique_id=651211548]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 0, 0)
+
+[node name="Yamo" parent="." unique_id=1737645157 instance=ExtResource("2_vxqig")]
+transform = Transform3D(-2.1855695e-07, 0, 5, 0, 5, 0, -5, 0, -2.1855695e-07, -5.5716443, -0.37566614, 0.025659561)
+
+[node name="amphitheater" parent="." unique_id=162996264 instance=ExtResource("3_emaaf")]
+transform = Transform3D(-2.1855695e-07, 0, 5, 0, 5, 0, -5, 0, -2.1855695e-07, -5.567178, -1.5019257, 5.0760508)
+
+[node name="amphitheater2" parent="." unique_id=840339555 instance=ExtResource("3_emaaf")]
+transform = Transform3D(-2.1855695e-07, 0, 5, 0, 5, 0, -5, 0, -2.1855695e-07, -5.5211267, -1.5453255, -4.7611327)

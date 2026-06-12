@@ -20,13 +20,15 @@ func _ready():
 		_create_pool_tile()
 
 func _get_current_zone_scene() -> PackedScene:
-	var scene = get_tree().current_scene
-	var gm = scene.find_child("GameManager", true, false)
-	var z = gm.current_zone if gm else 1
+	# Calculate zone based on where the tile is actually being placed (spawn_z)
+	var distance = abs(spawn_z)
 	
-	if z == 2: return ground_zone2
-	if z == 3: return ground_zone3
-	return ground_zone1
+	if distance >= 666.0:
+		return ground_zone3
+	elif distance >= 333.0:
+		return ground_zone2
+	else:
+		return ground_zone1
 
 func _process(_delta):
 	# เช็กตำแหน่งผู้เล่นทั้งคู่
