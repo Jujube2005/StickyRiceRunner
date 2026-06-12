@@ -145,6 +145,48 @@ func _create_kratip_label(parent_node: Control) -> Label:
 	parent_node.add_child(lbl)
 	return lbl
 
+func show_coin_fly_in(player_name: String, coin_name: String, is_new: bool):
+	# Center screen start
+	var start_pos = Vector2(size.x / 2.0, size.y / 2.0)
+	
+	# Determine target pos based on player
+	var target_pos = Vector2.ZERO
+	if player_name == "Player1":
+		target_pos = $TopLeft/KratibIcon.global_position
+	else:
+		target_pos = $TopRight/KratibIcon.global_position
+		
+	# Create cinematic coin label
+	var coin_lbl = Label.new()
+	coin_lbl.text = "🪙 " + coin_name
+	var ls = LabelSettings.new()
+	ls.font_size = 40
+	if font_resource: ls.font = font_resource
+	ls.font_color = Color(1.0, 0.8, 0.1)
+	ls.outline_size = 8
+	ls.outline_color = Color.BLACK
+	coin_lbl.label_settings = ls
+	
+	coin_lbl.global_position = start_pos - Vector2(100, 50) # center roughly
+	coin_lbl.scale = Vector2.ZERO
+	add_child(coin_lbl)
+	
+	var tween = create_tween()
+	# Pop in center
+	tween.tween_property(coin_lbl, "scale", Vector2(1.2, 1.2), 0.3).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tween.tween_interval(0.8) # Wait to let player see it
+	
+	# Fly to target
+	tween.tween_property(coin_lbl, "global_position", target_pos, 0.5).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	tween.parallel().tween_property(coin_lbl, "scale", Vector2(0.3, 0.3), 0.5)
+	
+	# Trigger unlock popup if new, and delete the fly-in label
+	tween.tween_callback(func(): 
+		coin_lbl.queue_free()
+		if is_new:
+			show_coin_unlock(coin_name)
+	)
+
 func show_coin_unlock(coin_name: String):
 	var popup = Label.new()
 	popup.text = "🎉 ปลดล็อก: " + coin_name + "!"
@@ -170,33 +212,22 @@ func show_coin_unlock(coin_name: String):
 	tween.tween_callback(popup.queue_free)
 
 func _process(delta):
-	var goal_dist = 1000.0
-	if game_manager:
-		goal_dist = float(game_manager.get("GOAL_DISTANCE"))
-		
 	var p1_target_percent = 0.0
 	var p2_target_percent = 0.0
 	
-	# Update P1 Data
 	if player1:
-		var p1_dist = player1.get("distance") if "distance" in player1 else 0.0
-		p1_target_percent = clamp((p1_dist / goal_dist) * 100.0, 0.0, 100.0)
-		p1_distance.text = "%dm / %dm" % [int(p1_dist), int(goal_dist)]
-	
-	# Update P2 Data
-	if player2:
-		var p2_dist = player2.get("distance") if "distance" in player2 else 0.0
-		p2_target_percent = clamp((p2_dist / goal_dist) * 100.0, 0.0, 100.0)
-		p2_distance.text = "%dm / %dm" % [int(p2_dist), int(goal_dist)]
+		p1_distance.text = str(int(player1.distance)) + "m"
+		p1_target_percent = (player1.kratip_milestone_count / 10.0) * 100.0
 		
-	# Smoothly interpolate progress bar values
-	p1_current_percent = lerp(p1_current_percent, p1_target_percent, 5.0 * delta)
-	p2_current_percent = lerp(p2_current_percent, p2_target_percent, 5.0 * delta)
+	if player2:
+		p2_distance.text = str(int(player2.distance)) + "m"
+		p2_target_percent = (player2.kratip_milestone_count / 10.0) * 100.0
+		
+	p1_current_percent = lerp(p1_current_percent, p1_target_percent, 10.0 * delta)
+	p2_current_percent = lerp(p2_current_percent, p2_target_percent, 10.0 * delta)
 	
-	if p1_distance_bar:
-		p1_distance_bar.value = p1_current_percent
-	if p2_distance_bar:
-		p2_distance_bar.value = p2_current_percent
+	if p1_distance_bar: p1_distance_bar.value = p1_current_percent
+	if p2_distance_bar: p2_distance_bar.value = p2_current_percent
 		
 	# Compare distances and update LEADING indicators
 	if player1 and player2:

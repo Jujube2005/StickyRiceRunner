@@ -508,12 +508,25 @@ func add_kratip(amount: int = 1):
 	_calculate_total_score()
 	emit_signal("kratip_count_changed", kratip_milestone_count, 10)
 	
-	# Every 10 kratips → spawn a Luang Por Khoon coin
+	# Every 10 kratips → grant Luang Por Khoon coin directly
 	if kratip_milestone_count >= 10:
 		kratip_milestone_count = 0
 		emit_signal("kratip_count_changed", 0, 10)
-		if game_manager and game_manager.has_method("spawn_coin_for_player"):
-			game_manager.spawn_coin_for_player(self)
+		
+		# Roll random coin
+		var coin_data = CollectionManager.roll_random_coin()
+		var is_new = CollectionManager.add_coin(coin_data["id"])
+		
+		# SFX
+		AudioManager.play_sfx("pickup")
+		
+		# Tell HUD to show cinematic fly-in
+		var hud = get_tree().current_scene.find_child("GameplayHUD", true, false)
+		if hud and hud.has_method("show_coin_fly_in"):
+			hud.show_coin_fly_in(self.name, coin_data["name"], is_new)
+			
+		# Grant protection (delay slightly to match fly-in animation)
+		get_tree().create_timer(0.6).timeout.connect(grant_coin_protection)
 
 func grant_coin_protection():
 	"""Grant or refresh the 5-second collision-immunity from a Luang Por Khoon coin."""
@@ -691,6 +704,16 @@ func use_skill_at_slot(slot_index: int):
 				get_tree().create_timer(1.0).timeout.connect(clear_warning.bind("คูลดาวน์..."))
 
 func apply_prank(skill_name):
+	# Coin protection blocks opponent skills entirely
+	if coin_protection_timer > 0.0:
+		set_warning("🛡️ หลวงพ่อคูณปัดเป่า!")
+		get_tree().create_timer(1.2).timeout.connect(clear_warning.bind("🛡️ หลวงพ่อคูณปัดเป่า!"))
+		# Light flash instead of taking debuff
+		var tween = create_tween()
+		tween.tween_property($Model, "scale", Vector3(1.3, 1.3, 1.3), 0.08)
+		tween.tween_property($Model, "scale", Vector3(1.0, 1.0, 1.0), 0.12)
+		return
+		
 	match skill_name:
 		"Rice Yard Dust":
 			# ฝุ่นลานข้าว — ช้าลงทั้งเสี๚ระยะการเปลี่ยนเลน
