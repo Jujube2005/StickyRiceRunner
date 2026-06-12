@@ -1,6 +1,9 @@
 extends Node3D
 
-@export var ground_scene : PackedScene
+@export var ground_zone1 : PackedScene = preload("res://scenes/ground/ground_zone1.tscn")
+@export var ground_zone2 : PackedScene = preload("res://scenes/ground/ground_zone2.tscn")
+@export var ground_zone3 : PackedScene = preload("res://scenes/ground/ground_zone3.tscn")
+
 @export var player1 : CharacterBody3D
 @export var player2 : CharacterBody3D
 
@@ -12,21 +15,18 @@ var spawn_z = 0.0
 var pool = []
 
 func _ready():
-	# Automatically stretch the collision shape and side grounds to match the tile_length
-	var temp_ground = ground_scene.instantiate()
-	var col = temp_ground.get_node_or_null("CollisionShape3D")
-	if col and col.shape is BoxShape3D:
-		col.shape.size.z = tile_length
-		
-	var side_left = temp_ground.get_node_or_null("SideGroundLeft")
-	if side_left and side_left.mesh is BoxMesh:
-		side_left.mesh.size.z = tile_length
-		
-	temp_ground.free()
-
-	# Initial Pool Creation
+	# Initial Pool Creation (Always Zone 1)
 	for i in range(pool_size):
 		_create_pool_tile()
+
+func _get_current_zone_scene() -> PackedScene:
+	var scene = get_tree().current_scene
+	var gm = scene.find_child("GameManager", true, false)
+	var z = gm.current_zone if gm else 1
+	
+	if z == 2: return ground_zone2
+	if z == 3: return ground_zone3
+	return ground_zone1
 
 func _process(_delta):
 	# เช็กตำแหน่งผู้เล่นทั้งคู่
@@ -55,20 +55,44 @@ func _process(_delta):
 			break
 
 func _create_pool_tile():
-	var ground = ground_scene.instantiate()
+	var scene_to_spawn = _get_current_zone_scene()
+	if !scene_to_spawn: return
+	
+	var ground = scene_to_spawn.instantiate()
+	
+	# Randomize decorations to prevent them from repeating every 10 meters and looking like a wall
+	var preserve_names = ["CollisionShape3D", "road01", "road02", "SideGroundLeft", "SideGroundRight", "SceneryPoints"]
+	for child in ground.get_children():
+		if child.name in preserve_names:
+			continue
+		
+		# 25% chance to spawn each decoration, 75% chance to delete it for this block
+		if randf() > 0.25:
+			child.queue_free()
+	
 	ground.position = Vector3(0, 0, spawn_z)
 	get_parent().get_node("World").add_child(ground)
 	pool.append(ground)
 	
+	# Tag it so we know which zone it belongs to
+	var gm = get_tree().current_scene.find_child("GameManager", true, false)
+	ground.set_meta("zone", gm.current_zone if gm else 1)
+	
 	spawn_z -= tile_length
 
 func _recycle_tile(tile):
-	# ย้ายไปข้างหน้าและล็อคค่า X, Y ให้ตรง
-	tile.global_position = Vector3(0, 0, spawn_z)
+	var gm = get_tree().current_scene.find_child("GameManager", true, false)
+	var active_zone = gm.current_zone if gm else 1
+	var tile_zone = tile.get_meta("zone") if tile.has_meta("zone") else 1
 	
-	# เตรียมตำแหน่งถัดไป
-	spawn_z -= tile_length
-	
-	# จัดลำดับ Array ใหม่
 	pool.remove_at(0)
-	pool.append(tile)
+	
+	# If the tile belongs to an old zone, delete it and spawn a new one in its place!
+	if tile_zone != active_zone:
+		tile.queue_free()
+		_create_pool_tile()
+	else:
+		# Recycle the existing tile
+		tile.global_position = Vector3(0, 0, spawn_z)
+		spawn_z -= tile_length
+		pool.append(tile)

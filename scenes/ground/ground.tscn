@@ -1,8 +1,6 @@
 [gd_scene format=3 uid="uid://cfi32xwqvv463"]
 
 [ext_resource type="PackedScene" uid="uid://5puofchkhk8s" path="res://assets/models/ground/road01.glb" id="1_au3k8"]
-[ext_resource type="PackedScene" uid="uid://shvkfhn332ud" path="res://assets/models/ground/isanthaihouse.glb" id="2_rrkwn"]
-[ext_resource type="PackedScene" uid="uid://cj53l3mrnwg41" path="res://assets/models/ground/homekorat.glb" id="3_xmv3o"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_lv0v5"]
 size = Vector3(30, 2, 10.4)
@@ -49,9 +47,3 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18, 0, 0)
 
 [node name="RightFar" type="Node3D" parent="SceneryPoints" unique_id=651211548]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 0, 0)
-
-[node name="Sketchfab_Scene2" parent="." unique_id=667169679 instance=ExtResource("2_rrkwn")]
-transform = Transform3D(-0.65314233, 0, -7.853694e-08, 0, 1.4577296, 0, 5.7099516e-08, 0, -0.8983579, 7.307415, -0.17298007, 4.8100424)
-
-[node name="Sketchfab_Scene3" parent="." unique_id=113104191 instance=ExtResource("3_xmv3o")]
-transform = Transform3D(0.00018482498, -0.44226477, -0.00016848404, -0.0004775619, -7.777e-05, 0.9587385, -0.90344095, -9.043628e-05, -0.00050682743, 0.7646651, -0.20652199, 14.499462)

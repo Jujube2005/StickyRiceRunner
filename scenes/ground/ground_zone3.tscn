@@ -1,0 +1,49 @@
+[gd_scene format=3 uid="uid://bn4llccpeimf"]
+
+[ext_resource type="PackedScene" uid="uid://5puofchkhk8s" path="res://assets/models/ground/road01.glb" id="1_au3k8"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_lv0v5"]
+size = Vector3(30, 2, 10.4)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dirt"]
+albedo_color = Color(0.42, 0.33, 0.22, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_dirt"]
+material = SubResource("StandardMaterial3D_dirt")
+size = Vector3(15, 0.5, 10.4)
+
+[node name="Ground" type="StaticBody3D" unique_id=1642254633]
+collision_layer = 6
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1372169769]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+shape = SubResource("BoxShape3D_lv0v5")
+
+[node name="road01" parent="." unique_id=1049326560 instance=ExtResource("1_au3k8")]
+transform = Transform3D(-3.715468e-07, 0, 6, 0, 6, 0, -8.5, 0, -2.6226832e-07, -1.95, 0, 0)
+
+[node name="road02" parent="." unique_id=764681803 instance=ExtResource("1_au3k8")]
+transform = Transform3D(-3.715468e-07, 0, 6, 0, 6, 0, -8.5, 0, -2.6226832e-07, 2, 0, 0)
+
+[node name="SideGroundLeft" type="MeshInstance3D" parent="." unique_id=888888881]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1.6, -11.554779, -0.25, 0)
+mesh = SubResource("BoxMesh_dirt")
+
+[node name="SideGroundRight" type="MeshInstance3D" parent="." unique_id=888888882]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1.6, 11.5, -0.25, 0)
+mesh = SubResource("BoxMesh_dirt")
+
+[node name="SceneryPoints" type="Node3D" parent="." unique_id=1760085451]
+
+[node name="Left" type="Node3D" parent="SceneryPoints" unique_id=2126371196]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0, 0)
+
+[node name="Right" type="Node3D" parent="SceneryPoints" unique_id=39167907]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0, 0)
+
+[node name="LeftFar" type="Node3D" parent="SceneryPoints" unique_id=2427372]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18, 0, 0)
+
+[node name="RightFar" type="Node3D" parent="SceneryPoints" unique_id=651211548]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 0, 0)

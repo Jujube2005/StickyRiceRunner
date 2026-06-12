@@ -1,0 +1,74 @@
+[gd_scene format=3 uid="uid://t0odnnx4fis2"]
+
+[ext_resource type="PackedScene" uid="uid://5puofchkhk8s" path="res://assets/models/ground/road01.glb" id="1_au3k8"]
+[ext_resource type="PackedScene" uid="uid://shvkfhn332ud" path="res://assets/models/ground/isanthaihouse.glb" id="2_rrkwn"]
+[ext_resource type="PackedScene" uid="uid://cj53l3mrnwg41" path="res://assets/models/ground/homekorat.glb" id="3_xmv3o"]
+[ext_resource type="PackedScene" uid="uid://d4moq5avpayts" path="res://assets/models/ground/Kiln.glb" id="4_t3agl"]
+[ext_resource type="PackedScene" uid="uid://clpnxsshjl2w7" path="res://assets/models/ground/clayjar.glb" id="5_p3dfm"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_lv0v5"]
+size = Vector3(30, 2, 10.4)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dirt"]
+albedo_color = Color(0.42, 0.33, 0.22, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_dirt"]
+material = SubResource("StandardMaterial3D_dirt")
+size = Vector3(15, 0.5, 10.4)
+
+[node name="Ground" type="StaticBody3D" unique_id=1642254633]
+collision_layer = 6
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1372169769]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+shape = SubResource("BoxShape3D_lv0v5")
+
+[node name="road01" parent="." unique_id=1049326560 instance=ExtResource("1_au3k8")]
+transform = Transform3D(-3.715468e-07, 0, 6, 0, 6, 0, -8.5, 0, -2.6226832e-07, -1.95, 0, 0)
+
+[node name="road02" parent="." unique_id=764681803 instance=ExtResource("1_au3k8")]
+transform = Transform3D(-3.715468e-07, 0, 6, 0, 6, 0, -8.5, 0, -2.6226832e-07, 2, 0, 0)
+
+[node name="SideGroundLeft" type="MeshInstance3D" parent="." unique_id=888888881]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1.6, -11.554779, -0.25, 0)
+mesh = SubResource("BoxMesh_dirt")
+
+[node name="SideGroundRight" type="MeshInstance3D" parent="." unique_id=888888882]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1.6, 11.5, -0.25, 0)
+mesh = SubResource("BoxMesh_dirt")
+
+[node name="SceneryPoints" type="Node3D" parent="." unique_id=1760085451]
+
+[node name="Left" type="Node3D" parent="SceneryPoints" unique_id=2126371196]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0, 0)
+
+[node name="Right" type="Node3D" parent="SceneryPoints" unique_id=39167907]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0, 0)
+
+[node name="LeftFar" type="Node3D" parent="SceneryPoints" unique_id=2427372]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18, 0, 0)
+
+[node name="RightFar" type="Node3D" parent="SceneryPoints" unique_id=651211548]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 0, 0)
+
+[node name="Sketchfab_Scene2" parent="." unique_id=667169679 instance=ExtResource("2_rrkwn")]
+transform = Transform3D(-0.65314233, 0, -7.853694e-08, 0, 1.4577296, 0, 5.7099516e-08, 0, -0.8983579, 7.307415, -0.17298007, 4.8100424)
+
+[node name="Sketchfab_Scene3" parent="." unique_id=113104191 instance=ExtResource("3_xmv3o")]
+transform = Transform3D(0.00018482498, -0.44226477, -0.00016848404, -0.0004775619, -7.777e-05, 0.9587385, -0.90344095, -9.043628e-05, -0.00050682743, 0.7646651, -0.20652199, 14.499462)
+
+[node name="Kiln" parent="." unique_id=1176421672 instance=ExtResource("4_t3agl")]
+transform = Transform3D(0.94547224, 0, 1.9887203, 0, 3.17439, 0, -2.0668051, 0, 0.9097516, -5.529229, -0.39947116, 4.38325)
+
+[node name="Sketchfab_Scene" parent="." unique_id=1432283793 instance=ExtResource("5_p3dfm")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1236438, -2.360768, -3.1439743)
+
+[node name="Sketchfab_Scene4" parent="." unique_id=1155235940 instance=ExtResource("5_p3dfm")]
+transform = Transform3D(0.5, 0, 0, 0, 0.474, 0, 0, 0, 0.336, -9.963439, -1.0827382, 5.0732245)
+
+[node name="Sketchfab_Scene5" parent="." unique_id=993468418 instance=ExtResource("5_p3dfm")]
+transform = Transform3D(0.20083158, 0, 0, 0, 0.19747712, 0.06808307, 0, -0.062442444, 0.21531588, -6.773823, -0.49536467, 5.579857)
+
+[node name="Sketchfab_Scene6" parent="." unique_id=332276778 instance=ExtResource("5_p3dfm")]
+transform = Transform3D(0.2, 0, 0, 0, 0.21484578, 0.009657107, 0, -0.008142263, 0.25481707, 3.1772237, -0.448972, 7.49922)

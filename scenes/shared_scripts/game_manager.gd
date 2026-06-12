@@ -21,8 +21,11 @@ class Prank:
 # --- SIGNALS ---
 signal prank_state_changed(prank: Prank)
 signal global_cooldown_changed(active: bool)
+signal zone_changed(new_zone: int)
 
 # --- CONFIGURATION ---
+var current_zone: int = 1  # 1: Oxcart, 2: Phimai, 3: Yamo
+
 @export var player_scene: PackedScene = preload("res://scenes/player/players.tscn")
 @export var skill_cooldown_min := 3.0
 @export var skill_cooldown_max := 5.0
@@ -217,7 +220,22 @@ func spawn_lane_block(target):
 
 func _check_distance_goal(_new_dist):
 	if game_ended: return
-	if p1.distance >= GOAL_DISTANCE or p2.distance >= GOAL_DISTANCE:
+	
+	var max_dist = max(p1.distance, p2.distance)
+	
+	# Check Zone Transitions
+	var new_zone = current_zone
+	if max_dist >= 666.0:
+		new_zone = 3
+	elif max_dist >= 333.0:
+		new_zone = 2
+		
+	if new_zone != current_zone:
+		current_zone = new_zone
+		emit_signal("zone_changed", current_zone)
+		print("[GAME MANAGER] Transitioned to Zone ", current_zone)
+	
+	if max_dist >= GOAL_DISTANCE:
 		game_ended = true
 		_determine_winner_by_score()
 
