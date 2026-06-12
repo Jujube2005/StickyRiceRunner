@@ -2,6 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://5puofchkhk8s" path="res://assets/models/ground/road01.glb" id="1_au3k8"]
 [ext_resource type="PackedScene" uid="uid://cl6t0nmfe0gig" path="res://assets/models/ground/Phimai.glb" id="2_mdsb6"]
+[ext_resource type="PackedScene" uid="uid://c3wl2hoenmsmt" path="res://assets/models/ground/rock.glb" id="5_rock"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_lv0v5"]
 size = Vector3(30, 2, 10.4)
@@ -51,3 +52,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 0, 0)
 
 [node name="Phimai" parent="." unique_id=220114011 instance=ExtResource("2_mdsb6")]
 transform = Transform3D(-2.1855695e-07, 0, 5, 0, 5, 0, -5, 0, -2.1855695e-07, -7.359506, 2.520605, 0.035470724)
+
+[node name="rock" parent="." unique_id=650522813 instance=ExtResource("5_rock")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.7286983, 0, 4.611256)
+
+[node name="rock2" parent="." unique_id=1289991719 instance=ExtResource("5_rock")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.7412148, 0.15462491, 4.448049)
+
+[node name="rock3" parent="." unique_id=1672746411 instance=ExtResource("5_rock")]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 5.09824, 0.15462539, -0.06808376)

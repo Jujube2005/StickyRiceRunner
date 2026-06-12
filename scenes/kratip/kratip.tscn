@@ -1,5 +1,6 @@
 [gd_scene format=3 uid="uid://2718haf4cta6"]
 
+[ext_resource type="PackedScene" uid="uid://d1ibevechc41b" path="res://assets/models/kratip/Rice.glb" id="1_w36du"]
 [ext_resource type="Script" uid="uid://d2imbcdekhnj2" path="res://scenes/kratip/kratip.gd" id="1_x575a"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_3d750"]
@@ -7,16 +8,19 @@ radius = 0.4013672
 height = 1.1025391
 
 [node name="Kratip" type="Area3D" unique_id=1121803993]
-transform = Transform3D(0.6, 0, 0, 0, 0.6, 0, 0, 0, 0.6, 0, 0, 0)
+transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 0, 0, 0)
 collision_layer = 16
 collision_mask = 3
 script = ExtResource("1_x575a")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1749946054]
-transform = Transform3D(0.99999976, 0, 0, 0, 0.99999976, 0, 0, 0, 0.99999976, -0.15499304, 0.29951042, -0.06388092)
+transform = Transform3D(0.99999976, 0, 0, 0, 0.99999976, 0, 0, 0, 0.99999976, -0.00087649864, 0.29951042, -0.06388092)
 shape = SubResource("CapsuleShape3D_3d750")
 
 [node name="Model" type="Node3D" parent="." unique_id=134852010]
+
+[node name="Rice" parent="Model" unique_id=1378908268 instance=ExtResource("1_w36du")]
+transform = Transform3D(3.9999998, 0, 0, 0, 3.9999998, 0, 0, 0, 3.9999998, 0, -3.4082818, 0)
 
 [node name="GlowLight" type="OmniLight3D" parent="." unique_id=20240529]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0.4, 0)
