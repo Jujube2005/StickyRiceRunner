@@ -1,15 +1,15 @@
 extends Control
 
-const TEX_SWITCH_ON  = preload("res://assets/textures/UI/Buttons/switch_on.png")
-const TEX_SWITCH_OFF = preload("res://assets/textures/UI/Buttons/switch_off.png")
+
 const TEX_SLIDER_TRACK = preload("res://assets/textures/UI/Buttons/HSliderTrac.png")
-const TEX_SLIDER_GRABBER = preload("res://assets/textures/UI/Buttons/HSliderGrabber.png")
+const TEX_SLIDER_RING = preload("res://assets/textures/UI/Buttons/HSliderGrabber.png")
+const TEX_SLIDER_COIN = preload("res://assets/textures/UI/Buttons/HSliderIcon.png")
 
 @onready var board_rect: TextureRect   = $Board
 @onready var master_slider: HSlider    = $Board/Content/Master/MasterSlider
 @onready var music_slider: HSlider     = $Board/Content/Music/MusicSlider
 @onready var sfx_slider: HSlider       = $Board/Content/SFX/SFXSlider
-@onready var fullscreen_switch: TextureButton = $Board/Content/Screen/FullscreenSwitch
+
 @onready var btn_ok: TextureButton     = $Board/ButtonBox/BtnOk
 @onready var btn_close: TextureButton  = $Board/ButtonBox/BtnClose
 
@@ -19,12 +19,10 @@ func _ready():
 	default_scale = board_rect.scale
 	_setup_visuals()
 	_load_settings()
-	_update_switch_visual(fullscreen_switch.button_pressed)
-
 	master_slider.value_changed.connect(_on_master_changed)
 	music_slider.value_changed.connect(_on_music_changed)
 	sfx_slider.value_changed.connect(_on_sfx_changed)
-	fullscreen_switch.toggled.connect(_on_fullscreen_toggled)
+
 	btn_ok.pressed.connect(_on_close_pressed)
 	btn_close.pressed.connect(_on_menu_pressed)
 	
@@ -34,25 +32,23 @@ func _ready():
 	_animate_in()
 
 func _setup_visuals():
-	# Resize the grabber image to be a nice pill shape matching the track height
-	var grabber_img = TEX_SLIDER_GRABBER.get_image()
-	grabber_img.resize(54, 32, Image.INTERPOLATE_LANCZOS)
-	var small_grabber = ImageTexture.create_from_image(grabber_img)
-
 	for slider in [master_slider, music_slider, sfx_slider]:
-		slider.custom_minimum_size = Vector2(0, 30)
 		var style_track = StyleBoxTexture.new()
 		style_track.texture = TEX_SLIDER_TRACK
-		style_track.expand_margin_top = 10
-		style_track.expand_margin_bottom = 10
+		style_track.expand_margin_top = 18.0
+		style_track.expand_margin_bottom = 18.0
+		
+		var style_fill = StyleBoxTexture.new()
+		style_fill.texture = TEX_SLIDER_RING
+		style_fill.expand_margin_top = 14.0
+		style_fill.expand_margin_bottom = 14.0
 		
 		slider.add_theme_stylebox_override("slider", style_track)
-		slider.add_theme_stylebox_override("grabber_area", StyleBoxEmpty.new())
-		slider.add_theme_stylebox_override("grabber_area_highlight", StyleBoxEmpty.new())
-		slider.add_theme_icon_override("grabber", small_grabber)
-		slider.add_theme_icon_override("grabber_highlight", small_grabber)
+		slider.add_theme_stylebox_override("grabber_area", style_fill)
+		slider.add_theme_stylebox_override("grabber_area_highlight", style_fill)
+		slider.add_theme_icon_override("grabber", TEX_SLIDER_COIN)
+		slider.add_theme_icon_override("grabber_highlight", TEX_SLIDER_COIN)
 
-	fullscreen_switch.custom_minimum_size = Vector2(90, 38)
 	
 func _setup_button_hover(btn: TextureButton):
 	btn.pivot_offset = btn.size / 2.0
@@ -78,13 +74,7 @@ func _load_settings():
 	var sfx_bus = AudioServer.get_bus_index("SFX")
 	if sfx_bus != -1:
 		sfx_slider.value = db_to_linear(AudioServer.get_bus_volume_db(sfx_bus))
-	fullscreen_switch.button_pressed = (
-		get_window().mode == Window.MODE_EXCLUSIVE_FULLSCREEN or
-		get_window().mode == Window.MODE_FULLSCREEN
-	)
 
-func _update_switch_visual(is_on: bool):
-	fullscreen_switch.texture_normal = TEX_SWITCH_ON if is_on else TEX_SWITCH_OFF
 
 func _animate_in():
 	board_rect.scale = default_scale * 0.85
@@ -108,9 +98,6 @@ func _on_sfx_changed(value: float):
 	var bus = AudioServer.get_bus_index("SFX")
 	if bus != -1: AudioServer.set_bus_volume_db(bus, linear_to_db(value))
 
-func _on_fullscreen_toggled(is_on: bool):
-	_update_switch_visual(is_on)
-	get_window().mode = Window.MODE_EXCLUSIVE_FULLSCREEN if is_on else Window.MODE_WINDOWED
 
 func _on_close_pressed():
 	var tween = create_tween().set_parallel(true)
@@ -124,4 +111,3 @@ func _on_menu_pressed():
 	# Close the setting and change scene to Main Menu
 	get_tree().paused = false
 	get_tree().change_scene_to_file("res://scenes/main_menu/main_menu.tscn")
-
