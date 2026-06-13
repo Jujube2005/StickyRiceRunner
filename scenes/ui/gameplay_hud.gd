@@ -417,38 +417,25 @@ func update_slots_ui(player, slot1_btn, slot2_btn, _key1_text, _key2_text):
 		var skill_name = skills_list[0]
 		slot1_btn.disabled = false
 		slot1_btn.modulate = Color.WHITE
+		slot1_btn.self_modulate = get_skill_color(skill_name)
 		
-		var icon_path = _get_skill_icon_path(skill_name)
-		var custom_tex = _load_texture_safe(icon_path, "")
-		var icon_node = slot1_btn.get_node_or_null("SkillIcon")
-		
-		if skill_name == "Pha Khao Ma":
-			slot1_btn.texture_normal = _load_texture_safe("res://assets/textures/UI/Buttons/skill_shield.png")
-			slot1_btn.self_modulate = Color(0.9, 0.7, 0.1) if custom_tex == null else Color.WHITE
-		else:
-			slot1_btn.texture_normal = _load_texture_safe("res://assets/textures/UI/Buttons/skill_bangfai.png")
-			slot1_btn.self_modulate = get_skill_color(skill_name) if custom_tex == null else Color.WHITE
-			
-		if icon_node:
-			if custom_tex != null:
-				icon_node.texture = custom_tex
-				icon_node.visible = true
-			else:
-				icon_node.visible = false
-		
-		var label = slot1_btn.get_node("NameLabel")
-		label.text = get_skill_display_name(skill_name)
-		label.visible = true
-	else:
-		slot1_btn.disabled = true
-		slot1_btn.modulate = Color(0.3, 0.3, 0.3, 0.6) # dimmed
-		slot1_btn.self_modulate = Color.WHITE
-		slot1_btn.texture_normal = _load_texture_safe("res://assets/textures/UI/Buttons/skill_bangfai.png")
 		var icon_node = slot1_btn.get_node_or_null("SkillIcon")
 		if icon_node: icon_node.visible = false
-		var label = slot1_btn.get_node("NameLabel")
-		label.text = ""
-		label.visible = false
+		
+		var label = slot1_btn.get_node_or_null("NameLabel")
+		if label:
+			label.text = get_skill_display_name(skill_name)
+			label.visible = true
+	else:
+		slot1_btn.disabled = true
+		slot1_btn.modulate = Color(0.3, 0.3, 0.3, 0.6)
+		slot1_btn.self_modulate = Color.WHITE
+		var icon_node = slot1_btn.get_node_or_null("SkillIcon")
+		if icon_node: icon_node.visible = false
+		var label = slot1_btn.get_node_or_null("NameLabel")
+		if label:
+			label.text = ""
+			label.visible = false
 		
 	# Update Slot 2
 	var s2_active = skills_list.size() > 1 and skills_list[1] != ""
@@ -456,38 +443,25 @@ func update_slots_ui(player, slot1_btn, slot2_btn, _key1_text, _key2_text):
 		var skill_name = skills_list[1]
 		slot2_btn.disabled = false
 		slot2_btn.modulate = Color.WHITE
+		slot2_btn.self_modulate = get_skill_color(skill_name)
 		
-		var icon_path = _get_skill_icon_path(skill_name)
-		var custom_tex = _load_texture_safe(icon_path, "")
-		var icon_node = slot2_btn.get_node_or_null("SkillIcon")
-		
-		if skill_name == "Pha Khao Ma":
-			slot2_btn.texture_normal = _load_texture_safe("res://assets/textures/UI/Buttons/skill_shield.png")
-			slot2_btn.self_modulate = Color(0.9, 0.7, 0.1) if custom_tex == null else Color.WHITE
-		else:
-			slot2_btn.texture_normal = _load_texture_safe("res://assets/textures/UI/Buttons/skill_bangfai.png")
-			slot2_btn.self_modulate = get_skill_color(skill_name) if custom_tex == null else Color.WHITE
-			
-		if icon_node:
-			if custom_tex != null:
-				icon_node.texture = custom_tex
-				icon_node.visible = true
-			else:
-				icon_node.visible = false
-		
-		var label = slot2_btn.get_node("NameLabel")
-		label.text = get_skill_display_name(skill_name)
-		label.visible = true
-	else:
-		slot2_btn.disabled = true
-		slot2_btn.modulate = Color(0.3, 0.3, 0.3, 0.6) # dimmed
-		slot2_btn.self_modulate = Color.WHITE
-		slot2_btn.texture_normal = _load_texture_safe("res://assets/textures/UI/Buttons/skill_shield.png")
 		var icon_node = slot2_btn.get_node_or_null("SkillIcon")
 		if icon_node: icon_node.visible = false
-		var label = slot2_btn.get_node("NameLabel")
-		label.text = ""
-		label.visible = false
+		
+		var label = slot2_btn.get_node_or_null("NameLabel")
+		if label:
+			label.text = get_skill_display_name(skill_name)
+			label.visible = true
+	else:
+		slot2_btn.disabled = true
+		slot2_btn.modulate = Color(0.3, 0.3, 0.3, 0.6)
+		slot2_btn.self_modulate = Color.WHITE
+		var icon_node = slot2_btn.get_node_or_null("SkillIcon")
+		if icon_node: icon_node.visible = false
+		var label = slot2_btn.get_node_or_null("NameLabel")
+		if label:
+			label.text = ""
+			label.visible = false
 
 func get_skill_color(skill_name: String) -> Color:
 	match skill_name:
@@ -517,7 +491,7 @@ func _get_skill_icon_path(skill_name: String) -> String:
 	var safe_name = skill_name.to_lower().replace(" ", "_")
 	return "res://assets/textures/UI/Skills/skill_" + safe_name + ".png"
 
-func _load_texture_safe(path: String, fallback_path: String = "res://assets/textures/UI/Buttons/box_orange.png") -> Texture2D:
+func _load_texture_safe(path: String, fallback_path: String = "") -> Texture2D:
 	if ResourceLoader.exists(path):
 		var tex = load(path)
 		if tex:
