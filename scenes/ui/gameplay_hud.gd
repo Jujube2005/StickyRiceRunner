@@ -208,7 +208,7 @@ func show_coin_fly_in(player_name: String, coin_name: String, is_new: bool):
 
 func show_coin_unlock(coin_name: String):
 	var popup = Label.new()
-	popup.text = "🎉 ปลดล็อก: " + coin_name + "!"
+	popup.text = LanguageManager.t("LBL_UNLOCK") + coin_name + "!"
 	var ls = LabelSettings.new()
 	ls.font_size = 28
 	if font_resource: ls.font = font_resource

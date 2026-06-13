@@ -27,10 +27,10 @@ stretch_mode = 6
 
 [node name="MenuContainer" type="PanelContainer" parent="." unique_id=1797221629]
 layout_mode = 0
-offset_left = 220.0
-offset_top = 276.0
-offset_right = 420.0
-offset_bottom = 501.0
+offset_left = 204.00002
+offset_top = 276.00003
+offset_right = 436.0939
+offset_bottom = 501.00003
 rotation = -0.122173
 scale = Vector2(1.2566994, 1.0777587)
 pivot_offset = Vector2(100, 112)

@@ -108,12 +108,6 @@ func _setup_modern_hud():
 	score_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	score_h_box.add_child(score_label)
 	
-	var s_icon = Label.new()
-	s_icon.text = " 🏆"
-	s_icon.label_settings = label_settings
-	s_icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	score_h_box.add_child(s_icon)
-	
 	# Distance (Right Aligned)
 	var dist_h_box = HBoxContainer.new()
 	dist_h_box.alignment = BoxContainer.ALIGNMENT_END
@@ -127,19 +121,13 @@ func _setup_modern_hud():
 	distance_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	dist_h_box.add_child(distance_label)
 	
-	var d_icon = Label.new()
-	d_icon.text = " 🏃"
-	d_icon.label_settings = label_settings
-	d_icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	dist_h_box.add_child(d_icon)
-	
 	# Segmented Charge Bar
 	var charge_v_box = VBoxContainer.new()
 	charge_v_box.mouse_filter = Control.MOUSE_FILTER_PASS
 	v_box.add_child(charge_v_box)
 	
 	var c_label = Label.new()
-	c_label.text = "แฮงดี / กระติ๊บข้าว"
+	c_label.text = LanguageManager.t("UI_STAMINA_KRATIP")
 	c_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	c_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var c_settings = label_settings.duplicate()
@@ -300,30 +288,30 @@ func _update_button_visuals():
 	if player.charges >= player.MAX_CHARGES and !is_cooldown:
 		skill_button.disabled = false
 		if player.is_rolling_skill:
-			skill_button.text = "🎆 ลุ้นบั้งไฟ..."
+			skill_button.text = LanguageManager.t("BTN_ROLLING")
 			skill_button.disabled = true
 			_apply_button_style(skill_button, COLOR_PREPARE.lightened(0.3))
 			_start_rolling_animation()
 		elif player.is_skill_ready:
-			skill_button.text = "🚀 จุดบั้งไฟ!"
+			skill_button.text = LanguageManager.t("BTN_USE_SKILL")
 			skill_button.modulate = Color.WHITE
 			_apply_button_style(skill_button, COLOR_READY)
 			_start_pulse_animation(skill_button)
 		else:
-			skill_button.text = "🚀 เตรียมบั้งไฟ"
+			skill_button.text = LanguageManager.t("BTN_SKILL_READY")
 			skill_button.modulate = Color.WHITE
 			_apply_button_style(skill_button, COLOR_PREPARE)
 	else:
 		skill_button.disabled = true
 		if is_cooldown:
-			skill_button.text = "⏳ รอคอยจังหวะ"
+			skill_button.text = LanguageManager.t("BTN_WAIT")
 		else:
-			skill_button.text = "🔒 ยังบ่พร้อม"
+			skill_button.text = LanguageManager.t("BTN_NOT_READY")
 		skill_button.modulate = Color.WHITE
 		_apply_button_style(skill_button, COLOR_LOCKED)
 		
 	# Defend Button Logic
-	defend_button.text = "🛡️ ตั้งรับ"
+	defend_button.text = LanguageManager.t("BTN_DEFEND")
 	if player.charges >= 1:
 		defend_button.disabled = false
 		defend_button.modulate = Color.WHITE
@@ -337,7 +325,7 @@ func _start_rolling_animation():
 	var tween = create_tween().set_loops(10)
 	var random_emoji = ["🏮", "🎆", "✨", "🔥", "🚀"]
 	tween.tween_callback(func(): 
-		skill_button.text = random_emoji[randi() % random_emoji.size()] + " ลุ้นบั้งไฟ " + random_emoji[randi() % random_emoji.size()]
+		skill_button.text = LanguageManager.t("BTN_ROLLING")
 	).set_delay(0.1)
 
 func _apply_button_style(btn: Button, color: Color):
@@ -392,27 +380,27 @@ func update_warning(text):
 	var tween = create_tween()
 	tween.tween_property(warning_label_large, "scale", Vector2(1.0, 1.0), 0.2).set_trans(Tween.TRANS_BACK)
 	
-	if text.ends_with(" กำลังมา!"):
+	if text.ends_with(LanguageManager.t("WARN_INCOMING")):
 		warning_label_large.label_settings.font_color = Color.RED
-		warning_label_large.text = "⚠️ ระวัง ⚠️\n" + text.to_upper()
+		warning_label_large.text = LanguageManager.t("WARN_WARNING") + text.to_upper()
 		_pulse_warning()
 		_flash_screen(Color(1, 0, 0, 0.3))
-	elif text.begins_with("พร้อมแล้ว:"):
+	elif text.begins_with(LanguageManager.t("HUD_GOT_SKILL")):
 		warning_label_large.label_settings.font_color = Color.GOLD
-		var skill_name = text.get_slice(": ", 1).to_upper()
-		warning_label_large.text = "✨ บั้งไฟพร้อมปล่อย! ✨\n[" + skill_name + "]"
+		var skill_name = text.trim_prefix(LanguageManager.t("HUD_GOT_SKILL")).to_upper()
+		warning_label_large.text = LanguageManager.t("WARN_SKILL_READY_RELEASE") + "[" + skill_name + "]"
 		_flash_screen(Color(1, 0.8, 0, 0.4))
 		# Extra reveal animation
 		var tween_reveal = create_tween()
 		tween_reveal.tween_property(warning_label_large, "scale", Vector2(1.5, 1.5), 0.2)
 		tween_reveal.tween_property(warning_label_large, "scale", Vector2(1.0, 1.0), 0.1)
-	elif text == "ป้องได้แล้ว!":
+	elif text == LanguageManager.t("WARN_BLOCKED"):
 		warning_label_large.label_settings.font_color = Color.GREEN
-		warning_label_large.text = "🛡️ ป้องได้แล้ว! 🛡️"
+		warning_label_large.text = LanguageManager.t("WARN_BLOCKED")
 		_flash_screen(Color(0, 1, 0, 0.3))
-	elif text == "ป้องกันบ่ทัน":
+	elif text == LanguageManager.t("WARN_HIT"):
 		warning_label_large.label_settings.font_color = Color.ORANGE_RED
-		warning_label_large.text = "💥 ป้องกันบ่ทัน! 💥"
+		warning_label_large.text = LanguageManager.t("WARN_HIT")
 		_flash_screen(Color(1, 0.3, 0, 0.4))
 		# Shake animation
 		var tween_shake = create_tween()
@@ -420,9 +408,9 @@ func update_warning(text):
 			tween_shake.tween_property(warning_label_large, "position:x", warning_label_large.position.x + 10, 0.05)
 			tween_shake.tween_property(warning_label_large, "position:x", warning_label_large.position.x - 10, 0.05)
 		tween_shake.tween_property(warning_label_large, "position:x", warning_label_large.position.x, 0.05)
-	elif text == "บ่มีหยังให้ป้อง":
+	elif text == LanguageManager.t("WARN_NOTHING_TO_BLOCK"):
 		warning_label_large.label_settings.font_color = Color.LIGHT_GRAY
-		warning_label_large.text = "💨 บ่มีหยังให้ป้อง"
+		warning_label_large.text = LanguageManager.t("WARN_NOTHING_TO_BLOCK")
 		_flash_screen(Color(0.5, 0.5, 0.5, 0.1))
 	else:
 		warning_label_large.label_settings.font_color = Color.YELLOW

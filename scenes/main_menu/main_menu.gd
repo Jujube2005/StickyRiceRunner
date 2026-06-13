@@ -112,7 +112,7 @@ func _animate_button_hover(btn: Button, is_hover: bool):
 func _update_button_texts():
 	$MenuContainer/ButtonList/PlayBtn.text = LanguageManager.t("BTN_PLAY")
 	if $MenuContainer/ButtonList.has_node("CollectionBtn"):
-		$MenuContainer/ButtonList/CollectionBtn.text = "ของขลังสะสม"
+		$MenuContainer/ButtonList/CollectionBtn.text = LanguageManager.t("BTN_COLLECTION")
 	$MenuContainer/ButtonList/SettingsBtn.text = LanguageManager.t("BTN_SETTINGS")
 	$MenuContainer/ButtonList/HowToBtn.text = LanguageManager.t("BTN_HOW_TO")
 	$MenuContainer/ButtonList/QuitBtn.text = LanguageManager.t("BTN_QUIT")

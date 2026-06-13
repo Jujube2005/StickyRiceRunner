@@ -13,8 +13,8 @@
 [ext_resource type="Texture2D" uid="uid://xjdny1cp4333" path="res://assets/textures/UI/Buttons/P2.png" id="9_cqn7g"]
 [ext_resource type="Texture2D" uid="uid://bfdspjmjgwjm1" path="res://assets/textures/UI/Buttons/down.png" id="10_down"]
 [ext_resource type="FontFile" uid="uid://2d6rvw7lnbb6" path="res://assets/textures/UI/Font/Mitr/Mitr-Bold.ttf" id="11_font"]
-[ext_resource type="Texture2D" uid="uid://hpiegj4jiilm" path="res://assets/textures/UI/Buttons/box_orange.png" id="12_noor6"]
-[ext_resource type="Texture2D" uid="uid://b7qy8qpe0n5uv" path="res://assets/textures/UI/Buttons/box_green.png" id="13_t667q"]
+[ext_resource type="Texture2D" uid="uid://bpufwsl7jtdjt" path="res://assets/textures/UI/Buttons/slot_orange.png" id="14_3y74m"]
+[ext_resource type="Texture2D" uid="uid://xnkof5vsl58w" path="res://assets/textures/UI/Buttons/slot_green.png" id="15_cqn7g"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_leader"]
 font = ExtResource("11_font")
@@ -336,14 +336,14 @@ theme_override_constants/separation = 15
 [node name="Slot1" type="TextureButton" parent="BottomControls/P1Skills" unique_id=1182060587]
 custom_minimum_size = Vector2(80, 80)
 layout_mode = 2
-texture_normal = ExtResource("12_noor6")
+texture_normal = ExtResource("14_3y74m")
 ignore_texture_size = true
 stretch_mode = 5
 
 [node name="Slot2" type="TextureButton" parent="BottomControls/P1Skills" unique_id=128640499]
 custom_minimum_size = Vector2(80, 80)
 layout_mode = 2
-texture_normal = ExtResource("12_noor6")
+texture_normal = ExtResource("14_3y74m")
 ignore_texture_size = true
 stretch_mode = 5
 
@@ -363,21 +363,21 @@ grow_vertical = 0
 theme_override_constants/separation = 0
 alignment = 2
 
-[node name="Slot1" type="TextureButton" parent="BottomControls/P2Skills" unique_id=1232434785]
-custom_minimum_size = Vector2(95, 95)
+[node name="Slot1" type="TextureButton" parent="BottomControls/P2Skills" unique_id=62760567]
+custom_minimum_size = Vector2(80, 80)
 layout_mode = 2
-texture_normal = ExtResource("13_t667q")
+texture_normal = ExtResource("15_cqn7g")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="Slot2" type="TextureButton" parent="BottomControls/P2Skills" unique_id=1423934459]
-custom_minimum_size = Vector2(95, 95)
+[node name="Slot2" type="TextureButton" parent="BottomControls/P2Skills" unique_id=239930120]
+custom_minimum_size = Vector2(80, 80)
 layout_mode = 2
-texture_normal = ExtResource("13_t667q")
+texture_normal = ExtResource("15_cqn7g")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="CoinPopupAnchor" type="Control" parent="."]
+[node name="CoinPopupAnchor" type="Control" parent="." unique_id=1577901387]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5

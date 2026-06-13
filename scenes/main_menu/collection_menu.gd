@@ -19,7 +19,7 @@ func _setup_ui():
 	ls.outline_size = 6
 	ls.outline_color = Color.BLACK
 	title_label.label_settings = ls
-	title_label.text = "ของขลังสะสม"
+	title_label.text = LanguageManager.t("BTN_COLLECTION")
 	
 	# Panel background
 	var style = StyleBoxFlat.new()
@@ -68,7 +68,7 @@ func _create_coin_item(coin_id: String, coin_name: String) -> Control:
 	
 	# Label "?" if not collected
 	var icon_lbl = Label.new()
-	icon_lbl.text = "🏆" if has_collected else "?"
+	icon_lbl.text = "✓" if has_collected else "?"
 	var ls_icon = LabelSettings.new()
 	ls_icon.font_size = 60
 	if font_resource: ls_icon.font = font_resource
@@ -100,7 +100,7 @@ func _create_coin_item(coin_id: String, coin_name: String) -> Control:
 	
 	# Count Label
 	var count_lbl = Label.new()
-	count_lbl.text = "จำนวน: " + str(count) if has_collected else "ยังไม่มี"
+	count_lbl.text = LanguageManager.t("LBL_AMOUNT") + str(count) if has_collected else LanguageManager.t("LBL_NOT_FOUND")
 	var ls_count = LabelSettings.new()
 	ls_count.font_size = 14
 	if font_resource: ls_count.font = font_resource

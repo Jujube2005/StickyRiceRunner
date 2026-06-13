@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c3xcdws0e843w"
-path="res://.godot/imported/icon_katib.png-3c4be319e8fa5673fe22c6f0fa7e06d4.ctex"
+uid="uid://bpufwsl7jtdjt"
+path="res://.godot/imported/slot_orange.png-3ef7598863ebfc5c5ede80b2fa5317f5.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/textures/UI/Buttons/icon_katib.png"
-dest_files=["res://.godot/imported/icon_katib.png-3c4be319e8fa5673fe22c6f0fa7e06d4.ctex"]
+source_file="res://assets/textures/UI/Buttons/slot_orange.png"
+dest_files=["res://.godot/imported/slot_orange.png-3ef7598863ebfc5c5ede80b2fa5317f5.ctex"]
 
 [params]
 

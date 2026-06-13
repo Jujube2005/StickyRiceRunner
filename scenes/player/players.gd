@@ -536,8 +536,9 @@ func add_kratip(amount: int = 1):
 func grant_coin_protection():
 	"""Grant or refresh the 5-second collision-immunity from a Luang Por Khoon coin."""
 	coin_protection_timer = COIN_PROTECTION_DURATION
-	set_warning("🛡️ หลวงพ่อคูณคุ้มครอง!")
-	get_tree().create_timer(1.5).timeout.connect(clear_warning.bind("🛡️ หลวงพ่อคูณคุ้มครอง!"))
+	var warn_msg = LanguageManager.t("WARN_PKM_PROTECT")
+	set_warning(warn_msg)
+	get_tree().create_timer(1.5).timeout.connect(clear_warning.bind(warn_msg))
 	_show_shield_vfx()
 
 func add_penalty(amount):
@@ -553,8 +554,9 @@ func _calculate_total_score():
 func die() -> void:
 	# If coin-protection is active, block the hit entirely
 	if coin_protection_timer > 0.0:
-		set_warning("🛡️ ป้องกันได้!")
-		get_tree().create_timer(1.2).timeout.connect(clear_warning.bind("🛡️ ป้องกันได้!"))
+		var warn_msg = LanguageManager.t("WARN_BLOCKED")
+		set_warning(warn_msg)
+		get_tree().create_timer(1.2).timeout.connect(clear_warning.bind(warn_msg))
 		# Light flash instead of stun
 		var tween = create_tween()
 		tween.tween_property($Model, "scale", Vector3(1.3, 1.3, 1.3), 0.08)
@@ -656,9 +658,10 @@ func add_skill(skill_name: String) -> bool:
 	if skills.size() < 2:
 		skills.append(skill_name)
 		emit_signal("skills_changed", skills)
-		set_warning("เก็บได้: " + skill_name)
-		# Clear warning message after 1.5s
-		get_tree().create_timer(1.5).timeout.connect(clear_warning.bind("เก็บได้: " + skill_name))
+		var warn_msg = LanguageManager.t("WARN_OBTAINED") + skill_name
+		set_warning(warn_msg)
+		# clear message
+		get_tree().create_timer(1.5).timeout.connect(clear_warning.bind(warn_msg))
 		return true
 	return false
 
@@ -684,19 +687,22 @@ func use_skill_at_slot(slot_index: int):
 					_:                      AudioManager.play_sfx("skill_use")
 				# VFX
 				#VfxManager.spawn("skill_use", global_position)
-				set_warning("ใช้สกิล: " + skill_name)
-				# Clear warning message after 1.5s
-				get_tree().create_timer(1.5).timeout.connect(clear_warning.bind("ใช้สกิล: " + skill_name))
+				var warn_msg = LanguageManager.t("WARN_USED") + skill_name
+				set_warning(warn_msg)
+				
+				get_tree().create_timer(1.5).timeout.connect(clear_warning.bind(warn_msg))
 			else:
 				print(name, " skill ", skill_name, " is on global cooldown!")
-				set_warning("คูลดาวน์...")
-				get_tree().create_timer(1.0).timeout.connect(clear_warning.bind("คูลดาวน์..."))
+				var warn_msg = LanguageManager.t("WARN_COOLDOWN")
+				set_warning(warn_msg)
+				get_tree().create_timer(1.0).timeout.connect(clear_warning.bind(warn_msg))
 
 func apply_prank(skill_name):
 	# Coin protection blocks opponent skills entirely
 	if coin_protection_timer > 0.0:
-		set_warning("🛡️ หลวงพ่อคูณปัดเป่า!")
-		get_tree().create_timer(1.2).timeout.connect(clear_warning.bind("🛡️ หลวงพ่อคูณปัดเป่า!"))
+		var warn_msg = LanguageManager.t("WARN_PKM_DEFLECT")
+		set_warning(warn_msg)
+		get_tree().create_timer(1.2).timeout.connect(clear_warning.bind(warn_msg))
 		# Light flash instead of taking debuff
 		var tween = create_tween()
 		tween.tween_property($Model, "scale", Vector3(1.3, 1.3, 1.3), 0.08)
@@ -745,21 +751,21 @@ func on_prank_state_updated(prank):
 		1: # PREPARED (not used in this simplified flow yet, but for consistency)
 			pass
 		2: # ARMED
-			set_warning(prank.type + " กำลังมา!")
+			set_warning(prank.type + LanguageManager.t("WARN_INCOMING"))
 		4: # BLOCKED
-			set_warning("ป้องได้แล้ว!")
-			# Auto-clear block message
-			get_tree().create_timer(1.5).timeout.connect(clear_warning.bind("ป้องได้แล้ว!"))
+			var warn_msg = LanguageManager.t("WARN_BLOCKED")
+			set_warning(warn_msg)
+			get_tree().create_timer(1.5).timeout.connect(clear_warning.bind(warn_msg))
 		3: # ACTIVE (Failed to block)
-			set_warning("ป้องกันบ่ทัน")
-			# Auto-clear fail message
-			get_tree().create_timer(1.5).timeout.connect(clear_warning.bind("ป้องกันบ่ทัน"))
+			var warn_msg = LanguageManager.t("WARN_HIT")
+			set_warning(warn_msg)
+			get_tree().create_timer(1.5).timeout.connect(clear_warning.bind(warn_msg))
 
 func set_warning(text):
 	emit_signal("warning_changed", text)
 	
 	# Bot auto-defend logic (uses Pha Khao Ma skill in slot if available)
-	if is_bot and "กำลังมา!" in text:
+	if is_bot and LanguageManager.t("WARN_INCOMING") in text:
 		var shield_slot = -1
 		for i in range(skills.size()):
 			if skills[i] == "Pha Khao Ma":
@@ -770,7 +776,7 @@ func set_warning(text):
 			get_tree().create_timer(randf_range(0.2, 0.5)).timeout.connect(_bot_use_shield_delayed.bind(slot_to_use))
 	
 	# Visual feedback for warning/blocking
-	if text == "ป้องได้แล้ว!":
+	if text == LanguageManager.t("WARN_BLOCKED"):
 		# Pulse green-ish or just jump
 		var tween_block = create_tween()
 		tween_block.tween_property($Model, "scale", Vector3(1.5, 1.5, 1.5), 0.1)
