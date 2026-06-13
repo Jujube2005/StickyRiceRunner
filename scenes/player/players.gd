@@ -44,11 +44,13 @@ var current_anim : String = ""
 
 @export_group("Animations")
 @export var anim_run : String = "run"
+@export var anim_jump : String = "jump"
 @export var anim_stun : String = "stun"
 
 @export_group("Animation Files")
 @export_file("*.glb") var model_file : String
 @export_file("*.glb") var run_file : String
+@export_file("*.glb") var jump_file : String
 @export_file("*.glb") var stun_file : String
 
 @export_group("Model Offset")
@@ -120,6 +122,7 @@ func _ready():
 		
 		# Import animations from files
 		if run_file: _import_anim(run_file, anim_run)
+		if jump_file: _import_anim(jump_file, anim_jump)
 		if stun_file: _import_anim(stun_file, anim_stun)
 		
 		# Force active and play
@@ -338,6 +341,7 @@ func _physics_process(delta):
 		if anim_player and current_anim == anim_run:
 			anim_player.speed_scale = abs(velocity.z) / BASE_FORWARD_SPEED
 	else:
+		play_animation(anim_jump)
 		if anim_player:
 			anim_player.speed_scale = 1.0
 
@@ -815,10 +819,12 @@ func _auto_assign_files():
 	if is_male:
 		if !model_file: model_file = "res://assets/models/player/manTmodel.glb"
 		if !run_file: run_file = "res://assets/animation/manRunning.glb"
+		if !jump_file: jump_file = "res://assets/animation/jump.glb"
 		if !stun_file: stun_file = "res://assets/animation/manStun.glb"
 	else:
 		if !model_file: model_file = "res://assets/models/player/girlTmodel.glb"
 		if !run_file: run_file = "res://assets/animation/girlRunning.glb"
+		if !jump_file: jump_file = "res://assets/animation/jump.glb"
 		if !stun_file: stun_file = "res://assets/animation/girlStun.glb"
 
 func _import_anim(path: String, target_name: String):
@@ -867,6 +873,15 @@ func _apply_anim_to_player(anim: Animation, target_name: String):
 		var tracks_to_remove = []
 		for i in range(anim.get_track_count()):
 			var path = str(anim.track_get_path(i))
+			var p_lower = path.to_lower()
+			
+			# Root Motion Removal for jump animation
+			if target_name == anim_jump:
+				if p_lower.ends_with(":position") or p_lower.ends_with(":location"):
+					if "hips" in p_lower or "metarig" in p_lower or "armature" in p_lower or "root" in p_lower:
+						tracks_to_remove.append(i)
+						continue
+
 			if ":" in path:
 				var parts = path.split(":")
 				# Mixamo/Godot 4 track pattern: "Node/Path:BoneName" or "Node/Path:BoneName:property"
