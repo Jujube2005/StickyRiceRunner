@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://c6snrht51rmp6"]
+
+[ext_resource type="PackedScene" uid="uid://cwsjp5axipcqp" path="res://assets/models/ground/bigrock.glb" id="1_bq00q"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_rock"]
+size = Vector3(0.43543702, 0.6807373, 0.45734864)
+
+[node name="Obstacle" type="Area3D" unique_id=382382367]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 1, 0)
+collision_layer = 8
+collision_mask = 3
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=390459933]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.06658326, -0.33909914, -0.04134522)
+shape = SubResource("BoxShape3D_rock")
+
+[node name="firewood_mid" type="Node3D" parent="." unique_id=999999901]
+visible = false
+
+[node name="firewood_top" type="Node3D" parent="." unique_id=999999902]
+visible = false
+
+[node name="Sketchfab_Scene" parent="." unique_id=1620941698 instance=ExtResource("1_bq00q")]
+transform = Transform3D(30, 0, 0, 0, 30, 0, 0, 0, 30, -0.106528684, -0.43378672, 0)

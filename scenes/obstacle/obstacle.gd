@@ -2,15 +2,21 @@ extends Area3D
 
 var is_active = false
 @onready var collision_shape = $CollisionShape3D
-@onready var firewood_mid = $firewood_mid
-@onready var firewood_top = $firewood_top
+
+# These nodes may or may not exist depending on the obstacle type (firewood stacking)
+var firewood_mid: Node3D = null
+var firewood_top: Node3D = null
 
 func _ready():
 	connect("body_entered", Callable(self, "_on_body_entered"))
 	
 	if collision_shape and collision_shape.shape:
 		collision_shape.shape = collision_shape.shape.duplicate()
-		
+	
+	# Optional stacking nodes — only exist in firewood (zone 1)
+	firewood_mid = get_node_or_null("firewood_mid")
+	firewood_top = get_node_or_null("firewood_top")
+	
 	# Start deactivated if instantiated through code
 	if !is_active:
 		deactivate()
@@ -68,8 +74,6 @@ func _on_body_entered(body) -> void:
 	var node_body := body as Node
 	if node_body and node_body.has_method("stun"):
 		node_body.call("stun", 2.0)
-		# VFX at player's chest position
-		#VfxManager.spawn("obstacle_hit", node_body.global_position + Vector3(0, 1.0, 0))
 		AudioManager.play_sfx("obstacle_hit")
 		# Instead of queue_free, we deactivate
 		deactivate()

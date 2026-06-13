@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://d2nr0yp58gg7o"]
+
+[ext_resource type="PackedScene" uid="uid://jsucdx0wvvba" path="res://assets/models/ground/Hurdle.glb" id="1_kmc62"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_buffalo"]
+size = Vector3(1.0205078, 0.6557129, 0.16027832)
+
+[node name="Obstacle" type="Area3D" unique_id=382382368]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 1, 0)
+collision_layer = 8
+collision_mask = 3
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=390459934]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.011230469, -0.26174325, 0.04486084)
+shape = SubResource("BoxShape3D_buffalo")
+
+[node name="firewood_mid" type="Node3D" parent="." unique_id=999999911]
+visible = false
+
+[node name="firewood_top" type="Node3D" parent="." unique_id=999999912]
+visible = false
+
+[node name="Sketchfab_Scene" parent="." unique_id=1159828856 instance=ExtResource("1_kmc62")]
+transform = Transform3D(0.10000001, 0, 0, 0, 0.10000001, 0, 0, 0, 0.10000001, 0, -0.5846457, 0.0054363413)
