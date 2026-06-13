@@ -142,8 +142,13 @@ func _create_kratip_label(parent_node: Control) -> Label:
 	ls.outline_color = Color.BLACK
 	lbl.label_settings = ls
 	
-	# Position to the right of the kratip icon
-	lbl.position = Vector2(parent_node.size.x + 5, parent_node.size.y / 2.0 - 15)
+	if parent_node.get_parent().name == "TopRight":
+		# Position to the left of the kratip icon for Player 2
+		lbl.position = Vector2(-45, parent_node.size.y / 2.0 - 15)
+	else:
+		# Position to the right of the kratip icon for Player 1
+		lbl.position = Vector2(parent_node.size.x + 5, parent_node.size.y / 2.0 - 15)
+		
 	parent_node.add_child(lbl)
 	return lbl
 
