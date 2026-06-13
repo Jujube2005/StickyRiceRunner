@@ -47,10 +47,8 @@ func _ready():
 func _load_current_settings():
 	# Audio
 	master_slider.value = db_to_linear(AudioServer.get_bus_volume_db(AudioServer.get_bus_index("Master")))
-	var music_bus = AudioServer.get_bus_index("Music")
-	if music_bus != -1: music_slider.value = db_to_linear(AudioServer.get_bus_volume_db(music_bus))
-	var sfx_bus = AudioServer.get_bus_index("SFX")
-	if sfx_bus != -1: sfx_slider.value = db_to_linear(AudioServer.get_bus_volume_db(sfx_bus))
+	music_slider.value = db_to_linear(AudioManager._music_volume_db)
+	sfx_slider.value = db_to_linear(AudioManager._sfx_volume_db)
 	
 	# Fullscreen
 	fullscreen_switch.button_pressed = ((get_window().mode == Window.MODE_EXCLUSIVE_FULLSCREEN) or (get_window().mode == Window.MODE_FULLSCREEN))
@@ -66,10 +64,12 @@ func _on_master_volume_changed(value):
 	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Master"), linear_to_db(value))
 
 func _on_music_volume_changed(value):
+	AudioManager.set_music_volume(value)
 	var bus = AudioServer.get_bus_index("Music")
 	if bus != -1: AudioServer.set_bus_volume_db(bus, linear_to_db(value))
 
 func _on_sfx_volume_changed(value):
+	AudioManager.set_sfx_volume(value)
 	var bus = AudioServer.get_bus_index("SFX")
 	if bus != -1: AudioServer.set_bus_volume_db(bus, linear_to_db(value))
 
