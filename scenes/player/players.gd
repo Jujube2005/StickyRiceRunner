@@ -823,9 +823,9 @@ func _auto_assign_files():
 		if !stun_file: stun_file = "res://assets/animation/manStun.glb"
 	else:
 		if !model_file: model_file = "res://assets/models/player/girlTmodel.glb"
-		if !run_file: run_file = "res://assets/animation/girlRunning.glb"
+		if !run_file: run_file = "res://assets/animation/manRunning.glb"
 		if !jump_file: jump_file = "res://assets/animation/jump.glb"
-		if !stun_file: stun_file = "res://assets/animation/girlStun.glb"
+		if !stun_file: stun_file = "res://assets/animation/manStun.glb"
 
 func _import_anim(path: String, target_name: String):
 	if !FileAccess.file_exists(path): 
