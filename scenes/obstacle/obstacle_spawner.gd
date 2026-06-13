@@ -40,6 +40,7 @@ func _init_pool():
 		var obs = obstacle_zone1.instantiate()
 		obs.set_script(load("res://scenes/obstacle/obstacle.gd"))
 		obs.add_to_group("obstacle")
+		obs.set_meta("zone_scene", obstacle_zone1.resource_path)
 		get_parent().add_child.call_deferred(obs)
 		obstacle_pool.append(obs)
 
@@ -49,12 +50,23 @@ func _get_from_pool_for_zone(zone_scene: PackedScene):
 		if !obs.is_active and obs.get_meta("zone_scene", "") == zone_scene.resource_path:
 			return obs
 	
-	# No matching inactive — get any inactive and swap its visual
-	for obs in obstacle_pool:
-		if !obs.is_active:
-			return obs
+	# No matching inactive of the correct type.
+	# Let's find ANY inactive obstacle and REPLACE it with the correct type.
+	for i in range(obstacle_pool.size()):
+		var old_obs = obstacle_pool[i]
+		if !old_obs.is_active:
+			old_obs.queue_free()
+			
+			var new_obs = zone_scene.instantiate()
+			new_obs.set_script(load("res://scenes/obstacle/obstacle.gd"))
+			new_obs.add_to_group("obstacle")
+			new_obs.set_meta("zone_scene", zone_scene.resource_path)
+			
+			obstacle_pool[i] = new_obs
+			get_parent().add_child(new_obs)
+			return new_obs
 	
-	# Pool exhausted — grow dynamically
+	# Pool exhausted completely — grow dynamically
 	push_warning("Obstacle pool exhausted! Growing pool dynamically.")
 	if zone_scene:
 		var obs = zone_scene.instantiate()

@@ -31,7 +31,7 @@ func activate(pos: Vector3):
 func deactivate():
 	is_active = false
 	visible = false
-	position = Vector3(0, -100, 0)
+	call_deferred("set_position", Vector3(0, -100, 0))
 	
 	set_process(false)
 	set_deferred("monitoring", false)

@@ -112,8 +112,8 @@ func activate(pos: Vector3, data: Dictionary):
 func deactivate():
 	is_active = false
 	visible   = false
-	global_position = Vector3(0, -200, 0)
-	set_process(false)
+	call_deferred("set_position", Vector3(0, -100, 0))
+	set_deferred("monitorable", false)
 	set_deferred("monitoring", false)
 	set_deferred("monitorable", false)
 

@@ -10,12 +10,12 @@ var firewood_top: Node3D = null
 func _ready():
 	connect("body_entered", Callable(self, "_on_body_entered"))
 	
-	if collision_shape and collision_shape.shape:
-		collision_shape.shape = collision_shape.shape.duplicate()
-	
 	# Optional stacking nodes — only exist in firewood (zone 1)
 	firewood_mid = get_node_or_null("firewood_mid")
 	firewood_top = get_node_or_null("firewood_top")
+	
+	if firewood_mid and collision_shape and collision_shape.shape:
+		collision_shape.shape = collision_shape.shape.duplicate()
 	
 	# Start deactivated if instantiated through code
 	if !is_active:
@@ -60,8 +60,9 @@ func activate(pos: Vector3, height: float, high_obstacle: bool):
 func deactivate():
 	is_active = false
 	visible = false
-	# Move far away just in case
-	position = Vector3(0, -100, 0)
+	
+	# Move far away just in case (deferred to avoid Jolt physics errors during flush_events)
+	call_deferred("set_position", Vector3(0, -100, 0))
 	
 	# Disable processing and collision
 	set_process(false)

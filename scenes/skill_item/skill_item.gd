@@ -31,7 +31,8 @@ func activate(pos: Vector3):
 func deactivate():
 	is_active = false
 	visible = false
-	$CollisionShape3D.set_deferred("disabled", true)
+	call_deferred("set_position", Vector3(0, -100, 0))
+	set_deferred("monitorable", false)
 
 func _on_body_entered(body):
 	if !is_active: return
