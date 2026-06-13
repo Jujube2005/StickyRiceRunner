@@ -416,8 +416,8 @@ func update_slots_ui(player, slot1_btn, slot2_btn, _key1_text, _key2_text):
 	if s1_active:
 		var skill_name = skills_list[0]
 		slot1_btn.disabled = false
-		slot1_btn.modulate = Color.WHITE
-		slot1_btn.self_modulate = get_skill_color(skill_name)
+		slot1_btn.modulate = Color(1.2, 1.2, 1.2, 1.0) # สว่างขึ้น (เรืองแสง)
+		slot1_btn.self_modulate = get_skill_color(skill_name) * 1.5
 		
 		var icon_path = _get_skill_icon_path(skill_name)
 		var custom_tex = _load_texture_safe(icon_path, "")
@@ -427,6 +427,7 @@ func update_slots_ui(player, slot1_btn, slot2_btn, _key1_text, _key2_text):
 			if custom_tex != null:
 				icon_node.texture = custom_tex
 				icon_node.visible = true
+				icon_node.modulate = Color(1.1, 1.1, 1.1) # ให้ไอคอนสว่างด้วย
 			else:
 				icon_node.visible = false
 		
@@ -450,8 +451,8 @@ func update_slots_ui(player, slot1_btn, slot2_btn, _key1_text, _key2_text):
 	if s2_active:
 		var skill_name = skills_list[1]
 		slot2_btn.disabled = false
-		slot2_btn.modulate = Color.WHITE
-		slot2_btn.self_modulate = get_skill_color(skill_name)
+		slot2_btn.modulate = Color(1.2, 1.2, 1.2, 1.0) # สว่างขึ้น
+		slot2_btn.self_modulate = get_skill_color(skill_name) * 1.5
 		
 		var icon_path = _get_skill_icon_path(skill_name)
 		var custom_tex = _load_texture_safe(icon_path, "")
@@ -461,6 +462,7 @@ func update_slots_ui(player, slot1_btn, slot2_btn, _key1_text, _key2_text):
 			if custom_tex != null:
 				icon_node.texture = custom_tex
 				icon_node.visible = true
+				icon_node.modulate = Color(1.1, 1.1, 1.1)
 			else:
 				icon_node.visible = false
 		
