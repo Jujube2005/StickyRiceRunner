@@ -419,8 +419,16 @@ func update_slots_ui(player, slot1_btn, slot2_btn, _key1_text, _key2_text):
 		slot1_btn.modulate = Color.WHITE
 		slot1_btn.self_modulate = get_skill_color(skill_name)
 		
+		var icon_path = _get_skill_icon_path(skill_name)
+		var custom_tex = _load_texture_safe(icon_path, "")
 		var icon_node = slot1_btn.get_node_or_null("SkillIcon")
-		if icon_node: icon_node.visible = false
+		
+		if icon_node:
+			if custom_tex != null:
+				icon_node.texture = custom_tex
+				icon_node.visible = true
+			else:
+				icon_node.visible = false
 		
 		var label = slot1_btn.get_node_or_null("NameLabel")
 		if label:
@@ -445,8 +453,16 @@ func update_slots_ui(player, slot1_btn, slot2_btn, _key1_text, _key2_text):
 		slot2_btn.modulate = Color.WHITE
 		slot2_btn.self_modulate = get_skill_color(skill_name)
 		
+		var icon_path = _get_skill_icon_path(skill_name)
+		var custom_tex = _load_texture_safe(icon_path, "")
 		var icon_node = slot2_btn.get_node_or_null("SkillIcon")
-		if icon_node: icon_node.visible = false
+		
+		if icon_node:
+			if custom_tex != null:
+				icon_node.texture = custom_tex
+				icon_node.visible = true
+			else:
+				icon_node.visible = false
 		
 		var label = slot2_btn.get_node_or_null("NameLabel")
 		if label:
