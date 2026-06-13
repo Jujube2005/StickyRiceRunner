@@ -819,14 +819,14 @@ func _auto_assign_files():
 	
 	if is_male:
 		if !model_file: model_file = "res://assets/models/player/manTmodel.glb"
-		if !run_file: run_file = "res://assets/animation/manRunning.glb"
+		if !run_file: run_file = "res://assets/animation/Running.glb"
 		if !jump_file: jump_file = "res://assets/animation/jump.glb"
-		if !stun_file: stun_file = "res://assets/animation/manStun.glb"
+		if !stun_file: stun_file = "res://assets/animation/Stun.glb"
 	else:
 		if !model_file: model_file = "res://assets/models/player/girlTmodel.glb"
-		if !run_file: run_file = "res://assets/animation/manRunning.glb"
+		if !run_file: run_file = "res://assets/animation/Running.glb"
 		if !jump_file: jump_file = "res://assets/animation/jump.glb"
-		if !stun_file: stun_file = "res://assets/animation/manStun.glb"
+		if !stun_file: stun_file = "res://assets/animation/Stun.glb"
 
 func _import_anim(path: String, target_name: String):
 	if !FileAccess.file_exists(path): 
