@@ -2,16 +2,44 @@
 
 [ext_resource type="Script" uid="uid://cva0lv33251o4" path="res://scenes/main_menu/settings_menu.gd" id="1_script"]
 [ext_resource type="Texture2D" uid="uid://cgp1wqlt1jb3w" path="res://assets/textures/UI/Backgrounds/panelBackground.png" id="2_bg"]
-[ext_resource type="Texture2D" uid="uid://b48248fthx3nc" path="res://assets/textures/UI/Buttons/settings_header.png" id="3_header"]
 [ext_resource type="Texture2D" uid="uid://deaixmi6cgl8e" path="res://assets/textures/UI/Buttons/icon_master.png" id="4_icon_master"]
 [ext_resource type="Texture2D" uid="uid://d4k3pof0imj0d" path="res://assets/textures/UI/Buttons/icon_music.png" id="5_icon_music"]
+[ext_resource type="Texture2D" uid="uid://c6ju36f81ulm4" path="res://assets/textures/UI/Buttons/title_bg.png" id="5_linia"]
 [ext_resource type="Texture2D" uid="uid://38cjdpbstj8m" path="res://assets/textures/UI/Buttons/icon_sfx.png" id="6_icon_sfx"]
-[ext_resource type="Texture2D" uid="uid://dkeuwkccj2l7g" path="res://assets/textures/UI/Buttons/icon_lang.png" id="7_icon_lang"]
 [ext_resource type="Texture2D" uid="uid://cddu5m13v5mo7" path="res://assets/textures/UI/Buttons/icon_screen.png" id="8_icon_screen"]
-[ext_resource type="Texture2D" uid="uid://2m440y1sbbdp" path="res://assets/textures/UI/Buttons/btn_back.png" id="9_btn_back"]
-[ext_resource type="Texture2D" uid="uid://cc6j4ymlk0nge" path="res://assets/textures/UI/Buttons/btn_ok.png" id="10_btn_ok"]
 [ext_resource type="FontFile" uid="uid://2d6rvw7lnbb6" path="res://assets/textures/UI/Font/Mitr/Mitr-Bold.ttf" id="11_font"]
 [ext_resource type="Texture2D" uid="uid://bwu1pxobu8j8i" path="res://assets/textures/UI/Backgrounds/BG.png" id="12_bg_main"]
+[ext_resource type="Texture2D" uid="uid://2vq83mq8oapr" path="res://assets/textures/UI/Buttons/setting_board_bg.png" id="13_board"]
+[ext_resource type="Texture2D" uid="uid://f2yc54ptro81" path="res://assets/textures/UI/Buttons/panelBackground2.png" id="14_panel2"]
+[ext_resource type="Texture2D" uid="uid://dj6ynnaiwbgp" path="res://assets/textures/UI/Buttons/box.png" id="tex_btn_box"]
+[ext_resource type="Texture2D" uid="uid://bvg8mvghjfepc" path="res://assets/textures/UI/Buttons/HSliderIcon.png" id="tex_slider_coin"]
+[ext_resource type="Texture2D" uid="uid://o8bdm76q4yw1" path="res://assets/textures/UI/Buttons/HSliderGrabber.png" id="tex_slider_ring"]
+[ext_resource type="Texture2D" uid="uid://bgwdsa1djf4c1" path="res://assets/textures/UI/Buttons/HSliderTrac.png" id="tex_slider_track"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_btn_box"]
+content_margin_left = 30.0
+content_margin_top = 8.0
+content_margin_right = 30.0
+content_margin_bottom = 12.0
+texture = ExtResource("tex_btn_box")
+texture_margin_left = 20.0
+texture_margin_top = 15.0
+texture_margin_right = 20.0
+texture_margin_bottom = 15.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_track"]
+texture = ExtResource("tex_slider_track")
+expand_margin_top = 18.0
+expand_margin_bottom = 18.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_fill"]
+texture = ExtResource("tex_slider_ring")
+expand_margin_top = 14.0
+expand_margin_bottom = 14.0
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_separator"]
+color = Color(0.6, 0.4, 0.2, 0.5)
+thickness = 2
 
 [node name="SettingsMenu" type="Control" unique_id=1961004934]
 layout_mode = 3
@@ -39,311 +67,354 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0, 0, 0, 0.352941)
+color = Color(0, 0, 0, 0.2)
 
-[node name="Panel" type="TextureRect" parent="." unique_id=1262961380]
-modulate = Color(1, 1, 1, 0.95)
+[node name="panelBackground" type="TextureRect" parent="." unique_id=1972929029]
+layout_mode = 0
+offset_left = -8.0
+offset_top = 111.0
+offset_right = 1160.0
+offset_bottom = 658.0
+texture = ExtResource("2_bg")
+expand_mode = 1
+
+[node name="Panel" type="TextureRect" parent="." unique_id=2]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -579.0
-offset_top = -210.0
-offset_right = 579.0
+offset_left = -449.0
+offset_top = -176.0
+offset_right = 468.0
 offset_bottom = 327.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("2_bg")
+texture = ExtResource("13_board")
 expand_mode = 1
 
 [node name="Header" type="TextureRect" parent="Panel" unique_id=1416809079]
 layout_mode = 0
-offset_left = 27.999989
-offset_top = -64.0
-offset_right = 296.01675
-offset_bottom = 50.86432
-rotation = -0.122173
-texture = ExtResource("3_header")
+offset_left = -106.0
+offset_top = -84.00001
+offset_right = 174.0
+offset_bottom = 30.999992
+rotation = -0.261799
+scale = Vector2(0.8326138, 0.8326138)
+texture = ExtResource("5_linia")
 expand_mode = 1
 stretch_mode = 5
 
 [node name="Label" type="Label" parent="Panel/Header" unique_id=20240607]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -100.0
-offset_top = -25.0
-offset_right = 100.0
-offset_bottom = 25.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -7.108224
+offset_top = 18.80088
+offset_right = -7.1082153
+offset_bottom = 18.800873
 grow_horizontal = 2
 grow_vertical = 2
+rotation = -0.16420373
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 6
 theme_override_fonts/font = ExtResource("11_font")
 theme_override_font_sizes/font_size = 32
+text = "Settings"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Content" type="VBoxContainer" parent="Panel" unique_id=384838042]
+[node name="MarginOuter" type="MarginContainer" parent="Panel" unique_id=1000000001]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -304.99997
-offset_top = -195.5
-offset_right = 407.5
-offset_bottom = 184.5
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 17.999992
+offset_top = 3.0000038
+offset_right = -22.633606
+offset_bottom = 27.067322
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(0.85, 0.85)
-theme_override_constants/separation = 25
+scale = Vector2(0.9619264, 0.9619264)
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 40
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 20
 
-[node name="Master" type="HBoxContainer" parent="Panel/Content" unique_id=396862945]
+[node name="VBoxMain" type="VBoxContainer" parent="Panel/MarginOuter" unique_id=1000000002]
 layout_mode = 2
-theme_override_constants/separation = 40
+theme_override_constants/separation = 10
 
-[node name="Icon" type="TextureRect" parent="Panel/Content/Master" unique_id=406423936]
-custom_minimum_size = Vector2(50, 50)
+[node name="InnerPanel" type="TextureRect" parent="Panel/MarginOuter/VBoxMain" unique_id=1100000021]
+layout_mode = 2
+size_flags_vertical = 3
+texture = ExtResource("14_panel2")
+expand_mode = 1
+
+[node name="MarginInner" type="MarginContainer" parent="Panel/MarginOuter/VBoxMain/InnerPanel" unique_id=1000000003]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -0.49594116
+offset_right = 270.9054
+offset_bottom = 125.97772
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.75, 0.75)
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 20
+
+[node name="Content" type="VBoxContainer" parent="Panel/MarginOuter/VBoxMain/InnerPanel/MarginInner" unique_id=384838042]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = -5
+
+[node name="AudioHeader" type="Button" parent="Panel/MarginOuter/VBoxMain/InnerPanel/MarginInner/Content" unique_id=1100000001]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 36)
+layout_mode = 2
+size_flags_horizontal = 0
+mouse_filter = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0.2, 0.08, 0, 0.8)
+theme_override_constants/outline_size = 3
+theme_override_fonts/font = ExtResource("11_font")
+theme_override_font_sizes/font_size = 18
+theme_override_styles/normal = SubResource("StyleBoxTexture_btn_box")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_btn_box")
+theme_override_styles/hover = SubResource("StyleBoxTexture_btn_box")
+theme_override_styles/focus = SubResource("StyleBoxTexture_btn_box")
+text = "AUDIO"
+
+[node name="AudioSliders" type="VBoxContainer" parent="Panel/MarginOuter/VBoxMain/InnerPanel/MarginInner/Content" unique_id=987654321]
+layout_mode = 2
+theme_override_constants/separation = -35
+
+[node name="Master" type="HBoxContainer" parent="Panel/MarginOuter/VBoxMain/InnerPanel/MarginInner/Content/AudioSliders" unique_id=396862945]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Icon" type="TextureRect" parent="Panel/MarginOuter/VBoxMain/InnerPanel/MarginInner/Content/AudioSliders/Master" unique_id=406423936]
+custom_minimum_size = Vector2(36, 36)
 layout_mode = 2
 texture = ExtResource("4_icon_master")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Label" type="Button" parent="Panel/Content/Master" unique_id=349761859]
-custom_minimum_size = Vector2(220, 45)
+[node name="Label" type="Label" parent="Panel/MarginOuter/VBoxMain/InnerPanel/MarginInner/Content/AudioSliders/Master" unique_id=1067204481]
+custom_minimum_size = Vector2(140, 0)
 layout_mode = 2
-mouse_filter = 2
+theme_override_colors/font_color = Color(0.3, 0.15, 0, 1)
 theme_override_fonts/font = ExtResource("11_font")
-theme_override_font_sizes/font_size = 20
-text = "Master Volume"
+theme_override_font_sizes/font_size = 18
+text = "LBL_MASTER_VOL"
+vertical_alignment = 1
 
-[node name="MasterSlider" type="HSlider" parent="Panel/Content/Master" unique_id=652107963]
+[node name="MasterSlider" type="HSlider" parent="Panel/MarginOuter/VBoxMain/InnerPanel/MarginInner/Content/AudioSliders/Master" unique_id=325996024]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
+theme_override_icons/grabber = ExtResource("tex_slider_coin")
+theme_override_icons/grabber_highlight = ExtResource("tex_slider_coin")
+theme_override_styles/slider = SubResource("StyleBoxTexture_track")
+theme_override_styles/grabber_area = SubResource("StyleBoxTexture_fill")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxTexture_fill")
 max_value = 1.0
 step = 0.05
 value = 0.8
 
-[node name="Music" type="HBoxContainer" parent="Panel/Content" unique_id=1546945383]
+[node name="Music" type="HBoxContainer" parent="Panel/MarginOuter/VBoxMain/InnerPanel/MarginInner/Content/AudioSliders" unique_id=402436449]
 layout_mode = 2
-theme_override_constants/separation = 40
+theme_override_constants/separation = 20
 
-[node name="Icon" type="TextureRect" parent="Panel/Content/Music" unique_id=707155144]
-custom_minimum_size = Vector2(50, 50)
+[node name="Icon" type="TextureRect" parent="Panel/MarginOuter/VBoxMain/InnerPanel/MarginInner/Content/AudioSliders/Music" unique_id=1910603706]
+custom_minimum_size = Vector2(36, 36)
 layout_mode = 2
 texture = ExtResource("5_icon_music")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Label" type="Button" parent="Panel/Content/Music" unique_id=51944548]
-custom_minimum_size = Vector2(220, 45)
+[node name="Label" type="Label" parent="Panel/MarginOuter/VBoxMain/InnerPanel/MarginInner/Content/AudioSliders/Music" unique_id=1956555198]
+custom_minimum_size = Vector2(140, 0)
 layout_mode = 2
-mouse_filter = 2
+theme_override_colors/font_color = Color(0.3, 0.15, 0, 1)
 theme_override_fonts/font = ExtResource("11_font")
-theme_override_font_sizes/font_size = 20
-text = "Music Volume"
+theme_override_font_sizes/font_size = 18
+text = "LBL_MUSIC_VOL"
+vertical_alignment = 1
 
-[node name="MusicSlider" type="HSlider" parent="Panel/Content/Music" unique_id=1606888628]
+[node name="MusicSlider" type="HSlider" parent="Panel/MarginOuter/VBoxMain/InnerPanel/MarginInner/Content/AudioSliders/Music" unique_id=314781488]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
+theme_override_icons/grabber = ExtResource("tex_slider_coin")
+theme_override_icons/grabber_highlight = ExtResource("tex_slider_coin")
+theme_override_styles/slider = SubResource("StyleBoxTexture_track")
+theme_override_styles/grabber_area = SubResource("StyleBoxTexture_fill")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxTexture_fill")
 max_value = 1.0
 step = 0.05
 value = 0.8
 
-[node name="SFX" type="HBoxContainer" parent="Panel/Content" unique_id=1331355692]
+[node name="SFX" type="HBoxContainer" parent="Panel/MarginOuter/VBoxMain/InnerPanel/MarginInner/Content/AudioSliders" unique_id=1627993424]
 layout_mode = 2
-theme_override_constants/separation = 40
+theme_override_constants/separation = 20
 
-[node name="Icon" type="TextureRect" parent="Panel/Content/SFX" unique_id=1483752020]
-custom_minimum_size = Vector2(50, 50)
+[node name="Icon" type="TextureRect" parent="Panel/MarginOuter/VBoxMain/InnerPanel/MarginInner/Content/AudioSliders/SFX" unique_id=1614068305]
+custom_minimum_size = Vector2(36, 36)
 layout_mode = 2
 texture = ExtResource("6_icon_sfx")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Label" type="Button" parent="Panel/Content/SFX" unique_id=1882540020]
-custom_minimum_size = Vector2(220, 45)
+[node name="Label" type="Label" parent="Panel/MarginOuter/VBoxMain/InnerPanel/MarginInner/Content/AudioSliders/SFX" unique_id=1384073385]
+custom_minimum_size = Vector2(140, 0)
 layout_mode = 2
-mouse_filter = 2
+theme_override_colors/font_color = Color(0.3, 0.15, 0, 1)
 theme_override_fonts/font = ExtResource("11_font")
-theme_override_font_sizes/font_size = 20
-text = "SFX Volume"
+theme_override_font_sizes/font_size = 18
+text = "LBL_SFX_VOL"
+vertical_alignment = 1
 
-[node name="SFXSlider" type="HSlider" parent="Panel/Content/SFX" unique_id=1231506170]
+[node name="SFXSlider" type="HSlider" parent="Panel/MarginOuter/VBoxMain/InnerPanel/MarginInner/Content/AudioSliders/SFX" unique_id=315752179]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
+theme_override_icons/grabber = ExtResource("tex_slider_coin")
+theme_override_icons/grabber_highlight = ExtResource("tex_slider_coin")
+theme_override_styles/slider = SubResource("StyleBoxTexture_track")
+theme_override_styles/grabber_area = SubResource("StyleBoxTexture_fill")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxTexture_fill")
 max_value = 1.0
 step = 0.05
 value = 0.8
 
-[node name="Language" type="HBoxContainer" parent="Panel/Content" unique_id=235683492]
+[node name="Sep1" type="HSeparator" parent="Panel/MarginOuter/VBoxMain/InnerPanel/MarginInner/Content" unique_id=1000000004]
 layout_mode = 2
-theme_override_constants/separation = 40
+theme_override_styles/separator = SubResource("StyleBoxLine_separator")
 
-[node name="Icon" type="TextureRect" parent="Panel/Content/Language" unique_id=573167207]
-custom_minimum_size = Vector2(50, 50)
-layout_mode = 2
-texture = ExtResource("7_icon_lang")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="Label" type="Button" parent="Panel/Content/Language" unique_id=888448593]
-custom_minimum_size = Vector2(220, 45)
-layout_mode = 2
-mouse_filter = 2
-theme_override_fonts/font = ExtResource("11_font")
-theme_override_font_sizes/font_size = 20
-text = "Language"
-
-[node name="LangBtn" type="OptionButton" parent="Panel/Content/Language" unique_id=612209197]
+[node name="LanguageHeader" type="Button" parent="Panel/MarginOuter/VBoxMain/InnerPanel/MarginInner/Content" unique_id=1100000002]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(160, 45)
+custom_minimum_size = Vector2(150, 36)
 layout_mode = 2
-size_flags_vertical = 4
+size_flags_horizontal = 0
+mouse_filter = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0.2, 0.08, 0, 0.8)
+theme_override_constants/outline_size = 3
 theme_override_fonts/font = ExtResource("11_font")
 theme_override_font_sizes/font_size = 18
-alignment = 1
-selected = 0
-item_count = 2
-popup/item_0/text = "THAI"
-popup/item_0/id = 0
-popup/item_1/text = "ENGLISH"
-popup/item_1/id = 1
+theme_override_styles/normal = SubResource("StyleBoxTexture_btn_box")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_btn_box")
+theme_override_styles/hover = SubResource("StyleBoxTexture_btn_box")
+theme_override_styles/focus = SubResource("StyleBoxTexture_btn_box")
+text = "LANGUAGE"
 
-[node name="Arrow" type="Label" parent="Panel/Content/Language/LangBtn" unique_id=1384166595]
+[node name="LanguageRow" type="HBoxContainer" parent="Panel/MarginOuter/VBoxMain/InnerPanel/MarginInner/Content/LanguageHeader" unique_id=235683492]
 layout_mode = 1
-anchors_preset = 6
-anchor_left = 1.0
-anchor_top = 0.5
-anchor_right = 1.0
-anchor_bottom = 0.5
-offset_left = -30.0
-offset_top = -12.0
-offset_right = -10.0
-offset_bottom = 12.0
-grow_horizontal = 0
-grow_vertical = 2
+offset_left = 155.63828
+offset_right = 1006.0
+offset_bottom = 43.0
+theme_override_constants/separation = 20
+
+[node name="Spacer" type="Control" parent="Panel/MarginOuter/VBoxMain/InnerPanel/MarginInner/Content/LanguageHeader/LanguageRow" unique_id=1000000005]
+custom_minimum_size = Vector2(36, 36)
+layout_mode = 2
+
+[node name="LangBtn" type="OptionButton" parent="Panel/MarginOuter/VBoxMain/InnerPanel/MarginInner/Content/LanguageHeader/LanguageRow" unique_id=612209197]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 36)
+layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_fonts/font = ExtResource("11_font")
 theme_override_font_sizes/font_size = 14
-text = "▼"
-horizontal_alignment = 1
-vertical_alignment = 1
+theme_override_styles/normal = SubResource("StyleBoxTexture_btn_box")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_btn_box")
+theme_override_styles/hover = SubResource("StyleBoxTexture_btn_box")
+theme_override_styles/focus = SubResource("StyleBoxTexture_btn_box")
+selected = 0
+item_count = 2
+popup/item_0/text = "ENG"
+popup/item_0/id = 0
+popup/item_1/text = "THAI"
+popup/item_1/id = 1
 
-[node name="Screen" type="HBoxContainer" parent="Panel/Content" unique_id=684037207]
+[node name="Sep2" type="HSeparator" parent="Panel/MarginOuter/VBoxMain/InnerPanel/MarginInner/Content" unique_id=1000000006]
 layout_mode = 2
-theme_override_constants/separation = 40
+theme_override_styles/separator = SubResource("StyleBoxLine_separator")
 
-[node name="Icon" type="TextureRect" parent="Panel/Content/Screen" unique_id=1743349567]
-custom_minimum_size = Vector2(50, 50)
+[node name="DisplayHeader" type="Button" parent="Panel/MarginOuter/VBoxMain/InnerPanel/MarginInner/Content" unique_id=1100000003]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 36)
+layout_mode = 2
+size_flags_horizontal = 0
+mouse_filter = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0.2, 0.08, 0, 0.8)
+theme_override_constants/outline_size = 3
+theme_override_fonts/font = ExtResource("11_font")
+theme_override_font_sizes/font_size = 18
+theme_override_styles/normal = SubResource("StyleBoxTexture_btn_box")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_btn_box")
+theme_override_styles/hover = SubResource("StyleBoxTexture_btn_box")
+theme_override_styles/focus = SubResource("StyleBoxTexture_btn_box")
+text = "DISPLAY"
+
+[node name="Screen" type="HBoxContainer" parent="Panel/MarginOuter/VBoxMain/InnerPanel/MarginInner/Content" unique_id=684037207]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Icon" type="TextureRect" parent="Panel/MarginOuter/VBoxMain/InnerPanel/MarginInner/Content/Screen" unique_id=1743349567]
+custom_minimum_size = Vector2(36, 36)
 layout_mode = 2
 texture = ExtResource("8_icon_screen")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Label" type="Button" parent="Panel/Content/Screen" unique_id=1848964006]
-custom_minimum_size = Vector2(220, 45)
+[node name="Label" type="Label" parent="Panel/MarginOuter/VBoxMain/InnerPanel/MarginInner/Content/Screen" unique_id=2081546881]
+custom_minimum_size = Vector2(140, 0)
 layout_mode = 2
-mouse_filter = 2
+theme_override_colors/font_color = Color(0.3, 0.15, 0, 1)
 theme_override_fonts/font = ExtResource("11_font")
-theme_override_font_sizes/font_size = 20
-text = "Full screen"
+theme_override_font_sizes/font_size = 18
+text = "LBL_FULLSCREEN"
+vertical_alignment = 1
 
-[node name="SwitchContainer" type="HBoxContainer" parent="Panel/Content/Screen" unique_id=515388120]
-layout_mode = 2
-theme_override_constants/separation = 15
-
-[node name="FullscreenSwitch" type="TextureButton" parent="Panel/Content/Screen/SwitchContainer" unique_id=1704055553]
+[node name="FullscreenSwitch" type="TextureButton" parent="Panel/MarginOuter/VBoxMain/InnerPanel/MarginInner/Content/Screen" unique_id=214555896]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(160, 45)
+custom_minimum_size = Vector2(120, 60)
 layout_mode = 2
+size_flags_horizontal = 0
 size_flags_vertical = 4
 toggle_mode = true
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="Footer" type="Control" parent="Panel" unique_id=976321713]
-layout_mode = 1
-anchors_preset = 12
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = -120.0
-grow_horizontal = 2
-grow_vertical = 0
-
-[node name="Buttons" type="HBoxContainer" parent="Panel/Footer" unique_id=211258175]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -300.0
-offset_top = -40.0
-offset_right = 300.0
-offset_bottom = 40.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/separation = 100
-alignment = 1
-
-[node name="BackBtn" type="TextureButton" parent="Panel/Footer/Buttons" unique_id=203160083]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(220, 80)
+[node name="MarginFooter" type="MarginContainer" parent="Panel/MarginOuter/VBoxMain" unique_id=1000000007]
 layout_mode = 2
-texture_normal = ExtResource("9_btn_back")
-ignore_texture_size = true
-stretch_mode = 5
+theme_override_constants/margin_top = 1
+theme_override_constants/margin_bottom = 1
 
-[node name="Label" type="Label" parent="Panel/Footer/Buttons/BackBtn" unique_id=1438349947]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+[node name="BackBtn" type="Button" parent="Panel/MarginOuter/VBoxMain/MarginFooter" unique_id=203160083]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(220, 70)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0.2, 0.08, 0, 0.8)
 theme_override_constants/outline_size = 4
 theme_override_fonts/font = ExtResource("11_font")
-theme_override_font_sizes/font_size = 24
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="OkBtn" type="TextureButton" parent="Panel/Footer/Buttons" unique_id=1251322744]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(220, 80)
-layout_mode = 2
-texture_normal = ExtResource("10_btn_ok")
-ignore_texture_size = true
-stretch_mode = 5
-
-[node name="Label" type="Label" parent="Panel/Footer/Buttons/OkBtn" unique_id=1363176935]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 4
-theme_override_fonts/font = ExtResource("11_font")
-theme_override_font_sizes/font_size = 24
-horizontal_alignment = 1
-vertical_alignment = 1
+theme_override_font_sizes/font_size = 28
+theme_override_styles/normal = SubResource("StyleBoxTexture_btn_box")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_btn_box")
+theme_override_styles/hover = SubResource("StyleBoxTexture_btn_box")
+theme_override_styles/focus = SubResource("StyleBoxTexture_btn_box")
+text = "BACK"
