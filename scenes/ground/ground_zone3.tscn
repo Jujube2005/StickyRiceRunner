@@ -51,10 +51,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18, 0, 0)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 0, 0)
 
 [node name="Yamo" parent="." unique_id=1737645157 instance=ExtResource("2_vxqig")]
-transform = Transform3D(-2.1855695e-07, 0, 5, 0, 5, 0, -5, 0, -2.1855695e-07, -5.5716443, -0.37566614, 0.025659561)
+transform = Transform3D(-1.3113416e-07, 0, 3, 0, 3, 0, -3, 0, -1.3113416e-07, -5.5716443, -0.37566614, 0.0015368462)
+visible = false
 
-[node name="amphitheater" parent="." unique_id=162996264 instance=ExtResource("3_emaaf")]
-transform = Transform3D(-2.1855695e-07, 0, 5, 0, 5, 0, -5, 0, -2.1855695e-07, -5.567178, -1.5019257, 5.0760508)
+[node name="amphitheater3" parent="." unique_id=978757869 instance=ExtResource("3_emaaf")]
+transform = Transform3D(-2.1855694e-06, 0, 50, 0, 50, 0, -50, 0, -2.1855694e-06, -8, -1, 0)
 
-[node name="amphitheater2" parent="." unique_id=840339555 instance=ExtResource("3_emaaf")]
-transform = Transform3D(-2.1855695e-07, 0, 5, 0, 5, 0, -5, 0, -2.1855695e-07, -5.5211267, -1.5453255, -4.7611327)
+[node name="amphitheater4" parent="." unique_id=2061503528 instance=ExtResource("3_emaaf")]
+transform = Transform3D(-2.1855694e-06, 0, -50, 0, 50, 0, 50, 0, -2.1855694e-06, 8, -1, 0)
