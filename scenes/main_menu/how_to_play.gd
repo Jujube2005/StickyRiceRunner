@@ -14,11 +14,6 @@ func _ready():
 func _update_texts():
 	if has_node("%TitleLabel"):
 		%TitleLabel.text = LanguageManager.t("LBL_HOW_TO_PLAY")
-	if has_node("%BackBtn"):
-		%BackBtn.text = LanguageManager.t("BTN_BACK")
-	# Update P1 column
-	for node_path in ["%P1Move", "%P1Jump", "%P1Skill"]:
-		if has_node(node_path): pass  # Labels are set in scene, key labels are images
 	# Update description labels if they exist
 	for child in get_tree().get_nodes_in_group("how_to_desc"):
 		child.text = LanguageManager.t("LBL_HTP_DESC")
