@@ -59,7 +59,7 @@ var current_anim : String = ""
 # Adjust this value if the character still sinks or floats.
 @export var model_offset := Vector3(0.0, 0.0, 0.0)
 @export var model_y_offset : float = 0.0  # Fine-tune Y separately per character
-@export var stun_model_y_offset : float = 0.5  # Extra Y lift when laying flat (stun), prevents sinking
+@export var stun_model_y_offset : float = 0.35  # Extra Y lift when laying flat (stun), prevents sinking
 
 var distance := 0.0
 var start_z := 0.0
@@ -271,7 +271,8 @@ func _physics_process(delta):
 		play_animation(anim_stun)
 		
 		# Stun: lay flat (-90°) — lift model up to prevent sinking
-		$Model.rotation.x = deg_to_rad(-90)
+		# Stun: lay flat (90°) — lift model up to prevent sinking
+		$Model.rotation.x = deg_to_rad(90)
 		var model_node = get_node_or_null("Model")
 		if model_node:
 			model_node.position.x = model_offset.x
