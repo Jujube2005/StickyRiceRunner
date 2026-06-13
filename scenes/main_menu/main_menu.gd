@@ -20,18 +20,12 @@ func _ready():
 	_animate_entrance()
 	_update_button_texts()
 	
-	# Inject Collection button
-	var collection_btn = Button.new()
-	collection_btn.name = "CollectionBtn"
-	button_list.add_child(collection_btn)
-	button_list.move_child(collection_btn, button_list.get_child_count() - 2) # Before Settings/Quit
-	
 	# Connect Signals
 	$MenuContainer/ButtonList/PlayBtn.pressed.connect(_on_play_pressed)
 	$MenuContainer/ButtonList/QuitBtn.pressed.connect(_on_quit_pressed)
 	$MenuContainer/ButtonList/SettingsBtn.pressed.connect(_on_settings_pressed)
 	$MenuContainer/ButtonList/HowToBtn.pressed.connect(_on_how_to_pressed)
-	collection_btn.pressed.connect(_on_collection_pressed)
+	$MenuContainer/ButtonList/CollectionBtn.pressed.connect(_on_collection_pressed)
 	LanguageManager.language_changed.connect(func(_l): _update_button_texts())
 
 func _setup_ui_styles():
