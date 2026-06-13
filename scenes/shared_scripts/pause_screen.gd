@@ -2,6 +2,7 @@ extends Control
 
 @onready var board_rect: TextureRect = $Board
 @onready var btn_resume: TextureButton = $Board/ButtonBox/BtnResume
+@onready var btn_restart: TextureButton = $Board/ButtonBox/BtnRestart
 @onready var btn_menu: TextureButton = $Board/ButtonBox/BtnMenu
 
 var default_scale: Vector2
@@ -10,11 +11,13 @@ func _ready():
 	hide()
 	default_scale = board_rect.scale
 
-	if btn_resume: btn_resume.pressed.connect(_on_resume_pressed)
-	if btn_menu: btn_menu.pressed.connect(_on_menu_pressed)
+	if btn_resume:  btn_resume.pressed.connect(_on_resume_pressed)
+	if btn_restart: btn_restart.pressed.connect(_on_restart_pressed)
+	if btn_menu:    btn_menu.pressed.connect(_on_menu_pressed)
 
-	if btn_resume: _setup_button_hover(btn_resume)
-	if btn_menu: _setup_button_hover(btn_menu)
+	if btn_resume:  _setup_button_hover(btn_resume)
+	if btn_restart: _setup_button_hover(btn_restart)
+	if btn_menu:    _setup_button_hover(btn_menu)
 
 func _setup_button_hover(btn: TextureButton):
 	btn.pivot_offset = btn.custom_minimum_size / 2.0
@@ -48,6 +51,10 @@ func _on_resume_pressed():
 	await tween.finished
 	get_tree().paused = false
 	hide()
+
+func _on_restart_pressed():
+	get_tree().paused = false
+	get_tree().reload_current_scene()
 
 func _on_menu_pressed():
 	get_tree().paused = false
