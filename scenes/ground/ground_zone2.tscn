@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://wtlsifuaqf1r" path="res://assets/models/ground/treeV1.glb" id="4_cplsf"]
 [ext_resource type="PackedScene" uid="uid://cl6t0nmfe0gig" path="res://assets/models/ground/Phimai.glb" id="5_pygj3"]
 [ext_resource type="PackedScene" uid="uid://c3wl2hoenmsmt" path="res://assets/models/ground/rock.glb" id="5_rock"]
-[ext_resource type="PackedScene" uid="uid://cwsjp5axipcqp" path="res://assets/models/ground/bigrock.glb" id="6_qk3ku"]
+[ext_resource type="PackedScene" uid="uid://pgywswt5kcj0" path="res://assets/models/obstacle/bigrock.glb" id="6_qk3ku"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_lv0v5"]
 size = Vector3(30, 2, 10.4)
