@@ -2,24 +2,23 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bxgikr8m6g0k7"
-path.s3tc="res://.godot/imported/amphitheater_Image_0.webp-ebc970100c8ee47782ef822180009d38.s3tc.ctex"
+uid="uid://28ijkfuscoq5"
+path="res://.godot/imported/treeV1_Image_2.webp-82e7cf45e775a0b3e47de90bcfcdca0d.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 generator_parameters={
-"md5": "006b3dc72af80edeb860df89090a9c12"
+"md5": "7aa2d11ca1933a77389ed379cf70ff63"
 }
 
 [deps]
 
-source_file="res://assets/models/ground/amphitheater_Image_0.webp"
-dest_files=["res://.godot/imported/amphitheater_Image_0.webp-ebc970100c8ee47782ef822180009d38.s3tc.ctex"]
+source_file="res://assets/models/ground/treeV1_Image_2.webp"
+dest_files=["res://.godot/imported/treeV1_Image_2.webp-82e7cf45e775a0b3e47de90bcfcdca0d.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -41,4 +40,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=0
+detect_3d/compress_to=1

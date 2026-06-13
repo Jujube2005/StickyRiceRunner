@@ -2,20 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bxgikr8m6g0k7"
-path.s3tc="res://.godot/imported/amphitheater_Image_0.webp-ebc970100c8ee47782ef822180009d38.s3tc.ctex"
+uid="uid://qqq241l8ad8o"
+path.s3tc="res://.godot/imported/oldSpirithouse_Image_46.webp-03f9b9cdbb15cf6f9ecf4fac69833412.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 generator_parameters={
-"md5": "006b3dc72af80edeb860df89090a9c12"
+"md5": "dcc4906dac15a79f42d9da32d33bc4d0"
 }
 
 [deps]
 
-source_file="res://assets/models/ground/amphitheater_Image_0.webp"
-dest_files=["res://.godot/imported/amphitheater_Image_0.webp-ebc970100c8ee47782ef822180009d38.s3tc.ctex"]
+source_file="res://assets/models/ground/oldSpirithouse_Image_46.webp"
+dest_files=["res://.godot/imported/oldSpirithouse_Image_46.webp-03f9b9cdbb15cf6f9ecf4fac69833412.s3tc.ctex"]
 
 [params]
 

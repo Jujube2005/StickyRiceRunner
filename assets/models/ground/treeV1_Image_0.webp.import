@@ -2,20 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bxgikr8m6g0k7"
-path.s3tc="res://.godot/imported/amphitheater_Image_0.webp-ebc970100c8ee47782ef822180009d38.s3tc.ctex"
+uid="uid://d2bndt0dha2e7"
+path.s3tc="res://.godot/imported/treeV1_Image_0.webp-c5025c5dae3964efa90da9b1e0a0e623.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 generator_parameters={
-"md5": "006b3dc72af80edeb860df89090a9c12"
+"md5": "b301ab69fd64d7e953a26306852fdda4"
 }
 
 [deps]
 
-source_file="res://assets/models/ground/amphitheater_Image_0.webp"
-dest_files=["res://.godot/imported/amphitheater_Image_0.webp-ebc970100c8ee47782ef822180009d38.s3tc.ctex"]
+source_file="res://assets/models/ground/treeV1_Image_0.webp"
+dest_files=["res://.godot/imported/treeV1_Image_0.webp-c5025c5dae3964efa90da9b1e0a0e623.s3tc.ctex"]
 
 [params]
 
