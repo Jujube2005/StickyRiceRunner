@@ -1,11 +1,20 @@
 extends Area3D
 
+@export var low_shape_size: Vector3 = Vector3(1.18, 0.623, 1.0)
+@export var low_shape_pos: Vector3 = Vector3(0.034, -0.297, 0.0)
+@export var high_shape_size: Vector3 = Vector3(1.18, 1.8, 1.0)
+@export var high_shape_pos: Vector3 = Vector3(0.034, 0.24, 0.0)
+
 var is_active = false
 @onready var collision_shape = $CollisionShape3D
 
 # These nodes may or may not exist depending on the obstacle type (firewood stacking)
 var firewood_mid: Node3D = null
 var firewood_top: Node3D = null
+
+# These nodes exist for zone 2 and 3 alternate models
+var model_low: Node3D = null
+var model_high: Node3D = null
 
 func _ready():
 	connect("body_entered", Callable(self, "_on_body_entered"))
@@ -14,7 +23,11 @@ func _ready():
 	firewood_mid = get_node_or_null("firewood_mid")
 	firewood_top = get_node_or_null("firewood_top")
 	
-	if firewood_mid and collision_shape and collision_shape.shape:
+	# Alternate models — exist in zone 2 and 3
+	model_low = get_node_or_null("model_low")
+	model_high = get_node_or_null("model_high")
+	
+	if collision_shape and collision_shape.shape:
 		collision_shape.shape = collision_shape.shape.duplicate()
 	
 	# Start deactivated if instantiated through code
@@ -37,20 +50,28 @@ func activate(pos: Vector3, height: float, high_obstacle: bool):
 		add_to_group("high_obstacle")
 		if firewood_mid:
 			firewood_mid.visible = true
-		if firewood_top:
-			firewood_top.visible = true
+			if firewood_top:
+				firewood_top.visible = true
+		
+		if model_low: model_low.visible = false
+		if model_high: model_high.visible = true
+				
 		if collision_shape and collision_shape.shape is BoxShape3D:
-			collision_shape.shape.size.y = 1.8
-			collision_shape.position.y = 0.24
+			collision_shape.shape.size = high_shape_size
+			collision_shape.position = high_shape_pos
 	else:
 		add_to_group("low_obstacle")
 		if firewood_mid:
 			firewood_mid.visible = false
-		if firewood_top:
-			firewood_top.visible = false
+			if firewood_top:
+				firewood_top.visible = false
+				
+		if model_low: model_low.visible = true
+		if model_high: model_high.visible = false
+		
 		if collision_shape and collision_shape.shape is BoxShape3D:
-			collision_shape.shape.size.y = 0.623
-			collision_shape.position.y = -0.297
+			collision_shape.shape.size = low_shape_size
+			collision_shape.position = low_shape_pos
 	
 	# Enable processing and collision
 	set_process(true)

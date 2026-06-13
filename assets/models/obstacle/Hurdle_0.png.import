@@ -2,20 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dtts538h0b067"
-path.s3tc="res://.godot/imported/bigrock_1.webp-f24a53beaa3408b138a991d81f0c02cd.s3tc.ctex"
+uid="uid://c2edapipumtf3"
+path.s3tc="res://.godot/imported/Hurdle_0.png-b2646b1083ed4097a93a07e1f5b3d7ca.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 generator_parameters={
-"md5": "c2c7249044ea783e05a88f0d94dfd570"
+"md5": "073e8475449313d3dfd704c108d94148"
 }
 
 [deps]
 
-source_file="res://assets/models/ground/bigrock_1.webp"
-dest_files=["res://.godot/imported/bigrock_1.webp-f24a53beaa3408b138a991d81f0c02cd.s3tc.ctex"]
+source_file="res://assets/models/obstacle/Hurdle_0.png"
+dest_files=["res://.godot/imported/Hurdle_0.png-b2646b1083ed4097a93a07e1f5b3d7ca.s3tc.ctex"]
 
 [params]
 
@@ -29,8 +29,8 @@ compress/normal_map=0
 compress/channel_pack=0
 mipmaps/generate=true
 mipmaps/limit=-1
-roughness/mode=8
-roughness/src_normal="res://assets/models/ground/bigrock_2.webp"
+roughness/mode=0
+roughness/src_normal=""
 process/channel_remap/red=0
 process/channel_remap/green=1
 process/channel_remap/blue=2

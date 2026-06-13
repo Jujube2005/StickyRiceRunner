@@ -1,24 +1,25 @@
-[gd_scene format=3 uid="uid://d2nr0yp58gg7o"]
+[gd_scene format=3 uid="uid://gd6co7s3ddfa"]
 
-[ext_resource type="PackedScene" uid="uid://jsucdx0wvvba" path="res://assets/models/ground/Hurdle.glb" id="1_kmc62"]
+[ext_resource type="PackedScene" uid="uid://jsucdx0wvvba" path="res://assets/models/obstacle/Hurdle.glb" id="1_hurdle"]
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_buffalo"]
-size = Vector3(1.0205078, 0.6557129, 0.16027832)
+[sub_resource type="BoxShape3D" id="BoxShape3D_zone3"]
+size = Vector3(1.0844727, 0.6, 0.1038208)
 
 [node name="Obstacle" type="Area3D" unique_id=382382368]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 1, 0)
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 1, 0)
 collision_layer = 8
 collision_mask = 3
+low_shape_size = Vector3(1.084, 0.6, 0.103)
+low_shape_pos = Vector3(0.009, -0.2, -0.021)
+high_shape_size = Vector3(1.084, 1.2, 0.103)
+high_shape_pos = Vector3(0.009, 0.1, -0.021)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=390459934]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.011230469, -0.26174325, 0.04486084)
-shape = SubResource("BoxShape3D_buffalo")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.009521484, -0.20000002, -0.021759033)
+shape = SubResource("BoxShape3D_zone3")
 
-[node name="firewood_mid" type="Node3D" parent="." unique_id=999999911]
-visible = false
+[node name="model_low" parent="." unique_id=616748129 instance=ExtResource("1_hurdle")]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, -0.5, 0)
 
-[node name="firewood_top" type="Node3D" parent="." unique_id=999999912]
-visible = false
-
-[node name="Sketchfab_Scene" parent="." unique_id=1159828856 instance=ExtResource("1_kmc62")]
-transform = Transform3D(0.10000001, 0, 0, 0, 0.10000001, 0, 0, 0, 0.10000001, 0, -0.5846457, 0.0054363413)
+[node name="model_high" parent="." unique_id=781977772 instance=ExtResource("1_hurdle")]
+transform = Transform3D(0.1, 0, 0, 0, 0.2, 0, 0, 0, 0.1, 0, -0.5, 0)

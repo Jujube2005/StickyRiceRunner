@@ -1,24 +1,25 @@
-[gd_scene format=3 uid="uid://c6snrht51rmp6"]
+[gd_scene format=3 uid="uid://bacfoodj5etng"]
 
-[ext_resource type="PackedScene" uid="uid://cwsjp5axipcqp" path="res://assets/models/ground/bigrock.glb" id="1_bq00q"]
+[ext_resource type="PackedScene" uid="uid://pgywswt5kcj0" path="res://assets/models/obstacle/bigrock.glb" id="1_bq00q"]
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_rock"]
-size = Vector3(0.43543702, 0.6807373, 0.45734864)
+[sub_resource type="BoxShape3D" id="BoxShape3D_zone2"]
+size = Vector3(0.8165039, 0.6, 0.76875)
 
 [node name="Obstacle" type="Area3D" unique_id=382382367]
 transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 1, 0)
 collision_layer = 8
 collision_mask = 3
+low_shape_size = Vector3(0.816, 0.6, 0.768)
+low_shape_pos = Vector3(0.015, -0.3, -0.036)
+high_shape_size = Vector3(0.816, 1.08, 0.768)
+high_shape_pos = Vector3(0.015, -0.06, -0.036)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=390459933]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.06658326, -0.33909914, -0.04134522)
-shape = SubResource("BoxShape3D_rock")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.01586914, -0.30000004, -0.036718756)
+shape = SubResource("BoxShape3D_zone2")
 
-[node name="firewood_mid" type="Node3D" parent="." unique_id=999999901]
-visible = false
+[node name="model_high" parent="." unique_id=83963796 instance=ExtResource("1_bq00q")]
+transform = Transform3D(70, 0, 0, 0, 90, 0, 0, 0, 50, -0.30784592, -0.5, 0)
 
-[node name="firewood_top" type="Node3D" parent="." unique_id=999999902]
-visible = false
-
-[node name="Sketchfab_Scene" parent="." unique_id=1620941698 instance=ExtResource("1_bq00q")]
-transform = Transform3D(30, 0, 0, 0, 30, 0, 0, 0, 30, -0.106528684, -0.43378672, 0)
+[node name="model_low" parent="." unique_id=2107622593 instance=ExtResource("1_bq00q")]
+transform = Transform3D(50, 0, 0, 0, 50, 0, 0, 0, 50, -0.22541556, -0.47014388, 0)

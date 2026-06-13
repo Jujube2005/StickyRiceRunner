@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bd8ldyk4jorr0"
-path.s3tc="res://.godot/imported/bigrock_2.webp-925eeef0ef9a8a7233fa80a9f282ca10.s3tc.ctex"
+uid="uid://dmoq7q5oleux4"
+path.s3tc="res://.godot/imported/bigrock_2.webp-eee46651500a6b0ec9489a79640ad8e3.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -14,8 +14,8 @@ generator_parameters={
 
 [deps]
 
-source_file="res://assets/models/ground/bigrock_2.webp"
-dest_files=["res://.godot/imported/bigrock_2.webp-925eeef0ef9a8a7233fa80a9f282ca10.s3tc.ctex"]
+source_file="res://assets/models/obstacle/bigrock_2.webp"
+dest_files=["res://.godot/imported/bigrock_2.webp-eee46651500a6b0ec9489a79640ad8e3.s3tc.ctex"]
 
 [params]
 
@@ -30,7 +30,7 @@ compress/channel_pack=0
 mipmaps/generate=true
 mipmaps/limit=-1
 roughness/mode=1
-roughness/src_normal="res://assets/models/ground/bigrock_2.webp"
+roughness/src_normal="res://assets/models/obstacle/bigrock_2.webp"
 process/channel_remap/red=0
 process/channel_remap/green=1
 process/channel_remap/blue=2

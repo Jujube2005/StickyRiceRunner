@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://jsucdx0wvvba"
-path="res://.godot/imported/Hurdle.glb-4eacfc2b31e20a83d2263b622d82bfd0.scn"
+uid="uid://d3p2pbjen07rd"
+path="res://.godot/imported/bigrock.glb-da63531b2a837606e1c2ba54499a2aae.scn"
 
 [deps]
 
-source_file="res://assets/models/ground/Hurdle.glb"
-dest_files=["res://.godot/imported/Hurdle.glb-4eacfc2b31e20a83d2263b622d82bfd0.scn"]
+source_file="res://assets/models/kratip/bigrock.glb"
+dest_files=["res://.godot/imported/bigrock.glb-da63531b2a837606e1c2ba54499a2aae.scn"]
 
 [params]
 

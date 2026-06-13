@@ -2,20 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c2edapipumtf3"
-path.s3tc="res://.godot/imported/Hurdle_0.png-2d4652dcf7c7713a422bdb8e6c1e7534.s3tc.ctex"
+uid="uid://dblqbak7of3rr"
+path.s3tc="res://.godot/imported/bigrock_0.webp-2f67d1bd710a838686b454079cb18974.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 generator_parameters={
-"md5": "073e8475449313d3dfd704c108d94148"
+"md5": "e913b40c29a0377984881600de7e0549"
 }
 
 [deps]
 
-source_file="res://assets/models/ground/Hurdle_0.png"
-dest_files=["res://.godot/imported/Hurdle_0.png-2d4652dcf7c7713a422bdb8e6c1e7534.s3tc.ctex"]
+source_file="res://assets/models/obstacle/bigrock_0.webp"
+dest_files=["res://.godot/imported/bigrock_0.webp-2f67d1bd710a838686b454079cb18974.s3tc.ctex"]
 
 [params]
 
