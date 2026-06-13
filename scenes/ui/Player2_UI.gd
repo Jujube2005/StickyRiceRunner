@@ -173,8 +173,8 @@ func _setup_modern_hud():
 		btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 		btn.pivot_offset = btn.custom_minimum_size / 2
 		
-	skill_button.text = "SKILL"
-	defend_button.text = "DEFEND"
+	skill_button.text = LanguageManager.t("BTN_USE_SKILL")
+	defend_button.text = LanguageManager.t("BTN_DEFEND")
 	
 	_update_button_visuals()
 

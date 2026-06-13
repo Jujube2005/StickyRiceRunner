@@ -69,7 +69,7 @@ func _build_layout():
 	result_card.add_child(content_box)
 
 	section_label = Label.new()
-	section_label.text = "CHAMPION"
+	section_label.text = LanguageManager.t("LBL_CHAMPION")
 	section_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	var section_settings = LabelSettings.new()
 	section_settings.font_size = 16
@@ -149,7 +149,7 @@ func _build_layout():
 	content_box.add_child(final_score_label)
 	content_box.add_child(distance_label)
 
-	retry_button.text = "Play Again"
+	retry_button.text = LanguageManager.t("BTN_PLAY_AGAIN")
 	retry_button.custom_minimum_size = Vector2(0, 54)
 	retry_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	var retry_style = StyleBoxFlat.new()
@@ -183,14 +183,18 @@ func show_result(winner_name: String, p1_score: int, p2_score: int, p1_distance:
 
 	if winner_name == "Player 1":
 		winner_id = "p1"
-		title_text = "PLAYER 1 WINS!"
+		title_text = LanguageManager.t("LBL_P1_WINS")
 		title_color = Color(0.98, 0.83, 0.2)
 	elif winner_name == "Player 2":
 		winner_id = "p2"
-		title_text = "PLAYER 2 WINS!"
+		title_text = LanguageManager.t("LBL_P2_WINS")
 		title_color = Color(0.98, 0.83, 0.2)
 
-	section_label.text = "CHAMPION" if winner_id != "draw" else "FINAL RESULT"
+	var title_text_draw = LanguageManager.t("LBL_DRAW")
+	if winner_id == "draw":
+		title_text = title_text_draw
+
+	section_label.text = LanguageManager.t("LBL_CHAMPION") if winner_id != "draw" else LanguageManager.t("LBL_FINAL_RESULT")
 	var title_settings = LabelSettings.new()
 	title_settings.font_size = 42
 	title_settings.font_color = title_color
@@ -199,8 +203,8 @@ func show_result(winner_name: String, p1_score: int, p2_score: int, p1_distance:
 	winner_label.label_settings = title_settings
 	winner_label.text = title_text
 
-	final_score_label.text = "Score  P1 %d  vs  P2 %d" % [p1_score, p2_score]
-	distance_label.text = "Distance  %dm  /  %dm" % [p1_distance, p2_distance]
+	final_score_label.text = LanguageManager.t("LBL_SCORE") % [p1_score, p2_score]
+	distance_label.text = LanguageManager.t("LBL_DISTANCE") % [p1_distance, p2_distance]
 	_show_winner_model(winner_id)
 
 	self.modulate.a = 0

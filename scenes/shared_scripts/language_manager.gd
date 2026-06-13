@@ -14,6 +14,10 @@ const TRANSLATIONS: Dictionary = {
 		"BTN_SETTINGS": "SETTINGS",
 		"BTN_HOW_TO": "HOW TO",
 		"BTN_QUIT": "QUIT",
+		# Settings section headers
+		"HDR_AUDIO": "AUDIO",
+		"HDR_LANGUAGE": "LANGUAGE",
+		"HDR_DISPLAY": "DISPLAY",
 		# Settings labels
 		"LBL_MASTER_VOL": "Master Volume",
 		"LBL_MUSIC_VOL": "Music Volume",
@@ -22,6 +26,31 @@ const TRANSLATIONS: Dictionary = {
 		"LBL_FULLSCREEN": "Full screen",
 		"BTN_BACK": "BACK",
 		"BTN_OK": "OK",
+		"LBL_SETTINGS_TITLE": "Settings",
+		# Game Over
+		"LBL_CHAMPION": "CHAMPION",
+		"LBL_FINAL_RESULT": "FINAL RESULT",
+		"LBL_P1_WINS": "PLAYER 1 WINS!",
+		"LBL_P2_WINS": "PLAYER 2 WINS!",
+		"LBL_DRAW": "DRAW!",
+		"LBL_SCORE": "Score  P1 %d  vs  P2 %d",
+		"LBL_DISTANCE": "Distance  %dm  /  %dm",
+		"BTN_PLAY_AGAIN": "Play Again",
+		"LBL_WINNER": "WINNER",
+		"LBL_PLAYER1": "PLAYER 1",
+		"LBL_PLAYER2": "PLAYER 2",
+		"LBL_STICKY_RICE": "STICKY RICE",
+		# Pause
+		"LBL_PAUSED": "PAUSED",
+		"LBL_RICE_BREAK": "Rice Break!",
+		# How To Play
+		"LBL_HOW_TO_PLAY": "How To Play",
+		"LBL_HTP_MOVE": "MOVE",
+		"LBL_HTP_JUMP": "JUMP",
+		"LBL_HTP_SKILL": "Use Skill",
+		"LBL_HTP_DESC": "Collect Sticky Rice Baskets to use your skill.",
+		# Collection
+		"LBL_COLLECTION_TITLE": "Sacred Items",
 		# HUD warnings
 		"HUD_ROLLING_SKILL": "Rolling Charm...",
 		"HUD_GOT_SKILL": "Got: ",
@@ -69,6 +98,10 @@ const TRANSLATIONS: Dictionary = {
 		"BTN_SETTINGS": "ตั้งค่า",
 		"BTN_HOW_TO": "วิธีเล่น",
 		"BTN_QUIT": "ออกจากเกม",
+		# Settings section headers
+		"HDR_AUDIO": "เสียง",
+		"HDR_LANGUAGE": "ภาษา",
+		"HDR_DISPLAY": "หน้าจอ",
 		# Settings labels
 		"LBL_MASTER_VOL": "ระดับเสียงหลัก",
 		"LBL_MUSIC_VOL": "เสียงดนตรี",
@@ -77,6 +110,31 @@ const TRANSLATIONS: Dictionary = {
 		"LBL_FULLSCREEN": "เต็มจอ",
 		"BTN_BACK": "กลับ",
 		"BTN_OK": "ตกลง",
+		"LBL_SETTINGS_TITLE": "ตั้งค่า",
+		# Game Over
+		"LBL_CHAMPION": "แชมเปี้ยน",
+		"LBL_FINAL_RESULT": "ผลสุดท้าย",
+		"LBL_P1_WINS": "ผู้เล่น 1 ชนะ!",
+		"LBL_P2_WINS": "ผู้เล่น 2 ชนะ!",
+		"LBL_DRAW": "เสมอ!",
+		"LBL_SCORE": "คะแนน  P1 %d  vs  P2 %d",
+		"LBL_DISTANCE": "ระยะทาง  %dm  /  %dm",
+		"BTN_PLAY_AGAIN": "เล่นอีกครั้ง",
+		"LBL_WINNER": "ผู้ชนะ",
+		"LBL_PLAYER1": "ผู้เล่น 1",
+		"LBL_PLAYER2": "ผู้เล่น 2",
+		"LBL_STICKY_RICE": "ข้าวเหนียว",
+		# Pause
+		"LBL_PAUSED": "หยุดชั่วคราว",
+		"LBL_RICE_BREAK": "พักดื่มน้ำ!",
+		# How To Play
+		"LBL_HOW_TO_PLAY": "วิธีเล่น",
+		"LBL_HTP_MOVE": "เดิน/วิ่ง",
+		"LBL_HTP_JUMP": "กระโดด",
+		"LBL_HTP_SKILL": "ใช้สกิล",
+		"LBL_HTP_DESC": "เก็บกระติ๊บข้าวเพื่อใช้สกิลของคุณ",
+		# Collection
+		"LBL_COLLECTION_TITLE": "ของขลังสะสม",
 		# HUD warnings
 		"HUD_ROLLING_SKILL": "ลุ้นเครื่องรางเทศกาล...",
 		"HUD_GOT_SKILL": "ได้: ",
@@ -150,9 +208,9 @@ func skill_name(skill_internal: String) -> String:
 		return skill_internal
 	return t(key)
 
-# Get locale index for OptionButton (0 = TH, 1 = EN)
+# Get locale index for OptionButton (0 = EN, 1 = TH)
 func get_lang_index() -> int:
-	return 1 if current_locale == "en" else 0
+	return 0 if current_locale == "en" else 1
 
 func set_language(locale: String):
 	if locale == current_locale:

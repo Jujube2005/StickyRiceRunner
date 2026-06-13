@@ -9,6 +9,9 @@ func _ready():
 	_setup_ui()
 	_populate_collection()
 	$Panel/CloseBtn.pressed.connect(func(): queue_free())
+	LanguageManager.language_changed.connect(func(_l): 
+		title_label.text = LanguageManager.t("LBL_COLLECTION_TITLE")
+	)
 
 func _setup_ui():
 	# Title
