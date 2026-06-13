@@ -12,7 +12,7 @@ const BASE_FORWARD_SPEED = 10.0
 const MAX_FORWARD_SPEED = 35.0
 const SPEED_SCALE_FACTOR = 0.015 # Increase 1.0 speed every ~66m
 
-const JUMP_FORCE = 9.0
+const JUMP_FORCE = 8.5
 const GRAVITY = 30.0
 const MAX_CHARGES = 5
 
