@@ -25,6 +25,7 @@ const SFX_LIST := [
 	"skill_use",      # generic fallback
 	"shield_block",   # ผ้าขาวม้ากันสกิล
 	"charge_full",    # ชาร์จครบ
+	"skill_ready",    # สุ่มสกิลได้แล้ว — 2 โน้ตไต่ขึ้น
 ]
 
 func _ready():
@@ -85,6 +86,7 @@ func _generate(name: String) -> AudioStreamWAV:
 		"skill_use":      return _gen_skill_use_generic()
 		"shield_block":   return _gen_shield_block()
 		"charge_full":    return _gen_charge_full()
+		"skill_ready":    return _gen_skill_ready()
 	return _gen_pickup()
 
 # ═══════════════════════════════════════════════════════════
@@ -350,5 +352,27 @@ func _gen_charge_full() -> AudioStreamWAV:
 			seg[i]  = _soft_clip(env * (0.55 * sin(TAU * f * t) +
 									   0.25 * sin(TAU * f * 2.0 * t) +
 									   0.12 * sin(TAU * f * 3.0 * t)))
+		buf = _concat(buf, seg)
+	return _make_wav(buf)
+
+# ───────────────────────────────────────────────────────────
+# 🎺 สกิลพร้อม! — 2-note rising fanfare (G5 → E6)
+#    สั้น กระชับ แจ้งเตือนว่ากดใช้ได้แล้ว
+# ───────────────────────────────────────────────────────────
+func _gen_skill_ready() -> AudioStreamWAV:
+	var note_freqs: Array[float] = [784.0, 1318.51]  # G5 → E6
+	var note_dur   := 0.10
+	var buf        := PackedFloat32Array()
+	for f_val in note_freqs:
+		var f: float = f_val
+		var nn  := int(SAMPLE_RATE * note_dur)
+		var seg := PackedFloat32Array()
+		seg.resize(nn)
+		for i in nn:
+			var t   := float(i) / SAMPLE_RATE
+			var env := _adsr(i, nn, 0.01, 0.05, 0.6, 0.40)
+			seg[i]  = _soft_clip(env * (0.60 * sin(TAU * f * t) +
+									   0.22 * sin(TAU * f * 2.0 * t) +
+									   0.08 * sin(TAU * f * 3.0 * t)))
 		buf = _concat(buf, seg)
 	return _make_wav(buf)

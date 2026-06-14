@@ -46,6 +46,12 @@ func _ready():
 	skill_button.pressed.connect(_on_skill_pressed)
 	defend_button.pressed.connect(_on_defend_pressed)
 	
+	# Phase 1 feedback signals
+	if player.has_signal("obstacle_hit"):
+		player.obstacle_hit.connect(func(): _flash_screen(Color(1, 0, 0, 0.15)))
+	if player.has_signal("prank_flash"):
+		player.prank_flash.connect(func(color: Color): _flash_screen(color))
+	
 	update_score(player.score)
 	update_distance(player.distance)
 	update_charge(player.charges, player.MAX_CHARGES)
@@ -428,7 +434,13 @@ func _flash_screen(color):
 		tween.tween_property(flash_rect, "color:a", 0, 0.5)
 
 func _on_skill_pressed():
+	_animate_button_press(skill_button)
 	player.request_skill()
+
+func _animate_button_press(btn: Button):
+	var t = create_tween()
+	t.tween_property(btn, "scale", Vector2(0.88, 0.88), 0.07).set_trans(Tween.TRANS_CUBIC)
+	t.tween_property(btn, "scale", Vector2(1.0, 1.0), 0.12).set_trans(Tween.TRANS_BACK)
 
 func _on_skill_state_changed(_is_ready, _skill_name):
 	_update_button_visuals()

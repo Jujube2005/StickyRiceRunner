@@ -7,6 +7,8 @@ signal skill_state_changed(is_ready, skill_name)
 signal warning_changed(message)
 signal skills_changed(new_skills)
 signal kratip_count_changed(current: int, needed: int)  # For HUD kratip counter
+signal obstacle_hit  # Emitted when player is stunned by obstacle — used for screen flash + camera shake
+signal prank_flash(color: Color)  # Emitted on receiver when hit by a skill — per-skill color
 
 const BASE_FORWARD_SPEED = 10.0
 const MAX_FORWARD_SPEED = 35.0
@@ -39,6 +41,7 @@ var is_rolling_skill := false
 var skills: Array[String] = []
 
 var shield_vfx : MeshInstance3D = null
+var trail_vfx : CPUParticles3D = null
 var anim_player : AnimationPlayer = null
 var current_anim : String = ""
 
@@ -83,6 +86,7 @@ func _ready():
 	axis_lock_angular_z = true
 	start_z = global_position.z
 	_setup_shield_vfx()
+	_setup_trail_vfx()
 	
 	# Dynamically locate GameManager as fallback
 	if !game_manager and get_tree() and get_tree().current_scene:
@@ -242,6 +246,24 @@ func _setup_shield_vfx():
 	add_child(shield_vfx)
 	shield_vfx.visible = false
 
+func _setup_trail_vfx():
+	trail_vfx = CPUParticles3D.new()
+	trail_vfx.amount = 20
+	trail_vfx.lifetime = 0.4
+	trail_vfx.emission_shape = CPUParticles3D.EMISSION_SHAPE_SPHERE
+	trail_vfx.emission_sphere_radius = 0.25
+	trail_vfx.direction = Vector3(0, 0.3, 1)  # float up + backward
+	trail_vfx.spread = 25.0
+	trail_vfx.gravity = Vector3(0, 1.5, 0)
+	trail_vfx.initial_velocity_min = 0.5
+	trail_vfx.initial_velocity_max = 1.2
+	trail_vfx.scale_amount_min = 0.06
+	trail_vfx.scale_amount_max = 0.14
+	trail_vfx.color = Color(1.0, 0.82, 0.1, 0.9)  # Golden sparkle
+	trail_vfx.position = Vector3(0, 0.3, 0.5)  # At feet
+	add_child(trail_vfx)
+	trail_vfx.emitting = false
+
 func _sync_model_to_body():
 	# Always keep the Model node at the correct local offset.
 	# The CharacterBody3D origin is at its FEET (capsule bottom) after move_and_slide,
@@ -311,6 +333,9 @@ func _physics_process(delta):
 					shield_vfx.scale = Vector3.ONE
 					shield_vfx.material_override.albedo_color.a = 0.3
 				)
+				# Also stop the trail when protection ends
+				if trail_vfx:
+					trail_vfx.emitting = false
 
 	var speed_factor = 1.0
 	if _has_effect("slow_speed"):
@@ -517,6 +542,28 @@ func add_kratip(amount: int = 1):
 	kratip_milestone_count += amount
 	_calculate_total_score()
 	emit_signal("kratip_count_changed", kratip_milestone_count, 10)
+	# Collectible sparkle effect
+	_spawn_collect_sparkle()
+
+func _spawn_collect_sparkle():
+	var p := CPUParticles3D.new()
+	p.one_shot = true
+	p.amount = 12
+	p.lifetime = 0.5
+	p.emission_shape = CPUParticles3D.EMISSION_SHAPE_SPHERE
+	p.emission_sphere_radius = 0.3
+	p.direction = Vector3(0, 1, 0)
+	p.spread = 60.0
+	p.gravity = Vector3(0, -4.0, 0)
+	p.initial_velocity_min = 1.5
+	p.initial_velocity_max = 3.0
+	p.scale_amount_min = 0.06
+	p.scale_amount_max = 0.12
+	p.color = Color(1.0, 0.9, 0.2, 1.0)  # Gold sparkle
+	p.position = Vector3(0, 1.0, 0)
+	add_child(p)
+	p.emitting = true
+	get_tree().create_timer(1.0).timeout.connect(p.queue_free)
 	
 	# Every 10 kratips → grant Luang Por Khoon coin directly
 	if kratip_milestone_count >= 10:
@@ -545,6 +592,9 @@ func grant_coin_protection():
 	set_warning(warn_msg)
 	get_tree().create_timer(1.5).timeout.connect(clear_warning.bind(warn_msg))
 	_show_shield_vfx()
+	# Activate golden trail during protection
+	if trail_vfx:
+		trail_vfx.emitting = true
 
 func add_penalty(amount):
 	penalties += amount
@@ -578,6 +628,12 @@ func stun(duration: float = 2.0):
 	var tween = create_tween()
 	tween.tween_property($Model, "scale", Vector3(1.5, 1.5, 1.5), 0.1)
 	tween.tween_property($Model, "scale", Vector3(1.0, 1.0, 1.0), 0.1)
+	# Obstacle hit feedback: screen flash (red) + camera shake
+	emit_signal("obstacle_hit")
+	AudioManager.play_sfx("obstacle_hit")
+	var cam = get_viewport().get_camera_3d()
+	if cam and cam.has_method("shake"):
+		cam.shake(0.08, 0.12)
 
 func add_charge(amount):
 	if !can_charge:
@@ -616,6 +672,7 @@ func _prepare_skill():
 		is_rolling_skill = false
 		emit_signal("skill_state_changed", true, prepared_skill)
 		emit_signal("warning_changed", LanguageManager.t("HUD_GOT_SKILL") + LanguageManager.skill_name(prepared_skill))
+		AudioManager.play_sfx("skill_ready")
 
 func request_skill():
 	if charges < MAX_CHARGES:
@@ -625,6 +682,7 @@ func request_skill():
 		return
 	if game_manager:
 		game_manager.request_skill(self, prepared_skill)
+		AudioManager.play_sfx("skill_use")  # Caster SFX
 		is_skill_ready = false
 		prepared_skill = ""
 		emit_signal("skill_state_changed", false, "")
@@ -708,46 +766,70 @@ func apply_prank(skill_name):
 		var warn_msg = LanguageManager.t("WARN_PKM_DEFLECT")
 		set_warning(warn_msg)
 		get_tree().create_timer(1.2).timeout.connect(clear_warning.bind(warn_msg))
-		# Light flash instead of taking debuff
+		# Shield deflect: green flash + scale pop
+		emit_signal("prank_flash", Color(0.0, 1.0, 0.3, 0.35))
+		AudioManager.play_sfx("shield_block")
 		var tween = create_tween()
 		tween.tween_property($Model, "scale", Vector3(1.3, 1.3, 1.3), 0.08)
 		tween.tween_property($Model, "scale", Vector3(1.0, 1.0, 1.0), 0.12)
 		return
-		
+	
+	# Per-skill SFX + flash color (Receiver side only)
 	match skill_name:
 		"Rice Yard Dust":
-			# ฝุ่นลานข้าว — ช้าลงทั้งเสี๚ระยะการเปลี่ยนเลน
+			# ฝุ่นลานข้าว — ช้าลง
 			effect_durations["slow_floor"] = 4.0
+			AudioManager.play_sfx("skill_dust")
+			emit_signal("prank_flash", Color(1.0, 0.9, 0.0, 0.25))  # 🟡 เหลือง
 		"Lane Swap":
 			lane = -1 if lane >= 0 else 1
+			AudioManager.play_sfx("skill_use")
+			emit_signal("prank_flash", Color(1.0, 0.9, 0.0, 0.25))  # 🟡 เหลือง
 		"Boon Bang Fai":
-			# บั้งไฟ — ทำให้สะดุ้งชั่วคราว
+			# บั้งไฟ — สะดุ้ง
 			effect_durations["slow_speed"] = 4.0
+			AudioManager.play_sfx("skill_bang_fai")
+			emit_signal("prank_flash", Color(1.0, 0.9, 0.0, 0.25))  # 🟡 เหลือง
 		"Screen Blur":
-			# หมอกควัน — ชั่วคราวมองไม่ชัด
+			# หมอกควัน — มองไม่ชัด
 			effect_durations["screen_blur"] = 4.0
+			AudioManager.play_sfx("skill_wind")
+			emit_signal("prank_flash", Color(0.0, 0.5, 1.0, 0.30))  # 🔵 ฟ้า
 		"Pull to Center":
 			# ดึงกลาง
 			lane = 0
 			velocity.y = 5.0
+			AudioManager.play_sfx("skill_use")
+			emit_signal("prank_flash", Color(0.6, 0.0, 1.0, 0.30))  # 🟣 ม่วง
 		"Knockback":
 			global_position.z += 6.0
 			velocity.y = 5.0
+			AudioManager.play_sfx("skill_use")
+			emit_signal("prank_flash", Color(0.6, 0.0, 1.0, 0.30))  # 🟣 ม่วง
 		"Invert Controls":
 			# กลับทาง
 			effect_durations["invert_controls"] = 4.5
+			AudioManager.play_sfx("skill_use")
+			emit_signal("prank_flash", Color(1.0, 0.9, 0.0, 0.25))  # 🟡 เหลือง
 		"Lane Block":
 			# กีดขวาง
 			if game_manager:
 				game_manager.spawn_lane_block(self)
+			AudioManager.play_sfx("skill_use")
+			emit_signal("prank_flash", Color(1.0, 0.9, 0.0, 0.25))  # 🟡 เหลือง
 		"Field Wind":
 			# ลมทุ่ง — ผลักซ้ายขวา
 			effect_durations["wind_push"] = 3.0
+			AudioManager.play_sfx("skill_wind")
+			emit_signal("prank_flash", Color(1.0, 0.9, 0.0, 0.25))  # 🟡 เหลือง
 		"Wind Push":
 			# Legacy alias
 			effect_durations["wind_push"] = 3.0
+			AudioManager.play_sfx("skill_wind")
+			emit_signal("prank_flash", Color(1.0, 0.9, 0.0, 0.25))  # 🟡 เหลือง
 		_:
-			pass
+			AudioManager.play_sfx("skill_use")
+			emit_signal("prank_flash", Color(0.6, 0.0, 1.0, 0.30))
 
 func on_prank_state_updated(prank):
 	# Map PrankState to UI Warnings

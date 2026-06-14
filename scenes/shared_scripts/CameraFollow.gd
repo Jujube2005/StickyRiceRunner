@@ -36,3 +36,16 @@ func _physics_process(delta):
 	var lateral_diff = target.global_position.x - (global_position.x - offset.x)
 	var target_roll = clamp(-lateral_diff * roll_amount, -0.12, 0.12)
 	rotation.z = lerp(rotation.z, target_roll, follow_speed * delta)
+
+func shake(duration: float = 0.08, intensity: float = 0.12):
+	# Camera shake: rapid random X/Y offsets then snap back
+	var original_offset = offset
+	var elapsed := 0.0
+	var step := 0.016  # ~60fps
+	while elapsed < duration:
+		await get_tree().process_frame
+		elapsed += get_process_delta_time()
+		var shake_x = randf_range(-intensity, intensity)
+		var shake_y = randf_range(-intensity * 0.5, intensity * 0.5)
+		offset = original_offset + Vector3(shake_x, shake_y, 0)
+	offset = original_offset

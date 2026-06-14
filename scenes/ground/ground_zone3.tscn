@@ -1,8 +1,6 @@
 [gd_scene format=3 uid="uid://bn4llccpeimf"]
 
-[ext_resource type="PackedScene" uid="uid://5puofchkhk8s" path="res://assets/models/ground/road01.glb" id="1_au3k8"]
 [ext_resource type="PackedScene" uid="uid://cuqfuy5r3kufs" path="res://assets/models/ground/speaker.glb" id="1_g8x0v"]
-[ext_resource type="PackedScene" uid="uid://ct7xe23k0up5g" path="res://assets/models/ground/Yamo.glb" id="2_vxqig"]
 [ext_resource type="PackedScene" uid="uid://c8qep0b2v1omo" path="res://assets/models/ground/amphitheater.glb" id="3_emaaf"]
 [ext_resource type="PackedScene" uid="uid://cacrrckbhcplp" path="res://assets/models/ground/ambulan-v1.glb" id="5_t8x44"]
 [ext_resource type="PackedScene" uid="uid://fjfqtgvkqps2" path="res://assets/models/ground/bin.glb" id="6_vay5f"]
@@ -32,14 +30,6 @@ transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 8.46
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
 shape = SubResource("BoxShape3D_lv0v5")
 
-[node name="road01" parent="." unique_id=1049326560 instance=ExtResource("1_au3k8")]
-transform = Transform3D(-3.715468e-07, 0, 6, 0, 6, 0, -8.5, 0, -2.6226832e-07, -1.95, 0, 0)
-visible = false
-
-[node name="road02" parent="." unique_id=764681803 instance=ExtResource("1_au3k8")]
-transform = Transform3D(-3.715468e-07, 0, 6, 0, 6, 0, -8.5, 0, -2.6226832e-07, 2, 0, 0)
-visible = false
-
 [node name="SideGroundLeft" type="MeshInstance3D" parent="." unique_id=888888881]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1.6, -11.554779, -0.25, 0)
 mesh = SubResource("BoxMesh_dirt")
@@ -61,10 +51,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18, 0, 0)
 
 [node name="RightFar" type="Node3D" parent="SceneryPoints" unique_id=651211548]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 0, 0)
-
-[node name="Yamo" parent="." unique_id=1737645157 instance=ExtResource("2_vxqig")]
-transform = Transform3D(-1.3113416e-07, 0, 3, 0, 3, 0, -3, 0, -1.3113416e-07, -5.5716443, -0.37566614, 0.0015368462)
-visible = false
 
 [node name="amphitheater3" parent="." unique_id=978757869 instance=ExtResource("3_emaaf")]
 transform = Transform3D(-2.1855694e-06, 0, 50, 0, 50, 0, -50, 0, -2.1855694e-06, -8, -1, 0)
