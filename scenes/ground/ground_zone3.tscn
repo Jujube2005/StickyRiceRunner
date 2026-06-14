@@ -1,8 +1,15 @@
 [gd_scene format=3 uid="uid://bn4llccpeimf"]
 
 [ext_resource type="PackedScene" uid="uid://5puofchkhk8s" path="res://assets/models/ground/road01.glb" id="1_au3k8"]
+[ext_resource type="PackedScene" uid="uid://cuqfuy5r3kufs" path="res://assets/models/ground/speaker.glb" id="1_g8x0v"]
 [ext_resource type="PackedScene" uid="uid://ct7xe23k0up5g" path="res://assets/models/ground/Yamo.glb" id="2_vxqig"]
 [ext_resource type="PackedScene" uid="uid://c8qep0b2v1omo" path="res://assets/models/ground/amphitheater.glb" id="3_emaaf"]
+[ext_resource type="PackedScene" uid="uid://cacrrckbhcplp" path="res://assets/models/ground/ambulan-v1.glb" id="5_t8x44"]
+[ext_resource type="PackedScene" uid="uid://fjfqtgvkqps2" path="res://assets/models/ground/bin.glb" id="6_vay5f"]
+[ext_resource type="PackedScene" uid="uid://orwbw3xyfods" path="res://assets/models/ground/road-v1.glb" id="7_lvx8s"]
+[ext_resource type="PackedScene" uid="uid://iy30ubxfalef" path="res://assets/models/ground/StreetFoodV1.glb" id="8_r320o"]
+[ext_resource type="PackedScene" uid="uid://wtlsifuaqf1r" path="res://assets/models/ground/treeV1.glb" id="9_cvba7"]
+[ext_resource type="PackedScene" uid="uid://ugw8xesvd5uy" path="res://assets/models/ground/ballon-v1.glb" id="10_7mdpa"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_lv0v5"]
 size = Vector3(30, 2, 10.4)
@@ -18,15 +25,20 @@ size = Vector3(15, 0.5, 10.4)
 collision_layer = 6
 collision_mask = 0
 
+[node name="Sketchfab_Scene4" parent="." unique_id=1864930996 instance=ExtResource("1_g8x0v")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 8.060955, -0.088020325, -5.909107)
+
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1372169769]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
 shape = SubResource("BoxShape3D_lv0v5")
 
 [node name="road01" parent="." unique_id=1049326560 instance=ExtResource("1_au3k8")]
 transform = Transform3D(-3.715468e-07, 0, 6, 0, 6, 0, -8.5, 0, -2.6226832e-07, -1.95, 0, 0)
+visible = false
 
 [node name="road02" parent="." unique_id=764681803 instance=ExtResource("1_au3k8")]
 transform = Transform3D(-3.715468e-07, 0, 6, 0, 6, 0, -8.5, 0, -2.6226832e-07, 2, 0, 0)
+visible = false
 
 [node name="SideGroundLeft" type="MeshInstance3D" parent="." unique_id=888888881]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1.6, -11.554779, -0.25, 0)
@@ -59,3 +71,45 @@ transform = Transform3D(-2.1855694e-06, 0, 50, 0, 50, 0, -50, 0, -2.1855694e-06,
 
 [node name="amphitheater4" parent="." unique_id=2061503528 instance=ExtResource("3_emaaf")]
 transform = Transform3D(-2.1855694e-06, 0, -50, 0, 50, 0, 50, 0, -2.1855694e-06, 8, -1, 0)
+
+[node name="Sketchfab_Scene" parent="." unique_id=1213661607 instance=ExtResource("5_t8x44")]
+transform = Transform3D(0.70000005, 0, 0, 0, 0.7, 0, 0, 0, 0.70000005, 5.2703075, -0.077822566, 8.326975)
+
+[node name="bin" parent="." unique_id=1835564888 instance=ExtResource("6_vay5f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.3300776, 4.858679e-08, 5.059585)
+
+[node name="bin" parent="bin" unique_id=1699279391 instance=ExtResource("6_vay5f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.594614, 0.053079557, -10.461135)
+
+[node name="road-v1" parent="." unique_id=1215348767 instance=ExtResource("7_lvx8s")]
+transform = Transform3D(0.9999619, 0, 0.016144091, 0, 1, 0, -0.008726535, 0, 1.8499296, -0.5780965, 0.023548461, -0.001)
+
+[node name="Sketchfab_Scene2" parent="." unique_id=1244956658 instance=ExtResource("1_g8x0v")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.7906733, -0.14771676, 5.661684)
+
+[node name="Sketchfab_Scene3" parent="." unique_id=1638823346 instance=ExtResource("1_g8x0v")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.031683, -0.29543352, -5.4586687)
+
+[node name="Sketchfab_Scene5" parent="." unique_id=1173075857 instance=ExtResource("1_g8x0v")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 8.51906, -0.016839027, 5.5272193)
+
+[node name="StreetFoodV1" parent="." unique_id=230651780 instance=ExtResource("8_r320o")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -8.060512, 0.043476343, -6.5296097)
+
+[node name="treeV1" parent="." unique_id=1815618065 instance=ExtResource("9_cvba7")]
+transform = Transform3D(1500, 0, 0, 0, 1500, 0, 0, 0, 1500, -5.578082, 0.22850561, 7.0858965)
+
+[node name="treeV2" parent="." unique_id=1479497630 instance=ExtResource("9_cvba7")]
+transform = Transform3D(1500, 0, 0, 0, 1500, 0, 0, 0, 1500, 5.914163, -0.38524055, -6.721486)
+
+[node name="Sketchfab_Scene6" parent="." unique_id=601092041 instance=ExtResource("10_7mdpa")]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, -5.3065166, 3.5891013, 5.8896065)
+
+[node name="Sketchfab_Scene7" parent="." unique_id=331153089 instance=ExtResource("10_7mdpa")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.46390963, 4.717863, 4.03363)
+
+[node name="Sketchfab_Scene8" parent="." unique_id=1949001996 instance=ExtResource("10_7mdpa")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5455399, 3.2901993, -2.0773134)
+
+[node name="Sketchfab_Scene8" parent="Sketchfab_Scene8" unique_id=532606590 instance=ExtResource("10_7mdpa")]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 3.6806026, 2.0666637, -0.62388134)

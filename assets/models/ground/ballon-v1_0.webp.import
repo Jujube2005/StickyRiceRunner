@@ -2,20 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://clohfx04eh5nx"
-path.s3tc="res://.godot/imported/buffalo_Image_1.webp-06d543ded21ed367ad344421f28ff863.s3tc.ctex"
+uid="uid://cwsl6vcudjq7"
+path.s3tc="res://.godot/imported/ballon-v1_0.webp-5c654c1526f0d4bb7bd701918f4fa1d9.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 generator_parameters={
-"md5": "66b0bdfada0731f1615100f39aecee22"
+"md5": "fcf63f6e5cd422885b05cd8756606501"
 }
 
 [deps]
 
-source_file="res://assets/models/ground/buffalo_Image_1.webp"
-dest_files=["res://.godot/imported/buffalo_Image_1.webp-06d543ded21ed367ad344421f28ff863.s3tc.ctex"]
+source_file="res://assets/models/ground/ballon-v1_0.webp"
+dest_files=["res://.godot/imported/ballon-v1_0.webp-5c654c1526f0d4bb7bd701918f4fa1d9.s3tc.ctex"]
 
 [params]
 

@@ -63,9 +63,9 @@ func _create_pool_tile():
 	var ground = scene_to_spawn.instantiate()
 	
 	# Randomize decorations to prevent them from repeating every 10 meters and looking like a wall
-	var preserve_names = ["CollisionShape3D", "road01", "road02", "SideGroundLeft", "SideGroundRight", "SceneryPoints"]
+	var preserve_names = ["CollisionShape3D", "SideGroundLeft", "SideGroundRight", "SceneryPoints"]
 	for child in ground.get_children():
-		if child.name in preserve_names:
+		if child.name in preserve_names or "road" in child.name.to_lower():
 			continue
 		
 		# 55% chance to spawn each decoration, 45% chance to delete it

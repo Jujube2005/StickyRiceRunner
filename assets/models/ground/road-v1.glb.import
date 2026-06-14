@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://dvw15335rhnjd"
-path="res://.godot/imported/buffalo.glb-8d3aa9f5e941b69f8600093202b0d8fd.scn"
+uid="uid://orwbw3xyfods"
+path="res://.godot/imported/road-v1.glb-037e09888f282b6e7da364c7c6ef8290.scn"
 
 [deps]
 
-source_file="res://assets/models/ground/buffalo.glb"
-dest_files=["res://.godot/imported/buffalo.glb-8d3aa9f5e941b69f8600093202b0d8fd.scn"]
+source_file="res://assets/models/ground/road-v1.glb"
+dest_files=["res://.godot/imported/road-v1.glb-037e09888f282b6e7da364c7c6ef8290.scn"]
 
 [params]
 

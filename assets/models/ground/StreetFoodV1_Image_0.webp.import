@@ -2,20 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://il0f8dtk8nxq"
-path.s3tc="res://.godot/imported/buffalo_Image_3.webp-14d4fdd2ee3f117644c294d1af36afc8.s3tc.ctex"
+uid="uid://c0aiymtylcuv1"
+path.s3tc="res://.godot/imported/StreetFoodV1_Image_0.webp-9af77a18b20e4c0027628be0b3c70a6b.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 generator_parameters={
-"md5": "a3ed1ef97737a7ffcd4279bfa6ce8b88"
+"md5": "cf45b9835aa6f65dde2aa12d8a2cbe29"
 }
 
 [deps]
 
-source_file="res://assets/models/ground/buffalo_Image_3.webp"
-dest_files=["res://.godot/imported/buffalo_Image_3.webp-14d4fdd2ee3f117644c294d1af36afc8.s3tc.ctex"]
+source_file="res://assets/models/ground/StreetFoodV1_Image_0.webp"
+dest_files=["res://.godot/imported/StreetFoodV1_Image_0.webp-9af77a18b20e4c0027628be0b3c70a6b.s3tc.ctex"]
 
 [params]
 
