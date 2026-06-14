@@ -72,10 +72,10 @@ func _create_pool_tile():
 		if randf() > 0.55:
 			child.queue_free()
 	
-	# 50% chance to rotate the block 180 degrees. This perfectly swaps the left and right sides!
-	if randf() > 0.5:
-		ground.rotation.y = PI
-		
+	# Rotation disabled: keeping all tiles forward-facing so roadside trees,
+	# poles, and buildings always align toward the same vanishing point,
+	# creating a strong sense of forward perspective depth.
+	
 	ground.position = Vector3(0, 0, spawn_z)
 	get_parent().get_node("World").add_child(ground)
 	pool.append(ground)

@@ -12,40 +12,115 @@
 [ext_resource type="PackedScene" uid="uid://b2lscfy2w3ey4" path="res://scenes/ui/gameplay_hud.tscn" id="13_hud"]
 [ext_resource type="Script" uid="uid://c3xwdt8ewoc5w" path="res://scenes/skill_item/skill_item_spawner.gd" id="14_spawner"]
 [ext_resource type="PackedScene" uid="uid://dd5o6ghlcevbj" path="res://scenes/ui/pause_screen.tscn" id="15_pause_screen"]
+[ext_resource type="Script" path="res://scenes/main/sky_effects.gd" id="20_skyeff"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_sky"]
-sky_top_color = Color(0.384314, 0.454902, 0.54902, 1)
-sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
-ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+sky_top_color = Color(0.12, 0.42, 0.82, 1)
+sky_horizon_color = Color(0.78, 0.88, 0.98, 1)
+sky_curve = 0.09
+sky_energy_multiplier = 1.0
+ground_bottom_color = Color(0.52, 0.38, 0.18, 1)
+ground_horizon_color = Color(0.88, 0.72, 0.35, 1)
+ground_curve = 0.04
+sun_angle_max = 5.5
+sun_curve = 0.15
+energy_multiplier = 1.05
 
 [sub_resource type="Sky" id="Sky_sky"]
 sky_material = SubResource("ProceduralSkyMaterial_sky")
+
+[sub_resource type="StandardMaterial3D" id="SDM_dust"]
+transparency = 1
+albedo_color = Color(1.0, 0.85, 0.50, 0.32)
+emission_enabled = true
+emission = Color(1.0, 0.78, 0.38, 1)
+emission_energy_multiplier = 0.6
+billboard_mode = 3
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+
+[sub_resource type="QuadMesh" id="QuadMesh_dust"]
+material = SubResource("SDM_dust")
+size = Vector2(0.04, 0.04)
+
+[sub_resource type="ParticleProcessMaterial" id="PPM_dust"]
+emission_shape = 2
+emission_box_extents = Vector3(12.0, 1.2, 7.0)
+direction = Vector3(0.1, 1.0, 0.05)
+spread = 40.0
+gravity = Vector3(0.05, -0.03, 0.0)
+initial_velocity_min = 0.08
+initial_velocity_max = 0.35
+angular_velocity_min = -25.0
+angular_velocity_max = 25.0
+scale_min = 0.7
+scale_max = 1.8
+lifetime_randomness = 0.65
+color = Color(1.0, 0.85, 0.50, 0.32)
+
+
+[sub_resource type="StandardMaterial3D" id="SDM_birds"]
+transparency = 1
+albedo_color = Color(0.08, 0.05, 0.04, 0.88)
+billboard_mode = 3
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+
+[sub_resource type="QuadMesh" id="QuadMesh_birds"]
+material = SubResource("SDM_birds")
+size = Vector2(0.5, 0.22)
+
+[sub_resource type="ParticleProcessMaterial" id="PPM_birds"]
+emission_shape = 2
+emission_box_extents = Vector3(28.0, 2.5, 12.0)
+direction = Vector3(1.0, 0.02, 0.0)
+spread = 6.0
+gravity = Vector3(0.0, 0.0, 0.0)
+initial_velocity_min = 2.2
+initial_velocity_max = 4.5
+scale_min = 0.6
+scale_max = 1.15
+lifetime_randomness = 0.55
+color = Color(0.08, 0.05, 0.04, 0.88)
 
 [sub_resource type="Environment" id="Environment_glow"]
 background_mode = 2
 sky = SubResource("Sky_sky")
 tonemap_mode = 2
 glow_enabled = true
-glow_intensity = 0.12
-glow_strength = 0.35
+glow_intensity = 0.1
+glow_strength = 0.3
 glow_bloom = 0.05
-glow_hdr_threshold = 1.8
+glow_hdr_threshold = 1.6
+glow_mix = 0.05
 fog_enabled = true
-fog_light_color = Color(0.647059, 0.654902, 0.670588, 1)
-fog_density = 0.003
-fog_sky_affect = 0.2
-fog_height = -3.0
-fog_height_density = 0.05
+fog_light_color = Color(0.85, 0.75, 0.50, 1)
+fog_density = 0.0025
+fog_sky_affect = 0.3
+fog_height = -2.5
+fog_height_density = 0.06
+fog_aerial_perspective = 0.25
+volumetric_fog_enabled = true
+volumetric_fog_density = 0.001
+volumetric_fog_albedo = Color(0.85, 0.78, 0.62, 1)
+volumetric_fog_emission = Color(0.55, 0.40, 0.18, 1)
+volumetric_fog_emission_energy = 0.05
+volumetric_fog_length = 48.0
+volumetric_fog_detail_spread = 2.0
+volumetric_fog_gi_inject = 0.25
+volumetric_fog_ambient_inject = 0.1
 
 [node name="Main" type="Node3D" unique_id=773682926]
 
 [node name="World" type="Node3D" parent="." unique_id=1993019558]
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=2084994250]
-transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 3.5405931, 2.3632915)
+transform = Transform3D(1, 0, 0, 0, 0.9563048, 0.29237172, 0, -0.29237172, 0.9563048, 0, 8.0, -12.0)
+light_color = Color(1.0, 0.92, 0.72, 1)
+light_energy = 1.6
 shadow_enabled = true
-shadow_opacity = 0.7
-shadow_blur = 1.2
+shadow_opacity = 0.75
+shadow_blur = 1.5
 
 [node name="GroundSpawner" type="Node3D" parent="." unique_id=834509586]
 script = ExtResource("1_7mycd")
@@ -124,3 +199,25 @@ offset_bottom = 0.0
 
 [node name="GameManager" type="Node3D" parent="." unique_id=184800071]
 script = ExtResource("5_1gmgm")
+
+[node name="SkyEffects" type="Node3D" parent="." unique_id=920381447]
+script = ExtResource("20_skyeff")
+
+[node name="DustParticles" type="GPUParticles3D" parent="SkyEffects" unique_id=920381448]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 5)
+amount = 28
+lifetime = 5.5
+preprocess = 2.5
+randomness = 0.5
+process_material = SubResource("PPM_dust")
+draw_pass_1 = SubResource("QuadMesh_dust")
+
+
+[node name="BirdsParticles" type="GPUParticles3D" parent="SkyEffects" unique_id=920381450]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 13, -45)
+amount = 6
+lifetime = 22.0
+preprocess = 5.0
+randomness = 0.6
+process_material = SubResource("PPM_birds")
+draw_pass_1 = SubResource("QuadMesh_birds")
