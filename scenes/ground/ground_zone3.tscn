@@ -26,7 +26,7 @@ collision_layer = 6
 collision_mask = 0
 
 [node name="Sketchfab_Scene4" parent="." unique_id=1864930996 instance=ExtResource("1_g8x0v")]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 8.060955, -0.088020325, -5.909107)
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 8.467232, -0.088020325, -5.909107)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1372169769]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
@@ -79,10 +79,10 @@ transform = Transform3D(0.70000005, 0, 0, 0, 0.7, 0, 0, 0, 0.70000005, 5.2703075
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.3300776, 4.858679e-08, 5.059585)
 
 [node name="bin" parent="bin" unique_id=1699279391 instance=ExtResource("6_vay5f")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.594614, 0.053079557, -10.461135)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.116168, 0.053079557, -10.302081)
 
 [node name="road-v1" parent="." unique_id=1215348767 instance=ExtResource("7_lvx8s")]
-transform = Transform3D(0.9999619, 0, 0.016144091, 0, 1, 0, -0.008726535, 0, 1.8499296, -0.5780965, 0.023548461, -0.001)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1.9, -0.578, 0.023, 0)
 
 [node name="Sketchfab_Scene2" parent="." unique_id=1244956658 instance=ExtResource("1_g8x0v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.7906733, -0.14771676, 5.661684)
@@ -100,7 +100,7 @@ transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -8.0
 transform = Transform3D(1500, 0, 0, 0, 1500, 0, 0, 0, 1500, -5.578082, 0.22850561, 7.0858965)
 
 [node name="treeV2" parent="." unique_id=1479497630 instance=ExtResource("9_cvba7")]
-transform = Transform3D(1500, 0, 0, 0, 1500, 0, 0, 0, 1500, 5.914163, -0.38524055, -6.721486)
+transform = Transform3D(1500, 0, 0, 0, 1500, 0, 0, 0, 1500, 8.824621, -0.38524055, -6.721486)
 
 [node name="Sketchfab_Scene6" parent="." unique_id=601092041 instance=ExtResource("10_7mdpa")]
 transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, -5.3065166, 3.5891013, 5.8896065)
@@ -113,3 +113,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5455399, 3.2901993, -2.077
 
 [node name="Sketchfab_Scene8" parent="Sketchfab_Scene8" unique_id=532606590 instance=ExtResource("10_7mdpa")]
 transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 3.6806026, 2.0666637, -0.62388134)
+
+[node name="StreetFoodV2" parent="." unique_id=1293692987 instance=ExtResource("8_r320o")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 5.7022104, 0, -6.810867)

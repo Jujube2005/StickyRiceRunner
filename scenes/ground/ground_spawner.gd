@@ -76,6 +76,8 @@ func _create_pool_tile():
 	# poles, and buildings always align toward the same vanishing point,
 	# creating a strong sense of forward perspective depth.
 	
+	_update_dirt_color(ground, spawn_z)
+	
 	ground.position = Vector3(0, 0, spawn_z)
 	get_parent().get_node("World").add_child(ground)
 	pool.append(ground)
@@ -99,6 +101,28 @@ func _recycle_tile(tile):
 		_create_pool_tile()
 	else:
 		# Recycle the existing tile
+		_update_dirt_color(tile, spawn_z)
 		tile.global_position = Vector3(0, 0, spawn_z)
 		spawn_z -= tile_length
 		pool.append(tile)
+
+func _update_dirt_color(tile: Node3D, z_pos: float):
+	var dirt_left = tile.find_child("SideGroundLeft", true, false)
+	var dirt_right = tile.find_child("SideGroundRight", true, false)
+	
+	if dirt_left and dirt_right:
+		var target_color = Color(0.48, 0.45, 0.3, 1) # Zone 1 (Brown)
+		var distance = abs(z_pos)
+		
+		# Transition over 150 meters to make it seamless
+		if distance >= 666.0:
+			var t = clamp((distance - 666.0) / 150.0, 0.0, 1.0)
+			target_color = Color(0.55, 0.45, 0.3, 1).lerp(Color(0.35, 0.35, 0.35, 1), t) # Zone 2 to Zone 3 (Grey)
+		elif distance >= 333.0:
+			var t = clamp((distance - 333.0) / 150.0, 0.0, 1.0)
+			target_color = Color(0.48, 0.45, 0.3, 1).lerp(Color(0.55, 0.45, 0.3, 1), t) # Zone 1 to Zone 2 (Reddish)
+			
+		var new_mat = StandardMaterial3D.new()
+		new_mat.albedo_color = target_color
+		dirt_left.set_surface_override_material(0, new_mat)
+		dirt_right.set_surface_override_material(0, new_mat)
