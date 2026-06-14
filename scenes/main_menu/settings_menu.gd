@@ -51,7 +51,8 @@ func _load_current_settings():
 	sfx_slider.value = db_to_linear(AudioManager._sfx_volume_db)
 	
 	# Fullscreen
-	fullscreen_switch.button_pressed = ((get_window().mode == Window.MODE_EXCLUSIVE_FULLSCREEN) or (get_window().mode == Window.MODE_FULLSCREEN))
+	var current_mode = DisplayServer.window_get_mode()
+	fullscreen_switch.button_pressed = (current_mode == DisplayServer.WINDOW_MODE_FULLSCREEN or current_mode == DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN)
 	
 	# Language dropdown
 	lang_btn.selected = LanguageManager.get_lang_index()
@@ -76,9 +77,9 @@ func _on_sfx_volume_changed(value):
 func _on_fullscreen_toggled(is_on: bool):
 	_update_switch_visual(is_on)
 	if is_on:
-		get_window().mode = Window.MODE_EXCLUSIVE_FULLSCREEN
+		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
 	else:
-		get_window().mode = Window.MODE_WINDOWED
+		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
 
 func _on_lang_selected(index: int):
 	var locale = "en" if index == 0 else "th"
