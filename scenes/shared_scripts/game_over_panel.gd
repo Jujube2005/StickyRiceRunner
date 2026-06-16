@@ -167,6 +167,17 @@ func _build_layout():
 	retry_button.add_theme_font_size_override("font_size", 22)
 	content_box.add_child(retry_button)
 
+	# ── Hover scale animation for Retry Button ─────────────────
+	get_tree().process_frame.connect(func(): retry_button.pivot_offset = retry_button.size / 2.0, CONNECT_ONE_SHOT)
+	retry_button.mouse_entered.connect(func():
+		var tw = create_tween()
+		tw.tween_property(retry_button, "scale", Vector2(1.08, 1.08), 0.15).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	)
+	retry_button.mouse_exited.connect(func():
+		var tw = create_tween()
+		tw.tween_property(retry_button, "scale", Vector2(1.0, 1.0), 0.15).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	)
+
 func _configure_info_label(label: Label, font_size: int, color: Color):
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	var info_settings = LabelSettings.new()

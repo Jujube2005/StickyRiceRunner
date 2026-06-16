@@ -61,6 +61,9 @@ func _apply_button_theme(btn: Button):
 	btn.add_theme_color_override("font_color", Color.WHITE)
 	btn.add_theme_color_override("font_hover_color", Color(1, 0.9, 0.8))
 	
+	# Wait for 1 frame so sizes are calculated, then set pivot to center
+	get_tree().process_frame.connect(func(): btn.pivot_offset = btn.size / 2.0, CONNECT_ONE_SHOT)
+	
 	# Style Normal (Orange)
 	var style_normal = StyleBoxTexture.new()
 	style_normal.texture = load(TEX_BTN_ORANGE)
@@ -99,9 +102,9 @@ func _animate_entrance():
 func _animate_button_hover(btn: Button, is_hover: bool):
 	var tween = create_tween()
 	if is_hover:
-		tween.tween_property(btn, "scale", Vector2(1.05, 1.05), 0.2)
+		tween.tween_property(btn, "scale", Vector2(1.10, 1.10), 0.15).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	else:
-		tween.tween_property(btn, "scale", Vector2(1.0, 1.0), 0.2)
+		tween.tween_property(btn, "scale", Vector2(1.0, 1.0), 0.15).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 
 func _update_button_texts():
 	$MenuContainer/ButtonList/PlayBtn.text = LanguageManager.t("BTN_PLAY")

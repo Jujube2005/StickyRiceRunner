@@ -53,6 +53,14 @@ func _ready():
 	if p2_slot1_btn and !p2_slot1_btn.has_node("KeyLabel"): _setup_slot_button(p2_slot1_btn, "K")
 	if p2_slot2_btn and !p2_slot2_btn.has_node("KeyLabel"): _setup_slot_button(p2_slot2_btn, "L")
 	
+	# Setup Hover Effects
+	_setup_button_hover($CenterTop/PauseBtn)
+	_setup_button_hover($CenterTop/SettingsBtn)
+	_setup_button_hover(p1_slot1_btn)
+	_setup_button_hover(p1_slot2_btn)
+	_setup_button_hover(p2_slot1_btn)
+	_setup_button_hover(p2_slot2_btn)
+	
 	# P1 Skills
 	if p1_slot1_btn: _safe_connect(p1_slot1_btn, "pressed", _on_p1_slot1_pressed)
 	if p1_slot2_btn: _safe_connect(p1_slot2_btn, "pressed", _on_p1_slot2_pressed)
@@ -448,6 +456,21 @@ func _on_p2_slot2_pressed():
 		player2.use_skill_at_slot(1)
 
 # --- Slot UI Helpers ---
+
+func _setup_button_hover(btn: BaseButton):
+	if !btn: return
+	get_tree().process_frame.connect(func(): btn.pivot_offset = btn.size / 2.0, CONNECT_ONE_SHOT)
+	var orig_scale = btn.scale
+	var hover_scale = orig_scale * 1.15
+	btn.mouse_entered.connect(func():
+		if btn.disabled: return
+		var tw = create_tween()
+		tw.tween_property(btn, "scale", hover_scale, 0.15).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	)
+	btn.mouse_exited.connect(func():
+		var tw = create_tween()
+		tw.tween_property(btn, "scale", orig_scale, 0.15).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	)
 
 func _setup_slot_button(btn: TextureButton, key_text: String):
 	if !btn: return
