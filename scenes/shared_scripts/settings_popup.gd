@@ -33,17 +33,20 @@ func _ready():
 
 func _setup_visuals():
 	for slider in [master_slider, music_slider, sfx_slider]:
-		# ดึง StyleBoxTexture ที่ตั้งไว้ใน Editor แล้วเพิ่ม expand_margin
-		# เพราะถ้าไม่มี expand_margin แถบจะบางมากจนมองไม่เห็น
+		# แถบสีส้ม (Track)
 		var style_track = slider.get_theme_stylebox("slider")
 		if style_track is StyleBoxTexture:
 			style_track.expand_margin_top    = 18.0
 			style_track.expand_margin_bottom = 18.0
 		
+		# แถบสีเขียว (Fill)
 		var style_fill = slider.get_theme_stylebox("grabber_area")
 		if style_fill is StyleBoxTexture:
 			style_fill.expand_margin_top    = 14.0
 			style_fill.expand_margin_bottom = 14.0
+			# บังคับ Hover state ใช้ StyleBox เดียวกับปกติ
+			# (กัน Godot ใช้ Default style ตอน Hover ทำให้สีหาย)
+			slider.add_theme_stylebox_override("grabber_area_highlight", style_fill)
 
 	
 func _setup_button_hover(btn: TextureButton):
