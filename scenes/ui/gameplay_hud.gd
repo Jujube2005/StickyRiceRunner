@@ -185,7 +185,7 @@ func _create_kratip_label(parent_node: Control) -> Label:
 	parent_node.add_child(lbl)
 	return lbl
 
-func show_silk_fly_in(player_name: String, silk_name: String, is_new: bool):
+func show_silk_fly_in(player_name: String, silk_name: String, silk_tex_path: String, is_new: bool):
 	# Use anchor node position set in .tscn editor
 	var start_pos: Vector2
 	if silk_popup_anchor:
@@ -205,60 +205,93 @@ func show_silk_fly_in(player_name: String, silk_name: String, is_new: bool):
 			target_pos = $TopRight/KratibIcon.global_position
 		else:
 			target_pos = Vector2(size.x - 80, 80)
-		
-	# Create cinematic silk label
+	
+	# ── Build popup: image on top, name below ──
+	var container = VBoxContainer.new()
+	container.alignment = BoxContainer.ALIGNMENT_CENTER
+	container.add_theme_constant_override("separation", 6)
+	
+	# Silk texture image
+	if silk_tex_path != "" and ResourceLoader.exists(silk_tex_path):
+		var tex_rect = TextureRect.new()
+		tex_rect.texture = load(silk_tex_path)
+		tex_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		tex_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		tex_rect.custom_minimum_size = Vector2(120, 120)
+		tex_rect.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+		container.add_child(tex_rect)
+	
+	# Silk name label
 	var silk_lbl = Label.new()
-	silk_lbl.text = "🧵 " + silk_name
+	silk_lbl.text = silk_name
 	var ls = LabelSettings.new()
-	ls.font_size = 40
+	ls.font_size = 36
 	if font_resource: ls.font = font_resource
-	ls.font_color = Color(0.85, 0.5, 1.0)
-	ls.outline_size = 8
+	ls.font_color = Color(0.95, 0.8, 1.0)
+	ls.outline_size = 7
 	ls.outline_color = Color.BLACK
 	silk_lbl.label_settings = ls
 	silk_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	container.add_child(silk_lbl)
 	
-	add_child(silk_lbl)
+	add_child(container)
 	
-	# Wait 1 frame for Godot to calculate label size
+	# Wait 1 frame for Godot to calculate sizes
 	await get_tree().process_frame
 	
-	# Position centered on the anchor using pivot
-	silk_lbl.pivot_offset = silk_lbl.size / 2.0
-	silk_lbl.global_position = start_pos - silk_lbl.size / 2.0
-	silk_lbl.scale = Vector2.ZERO
+	# Center on anchor, animate from zero scale
+	container.pivot_offset = container.size / 2.0
+	container.global_position = start_pos - container.size / 2.0
+	container.scale = Vector2.ZERO
 	
 	var tween = create_tween()
-	# Pop in center
-	tween.tween_property(silk_lbl, "scale", Vector2(1.2, 1.2), 0.3).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	tween.tween_interval(0.8) # Wait to let player see it
+	# Pop in
+	tween.tween_property(container, "scale", Vector2(1.15, 1.15), 0.35).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tween.tween_property(container, "scale", Vector2(1.0, 1.0), 0.1)
+	tween.tween_interval(0.9) # Hold so player can read it
 	
-	# Fly to target
-	tween.tween_property(silk_lbl, "global_position", target_pos, 0.5).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
-	tween.parallel().tween_property(silk_lbl, "scale", Vector2(0.3, 0.3), 0.5)
+	# Fly to target kratip icon
+	tween.tween_property(container, "global_position", target_pos, 0.5).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	tween.parallel().tween_property(container, "scale", Vector2(0.25, 0.25), 0.5)
 	
-	# Trigger unlock popup if new, then delete the fly-in label
+	# Cleanup + show unlock popup if brand new
 	tween.tween_callback(func(): 
-		silk_lbl.queue_free()
+		container.queue_free()
 		if is_new:
-			show_silk_unlock(silk_name)
+			show_silk_unlock(silk_name, silk_tex_path)
 	)
 
-func show_silk_unlock(silk_name: String):
-	var popup = Label.new()
-	popup.text = LanguageManager.t("LBL_UNLOCK") + silk_name + "!"
+func show_silk_unlock(silk_name: String, silk_tex_path: String = ""):
+	var popup = VBoxContainer.new()
+	popup.alignment = BoxContainer.ALIGNMENT_CENTER
+	popup.add_theme_constant_override("separation", 4)
+	
+	# Small thumbnail
+	if silk_tex_path != "" and ResourceLoader.exists(silk_tex_path):
+		var thumb = TextureRect.new()
+		thumb.texture = load(silk_tex_path)
+		thumb.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		thumb.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		thumb.custom_minimum_size = Vector2(72, 72)
+		thumb.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+		popup.add_child(thumb)
+	
+	# Unlock text
+	var lbl = Label.new()
+	lbl.text = LanguageManager.t("LBL_UNLOCK") + silk_name + "!"
 	var ls = LabelSettings.new()
-	ls.font_size = 28
+	ls.font_size = 26
 	if font_resource: ls.font = font_resource
-	ls.font_color = Color(0.85, 0.5, 1.0)
+	ls.font_color = Color(0.95, 0.8, 1.0)
 	ls.outline_size = 6
 	ls.outline_color = Color.BLACK
-	popup.label_settings = ls
-	popup.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	lbl.label_settings = ls
+	lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	popup.add_child(lbl)
 	
 	add_child(popup)
 	
-	# Wait 1 frame for label size
+	# Wait 1 frame for size
 	await get_tree().process_frame
 	
 	# Use anchor node for position if available
@@ -270,10 +303,12 @@ func show_silk_unlock(silk_name: String):
 	
 	popup.pivot_offset = popup.size / 2.0
 	popup.global_position = anchor_pos - popup.size / 2.0
+	popup.modulate.a = 0.0
 	
 	var tween = create_tween()
-	tween.tween_property(popup, "global_position:y", anchor_pos.y - popup.size.y / 2.0 - 40.0, 0.5).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-	tween.tween_interval(2.0)
+	tween.tween_property(popup, "modulate:a", 1.0, 0.3)
+	tween.tween_property(popup, "global_position:y", anchor_pos.y - popup.size.y / 2.0 - 30.0, 0.4).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	tween.tween_interval(2.2)
 	tween.tween_property(popup, "modulate:a", 0.0, 0.5)
 	tween.tween_callback(popup.queue_free)
 

@@ -582,7 +582,7 @@ func _spawn_collect_sparkle():
 		# Tell HUD to show cinematic fly-in
 		var hud = get_tree().current_scene.find_child("GameplayHUD", true, false)
 		if hud and hud.has_method("show_silk_fly_in"):
-			hud.show_silk_fly_in(self.name, silk_data["name"], is_new)
+			hud.show_silk_fly_in(self.name, silk_data["name"], silk_data.get("texture", ""), is_new)
 			
 		# Grant silk protection (delay slightly to match fly-in animation)
 		get_tree().create_timer(0.6).timeout.connect(grant_silk_protection)
