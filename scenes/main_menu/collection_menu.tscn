@@ -128,10 +128,10 @@ texture_over = ExtResource("7_yh7av")
 
 [node name="TickIcon" type="TextureRect" parent="Panel/SubtitleBox/TextureProgressBar" unique_id=228874211]
 layout_mode = 0
-offset_left = 353.91098
-offset_top = -39.323406
-offset_right = 468.91098
-offset_bottom = 75.67659
+offset_left = 598.73114
+offset_top = -40.591904
+offset_right = 713.73114
+offset_bottom = 74.4081
 texture = ExtResource("8_yh7av")
 
 [node name="TitleHeader" type="TextureRect" parent="Panel" unique_id=1800218834]
@@ -186,13 +186,15 @@ columns = 4
 
 [node name="CloseBtn" type="TextureButton" parent="Panel" unique_id=788218523]
 layout_mode = 1
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -86.85388
-offset_top = 25.0
-offset_right = 127.14612
-offset_bottom = 240.0
+anchors_preset = -1
+anchor_left = 0.94600004
+anchor_top = 0.09
+anchor_right = 0.94600004
+anchor_bottom = 0.09
+offset_left = -27.253662
+offset_top = -27.2
+offset_right = 186.74634
+offset_bottom = 187.8
 grow_horizontal = 0
 scale = Vector2(0.2555365, 0.2555365)
 texture_normal = ExtResource("9_p7i6s")

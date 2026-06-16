@@ -28,6 +28,19 @@ func _ready():
 	_populate_collection()
 	close_btn.pressed.connect(func(): queue_free())
 	LanguageManager.language_changed.connect(func(_l): _refresh_texts())
+	
+	if close_btn:
+		var orig_scale = close_btn.scale
+		var hover_scale = orig_scale * 1.15  # Scale up by 15%
+		
+		close_btn.mouse_entered.connect(func():
+			var tw = create_tween()
+			tw.tween_property(close_btn, "scale", hover_scale, 0.15).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+		)
+		close_btn.mouse_exited.connect(func():
+			var tw = create_tween()
+			tw.tween_property(close_btn, "scale", orig_scale, 0.15).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+		)
 
 func _refresh_texts():
 	if title_label:
