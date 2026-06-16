@@ -184,7 +184,7 @@ func _choose_skill():
 	# Festival Charms — ธัมม์เทศกาล
 	var common = ["Rice Yard Dust", "Boon Bang Fai", "Field Wind", "Screen Blur"]
 	var uncommon = ["Pull to Center", "Lane Swap"]
-	var rare = ["Lane Block", "Wind Push"]
+	var rare = ["Wind Push"]
 	var roll = randf()
 	if roll < 0.6: return common[randi() % common.size()]
 	elif roll < 0.9: return uncommon[randi() % uncommon.size()]

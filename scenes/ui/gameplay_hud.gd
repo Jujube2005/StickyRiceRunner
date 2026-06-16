@@ -85,6 +85,14 @@ func _ready():
 	if player2 and player2.has_signal("kratip_count_changed"):
 		player2.kratip_count_changed.connect(_on_p2_kratip_changed)
 	
+	# Connect screen_blackout signal — only darken the hit player's half
+	if player1 and player1.has_signal("screen_blackout"):
+		if !player1.screen_blackout.is_connected(_on_p1_screen_blackout):
+			player1.screen_blackout.connect(_on_p1_screen_blackout)
+	if player2 and player2.has_signal("screen_blackout"):
+		if !player2.screen_blackout.is_connected(_on_p2_screen_blackout):
+			player2.screen_blackout.connect(_on_p2_screen_blackout)
+	
 	# Create Kratip Labels dynamically
 	p1_kratip_label = _create_kratip_label($TopLeft/KratibIcon)
 	p2_kratip_label = _create_kratip_label($TopRight/KratibIcon)
@@ -104,6 +112,31 @@ func _ready():
 func _safe_connect(node: Node, sig_name: String, callable: Callable):
 	if node and !node.is_connected(sig_name, callable):
 		node.connect(sig_name, callable)
+
+func _on_p1_screen_blackout(duration: float):
+	_show_half_blackout(duration, false)  # false = left half (Player 1)
+
+func _on_p2_screen_blackout(duration: float):
+	_show_half_blackout(duration, true)   # true  = right half (Player 2)
+
+func _show_half_blackout(duration: float, is_right_half: bool):
+	"""Darken only one player's half of the screen."""
+	var overlay = ColorRect.new()
+	overlay.color = Color(0, 0, 0, 0)
+	overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	overlay.z_index = 100
+	# Size and position will be set after one frame so 'size' is valid
+	add_child(overlay)
+	await get_tree().process_frame
+	var half_w = size.x / 2.0
+	overlay.size = Vector2(half_w, size.y)
+	overlay.position = Vector2(half_w if is_right_half else 0.0, 0.0)
+	
+	var tween = create_tween()
+	tween.tween_property(overlay, "color:a", 0.95, 0.3)
+	tween.tween_interval(duration - 0.8)
+	tween.tween_property(overlay, "color:a", 0.0, 0.5)
+	tween.tween_callback(overlay.queue_free)
 
 func _on_p1_warning_changed(msg):
 	if p1_warning:
@@ -175,7 +208,7 @@ func show_silk_fly_in(player_name: String, silk_name: String, is_new: bool):
 		
 	# Create cinematic silk label
 	var silk_lbl = Label.new()
-	silk_lbl.text = silk_name
+	silk_lbl.text = "🧵 " + silk_name
 	var ls = LabelSettings.new()
 	ls.font_size = 40
 	if font_resource: ls.font = font_resource

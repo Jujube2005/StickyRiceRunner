@@ -9,6 +9,7 @@ signal skills_changed(new_skills)
 signal kratip_count_changed(current: int, needed: int)  # For HUD kratip counter
 signal obstacle_hit  # Emitted when player is stunned by obstacle — used for screen flash + camera shake
 signal prank_flash(color: Color)  # Emitted on receiver when hit by a skill — per-skill color
+signal screen_blackout(duration: float)  # Emitted to make the screen go black for a duration
 
 const BASE_FORWARD_SPEED = 10.0
 const MAX_FORWARD_SPEED = 35.0
@@ -347,13 +348,14 @@ func _physics_process(delta):
 	# Pin model to body every frame (fixes sinking)
 	_sync_model_to_body()
 	
-	# Visual feedback for screen blur / confusion (X offset only, Y managed by sync)
-	if _has_effect("screen_blur"):
-		$Model.position.x = model_offset.x + randf_range(-0.2, 0.2)
-
-	# Flash or shake when hit by something
-	if _has_effect("slow_speed") or _has_effect("slow_floor") or _has_effect("wind_push"):
-		$Model.rotation.z = sin(Engine.get_frames_drawn() * 0.5) * 0.2
+	# Flash or shake when hit by Field Wind
+	if _has_effect("wind_push"):
+		# Strong random shaking (left/right)
+		var shake_t = Engine.get_frames_drawn() * 1.2
+		$Model.rotation.z = sin(shake_t) * 0.35 + randf_range(-0.08, 0.08)
+		$Model.position.x = model_offset.x + sin(shake_t * 1.7) * 0.25
+	elif _has_effect("slow_floor"):
+		$Model.rotation.z = sin(Engine.get_frames_drawn() * 0.5) * 0.15
 	else:
 		$Model.rotation.z = 0
 
@@ -786,15 +788,15 @@ func apply_prank(skill_name):
 			AudioManager.play_sfx("skill_use")
 			emit_signal("prank_flash", Color(1.0, 0.9, 0.0, 0.25))  # 🟡 เหลือง
 		"Boon Bang Fai":
-			# บั้งไฟ — สะดุ้ง
-			effect_durations["slow_speed"] = 4.0
+			# บั้งไฟ — ล้มลงเหมือนชนสิ่งกีดขวาง
 			AudioManager.play_sfx("skill_bang_fai")
-			emit_signal("prank_flash", Color(1.0, 0.9, 0.0, 0.25))  # 🟡 เหลือง
+			emit_signal("prank_flash", Color(1.0, 0.4, 0.0, 0.45))  # 🔴 แดงส้ม
+			stun(2.0)
 		"Screen Blur":
-			# หมอกควัน — มองไม่ชัด
-			effect_durations["screen_blur"] = 4.0
+			# หมอกควัน — จอดำ
 			AudioManager.play_sfx("skill_wind")
-			emit_signal("prank_flash", Color(0.0, 0.5, 1.0, 0.30))  # 🔵 ฟ้า
+			emit_signal("prank_flash", Color(0.0, 0.0, 0.0, 0.95))  # ⚫ ดำ
+			emit_signal("screen_blackout", 4.0)
 		"Pull to Center":
 			# ดึงกลาง
 			lane = 0
@@ -811,22 +813,16 @@ func apply_prank(skill_name):
 			effect_durations["invert_controls"] = 4.5
 			AudioManager.play_sfx("skill_use")
 			emit_signal("prank_flash", Color(1.0, 0.9, 0.0, 0.25))  # 🟡 เหลือง
-		"Lane Block":
-			# กีดขวาง
-			if game_manager:
-				game_manager.spawn_lane_block(self)
-			AudioManager.play_sfx("skill_use")
-			emit_signal("prank_flash", Color(1.0, 0.9, 0.0, 0.25))  # 🟡 เหลือง
 		"Field Wind":
-			# ลมทุ่ง — ผลักซ้ายขวา
-			effect_durations["wind_push"] = 3.0
+			# ลมทุ่ง — ตัวสั่นแรง
+			effect_durations["wind_push"] = 4.0
 			AudioManager.play_sfx("skill_wind")
-			emit_signal("prank_flash", Color(1.0, 0.9, 0.0, 0.25))  # 🟡 เหลือง
+			emit_signal("prank_flash", Color(0.4, 0.9, 1.0, 0.30))  # 🔵 ฟ้าลม
 		"Wind Push":
-			# Legacy alias
-			effect_durations["wind_push"] = 3.0
+			# Legacy alias — same as Field Wind
+			effect_durations["wind_push"] = 4.0
 			AudioManager.play_sfx("skill_wind")
-			emit_signal("prank_flash", Color(1.0, 0.9, 0.0, 0.25))  # 🟡 เหลือง
+			emit_signal("prank_flash", Color(0.4, 0.9, 1.0, 0.30))  # 🔵 ฟ้าลม
 		_:
 			AudioManager.play_sfx("skill_use")
 			emit_signal("prank_flash", Color(0.6, 0.0, 1.0, 0.30))
