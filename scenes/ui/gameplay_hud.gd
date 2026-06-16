@@ -8,7 +8,7 @@ extends Control
 @onready var p2_distance = $TopRight/DistanceSign/Label
 @onready var p2_leader_label = $TopRight/LeaderLabel
 
-@onready var coin_popup_anchor: Control = $CoinPopupAnchor
+@onready var silk_popup_anchor: Control = $SilkPopupAnchor
 
 var p1_current_percent: float = 0.0
 var p2_current_percent: float = 0.0
@@ -152,11 +152,11 @@ func _create_kratip_label(parent_node: Control) -> Label:
 	parent_node.add_child(lbl)
 	return lbl
 
-func show_coin_fly_in(player_name: String, coin_name: String, is_new: bool):
+func show_silk_fly_in(player_name: String, silk_name: String, is_new: bool):
 	# Use anchor node position set in .tscn editor
 	var start_pos: Vector2
-	if coin_popup_anchor:
-		start_pos = coin_popup_anchor.global_position
+	if silk_popup_anchor:
+		start_pos = silk_popup_anchor.global_position
 	else:
 		start_pos = Vector2(size.x / 2.0, size.y / 2.0)
 	
@@ -173,51 +173,51 @@ func show_coin_fly_in(player_name: String, coin_name: String, is_new: bool):
 		else:
 			target_pos = Vector2(size.x - 80, 80)
 		
-	# Create cinematic coin label
-	var coin_lbl = Label.new()
-	coin_lbl.text = "🪙 " + coin_name
+	# Create cinematic silk label
+	var silk_lbl = Label.new()
+	silk_lbl.text = silk_name
 	var ls = LabelSettings.new()
 	ls.font_size = 40
 	if font_resource: ls.font = font_resource
-	ls.font_color = Color(1.0, 0.8, 0.1)
+	ls.font_color = Color(0.85, 0.5, 1.0)
 	ls.outline_size = 8
 	ls.outline_color = Color.BLACK
-	coin_lbl.label_settings = ls
-	coin_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	silk_lbl.label_settings = ls
+	silk_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	
-	add_child(coin_lbl)
+	add_child(silk_lbl)
 	
 	# Wait 1 frame for Godot to calculate label size
 	await get_tree().process_frame
 	
 	# Position centered on the anchor using pivot
-	coin_lbl.pivot_offset = coin_lbl.size / 2.0
-	coin_lbl.global_position = start_pos - coin_lbl.size / 2.0
-	coin_lbl.scale = Vector2.ZERO
+	silk_lbl.pivot_offset = silk_lbl.size / 2.0
+	silk_lbl.global_position = start_pos - silk_lbl.size / 2.0
+	silk_lbl.scale = Vector2.ZERO
 	
 	var tween = create_tween()
 	# Pop in center
-	tween.tween_property(coin_lbl, "scale", Vector2(1.2, 1.2), 0.3).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tween.tween_property(silk_lbl, "scale", Vector2(1.2, 1.2), 0.3).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	tween.tween_interval(0.8) # Wait to let player see it
 	
 	# Fly to target
-	tween.tween_property(coin_lbl, "global_position", target_pos, 0.5).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
-	tween.parallel().tween_property(coin_lbl, "scale", Vector2(0.3, 0.3), 0.5)
+	tween.tween_property(silk_lbl, "global_position", target_pos, 0.5).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	tween.parallel().tween_property(silk_lbl, "scale", Vector2(0.3, 0.3), 0.5)
 	
-	# Trigger unlock popup if new, and delete the fly-in label
+	# Trigger unlock popup if new, then delete the fly-in label
 	tween.tween_callback(func(): 
-		coin_lbl.queue_free()
+		silk_lbl.queue_free()
 		if is_new:
-			show_coin_unlock(coin_name)
+			show_silk_unlock(silk_name)
 	)
 
-func show_coin_unlock(coin_name: String):
+func show_silk_unlock(silk_name: String):
 	var popup = Label.new()
-	popup.text = LanguageManager.t("LBL_UNLOCK") + coin_name + "!"
+	popup.text = LanguageManager.t("LBL_UNLOCK") + silk_name + "!"
 	var ls = LabelSettings.new()
 	ls.font_size = 28
 	if font_resource: ls.font = font_resource
-	ls.font_color = Color(1.0, 0.8, 0.1)
+	ls.font_color = Color(0.85, 0.5, 1.0)
 	ls.outline_size = 6
 	ls.outline_color = Color.BLACK
 	popup.label_settings = ls
@@ -230,8 +230,8 @@ func show_coin_unlock(coin_name: String):
 	
 	# Use anchor node for position if available
 	var anchor_pos: Vector2
-	if coin_popup_anchor:
-		anchor_pos = coin_popup_anchor.global_position
+	if silk_popup_anchor:
+		anchor_pos = silk_popup_anchor.global_position
 	else:
 		anchor_pos = Vector2(size.x / 2.0, 120)
 	

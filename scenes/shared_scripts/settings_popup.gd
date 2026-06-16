@@ -3,7 +3,7 @@ extends Control
 
 const TEX_SLIDER_TRACK = preload("res://assets/textures/UI/Buttons/HSliderTrac.png")
 const TEX_SLIDER_RING = preload("res://assets/textures/UI/Buttons/HSliderGrabber.png")
-const TEX_SLIDER_COIN = preload("res://assets/textures/UI/Buttons/HSliderIcon.png")
+const TEX_SLIDER_SILK = preload("res://assets/textures/UI/Buttons/HSliderIcon.png")
 
 @onready var board_rect: TextureRect   = $Board
 @onready var master_slider: HSlider    = $Board/Content/Master/MasterSlider
@@ -46,8 +46,8 @@ func _setup_visuals():
 		slider.add_theme_stylebox_override("slider", style_track)
 		slider.add_theme_stylebox_override("grabber_area", style_fill)
 		slider.add_theme_stylebox_override("grabber_area_highlight", style_fill)
-		slider.add_theme_icon_override("grabber", TEX_SLIDER_COIN)
-		slider.add_theme_icon_override("grabber_highlight", TEX_SLIDER_COIN)
+		slider.add_theme_icon_override("grabber", TEX_SLIDER_SILK)
+		slider.add_theme_icon_override("grabber_highlight", TEX_SLIDER_SILK)
 
 	
 func _setup_button_hover(btn: TextureButton):

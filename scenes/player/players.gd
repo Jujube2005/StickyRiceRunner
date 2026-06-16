@@ -25,15 +25,15 @@ var alive = true
 var finished = false
 var stun_timer := 0.0
 var kratips_collected := 0      # Total kratips (for scoring)
-var kratip_milestone_count := 0 # Kratips toward next coin (0-9, resets at 10)
+var kratip_milestone_count := 0 # Kratips toward next silk (0-9, resets at 10)
 var penalties := 0
 var score := 0
 var charges := 0
 var can_charge := true
 var effect_durations := {}
 
-const COIN_PROTECTION_DURATION := 5.0
-var coin_protection_timer := 0.0  # > 0 means protection is active
+const SILK_PROTECTION_DURATION := 5.0
+var silk_protection_timer := 0.0  # > 0 means silk protection is active
 
 var prepared_skill := ""
 var is_skill_ready := false
@@ -320,9 +320,9 @@ func _physics_process(delta):
 
 	_update_effects(delta)
 
-	if coin_protection_timer > 0:
-		coin_protection_timer -= delta
-		if coin_protection_timer <= 0:
+	if silk_protection_timer > 0:
+		silk_protection_timer -= delta
+		if silk_protection_timer <= 0:
 			if shield_vfx and shield_vfx.visible:
 				# Use fade-out logic similar to try_defend's shield
 				var fade_tween = create_tween()
@@ -333,7 +333,7 @@ func _physics_process(delta):
 					shield_vfx.scale = Vector3.ONE
 					shield_vfx.material_override.albedo_color.a = 0.3
 				)
-				# Also stop the trail when protection ends
+				# Also stop the trail when silk protection ends
 				if trail_vfx:
 					trail_vfx.emitting = false
 
@@ -565,34 +565,34 @@ func _spawn_collect_sparkle():
 	p.emitting = true
 	get_tree().create_timer(1.0).timeout.connect(p.queue_free)
 	
-	# Every 10 kratips → grant Luang Por Khoon coin directly
+	# Every 10 kratips → grant a Silk collectible
 	if kratip_milestone_count >= 10:
 		kratip_milestone_count = 0
 		emit_signal("kratip_count_changed", 0, 10)
 		
-		# Roll random coin
-		var coin_data = CollectionManager.roll_random_coin()
-		var is_new = CollectionManager.add_coin(coin_data["id"])
+		# Roll random silk
+		var silk_data = CollectionManager.roll_random_silk()
+		var is_new = CollectionManager.add_silk(silk_data["id"])
 		
 		# SFX
 		AudioManager.play_sfx("pickup")
 		
 		# Tell HUD to show cinematic fly-in
 		var hud = get_tree().current_scene.find_child("GameplayHUD", true, false)
-		if hud and hud.has_method("show_coin_fly_in"):
-			hud.show_coin_fly_in(self.name, coin_data["name"], is_new)
+		if hud and hud.has_method("show_silk_fly_in"):
+			hud.show_silk_fly_in(self.name, silk_data["name"], is_new)
 			
-		# Grant protection (delay slightly to match fly-in animation)
-		get_tree().create_timer(0.6).timeout.connect(grant_coin_protection)
+		# Grant silk protection (delay slightly to match fly-in animation)
+		get_tree().create_timer(0.6).timeout.connect(grant_silk_protection)
 
-func grant_coin_protection():
-	"""Grant or refresh the 5-second collision-immunity from a Luang Por Khoon coin."""
-	coin_protection_timer = COIN_PROTECTION_DURATION
+func grant_silk_protection():
+	"""Grant or refresh the 5-second collision-immunity from a silk collectible."""
+	silk_protection_timer = SILK_PROTECTION_DURATION
 	var warn_msg = LanguageManager.t("WARN_PKM_PROTECT")
 	set_warning(warn_msg)
 	get_tree().create_timer(1.5).timeout.connect(clear_warning.bind(warn_msg))
 	_show_shield_vfx()
-	# Activate golden trail during protection
+	# Activate golden trail during silk protection
 	if trail_vfx:
 		trail_vfx.emitting = true
 
@@ -607,8 +607,8 @@ func _calculate_total_score():
 	emit_signal("score_changed", score)
 
 func die() -> void:
-	# If coin-protection is active, block the hit entirely
-	if coin_protection_timer > 0.0:
+	# If silk protection is active, block the hit entirely
+	if silk_protection_timer > 0.0:
 		var warn_msg = LanguageManager.t("WARN_BLOCKED")
 		set_warning(warn_msg)
 		get_tree().create_timer(1.2).timeout.connect(clear_warning.bind(warn_msg))
@@ -761,8 +761,8 @@ func use_skill_at_slot(slot_index: int):
 				get_tree().create_timer(1.0).timeout.connect(clear_warning.bind(warn_msg))
 
 func apply_prank(skill_name):
-	# Coin protection blocks opponent skills entirely
-	if coin_protection_timer > 0.0:
+	# Silk protection blocks opponent skills entirely
+	if silk_protection_timer > 0.0:
 		var warn_msg = LanguageManager.t("WARN_PKM_DEFLECT")
 		set_warning(warn_msg)
 		get_tree().create_timer(1.2).timeout.connect(clear_warning.bind(warn_msg))
