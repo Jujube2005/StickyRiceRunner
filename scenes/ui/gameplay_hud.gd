@@ -212,12 +212,13 @@ func _create_kratip_label(parent_node: Control) -> Label:
 	return lbl
 
 func show_silk_fly_in(player_name: String, silk_name: String, silk_tex_path: String, is_new: bool):
-	# Use anchor node position set in .tscn editor
+	# Start position = center of the player's own half-screen
+	var half_w = size.x / 2.0
 	var start_pos: Vector2
-	if silk_popup_anchor:
-		start_pos = silk_popup_anchor.global_position
+	if player_name == "Player1":
+		start_pos = Vector2(half_w / 2.0, size.y / 2.0)        # center of left half
 	else:
-		start_pos = Vector2(size.x / 2.0, size.y / 2.0)
+		start_pos = Vector2(half_w + half_w / 2.0, size.y / 2.0) # center of right half
 	
 	# Determine target pos based on player
 	var target_pos = Vector2.ZERO
@@ -284,10 +285,10 @@ func show_silk_fly_in(player_name: String, silk_name: String, silk_tex_path: Str
 	tween.tween_callback(func(): 
 		container.queue_free()
 		if is_new:
-			show_silk_unlock(silk_name, silk_tex_path)
+			show_silk_unlock(player_name, silk_name, silk_tex_path)
 	)
 
-func show_silk_unlock(silk_name: String, silk_tex_path: String = ""):
+func show_silk_unlock(player_name: String, silk_name: String, silk_tex_path: String = ""):
 	var popup = VBoxContainer.new()
 	popup.alignment = BoxContainer.ALIGNMENT_CENTER
 	popup.add_theme_constant_override("separation", 4)
@@ -320,12 +321,13 @@ func show_silk_unlock(silk_name: String, silk_tex_path: String = ""):
 	# Wait 1 frame for size
 	await get_tree().process_frame
 	
-	# Use anchor node for position if available
+	# Anchor at center of the player's own half-screen
+	var half_w = size.x / 2.0
 	var anchor_pos: Vector2
-	if silk_popup_anchor:
-		anchor_pos = silk_popup_anchor.global_position
+	if player_name == "Player1":
+		anchor_pos = Vector2(half_w / 2.0, size.y / 2.0)
 	else:
-		anchor_pos = Vector2(size.x / 2.0, 120)
+		anchor_pos = Vector2(half_w + half_w / 2.0, size.y / 2.0)
 	
 	popup.pivot_offset = popup.size / 2.0
 	popup.global_position = anchor_pos - popup.size / 2.0
