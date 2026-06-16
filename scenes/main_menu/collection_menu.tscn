@@ -1,6 +1,9 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" uid="uid://djqissv6uaawu" path="res://scenes/main_menu/collection_menu.gd" id="1_col_script"]
+[ext_resource type="Texture2D" path="res://assets/textures/UI/Buttons/wooden_sign.png" id="2_wooden_sign"]
+[ext_resource type="Texture2D" path="res://assets/textures/UI/Buttons/title_header.png" id="3_title_header"]
+[ext_resource type="Texture2D" path="res://assets/textures/UI/Buttons/close_2.png" id="4_close_btn"]
 
 [node name="CollectionMenu" type="Control"]
 layout_mode = 3
@@ -11,67 +14,122 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_col_script")
 
-[node name="ColorRect" type="ColorRect" parent="."]
+[node name="Overlay" type="ColorRect" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0, 0, 0, 0.7)
+color = Color(0, 0, 0, 0.55)
 
-[node name="Panel" type="Panel" parent="."]
+[node name="Panel" type="TextureRect" parent="."]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -400.0
-offset_top = -250.0
-offset_right = 400.0
-offset_bottom = 250.0
+offset_left = -490.0
+offset_top = -290.0
+offset_right = 490.0
+offset_bottom = 290.0
 grow_horizontal = 2
 grow_vertical = 2
+texture = ExtResource("2_wooden_sign")
+expand_mode = 3
+stretch_mode = 6
 
-[node name="TitleLabel" type="Label" parent="Panel"]
+[node name="TitleHeader" type="TextureRect" parent="Panel"]
 layout_mode = 1
-anchors_preset = 10
-anchor_right = 1.0
-offset_top = 20.0
-offset_bottom = 65.0
+anchors_preset = 6
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -200.0
+offset_top = -52.0
+offset_right = 200.0
+offset_bottom = 28.0
 grow_horizontal = 2
-text = "ของขลังสะสม"
-horizontal_alignment = 1
+texture = ExtResource("3_title_header")
+expand_mode = 3
+stretch_mode = 6
 
-[node name="ScrollContainer" type="ScrollContainer" parent="Panel"]
+[node name="TitleLabel" type="Label" parent="Panel/TitleHeader"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 30.0
-offset_top = 80.0
-offset_right = -30.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "COLLECTION"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SubtitleBox" type="TextureRect" parent="Panel"]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -260.0
+offset_top = 38.0
+offset_right = 260.0
+offset_bottom = 100.0
+grow_horizontal = 2
+texture = ExtResource("2_wooden_sign")
+expand_mode = 3
+stretch_mode = 6
+
+[node name="SubtitleLabel" type="Label" parent="Panel/SubtitleBox"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "สะสมผ้าไหม"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CounterLabel" type="Label" parent="Panel/SubtitleBox"]
+layout_mode = 1
+anchors_preset = 4
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = -90.0
+offset_top = -16.0
+offset_right = -12.0
+offset_bottom = 16.0
+grow_horizontal = 0
+grow_vertical = 2
+text = "0 / 4"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="GridContainer" type="GridContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 40.0
+offset_top = 115.0
+offset_right = -40.0
 offset_bottom = -30.0
 grow_horizontal = 2
 grow_vertical = 2
-
-[node name="GridContainer" type="GridContainer" parent="Panel/ScrollContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_constants/h_separation = 30
-theme_override_constants/v_separation = 30
+theme_override_constants/h_separation = 24
+theme_override_constants/v_separation = 12
 columns = 4
 
-[node name="CloseBtn" type="Button" parent="Panel"]
+[node name="CloseBtn" type="TextureButton" parent="Panel"]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -50.0
-offset_top = 15.0
-offset_right = -15.0
-offset_bottom = 50.0
+offset_left = -56.0
+offset_top = -56.0
+offset_right = 4.0
+offset_bottom = 4.0
 grow_horizontal = 0
-text = "X"
+texture_normal = ExtResource("4_close_btn")

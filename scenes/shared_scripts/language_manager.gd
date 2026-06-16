@@ -50,7 +50,8 @@ const TRANSLATIONS: Dictionary = {
 		"LBL_HTP_SKILL": "Use Skill",
 		"LBL_HTP_DESC": "Collect Sticky Rice Baskets to use your skill.",
 		# Collection
-		"LBL_COLLECTION_TITLE": "Sacred Items",
+		"LBL_COLLECTION_TITLE": "COLLECTION",
+		"LBL_COLLECTION_SUBTITLE": "Silk Collection",
 		# HUD warnings
 		"HUD_ROLLING_SKILL": "Rolling Charm...",
 		"HUD_GOT_SKILL": "Got: ",
@@ -134,7 +135,8 @@ const TRANSLATIONS: Dictionary = {
 		"LBL_HTP_SKILL": "ใช้สกิล",
 		"LBL_HTP_DESC": "เก็บกระติ๊บข้าวเพื่อใช้สกิลของคุณ",
 		# Collection
-		"LBL_COLLECTION_TITLE": "ของขลังสะสม",
+		"LBL_COLLECTION_TITLE": "COLLECTION",
+		"LBL_COLLECTION_SUBTITLE": "สะสมผ้าไหม",
 		# HUD warnings
 		"HUD_ROLLING_SKILL": "ลุ้นเครื่องรางเทศกาล...",
 		"HUD_GOT_SKILL": "ได้: ",
