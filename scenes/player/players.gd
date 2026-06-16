@@ -793,9 +793,9 @@ func apply_prank(skill_name):
 			emit_signal("prank_flash", Color(1.0, 0.4, 0.0, 0.45))  # 🔴 แดงส้ม
 			stun(2.0)
 		"Screen Blur":
-			# หมอกควัน — จอดำ
+			# หมอกควัน — วงกลมเบลอขอบ (vignette ฝั่งผู้เล่นที่โดน)
 			AudioManager.play_sfx("skill_wind")
-			emit_signal("prank_flash", Color(0.0, 0.0, 0.0, 0.95))  # ⚫ ดำ
+			emit_signal("prank_flash", Color(0.0, 0.0, 0.1, 0.35))  # ⚫ flash เบา
 			emit_signal("screen_blackout", 4.0)
 		"Pull to Center":
 			# ดึงกลาง

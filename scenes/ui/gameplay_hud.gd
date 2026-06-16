@@ -114,28 +114,54 @@ func _safe_connect(node: Node, sig_name: String, callable: Callable):
 		node.connect(sig_name, callable)
 
 func _on_p1_screen_blackout(duration: float):
-	_show_half_blackout(duration, false)  # false = left half (Player 1)
+	_show_half_vignette(duration, false)  # false = left half (Player 1)
 
 func _on_p2_screen_blackout(duration: float):
-	_show_half_blackout(duration, true)   # true  = right half (Player 2)
+	_show_half_vignette(duration, true)   # true  = right half (Player 2)
 
-func _show_half_blackout(duration: float, is_right_half: bool):
-	"""Darken only one player's half of the screen."""
+func _show_half_vignette(duration: float, is_right_half: bool):
+	"""Circular vignette on one player's half — dark ring, transparent center."""
 	var overlay = ColorRect.new()
-	overlay.color = Color(0, 0, 0, 0)
+	overlay.color = Color.WHITE  # Shader controls the actual color
 	overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	overlay.z_index = 100
-	# Size and position will be set after one frame so 'size' is valid
 	add_child(overlay)
 	await get_tree().process_frame
+	
 	var half_w = size.x / 2.0
-	overlay.size = Vector2(half_w, size.y)
+	overlay.size    = Vector2(half_w, size.y)
 	overlay.position = Vector2(half_w if is_right_half else 0.0, 0.0)
 	
+	# ── Inline vignette shader ──
+	var shader = Shader.new()
+	shader.code = """
+shader_type canvas_item;
+uniform float strength  : hint_range(0.0, 1.0) = 0.0;
+uniform float inner_r   : hint_range(0.0, 1.0) = 0.28;
+uniform float outer_r   : hint_range(0.0, 2.0) = 0.80;
+uniform float aspect    : hint_range(0.1, 10.0) = 1.0;
+
+void fragment() {
+    vec2 uv = UV - vec2(0.5);
+    uv.x *= aspect;  // correct non-square rect
+    float dist = length(uv);
+    float ring = smoothstep(inner_r, outer_r, dist);
+    COLOR = vec4(0.0, 0.0, 0.0, ring * strength);
+}
+"""
+	var mat = ShaderMaterial.new()
+	mat.shader = shader
+	mat.set_shader_parameter("strength", 0.0)
+	mat.set_shader_parameter("inner_r",  0.28)
+	mat.set_shader_parameter("outer_r",  0.80)
+	mat.set_shader_parameter("aspect",   size.y / half_w)  # height/width
+	overlay.material = mat
+	
+	# Animate strength
 	var tween = create_tween()
-	tween.tween_property(overlay, "color:a", 0.95, 0.3)
-	tween.tween_interval(duration - 0.8)
-	tween.tween_property(overlay, "color:a", 0.0, 0.5)
+	tween.tween_method(func(v: float): mat.set_shader_parameter("strength", v), 0.0, 0.92, 0.4)
+	tween.tween_interval(duration - 0.9)
+	tween.tween_method(func(v: float): mat.set_shader_parameter("strength", v), 0.92, 0.0, 0.5)
 	tween.tween_callback(overlay.queue_free)
 
 func _on_p1_warning_changed(msg):
