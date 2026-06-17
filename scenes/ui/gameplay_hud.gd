@@ -131,7 +131,6 @@ func _show_half_vignette(duration: float, is_right_half: bool):
 	"""Thick fog/clouds overlay on one player's half."""
 	var overlay = Control.new()
 	overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	overlay.clip_contents = true
 	overlay.z_index = 100
 	add_child(overlay)
 	await get_tree().process_frame
@@ -144,22 +143,32 @@ func _show_half_vignette(duration: float, is_right_half: bool):
 	var particles = CPUParticles2D.new()
 	particles.position = Vector2(half_w / 2.0, size.y + 50)
 	particles.emission_shape = CPUParticles2D.EMISSION_SHAPE_RECTANGLE
-	particles.emission_rect_extents = Vector2(half_w / 1.5, 20)
+	particles.emission_rect_extents = Vector2(half_w / 2.0, 20)
 	particles.direction = Vector2(0, -1)
 	particles.spread = 20.0
 	particles.gravity = Vector2(0, -150)
 	particles.initial_velocity_min = 200.0
 	particles.initial_velocity_max = 500.0
-	particles.scale_amount_min = 1.0
-	particles.scale_amount_max = 2.5
+	particles.scale_amount_min = 3.0
+	particles.scale_amount_max = 8.0
 	particles.lifetime = 2.5
-	particles.amount = 45
+	particles.amount = 40
+	particles.emitting = true
 	
 	var tex_path = "res://assets/textures/brackeys_vfx_bundle/particles/opague/smoke_04.png"
 	if ResourceLoader.exists(tex_path):
 		particles.texture = load(tex_path)
-		var mat = CanvasItemMaterial.new()
-		mat.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD
+		var mat = ShaderMaterial.new()
+		var shader = Shader.new()
+		shader.code = """
+shader_type canvas_item;
+void fragment() {
+	vec4 tex = texture(TEXTURE, UV);
+	// Use texture grayscale as alpha for soft cloud blending
+	COLOR = vec4(COLOR.rgb, tex.r * COLOR.a);
+}
+"""
+		mat.shader = shader
 		particles.material = mat
 		
 	var gradient = Gradient.new()
