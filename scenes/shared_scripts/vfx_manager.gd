@@ -64,7 +64,6 @@ func spawn(effect_name: String, world_pos: Vector3) -> void:
 		"shield_block":   _fx_shield_block(scene_root, world_pos)
 		"landing_dust":   _fx_landing_dust(scene_root, world_pos)
 		"shockwave":      _fx_shockwave(scene_root, world_pos)
-		"flash_burst":    _fx_flash_burst(scene_root, world_pos)
 		"silk_unlock":    _fx_silk_unlock(scene_root, world_pos)
 		"confetti":       _fx_confetti(scene_root, world_pos)
 
@@ -101,7 +100,6 @@ func _fx_obstacle_hit(root: Node, pos: Vector3) -> void:
 	smoke.scale_amount_max     = 0.6
 	smoke.color                = Color(0.9, 0.8, 0.7, 0.7)
 
-	_flash(root, pos + Vector3(0, 1.0, 0), Color(1.0, 0.4, 0.0, 0.9), 1.0, 0.18)
 	_auto_free(sparks, 1.2)
 	_auto_free(smoke,  1.5)
 
@@ -121,7 +119,6 @@ func _fx_kratip_pickup(root: Node, pos: Vector3) -> void:
 	stars.color                = Color(1.0, 0.92, 0.2, 1.0)
 	stars.color_ramp           = _gradient([Color(1.0, 0.95, 0.3, 1.0), Color(1.0, 0.8, 0.0, 0.0)])
 
-	_flash(root, pos + Vector3(0, 0.8, 0), Color(1.0, 0.95, 0.2, 0.7), 0.6, 0.12)
 	_auto_free(stars, 1.2)
 
 # 🎀 เก็บผ้าไหม — Purple/gold magic radiates outward
@@ -337,7 +334,6 @@ func _fx_shockwave(root: Node, pos: Vector3) -> void:
 	ring.emission_shape       = CPUParticles3D.EMISSION_SHAPE_RING
 	ring.emission_ring_axis   = Vector3(0, 1, 0)
 	ring.emission_ring_radius = 0.05
-	ring.emission_ring_radius_inner = 0.0
 	ring.direction            = Vector3(0, 0.1, 0)
 	ring.spread               = 5.0
 	ring.gravity              = Vector3.ZERO
@@ -362,25 +358,6 @@ func _fx_shockwave(root: Node, pos: Vector3) -> void:
 	_flash(root, pos + Vector3(0, 0.5, 0), Color(0.5, 0.9, 1.0, 1.0), 1.0, 0.25)
 	_auto_free(ring,  1.0)
 	_auto_free(inner, 0.8)
-
-# ─────────────────────────────────────────────────────────────
-# ⚡ FLASH BURST — instant bright flash
-# ─────────────────────────────────────────────────────────────
-func _fx_flash_burst(root: Node, pos: Vector3) -> void:
-	_flash(root, pos + Vector3(0, 1.0, 0), Color(1.0, 1.0, 0.85, 1.0), 1.5, 0.18)
-	var sparks := _make_particles(root, pos + Vector3(0, 1.0, 0))
-	sparks.amount               = 14
-	sparks.lifetime             = 0.35
-	_set_tex(sparks, _tex.get("muzzle", _tex.get("spark")))
-	sparks.direction            = Vector3(0, 1, 0)
-	sparks.spread               = 180.0
-	sparks.gravity              = Vector3(0, -4.0, 0)
-	sparks.initial_velocity_min = 2.5
-	sparks.initial_velocity_max = 6.0
-	sparks.scale_amount_min     = 0.08
-	sparks.scale_amount_max     = 0.18
-	sparks.color                = Color(1.0, 0.98, 0.7, 1.0)
-	_auto_free(sparks, 0.8)
 
 # ─────────────────────────────────────────────────────────────
 # 🎀 SILK UNLOCK — big celebration burst

@@ -121,7 +121,10 @@ func _on_body_entered(body):
 
 	# 3. SFX + VFX
 	AudioManager.play_sfx("pickup")
-	VfxManager.spawn("silk_pickup", global_position + Vector3(0, 0.5, 0))
+	if is_new:
+		VfxManager.spawn("silk_unlock", global_position + Vector3(0, 0.5, 0))
+	else:
+		VfxManager.spawn("silk_pickup", global_position + Vector3(0, 0.5, 0))
 
 	# 4. Unlock notification via HUD
 	if is_new and silk_data.has("name"):

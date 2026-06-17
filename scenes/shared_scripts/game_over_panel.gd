@@ -226,6 +226,14 @@ func show_result(winner_name: String, p1_score: int, p2_score: int, p1_distance:
 	tween.tween_property(self, "modulate:a", 1.0, 0.5)
 	tween.tween_property(self, "scale", Vector2(1.0, 1.0), 0.45).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 
+	if winner_id != "draw":
+		get_tree().create_timer(0.5).timeout.connect(func():
+			var scene = get_tree().current_scene
+			var winner_player = scene.find_child("Player1" if winner_id == "p1" else "Player2", true, false)
+			if winner_player:
+				VfxManager.spawn("confetti", winner_player.global_position)
+		)
+
 func _show_winner_model(winner_id: String):
 	for child in preview_pivot.get_children():
 		child.queue_free()

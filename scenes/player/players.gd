@@ -434,13 +434,13 @@ func _physics_process(delta):
 
 	# ── Speed trail: when going fast (e.g. > 130% base speed) ──
 	if speed_trail_vfx:
-		var want_speed := current_speed > (BASE_FORWARD_SPEED * 1.3) and alive
+		var want_speed: bool = current_speed > (BASE_FORWARD_SPEED * 1.3) and alive
 		if speed_trail_vfx.emitting != want_speed:
 			speed_trail_vfx.emitting = want_speed
 
 	# ── Energy trail: when silk protection is active ──
 	if energy_trail_vfx:
-		var want_energy := silk_protection_timer > 0 and alive
+		var want_energy: bool = silk_protection_timer > 0 and alive
 		if energy_trail_vfx.emitting != want_energy:
 			energy_trail_vfx.emitting = want_energy
 
@@ -591,7 +591,7 @@ func _physics_process(delta):
 
 	# ── Dust trail: only while running on ground, not stunned ──
 	if dust_trail_vfx:
-		var want_dust := now_on_floor and velocity.length() > 2.0 and stun_timer <= 0 and alive
+		var want_dust: bool = now_on_floor and velocity.length() > 2.0 and stun_timer <= 0 and alive
 		if dust_trail_vfx.emitting != want_dust:
 			dust_trail_vfx.emitting = want_dust
 
@@ -822,6 +822,7 @@ func use_skill_at_slot(slot_index: int):
 				skills.remove_at(slot_index)
 				emit_signal("skills_changed", skills)
 				# Play per-skill SFX + VFX
+				VfxManager.spawn("shockwave", global_position)
 				match skill_name:
 					"Boon Bang Fai":
 						AudioManager.play_sfx("skill_bang_fai")
