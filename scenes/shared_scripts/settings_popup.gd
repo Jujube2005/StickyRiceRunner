@@ -33,20 +33,29 @@ func _ready():
 
 func _setup_visuals():
 	for slider in [master_slider, music_slider, sfx_slider]:
-		# แถบสีส้ม (Track)
-		var style_track = slider.get_theme_stylebox("slider")
-		if style_track is StyleBoxTexture:
-			style_track.expand_margin_top    = 18.0
-			style_track.expand_margin_bottom = 18.0
+		var style_track = StyleBoxTexture.new()
+		style_track.texture = TEX_SLIDER_TRACK
+		style_track.expand_margin_top    = 18.0
+		style_track.expand_margin_bottom = 18.0
+		slider.add_theme_stylebox_override("slider", style_track)
 		
-		# แถบสีเขียว (Fill)
-		var style_fill = slider.get_theme_stylebox("grabber_area")
-		if style_fill is StyleBoxTexture:
-			style_fill.expand_margin_top    = 14.0
-			style_fill.expand_margin_bottom = 14.0
-			# บังคับ Hover state ใช้ StyleBox เดียวกับปกติ
-			# (กัน Godot ใช้ Default style ตอน Hover ทำให้สีหาย)
-			slider.add_theme_stylebox_override("grabber_area_highlight", style_fill)
+		var style_fill = StyleBoxTexture.new()
+		style_fill.texture = TEX_SLIDER_RING
+		style_fill.expand_margin_top    = 14.0
+		style_fill.expand_margin_bottom = 14.0
+		slider.add_theme_stylebox_override("grabber_area",           style_fill)
+		slider.add_theme_stylebox_override("grabber_area_highlight", style_fill)
+		
+		slider.add_theme_icon_override("grabber",           TEX_SLIDER_SILK)
+		slider.add_theme_icon_override("grabber_highlight", TEX_SLIDER_SILK)
+		
+		slider.clip_contents = false
+		var parent = slider.get_parent()
+		if parent:
+			parent.clip_contents = false
+			var grandparent = parent.get_parent()
+			if grandparent:
+				grandparent.clip_contents = false
 
 	
 func _setup_button_hover(btn: TextureButton):
