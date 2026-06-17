@@ -119,8 +119,9 @@ func _on_body_entered(body):
 	if silk_data.has("id"):
 		is_new = CollectionManager.add_silk(silk_data["id"])
 
-	# 3. SFX
+	# 3. SFX + VFX
 	AudioManager.play_sfx("pickup")
+	VfxManager.spawn("silk_pickup", global_position + Vector3(0, 0.5, 0))
 
 	# 4. Unlock notification via HUD
 	if is_new and silk_data.has("name"):

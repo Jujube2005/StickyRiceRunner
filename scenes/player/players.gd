@@ -548,24 +548,7 @@ func add_kratip(amount: int = 1):
 	_spawn_collect_sparkle()
 
 func _spawn_collect_sparkle():
-	var p := CPUParticles3D.new()
-	p.one_shot = true
-	p.amount = 12
-	p.lifetime = 0.5
-	p.emission_shape = CPUParticles3D.EMISSION_SHAPE_SPHERE
-	p.emission_sphere_radius = 0.3
-	p.direction = Vector3(0, 1, 0)
-	p.spread = 60.0
-	p.gravity = Vector3(0, -4.0, 0)
-	p.initial_velocity_min = 1.5
-	p.initial_velocity_max = 3.0
-	p.scale_amount_min = 0.06
-	p.scale_amount_max = 0.12
-	p.color = Color(1.0, 0.9, 0.2, 1.0)  # Gold sparkle
-	p.position = Vector3(0, 1.0, 0)
-	add_child(p)
-	p.emitting = true
-	get_tree().create_timer(1.0).timeout.connect(p.queue_free)
+	VfxManager.spawn("kratip_pickup", global_position + Vector3(0, 1.0, 0))
 	
 	# Every 10 kratips → grant a Silk collectible
 	if kratip_milestone_count >= 10:
@@ -633,6 +616,7 @@ func stun(duration: float = 2.0):
 	# Obstacle hit feedback: screen flash (red) + camera shake
 	emit_signal("obstacle_hit")
 	AudioManager.play_sfx("obstacle_hit")
+	VfxManager.spawn("obstacle_hit", global_position + Vector3(0, 1.0, 0))
 	var cam = get_viewport().get_camera_3d()
 	if cam and cam.has_method("shake"):
 		cam.shake(0.08, 0.12)
@@ -744,14 +728,20 @@ func use_skill_at_slot(slot_index: int):
 				print(name, " using skill: ", skill_name, " from slot ", slot_index)
 				skills.remove_at(slot_index)
 				emit_signal("skills_changed", skills)
-				# Play per-skill SFX
+				# Play per-skill SFX + VFX
 				match skill_name:
-					"Boon Bang Fai":        AudioManager.play_sfx("skill_bang_fai")
-					"Rice Yard Dust":       AudioManager.play_sfx("skill_dust")
-					"Field Wind", "Wind Push": AudioManager.play_sfx("skill_wind")
-					_:                      AudioManager.play_sfx("skill_use")
-				# VFX
-				#VfxManager.spawn("skill_use", global_position)
+					"Boon Bang Fai":
+						AudioManager.play_sfx("skill_bang_fai")
+						VfxManager.spawn("skill_bang_fai", global_position + Vector3(0, 1.0, 0))
+					"Rice Yard Dust":
+						AudioManager.play_sfx("skill_dust")
+						VfxManager.spawn("skill_dust", global_position + Vector3(0, 0.5, 0))
+					"Field Wind", "Wind Push":
+						AudioManager.play_sfx("skill_wind")
+						VfxManager.spawn("skill_wind", global_position + Vector3(0, 1.0, 0))
+					_:
+						AudioManager.play_sfx("skill_use")
+						VfxManager.spawn("skill_use", global_position + Vector3(0, 1.0, 0))
 				var warn_msg = LanguageManager.t("WARN_USED") + skill_name
 				set_warning(warn_msg)
 				
