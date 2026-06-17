@@ -128,10 +128,10 @@ func _on_p2_screen_blackout(duration: float):
 	_show_half_vignette(duration, true)   # true  = right half (Player 2)
 
 func _show_half_vignette(duration: float, is_right_half: bool):
-	"""Circular vignette on one player's half — dark ring, transparent center."""
-	var overlay = ColorRect.new()
-	overlay.color = Color.WHITE  # Shader controls the actual color
+	"""Thick fog/clouds overlay on one player's half."""
+	var overlay = Control.new()
 	overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	overlay.clip_contents = true
 	overlay.z_index = 100
 	add_child(overlay)
 	await get_tree().process_frame
@@ -140,37 +140,45 @@ func _show_half_vignette(duration: float, is_right_half: bool):
 	overlay.size    = Vector2(half_w, size.y)
 	overlay.position = Vector2(half_w if is_right_half else 0.0, 0.0)
 	
-	# ── Inline vignette shader ──
-	var shader = Shader.new()
-	shader.code = """
-shader_type canvas_item;
-uniform float strength  : hint_range(0.0, 1.0) = 0.0;
-uniform float inner_r   : hint_range(0.0, 1.0) = 0.28;
-uniform float outer_r   : hint_range(0.0, 2.0) = 0.80;
-uniform float aspect    : hint_range(0.1, 10.0) = 1.0;
-
-void fragment() {
-    vec2 uv = UV - vec2(0.5);
-    uv.x *= aspect;  // correct non-square rect
-    float dist = length(uv);
-    float ring = smoothstep(inner_r, outer_r, dist);
-    COLOR = vec4(0.0, 0.0, 0.0, ring * strength);
-}
-"""
-	var mat = ShaderMaterial.new()
-	mat.shader = shader
-	mat.set_shader_parameter("strength", 0.0)
-	mat.set_shader_parameter("inner_r",  0.28)
-	mat.set_shader_parameter("outer_r",  0.80)
-	mat.set_shader_parameter("aspect",   size.y / half_w)  # height/width
-	overlay.material = mat
+	# Add smoke/cloud particles
+	var particles = CPUParticles2D.new()
+	particles.position = Vector2(half_w / 2.0, size.y + 50)
+	particles.emission_shape = CPUParticles2D.EMISSION_SHAPE_RECTANGLE
+	particles.emission_rect_extents = Vector2(half_w / 1.5, 20)
+	particles.direction = Vector2(0, -1)
+	particles.spread = 20.0
+	particles.gravity = Vector2(0, -150)
+	particles.initial_velocity_min = 200.0
+	particles.initial_velocity_max = 500.0
+	particles.scale_amount_min = 1.0
+	particles.scale_amount_max = 2.5
+	particles.lifetime = 2.5
+	particles.amount = 45
 	
-	# Animate strength
-	var tween = create_tween()
-	tween.tween_method(func(v: float): mat.set_shader_parameter("strength", v), 0.0, 0.92, 0.4)
-	tween.tween_interval(duration - 0.9)
-	tween.tween_method(func(v: float): mat.set_shader_parameter("strength", v), 0.92, 0.0, 0.5)
-	tween.tween_callback(overlay.queue_free)
+	var tex_path = "res://assets/textures/brackeys_vfx_bundle/particles/opague/smoke_04.png"
+	if ResourceLoader.exists(tex_path):
+		particles.texture = load(tex_path)
+		var mat = CanvasItemMaterial.new()
+		mat.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD
+		particles.material = mat
+		
+	var gradient = Gradient.new()
+	# Use add_point to create the gradient safely
+	# default gradient has points at 0 and 1
+	gradient.set_color(0, Color(0.8, 0.8, 0.85, 0.0))
+	gradient.set_color(1, Color(0.8, 0.8, 0.85, 0.0))
+	gradient.add_point(0.2, Color(0.85, 0.85, 0.9, 1.0))
+	gradient.add_point(0.8, Color(0.85, 0.85, 0.9, 1.0))
+	particles.color_ramp = gradient
+	
+	overlay.add_child(particles)
+	
+	# Stop emitting after duration, then queue_free after particles finish
+	get_tree().create_timer(duration).timeout.connect(func():
+		if is_instance_valid(particles):
+			particles.emitting = false
+			get_tree().create_timer(2.6).timeout.connect(overlay.queue_free)
+	)
 
 func _on_p1_warning_changed(msg):
 	if p1_warning:

@@ -271,13 +271,13 @@ func _setup_trail_vfx():
 	trail_vfx.emitting = false
 
 	# ── Dust Trail (while running on ground) ──
-	var _TEX := "res://assets/textures/brackeys_vfx_bundle/particles/alpha/"
+	var _TEX := "res://assets/textures/brackeys_vfx_bundle/particles/opague/"
 	dust_trail_vfx = CPUParticles3D.new()
 	dust_trail_vfx.amount = 8
 	dust_trail_vfx.lifetime = 0.55
 	dust_trail_vfx.one_shot = false
-	if ResourceLoader.exists(_TEX + "dirt_01_a.png"):
-		VfxManager._set_tex(dust_trail_vfx, load(_TEX + "dirt_01_a.png"))
+	if ResourceLoader.exists(_TEX + "dirt_01.png"):
+		VfxManager._set_tex(dust_trail_vfx, load(_TEX + "dirt_01.png"))
 	dust_trail_vfx.emission_shape = CPUParticles3D.EMISSION_SHAPE_SPHERE
 	dust_trail_vfx.emission_sphere_radius = 0.18
 	dust_trail_vfx.direction = Vector3(0, 0.5, 1)
@@ -297,8 +297,8 @@ func _setup_trail_vfx():
 	speed_trail_vfx.amount = 6
 	speed_trail_vfx.lifetime = 0.25
 	speed_trail_vfx.one_shot = false
-	if ResourceLoader.exists(_TEX + "trace_01_a.png"):
-		VfxManager._set_tex(speed_trail_vfx, load(_TEX + "trace_01_a.png"))
+	if ResourceLoader.exists(_TEX + "trace_01.png"):
+		VfxManager._set_tex(speed_trail_vfx, load(_TEX + "trace_01.png"))
 	speed_trail_vfx.emission_shape = CPUParticles3D.EMISSION_SHAPE_SPHERE
 	speed_trail_vfx.emission_sphere_radius = 0.15
 	speed_trail_vfx.direction = Vector3(0, 0.1, 1)   # Shoot backward
@@ -318,8 +318,8 @@ func _setup_trail_vfx():
 	energy_trail_vfx.amount = 14
 	energy_trail_vfx.lifetime = 0.5
 	energy_trail_vfx.one_shot = false
-	if ResourceLoader.exists(_TEX + "light_01_a.png"):
-		VfxManager._set_tex(energy_trail_vfx, load(_TEX + "light_01_a.png"))
+	if ResourceLoader.exists(_TEX + "light_01.png"):
+		VfxManager._set_tex(energy_trail_vfx, load(_TEX + "light_01.png"))
 	energy_trail_vfx.emission_shape = CPUParticles3D.EMISSION_SHAPE_SPHERE
 	energy_trail_vfx.emission_sphere_radius = 0.40
 	energy_trail_vfx.direction = Vector3(0, 0.5, 0.5)

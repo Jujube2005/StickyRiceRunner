@@ -15,33 +15,27 @@ extends Node
 #   "shield_block"   — Green deflect flash + sparks
 # =============================================================================
 
-const _VFX_ALPHA  := "res://assets/textures/brackeys_vfx_bundle/particles/alpha/"
+const _TEX_BASE := "res://assets/textures/brackeys_vfx_bundle/particles/opague/"
 
 # Cached textures (graceful — works without textures too)
 var _tex: Dictionary = {}
 
 func _ready() -> void:
-	_try_load("spark",  _VFX_ALPHA + "spark_01_a.png")
-	_try_load("spark2", _VFX_ALPHA + "spark_03_a.png")
-	_try_load("star",   _VFX_ALPHA + "star_01_a.png")
-	_try_load("smoke",  _VFX_ALPHA + "smoke_01_a.png")
-	_try_load("smoke2", _VFX_ALPHA + "smoke_04_a.png")
-	_try_load("magic",  _VFX_ALPHA + "magic_01_a.png")
-	_try_load("magic2", _VFX_ALPHA + "magic_03_a.png")
-	_try_load("light",  _VFX_ALPHA + "light_01_a.png")
-	_try_load("fire",   _VFX_ALPHA + "fire_01_a.png")
-	_try_load("flame",  _VFX_ALPHA + "flame_01_a.png")
-	_try_load("wind",   _VFX_ALPHA + "twirl_01_a.png")
-	_try_load("circle", _VFX_ALPHA + "circle_01_a.png")
-	_try_load("circle3",_VFX_ALPHA + "circle_03_a.png")
-	_try_load("slash",  _VFX_ALPHA + "slash_01_a.png")
-	_try_load("muzzle", _VFX_ALPHA + "muzzle_01_a.png")
-	_try_load("flare",  _VFX_ALPHA + "flare_01_a.png")
-	_try_load("spotlight", _VFX_ALPHA + "spotlight_01_a.png")
-	_try_load("dirt",   _VFX_ALPHA + "dirt_01_a.png")
-	_try_load("dirt2",  _VFX_ALPHA + "dirt_02_a.png")
-	_try_load("trace",  _VFX_ALPHA + "trace_01_a.png")
-	_try_load("twirl2", _VFX_ALPHA + "twirl_02_a.png")
+	_try_load("magic2", _TEX_BASE + "magic_03.png")
+	_try_load("light",  _TEX_BASE + "light_01.png")
+	_try_load("fire",   _TEX_BASE + "fire_01.png")
+	_try_load("flame",  _TEX_BASE + "flame_01.png")
+	_try_load("wind",   _TEX_BASE + "twirl_01.png")
+	_try_load("circle", _TEX_BASE + "circle_01.png")
+	_try_load("circle3",_TEX_BASE + "circle_03.png")
+	_try_load("slash",  _TEX_BASE + "slash_01.png")
+	_try_load("muzzle", _TEX_BASE + "muzzle_01.png")
+	_try_load("flare",  _TEX_BASE + "flare_01.png")
+	_try_load("spotlight", _TEX_BASE + "spotlight_01.png")
+	_try_load("dirt",   _TEX_BASE + "dirt_01.png")
+	_try_load("dirt2",  _TEX_BASE + "dirt_02.png")
+	_try_load("trace",  _TEX_BASE + "trace_01.png")
+	_try_load("twirl2", _TEX_BASE + "twirl_02.png")
 
 func _try_load(key: String, path: String) -> void:
 	if ResourceLoader.exists(path):
@@ -276,7 +270,7 @@ func _set_tex(p: CPUParticles3D, tex) -> void:
 	if tex != null:
 		var mat = StandardMaterial3D.new()
 		mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-		mat.blend_mode = BaseMaterial3D.BLEND_MODE_MIX
+		mat.blend_mode = BaseMaterial3D.BLEND_MODE_ADD
 		mat.cull_mode = BaseMaterial3D.CULL_DISABLED
 		mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 		mat.vertex_color_use_as_albedo = true
