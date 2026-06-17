@@ -42,7 +42,11 @@ var is_rolling_skill := false
 var skills: Array[String] = []
 
 var shield_vfx : MeshInstance3D = null
-var trail_vfx : CPUParticles3D = null
+var trail_vfx : CPUParticles3D = null          # Gold energy trail (silk protection)
+var dust_trail_vfx : CPUParticles3D = null     # Dirt dust while running on ground
+var speed_trail_vfx : CPUParticles3D = null    # Speed streak at high velocity
+var energy_trail_vfx : CPUParticles3D = null   # Glow overlay during invincibility
+var _was_on_floor := false                     # For landing detection
 var anim_player : AnimationPlayer = null
 var current_anim : String = ""
 
@@ -248,22 +252,87 @@ func _setup_shield_vfx():
 	shield_vfx.visible = false
 
 func _setup_trail_vfx():
+	# ── Gold Energy Trail (toggled by silk protection) ──
 	trail_vfx = CPUParticles3D.new()
 	trail_vfx.amount = 20
 	trail_vfx.lifetime = 0.4
 	trail_vfx.emission_shape = CPUParticles3D.EMISSION_SHAPE_SPHERE
 	trail_vfx.emission_sphere_radius = 0.25
-	trail_vfx.direction = Vector3(0, 0.3, 1)  # float up + backward
+	trail_vfx.direction = Vector3(0, 0.3, 1)
 	trail_vfx.spread = 25.0
 	trail_vfx.gravity = Vector3(0, 1.5, 0)
 	trail_vfx.initial_velocity_min = 0.5
 	trail_vfx.initial_velocity_max = 1.2
 	trail_vfx.scale_amount_min = 0.06
 	trail_vfx.scale_amount_max = 0.14
-	trail_vfx.color = Color(1.0, 0.82, 0.1, 0.9)  # Golden sparkle
-	trail_vfx.position = Vector3(0, 0.3, 0.5)  # At feet
+	trail_vfx.color = Color(1.0, 0.82, 0.1, 0.9)
+	trail_vfx.position = Vector3(0, 0.3, 0.5)
 	add_child(trail_vfx)
 	trail_vfx.emitting = false
+
+	# ── Dust Trail (while running on ground) ──
+	var _TEX := "res://assets/textures/brackeys_vfx_bundle/particles/alpha/"
+	dust_trail_vfx = CPUParticles3D.new()
+	dust_trail_vfx.amount = 8
+	dust_trail_vfx.lifetime = 0.55
+	dust_trail_vfx.one_shot = false
+	if ResourceLoader.exists(_TEX + "dirt_01_a.png"):
+		dust_trail_vfx.texture = load(_TEX + "dirt_01_a.png")
+	dust_trail_vfx.emission_shape = CPUParticles3D.EMISSION_SHAPE_SPHERE
+	dust_trail_vfx.emission_sphere_radius = 0.18
+	dust_trail_vfx.direction = Vector3(0, 0.5, 1)
+	dust_trail_vfx.spread = 35.0
+	dust_trail_vfx.gravity = Vector3(0, -0.5, 0)
+	dust_trail_vfx.initial_velocity_min = 0.4
+	dust_trail_vfx.initial_velocity_max = 1.0
+	dust_trail_vfx.scale_amount_min = 0.14
+	dust_trail_vfx.scale_amount_max = 0.28
+	dust_trail_vfx.color = Color(0.78, 0.66, 0.46, 0.65)
+	dust_trail_vfx.position = Vector3(0, 0.05, 0.35)
+	add_child(dust_trail_vfx)
+	dust_trail_vfx.emitting = false
+
+	# ── Speed Trail (trace streak at high speed) ──
+	speed_trail_vfx = CPUParticles3D.new()
+	speed_trail_vfx.amount = 6
+	speed_trail_vfx.lifetime = 0.25
+	speed_trail_vfx.one_shot = false
+	if ResourceLoader.exists(_TEX + "trace_01_a.png"):
+		speed_trail_vfx.texture = load(_TEX + "trace_01_a.png")
+	speed_trail_vfx.emission_shape = CPUParticles3D.EMISSION_SHAPE_SPHERE
+	speed_trail_vfx.emission_sphere_radius = 0.15
+	speed_trail_vfx.direction = Vector3(0, 0.1, 1)   # Shoot backward
+	speed_trail_vfx.spread = 8.0
+	speed_trail_vfx.gravity = Vector3.ZERO
+	speed_trail_vfx.initial_velocity_min = 2.0
+	speed_trail_vfx.initial_velocity_max = 4.5
+	speed_trail_vfx.scale_amount_min = 0.08
+	speed_trail_vfx.scale_amount_max = 0.18
+	speed_trail_vfx.color = Color(0.55, 0.85, 1.0, 0.80)
+	speed_trail_vfx.position = Vector3(0, 0.5, 0.4)
+	add_child(speed_trail_vfx)
+	speed_trail_vfx.emitting = false
+
+	# ── Energy Trail Overlay (silk invincibility, stacked on trail_vfx) ──
+	energy_trail_vfx = CPUParticles3D.new()
+	energy_trail_vfx.amount = 14
+	energy_trail_vfx.lifetime = 0.5
+	energy_trail_vfx.one_shot = false
+	if ResourceLoader.exists(_TEX + "light_01_a.png"):
+		energy_trail_vfx.texture = load(_TEX + "light_01_a.png")
+	energy_trail_vfx.emission_shape = CPUParticles3D.EMISSION_SHAPE_SPHERE
+	energy_trail_vfx.emission_sphere_radius = 0.40
+	energy_trail_vfx.direction = Vector3(0, 0.5, 0.5)
+	energy_trail_vfx.spread = 45.0
+	energy_trail_vfx.gravity = Vector3(0, 0.8, 0)
+	energy_trail_vfx.initial_velocity_min = 0.6
+	energy_trail_vfx.initial_velocity_max = 1.5
+	energy_trail_vfx.scale_amount_min = 0.08
+	energy_trail_vfx.scale_amount_max = 0.20
+	energy_trail_vfx.color = Color(0.6, 1.0, 0.8, 0.85)
+	energy_trail_vfx.position = Vector3(0, 0.8, 0)
+	add_child(energy_trail_vfx)
+	energy_trail_vfx.emitting = false
 
 func _sync_model_to_body():
 	# Always keep the Model node at the correct local offset.
@@ -362,6 +431,18 @@ func _physics_process(delta):
 	# Calculate dynamic speed based on distance
 	var current_speed = min(BASE_FORWARD_SPEED + (distance * SPEED_SCALE_FACTOR), MAX_FORWARD_SPEED)
 	velocity.z = -current_speed * speed_factor
+
+	# ── Speed trail: when going fast (e.g. > 130% base speed) ──
+	if speed_trail_vfx:
+		var want_speed := current_speed > (BASE_FORWARD_SPEED * 1.3) and alive
+		if speed_trail_vfx.emitting != want_speed:
+			speed_trail_vfx.emitting = want_speed
+
+	# ── Energy trail: when silk protection is active ──
+	if energy_trail_vfx:
+		var want_energy := silk_protection_timer > 0 and alive
+		if energy_trail_vfx.emitting != want_energy:
+			energy_trail_vfx.emitting = want_energy
 
 	# Animation handling for normal state
 	if is_on_floor():
@@ -501,6 +582,18 @@ func _physics_process(delta):
 
 	move_and_slide()
 	# (Model Y is always synced via _sync_model_to_body — no global Y override needed)
+
+	# ── Landing detection ──
+	var now_on_floor := is_on_floor()
+	if now_on_floor and !_was_on_floor and velocity.y < -1.5:
+		VfxManager.spawn("landing_dust", global_position + Vector3(0, 0.05, 0))
+	_was_on_floor = now_on_floor
+
+	# ── Dust trail: only while running on ground, not stunned ──
+	if dust_trail_vfx:
+		var want_dust := now_on_floor and velocity.length() > 2.0 and stun_timer <= 0 and alive
+		if dust_trail_vfx.emitting != want_dust:
+			dust_trail_vfx.emitting = want_dust
 
 	if position.y < -10:
 		# Teleport back to lane 0 surface
