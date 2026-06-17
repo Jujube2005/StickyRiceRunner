@@ -34,6 +34,8 @@ func _ready() -> void:
 	_try_load("circle", _VFX_ALPHA + "circle_01_a.png")
 	_try_load("slash",  _VFX_ALPHA + "slash_01_a.png")
 	_try_load("muzzle", _VFX_ALPHA + "muzzle_01_a.png")
+	_try_load("flare",  _VFX_ALPHA + "flare_01_a.png")
+	_try_load("spotlight", _VFX_ALPHA + "spotlight_01_a.png")
 
 func _try_load(key: String, path: String) -> void:
 	if ResourceLoader.exists(path):
@@ -63,7 +65,7 @@ func _fx_obstacle_hit(root: Node, pos: Vector3) -> void:
 	var sparks := _make_particles(root, pos)
 	sparks.amount               = 24
 	sparks.lifetime             = 0.6
-	sparks.texture              = _tex.get("spark")
+	_set_tex(sparks, _tex.get("spark"))
 	sparks.direction            = Vector3(0, 1, 0)
 	sparks.spread               = 180.0
 	sparks.gravity              = Vector3(0, -6.0, 0)
@@ -78,7 +80,7 @@ func _fx_obstacle_hit(root: Node, pos: Vector3) -> void:
 	var smoke := _make_particles(root, pos + Vector3(0, 0.5, 0))
 	smoke.amount               = 10
 	smoke.lifetime             = 0.8
-	smoke.texture              = _tex.get("smoke")
+	_set_tex(smoke, _tex.get("smoke"))
 	smoke.direction            = Vector3(0, 1, 0)
 	smoke.spread               = 40.0
 	smoke.gravity              = Vector3(0, 0.5, 0)
@@ -97,7 +99,7 @@ func _fx_kratip_pickup(root: Node, pos: Vector3) -> void:
 	var stars := _make_particles(root, pos + Vector3(0, 0.6, 0))
 	stars.amount               = 16
 	stars.lifetime             = 0.7
-	stars.texture              = _tex.get("star", _tex.get("spark"))
+	_set_tex(stars, _tex.get("star", _tex.get("spark")))
 	stars.direction            = Vector3(0, 1, 0)
 	stars.spread               = 50.0
 	stars.gravity              = Vector3(0, -1.0, 0)
@@ -116,7 +118,7 @@ func _fx_silk_pickup(root: Node, pos: Vector3) -> void:
 	var magic := _make_particles(root, pos + Vector3(0, 0.8, 0))
 	magic.amount               = 28
 	magic.lifetime             = 1.0
-	magic.texture              = _tex.get("magic", _tex.get("star"))
+	_set_tex(magic, _tex.get("magic", _tex.get("star")))
 	magic.direction            = Vector3(0, 1, 0)
 	magic.spread               = 180.0
 	magic.gravity              = Vector3(0, 0.3, 0)
@@ -130,7 +132,7 @@ func _fx_silk_pickup(root: Node, pos: Vector3) -> void:
 	var light := _make_particles(root, pos + Vector3(0, 1.0, 0))
 	light.amount               = 10
 	light.lifetime             = 0.5
-	light.texture              = _tex.get("light", _tex.get("circle"))
+	_set_tex(light, _tex.get("light", _tex.get("circle")))
 	light.direction            = Vector3(0, 0, 0)
 	light.spread               = 180.0
 	light.gravity              = Vector3.ZERO
@@ -149,7 +151,7 @@ func _fx_skill_use(root: Node, pos: Vector3) -> void:
 	var energy := _make_particles(root, pos + Vector3(0, 1.0, 0))
 	energy.amount               = 20
 	energy.lifetime             = 0.6
-	energy.texture              = _tex.get("muzzle", _tex.get("magic"))
+	_set_tex(energy, _tex.get("muzzle", _tex.get("magic")))
 	energy.direction            = Vector3(0, 1, 0)
 	energy.spread               = 90.0
 	energy.gravity              = Vector3(0, 1.0, 0)
@@ -168,7 +170,7 @@ func _fx_bang_fai(root: Node, pos: Vector3) -> void:
 	var fire := _make_particles(root, pos + Vector3(0, 0.5, 0))
 	fire.amount               = 30
 	fire.lifetime             = 0.8
-	fire.texture              = _tex.get("flame", _tex.get("fire"))
+	_set_tex(fire, _tex.get("flame", _tex.get("fire")))
 	fire.direction            = Vector3(0, 1, 0)
 	fire.spread               = 30.0
 	fire.gravity              = Vector3(0, 2.0, 0)
@@ -182,7 +184,7 @@ func _fx_bang_fai(root: Node, pos: Vector3) -> void:
 	var smoke := _make_particles(root, pos + Vector3(0, 1.5, 0))
 	smoke.amount               = 8
 	smoke.lifetime             = 1.0
-	smoke.texture              = _tex.get("smoke")
+	_set_tex(smoke, _tex.get("smoke"))
 	smoke.direction            = Vector3(0, 1, 0)
 	smoke.spread               = 20.0
 	smoke.gravity              = Vector3(0, 0.3, 0)
@@ -201,7 +203,7 @@ func _fx_skill_dust(root: Node, pos: Vector3) -> void:
 	var dust := _make_particles(root, pos + Vector3(0, 0.3, 0))
 	dust.amount               = 22
 	dust.lifetime             = 1.0
-	dust.texture              = _tex.get("smoke2", _tex.get("smoke"))
+	_set_tex(dust, _tex.get("smoke2", _tex.get("smoke")))
 	dust.direction            = Vector3(0, 0.5, 0)
 	dust.spread               = 120.0
 	dust.gravity              = Vector3(0, -0.5, 0)
@@ -218,7 +220,7 @@ func _fx_skill_wind(root: Node, pos: Vector3) -> void:
 	var wind := _make_particles(root, pos + Vector3(0, 1.0, 0))
 	wind.amount               = 20
 	wind.lifetime             = 0.7
-	wind.texture              = _tex.get("wind", _tex.get("circle"))
+	_set_tex(wind, _tex.get("wind", _tex.get("circle")))
 	wind.direction            = Vector3(1, 0.3, 0)
 	wind.spread               = 60.0
 	wind.gravity              = Vector3(0, 0.2, 0)
@@ -237,7 +239,7 @@ func _fx_shield_block(root: Node, pos: Vector3) -> void:
 	var sparks := _make_particles(root, pos + Vector3(0, 1.0, 0))
 	sparks.amount               = 16
 	sparks.lifetime             = 0.5
-	sparks.texture              = _tex.get("slash", _tex.get("spark"))
+	_set_tex(sparks, _tex.get("slash", _tex.get("spark")))
 	sparks.direction            = Vector3(0, 1, 0)
 	sparks.spread               = 180.0
 	sparks.gravity              = Vector3(0, -4.0, 0)
@@ -261,35 +263,29 @@ func _make_particles(root: Node, pos: Vector3) -> CPUParticles3D:
 	root.add_child(p)
 	return p
 
-func _flash(root: Node, pos: Vector3, color: Color, size: float, duration: float) -> void:
-	var flash := MeshInstance3D.new()
-	var quad  := QuadMesh.new()
-	quad.size  = Vector2(size, size)
-	flash.mesh = quad
+# Null-safe texture assign — skips when texture is missing
+func _set_tex(p: CPUParticles3D, tex) -> void:
+	if tex != null:
+		p.texture = tex
 
-	var mat := StandardMaterial3D.new()
-	mat.transparency               = StandardMaterial3D.TRANSPARENCY_ALPHA
-	mat.albedo_color               = color
-	mat.emission_enabled           = true
-	mat.emission                   = color
-	mat.emission_energy_multiplier = 2.5
-	mat.billboard_mode             = BaseMaterial3D.BILLBOARD_ENABLED
-	mat.no_depth_test              = true
-	flash.material_override = mat
-	flash.position = pos
-	root.add_child(flash)
+func _flash(root: Node, pos: Vector3, color: Color, range_m: float, duration: float) -> void:
+	var light := OmniLight3D.new()
+	light.position     = pos
+	light.light_color  = color
+	light.light_energy = 6.0
+	light.omni_range   = range_m * 5.0  # range_m repurposed as light radius scale
+	light.shadow_enabled = false
+	root.add_child(light)
 
-	var tw := flash.create_tween()
-	tw.tween_property(flash, "material_override:albedo_color:a", 0.0, duration)
-	tw.tween_callback(flash.queue_free)
+	var tw := light.create_tween()
+	tw.tween_property(light, "light_energy", 0.0, duration)
+	tw.tween_callback(light.queue_free)
 
-func _gradient(colors: Array[Color]) -> GradientTexture1D:
+func _gradient(colors: Array[Color]) -> Gradient:
 	var g  := Gradient.new()
 	g.colors  = colors
 	g.offsets = [0.0, 1.0]
-	var gt := GradientTexture1D.new()
-	gt.gradient = g
-	return gt
+	return g
 
 func _auto_free(node: Node, after_sec: float = 2.0) -> void:
 	get_tree().create_timer(after_sec).timeout.connect(func():
