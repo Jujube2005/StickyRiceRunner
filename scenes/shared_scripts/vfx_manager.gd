@@ -271,10 +271,22 @@ func _make_particles(root: Node, pos: Vector3) -> CPUParticles3D:
 	root.add_child(p)
 	return p
 
-# Null-safe texture assign — skips when texture is missing
+# Null-safe texture assign — creates material and mesh for 3D particles
 func _set_tex(p: CPUParticles3D, tex) -> void:
 	if tex != null:
-		p.texture = tex
+		var mat = StandardMaterial3D.new()
+		mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+		mat.blend_mode = BaseMaterial3D.BLEND_MODE_MIX
+		mat.cull_mode = BaseMaterial3D.CULL_DISABLED
+		mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		mat.vertex_color_use_as_albedo = true
+		mat.albedo_texture = tex
+		mat.billboard_mode = BaseMaterial3D.BILLBOARD_PARTICLES
+		mat.billboard_keep_scale = true
+		p.material_override = mat
+		
+		if p.mesh == null:
+			p.mesh = QuadMesh.new()
 
 func _flash(root: Node, pos: Vector3, color: Color, range_m: float, duration: float) -> void:
 	var light := OmniLight3D.new()
