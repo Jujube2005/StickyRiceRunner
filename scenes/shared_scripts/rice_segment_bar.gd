@@ -143,21 +143,14 @@ func set_value(n: int) -> void:
 # ─────────────────────────────────────────────────────────────────────────────
 
 func _make_cell() -> Control:
-	# Outer container (Panel for background)
-	var panel := Panel.new()
-	panel.custom_minimum_size = segment_size
-	panel.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	panel.pivot_offset = segment_size / 2.0
+	# Plain container — background comes from the BarBackground TextureRect behind us.
+	# Each cell is just a TextureRect; color_off modulate darkens it when empty.
+	var cell := Control.new()
+	cell.custom_minimum_size = segment_size
+	cell.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	cell.pivot_offset = segment_size / 2.0
 
-	# StyleBoxFlat background
-	var style := StyleBoxFlat.new()
-	style.bg_color = Color(0.15, 0.12, 0.08, 0.7)
-	style.set_corner_radius_all(segment_corner_radius)
-	style.border_width_bottom = 2
-	style.border_color = Color(0.0, 0.0, 0.0, 0.4)
-	panel.add_theme_stylebox_override("panel", style)
-
-	# Inner TextureRect for ON/OFF texture
+	# Inner TextureRect for the segment image
 	var icon := TextureRect.new()
 	icon.name = "Icon"
 	icon.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -165,9 +158,9 @@ func _make_cell() -> Control:
 	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	icon.texture = tex_on
-	panel.add_child(icon)
+	cell.add_child(icon)
 
-	return panel
+	return cell
 
 func _refresh_textures() -> void:
 	for i in range(_segments.size()):

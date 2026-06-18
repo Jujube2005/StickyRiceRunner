@@ -3,8 +3,8 @@
 [ext_resource type="Script" uid="uid://3q03hyjyr7te" path="res://scenes/ui/gameplay_hud.gd" id="1_script"]
 [ext_resource type="Texture2D" uid="uid://bccy3dy3l2ofr" path="res://assets/textures/UI/Backgrounds/kratib.png" id="2_kratib"]
 [ext_resource type="Texture2D" uid="uid://dq7xbn86me4qp" path="res://assets/textures/UI/Buttons/rice_bar_orange.png" id="3_bar_bg"]
-[ext_resource type="Texture2D" uid="uid://dmrs23yo316wc" path="res://assets/textures/UI/Buttons/segmen_orange.png" id="4_bar_fill_orange"]
-[ext_resource type="Texture2D" uid="uid://dttul3r8f2cal" path="res://assets/textures/UI/Buttons/segmen_green.png" id="5_bar_fill_green"]
+[ext_resource type="Texture2D" uid="uid://dmrs23yo316wc" path="res://assets/textures/UI/Buttons/segmen_orange.png" id="4_segmen_orange"]
+[ext_resource type="Texture2D" uid="uid://dttul3r8f2cal" path="res://assets/textures/UI/Buttons/segmen_green.png" id="5_segmen_green"]
 [ext_resource type="Texture2D" uid="uid://b4k3irenw8bi0" path="res://assets/textures/UI/Buttons/distance_sign.png" id="6_sign"]
 [ext_resource type="Texture2D" uid="uid://bxf60ib60m68i" path="res://assets/textures/UI/Buttons/pause.png" id="7_pause"]
 [ext_resource type="Texture2D" uid="uid://cvaugs5xtglql" path="res://assets/textures/UI/Buttons/P1.png" id="8_3y74m"]
@@ -77,10 +77,10 @@ offset_bottom = 149.51318
 
 [node name="LeaderLabel" type="Label" parent="TopLeft" unique_id=1103878908]
 layout_mode = 0
-offset_left = 246.0
-offset_top = 18.0
-offset_right = 446.0
-offset_bottom = 48.0
+offset_left = 288.22324
+offset_top = 23.899584
+offset_right = 488.22324
+offset_bottom = 53.899582
 text = "🏆 LEADING"
 label_settings = SubResource("LabelSettings_leader")
 horizontal_alignment = 1
@@ -109,26 +109,42 @@ grow_vertical = 2
 step = 0.01
 nine_patch_stretch = true
 texture_under = ExtResource("3_bar_bg")
-texture_progress = ExtResource("4_bar_fill_orange")
+texture_progress = ExtResource("4_segmen_orange")
+
+[node name="BarBackground" type="TextureRect" parent="TopLeft/DistanceMeter" unique_id=1001000001]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 13.509838
+offset_top = 1.6620343
+offset_right = 64.50983
+offset_bottom = 6.662033
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("3_bar_bg")
+stretch_mode = 5
 
 [node name="RiceSegmentBar" type="HBoxContainer" parent="TopLeft/DistanceMeter" unique_id=1001001001]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = 24.634878
+offset_top = 12.787082
+offset_right = 151.63489
+offset_bottom = 12.787083
 grow_horizontal = 2
 grow_vertical = 2
+scale = Vector2(0.69336224, 0.69336224)
+theme_override_constants/separation = 3
 alignment = 1
 script = ExtResource("16_ricebar")
-segment_count = 10
-tex_on = ExtResource("3_bar_bg")
-segment_size = Vector2(18, 36)
-gap = 3
-color_on = Color(1, 1, 1, 1)
-color_off = Color(0.25, 0.25, 0.25, 0.55)
-animate_fill = true
-segment_corner_radius = 8
-filled_scale = 1.1
+tex_on = ExtResource("4_segmen_orange")
+segment_size = Vector2(30, 36)
+color_off = Color(0.18, 0.1, 0.05, 0.7)
+segment_corner_radius = 6
 
 [node name="KratibIcon" type="TextureRect" parent="TopLeft" unique_id=4239334]
 layout_mode = 0
@@ -173,9 +189,9 @@ horizontal_alignment = 1
 
 [node name="P1" type="TextureRect" parent="TopLeft" unique_id=1619626942]
 layout_mode = 0
-offset_left = 87.0
+offset_left = 83.66249
 offset_top = -24.0
-offset_right = 115.0
+offset_right = 111.66249
 offset_bottom = 4.0
 texture = ExtResource("8_3y74m")
 expand_mode = 1
@@ -205,10 +221,10 @@ layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -447.0003
-offset_top = 18.33706
-offset_right = -247.00032
-offset_bottom = 48.33706
+offset_left = -492.61298
+offset_top = 21.674576
+offset_right = -292.61298
+offset_bottom = 51.674576
 grow_horizontal = 0
 text = "🏆 LEADING"
 label_settings = SubResource("LabelSettings_leader")
@@ -242,26 +258,42 @@ step = 0.01
 fill_mode = 1
 nine_patch_stretch = true
 texture_under = ExtResource("8_noor6")
-texture_progress = ExtResource("5_bar_fill_green")
+texture_progress = ExtResource("5_segmen_green")
+
+[node name="BarBackground" type="TextureRect" parent="TopRight/DistanceMeter" unique_id=1001000002]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -66.84981
+offset_top = -0.5629735
+offset_right = -15.849808
+offset_bottom = 4.437027
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("8_noor6")
+stretch_mode = 5
 
 [node name="RiceSegmentBar" type="HBoxContainer" parent="TopRight/DistanceMeter" unique_id=1001001002]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = -55.724792
+offset_top = 9.449585
+offset_right = 71.27521
+offset_bottom = 9.449585
 grow_horizontal = 2
 grow_vertical = 2
+scale = Vector2(0.6971191, 0.6971191)
+theme_override_constants/separation = 3
 alignment = 1
 script = ExtResource("16_ricebar")
-segment_count = 10
-tex_on = ExtResource("8_noor6")
-segment_size = Vector2(18, 36)
-gap = 3
-color_on = Color(1, 1, 1, 1)
-color_off = Color(0.25, 0.25, 0.25, 0.55)
-animate_fill = true
-segment_corner_radius = 8
-filled_scale = 1.1
+tex_on = ExtResource("5_segmen_green")
+segment_size = Vector2(30, 36)
+color_off = Color(0.08, 0.18, 0.08, 0.7)
+segment_corner_radius = 6
 
 [node name="KratibIcon" type="TextureRect" parent="TopRight" unique_id=1409141249]
 layout_mode = 1
