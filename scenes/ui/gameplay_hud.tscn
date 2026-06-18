@@ -3,8 +3,8 @@
 [ext_resource type="Script" uid="uid://3q03hyjyr7te" path="res://scenes/ui/gameplay_hud.gd" id="1_script"]
 [ext_resource type="Texture2D" uid="uid://bccy3dy3l2ofr" path="res://assets/textures/UI/Backgrounds/kratib.png" id="2_kratib"]
 [ext_resource type="Texture2D" uid="uid://dq7xbn86me4qp" path="res://assets/textures/UI/Buttons/rice_bar_orange.png" id="3_bar_bg"]
-[ext_resource type="Texture2D" uid="uid://dmrs23yo316wc" path="res://assets/textures/UI/Buttons/progress_fill_orange.png" id="4_bar_fill_orange"]
-[ext_resource type="Texture2D" uid="uid://dttul3r8f2cal" path="res://assets/textures/UI/Buttons/progress_fill_green.png" id="5_bar_fill_green"]
+[ext_resource type="Texture2D" uid="uid://dmrs23yo316wc" path="res://assets/textures/UI/Buttons/segmen_orange.png" id="4_bar_fill_orange"]
+[ext_resource type="Texture2D" uid="uid://dttul3r8f2cal" path="res://assets/textures/UI/Buttons/segmen_green.png" id="5_bar_fill_green"]
 [ext_resource type="Texture2D" uid="uid://b4k3irenw8bi0" path="res://assets/textures/UI/Buttons/distance_sign.png" id="6_sign"]
 [ext_resource type="Texture2D" uid="uid://bxf60ib60m68i" path="res://assets/textures/UI/Buttons/pause.png" id="7_pause"]
 [ext_resource type="Texture2D" uid="uid://cvaugs5xtglql" path="res://assets/textures/UI/Buttons/P1.png" id="8_3y74m"]
@@ -15,6 +15,7 @@
 [ext_resource type="FontFile" uid="uid://2d6rvw7lnbb6" path="res://assets/textures/UI/Font/Mitr/Mitr-Bold.ttf" id="11_font"]
 [ext_resource type="Texture2D" uid="uid://bpufwsl7jtdjt" path="res://assets/textures/UI/Buttons/slot_orange.png" id="14_3y74m"]
 [ext_resource type="Texture2D" uid="uid://xnkof5vsl58w" path="res://assets/textures/UI/Buttons/slot_green.png" id="15_cqn7g"]
+[ext_resource type="Script" uid="uid://bo5yhn70g5r1w" path="res://scenes/shared_scripts/rice_segment_bar.gd" id="16_ricebar"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_leader"]
 font = ExtResource("11_font")
@@ -94,6 +95,7 @@ offset_right = 260.0
 offset_bottom = 60.0
 
 [node name="TextureProgressBar" type="TextureProgressBar" parent="TopLeft/DistanceMeter" unique_id=1661059065]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -108,6 +110,25 @@ step = 0.01
 nine_patch_stretch = true
 texture_under = ExtResource("3_bar_bg")
 texture_progress = ExtResource("4_bar_fill_orange")
+
+[node name="RiceSegmentBar" type="HBoxContainer" parent="TopLeft/DistanceMeter" unique_id=1001001001]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+script = ExtResource("16_ricebar")
+segment_count = 10
+tex_on = ExtResource("3_bar_bg")
+segment_size = Vector2(18, 36)
+gap = 3
+color_on = Color(1, 1, 1, 1)
+color_off = Color(0.25, 0.25, 0.25, 0.55)
+animate_fill = true
+segment_corner_radius = 8
+filled_scale = 1.1
 
 [node name="KratibIcon" type="TextureRect" parent="TopLeft" unique_id=4239334]
 layout_mode = 0
@@ -206,6 +227,7 @@ offset_bottom = 60.0
 grow_horizontal = 0
 
 [node name="TextureProgressBar" type="TextureProgressBar" parent="TopRight/DistanceMeter" unique_id=921897046]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -221,6 +243,25 @@ fill_mode = 1
 nine_patch_stretch = true
 texture_under = ExtResource("8_noor6")
 texture_progress = ExtResource("5_bar_fill_green")
+
+[node name="RiceSegmentBar" type="HBoxContainer" parent="TopRight/DistanceMeter" unique_id=1001001002]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+script = ExtResource("16_ricebar")
+segment_count = 10
+tex_on = ExtResource("8_noor6")
+segment_size = Vector2(18, 36)
+gap = 3
+color_on = Color(1, 1, 1, 1)
+color_off = Color(0.25, 0.25, 0.25, 0.55)
+animate_fill = true
+segment_corner_radius = 8
+filled_scale = 1.1
 
 [node name="KratibIcon" type="TextureRect" parent="TopRight" unique_id=1409141249]
 layout_mode = 1

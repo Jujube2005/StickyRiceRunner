@@ -1,17 +1,17 @@
 extends Control
 
-@onready var p1_distance_bar = $TopLeft/DistanceMeter/TextureProgressBar
+@onready var p1_distance_bar = $TopLeft/DistanceMeter/TextureProgressBar  # kept hidden
 @onready var p1_distance = $TopLeft/DistanceSign/Label
 @onready var p1_leader_label = $TopLeft/LeaderLabel
 
-@onready var p2_distance_bar = $TopRight/DistanceMeter/TextureProgressBar
+@onready var p2_distance_bar = $TopRight/DistanceMeter/TextureProgressBar  # kept hidden
 @onready var p2_distance = $TopRight/DistanceSign/Label
 @onready var p2_leader_label = $TopRight/LeaderLabel
 
-@onready var silk_popup_anchor: Control = $SilkPopupAnchor
+@onready var p1_rice_bar = $TopLeft/DistanceMeter/RiceSegmentBar
+@onready var p2_rice_bar = $TopRight/DistanceMeter/RiceSegmentBar
 
-var p1_current_percent: float = 0.0
-var p2_current_percent: float = 0.0
+@onready var silk_popup_anchor: Control = $SilkPopupAnchor
 
 
 @onready var p1_warning = $TopLeft/WarningLabel
@@ -87,11 +87,13 @@ func _ready():
 		if !player2.skills_changed.is_connected(_on_p2_skills_changed):
 			player2.skills_changed.connect(_on_p2_skills_changed)
 			
-	# Connect kratip count signals
+	# Connect kratip count signals — update label AND rice bar
 	if player1 and player1.has_signal("kratip_count_changed"):
 		player1.kratip_count_changed.connect(_on_p1_kratip_changed)
+		player1.kratip_count_changed.connect(func(cur: int, _max: int): update_rice_bar(1, cur))
 	if player2 and player2.has_signal("kratip_count_changed"):
 		player2.kratip_count_changed.connect(_on_p2_kratip_changed)
+		player2.kratip_count_changed.connect(func(cur: int, _max: int): update_rice_bar(2, cur))
 	
 	# Connect screen_blackout signal — only darken the hit player's half
 	if player1 and player1.has_signal("screen_blackout"):
@@ -109,9 +111,11 @@ func _ready():
 	if player1:
 		update_slots_ui(player1, p1_slot1_btn, p1_slot2_btn, "F", "G")
 		_on_p1_kratip_changed(0, 10)
+		update_rice_bar(1, 0)
 	if player2:
 		update_slots_ui(player2, p2_slot1_btn, p2_slot2_btn, "K", "L")
 		_on_p2_kratip_changed(0, 10)
+		update_rice_bar(2, 0)
 		
 	# Hide leader indicators initially
 	if p1_leader_label: p1_leader_label.visible = false
@@ -389,22 +393,11 @@ func show_silk_unlock(player_name: String, silk_name: String, silk_tex_path: Str
 	tween.tween_callback(popup.queue_free)
 
 func _process(delta):
-	var p1_target_percent = 0.0
-	var p2_target_percent = 0.0
-	
 	if player1:
 		p1_distance.text = str(int(player1.distance)) + "m"
-		p1_target_percent = (player1.kratip_milestone_count / 10.0) * 100.0
 		
 	if player2:
 		p2_distance.text = str(int(player2.distance)) + "m"
-		p2_target_percent = (player2.kratip_milestone_count / 10.0) * 100.0
-		
-	p1_current_percent = lerp(p1_current_percent, p1_target_percent, 10.0 * delta)
-	p2_current_percent = lerp(p2_current_percent, p2_target_percent, 10.0 * delta)
-	
-	if p1_distance_bar: p1_distance_bar.value = p1_current_percent
-	if p2_distance_bar: p2_distance_bar.value = p2_current_percent
 		
 	# Compare distances and update LEADING indicators
 	if player1 and player2:
@@ -423,6 +416,16 @@ func _process(delta):
 	else:
 		if p1_leader_label: p1_leader_label.visible = false
 		if p2_leader_label: p2_leader_label.visible = false
+
+func update_rice_bar(player_num: int, count: int) -> void:
+	## Called event-based via kratip_count_changed signal.
+	## Updates only the affected player's RiceSegmentBar.
+	if player_num == 1:
+		if p1_rice_bar and p1_rice_bar.has_method("set_value"):
+			p1_rice_bar.set_value(count)
+	else:
+		if p2_rice_bar and p2_rice_bar.has_method("set_value"):
+			p2_rice_bar.set_value(count)
 
 func _input(event):
 	if event is InputEventKey and event.pressed:

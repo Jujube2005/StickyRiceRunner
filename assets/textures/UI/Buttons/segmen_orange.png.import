@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dttul3r8f2cal"
-path="res://.godot/imported/progress_fill_green.png-a9983eb9cbb8a5b5917ddf63138f4656.ctex"
+uid="uid://dmrs23yo316wc"
+path="res://.godot/imported/segmen_orange.png-cc832b785121489a4f358c0101ad6c5a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/textures/UI/Buttons/progress_fill_green.png"
-dest_files=["res://.godot/imported/progress_fill_green.png-a9983eb9cbb8a5b5917ddf63138f4656.ctex"]
+source_file="res://assets/textures/UI/Buttons/segmen_orange.png"
+dest_files=["res://.godot/imported/segmen_orange.png-cc832b785121489a4f358c0101ad6c5a.ctex"]
 
 [params]
 
