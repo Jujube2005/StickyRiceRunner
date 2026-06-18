@@ -165,14 +165,19 @@ func _update_projectile(pd: Dictionary, delta: float) -> void:
 	var lerp_pos  := start.lerp(end_pos, t)
 	lerp_pos.y   += sin(t * PI) * 1.5  # graceful festival arc
 
-	# ── Rotation toward movement direction ──────────────────
+	# ── Rotation toward movement direction (safe) ──────────
 	var move_dir : Vector3 = lerp_pos - proj.global_position
 	proj.global_position   = lerp_pos
 
-	if move_dir.length() > 0.01:
-		var up_dot : float = abs(move_dir.normalized().dot(Vector3.UP))
-		if up_dot < 0.98:  # avoid gimbal lock when nearly vertical
-			proj.look_at(proj.global_position + move_dir, Vector3.UP)
+	if move_dir.length_squared() > 0.0001:
+		var dir_norm : Vector3 = move_dir.normalized()
+		# Choose an up reference that is NOT parallel to the movement direction.
+		# When dir_norm is close to UP or DOWN, use FORWARD to prevent det==0
+		# inside Basis::invert() (triggered by look_at when up || forward).
+		var up_ref : Vector3 = Vector3.UP
+		if abs(dir_norm.dot(Vector3.UP)) > 0.90:
+			up_ref = Vector3.FORWARD
+		proj.look_at(proj.global_position + dir_norm, up_ref)
 
 	# ── Pulsing scale on quad ────────────────
 	var quad : MeshInstance3D = pd["quad"]
@@ -206,7 +211,7 @@ func _on_impact(proj: Node3D, target: Node3D, skill_name: String, skill_color: C
 				child.emitting = false
 		var tw : Tween = proj.create_tween()
 		tw.tween_property(proj, "scale", Vector3(2.2, 2.2, 2.2), 0.06)
-		tw.parallel().tween_property(proj, "scale", Vector3(0.0, 0.0, 0.0), 0.12)
+		tw.parallel().tween_property(proj, "scale", Vector3(0.001, 0.001, 0.001), 0.12)
 		tw.tween_callback(proj.queue_free)
 
 	if not scene_root:
