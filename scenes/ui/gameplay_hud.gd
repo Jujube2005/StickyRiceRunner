@@ -190,6 +190,28 @@ void fragment() {
 			get_tree().create_timer(2.6).timeout.connect(overlay.queue_free)
 	)
 
+func show_skill_flash(is_right_half: bool, skill_color: Color):
+	"""Brief half-screen color flash when a skill projectile hits the target player.
+	Called by SkillProjectileManager._trigger_screen_flash()."""
+	var overlay = ColorRect.new()
+	overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	overlay.z_index = 120
+	add_child(overlay)
+	
+	# Wait one frame so the Control size is resolved
+	await get_tree().process_frame
+	
+	var half_w = size.x / 2.0
+	overlay.size     = Vector2(half_w, size.y)
+	overlay.position = Vector2(half_w if is_right_half else 0.0, 0.0)
+	# Start fully transparent
+	overlay.color    = Color(skill_color.r, skill_color.g, skill_color.b, 0.0)
+	
+	var tween = create_tween()
+	tween.tween_property(overlay, "color:a", 0.52, 0.06)   # sharp flash in
+	tween.tween_property(overlay, "color:a", 0.0,  0.26)   # fade out
+	tween.tween_callback(overlay.queue_free)
+
 func _on_p1_warning_changed(msg):
 	if p1_warning:
 		p1_warning.text = msg

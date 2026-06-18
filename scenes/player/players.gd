@@ -836,6 +836,14 @@ func use_skill_at_slot(slot_index: int):
 					_:
 						AudioManager.play_sfx("skill_use")
 						VfxManager.spawn("skill_use", global_position + Vector3(0, 1.0, 0))
+				
+				# ── Visual projectile: flies from this player to the opponent ──
+				# Purely cosmetic — apply_prank() timing is unchanged (fired by GameManager)
+				var _proj_target : Node3D = get_tree().current_scene.find_child(
+					"Player2" if name == "Player1" else "Player1", true, false) as Node3D
+				if is_instance_valid(_proj_target):
+					SkillProjectileManager.launch(self, _proj_target, skill_name)
+				
 				var warn_msg = LanguageManager.t("WARN_USED") + skill_name
 				set_warning(warn_msg)
 				

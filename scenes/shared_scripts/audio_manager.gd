@@ -26,6 +26,7 @@ const SFX_LIST := [
 	"shield_block",   # ผ้าขาวม้ากันสกิล
 	"charge_full",    # ชาร์จครบ
 	"skill_ready",    # สุ่มสกิลได้แล้ว — 2 โน้ตไต่ขึ้น
+	"skill_impact",   # โปรเจกไทล์กระทบ — thwack + golden shimmer
 ]
 
 func _ready():
@@ -87,6 +88,7 @@ func _generate(name: String) -> AudioStreamWAV:
 		"shield_block":   return _gen_shield_block()
 		"charge_full":    return _gen_charge_full()
 		"skill_ready":    return _gen_skill_ready()
+		"skill_impact":   return _gen_skill_impact()
 	return _gen_pickup()
 
 # ═══════════════════════════════════════════════════════════
@@ -353,6 +355,32 @@ func _gen_charge_full() -> AudioStreamWAV:
 									   0.25 * sin(TAU * f * 2.0 * t) +
 									   0.12 * sin(TAU * f * 3.0 * t)))
 		buf = _concat(buf, seg)
+	return _make_wav(buf)
+
+# ───────────────────────────────────────────────────────────
+# 💥 โปรเจกไทล์กระทบ — Metallic thwack + ascending golden shimmer
+#    คลิกกระทบคมชัด + เสียงวิบวาวขึ้นสูง (Thai golden hit)
+# ───────────────────────────────────────────────────────────
+func _gen_skill_impact() -> AudioStreamWAV:
+	var dur   := 0.42
+	var n     := int(SAMPLE_RATE * dur)
+	var buf   := PackedFloat32Array()
+	buf.resize(n)
+	var phase := 0.0
+	for i in n:
+		var t     := float(i) / SAMPLE_RATE
+		# Sharp metallic thwack transient (กระทบ)
+		var thwack := exp(-t * 110.0) * randf_range(-1.0, 1.0) * 0.55
+		# Ascending golden shimmer: 500 Hz → 1800 Hz (วิบวาว)
+		var prog   := minf(t / 0.20, 1.0)
+		var f: float = 500.0 + 1300.0 * pow(prog, 1.5)
+		phase     += TAU * f / SAMPLE_RATE
+		var shimmer := exp(-t * 9.0) * sin(phase) * 0.38
+		# High sparkle overtone (ประกาย)
+		var sparkle := exp(-t * 28.0) * sin(TAU * 3300.0 * t) * 0.12
+		# Warm resonant body (เสียงทอง)
+		var body    := exp(-t * 18.0) * sin(TAU * 820.0 * t) * 0.18
+		buf[i] = _soft_clip(thwack + shimmer + sparkle + body)
 	return _make_wav(buf)
 
 # ───────────────────────────────────────────────────────────
