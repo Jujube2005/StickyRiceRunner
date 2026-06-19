@@ -165,6 +165,8 @@ func show_result(winner_name: String, _p1_score: int, _p2_score: int, _p1_distan
 		p1_dist, p2_dist,
 		_show_board
 	)
+	_podium_instance.main_menu_pressed.connect(on_menu_pressed)
+	_podium_instance.restart_pressed.connect(on_restart_pressed)
 
 func _show_board() -> void:
 	# Pop-in animation using the editor-defined scale
