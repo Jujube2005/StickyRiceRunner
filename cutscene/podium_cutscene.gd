@@ -41,9 +41,8 @@ var fireworks_left: CPUParticles2D
 var fireworks_right: CPUParticles2D
 var stars_node: CPUParticles2D
 var spotlight_node: TextureRect
-var champion_banner: PanelContainer
+var champion_banner: Control
 var new_btn_container: HBoxContainer
-var score_labels: Array[Label] = []
 
 # ── Nodes ────────────────────────────────────────────────────
 @onready var bg_rect: TextureRect          = $BgRect
@@ -230,23 +229,6 @@ func _spawn_character(
 	name_label.visible  = false # ซ่อนชื่อ
 	rank_badge.visible  = false # ซ่อนเหรียญ
 
-	# Show score
-	var slot_index = 0
-	if char_rect == char_2nd: slot_index = 1
-	elif char_rect == char_3rd: slot_index = 2
-	
-	if slot_index < score_labels.size():
-		var slabel = score_labels[slot_index]
-		if data["char_key"] != "npc":
-			slabel.text = str(data["score"])
-		else:
-			slabel.text = "" # Hide NPC score
-		
-		# Show score label and animate it
-		slabel.modulate.a = 0.0
-		slabel.visible = true
-		create_tween().tween_property(slabel, "modulate:a", 1.0, duration)
-
 	var tween = create_tween().set_parallel(true)
 	tween.tween_property(char_rect, "scale", target_scale, duration).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	tween.tween_property(rank_badge, "modulate:a", 1.0, duration * 0.5)
@@ -346,23 +328,6 @@ func _build_celebration_effects() -> void:
 	$Podium.add_child(spotlight_node)
 	$Podium.move_child(spotlight_node, 0)
 	
-	# Score Labels
-	for char_node in [char_1st, char_2nd, char_3rd]:
-		var slabel = Label.new()
-		slabel.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		slabel.layout_mode = 1
-		slabel.anchor_top = 1.05
-		slabel.anchor_bottom = 1.2
-		slabel.anchor_left = -0.5
-		slabel.anchor_right = 1.5
-		slabel.add_theme_font_size_override("font_size", 30)
-		slabel.add_theme_color_override("font_color", Color(1, 0.8, 0.2) if char_node == char_1st else Color.WHITE)
-		slabel.add_theme_color_override("font_outline_color", Color.BLACK)
-		slabel.add_theme_constant_override("outline_size", 10)
-		slabel.visible = false
-		char_node.add_child(slabel)
-		score_labels.append(slabel)
-
 	# Confetti (Paper fireworks from corners)
 	var cf_setup = func(cf: CPUParticles2D, pos: Vector2, dir: Vector2):
 		cf.texture = load("res://assets/textures/brackeys_vfx_bundle/particles/alpha/circle_01_a.png")
@@ -426,7 +391,7 @@ func _build_celebration_effects() -> void:
 	fw_setup.call(fireworks_right, Vector2(1620, 800))
 
 	# Banner
-	champion_banner = PanelContainer.new()
+	champion_banner = Control.new()
 	champion_banner.layout_mode = 1
 	champion_banner.anchor_left = 0.3
 	champion_banner.anchor_right = 0.7
@@ -434,13 +399,6 @@ func _build_celebration_effects() -> void:
 	champion_banner.anchor_bottom = 0.16
 	champion_banner.modulate = Color(1, 1, 1, 0)
 	champion_banner.visible = false
-	var style = StyleBoxFlat.new()
-	style.bg_color = Color(0, 0, 0, 0.5)
-	style.corner_radius_bottom_left = 20
-	style.corner_radius_bottom_right = 20
-	style.corner_radius_top_left = 20
-	style.corner_radius_top_right = 20
-	champion_banner.add_theme_stylebox_override("panel", style)
 	
 	var vbox = VBoxContainer.new()
 	vbox.alignment = BoxContainer.ALIGNMENT_CENTER
@@ -449,10 +407,12 @@ func _build_celebration_effects() -> void:
 	var title = Label.new()
 	title.text = "CHAMPION"
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	title.add_theme_font_size_override("font_size", 70)
+	title.add_theme_font_size_override("font_size", 100)
 	title.add_theme_color_override("font_color", Color(1, 0.84, 0))
 	title.add_theme_color_override("font_outline_color", Color.BLACK)
-	title.add_theme_constant_override("outline_size", 12)
+	title.add_theme_constant_override("outline_size", 20)
+	var font = load("res://assets/textures/UI/Font/Mitr/Mitr-Bold.ttf")
+	title.add_theme_font_override("font", font)
 	vbox.add_child(title)
 	
 	add_child(champion_banner)
