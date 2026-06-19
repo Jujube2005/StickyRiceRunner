@@ -444,6 +444,10 @@ func _input(event):
 					player2.add_skill(s1)
 					player2.add_skill(s2)
 					print("[DEBUG] 6: Added random skills to Player 2: ", s1, ", ", s2)
+			KEY_9:
+				if player2:
+					player2.is_bot = !player2.is_bot
+					print("[DEBUG] 9: Player 2 Bot is now: ", player2.is_bot)
 
 func _on_pause_pressed():
 	var pause_panel = get_tree().current_scene.find_child("PausePanel", true, false)
