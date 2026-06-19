@@ -41,6 +41,7 @@ var active_pranks: Array[Prank] = []
 var prank_id_counter = 0
 var skill_cooldown_timer = 0.0
 var game_ended = false
+var elapsed_time = 0.0
 
 func _ready():
 	ui_gameover.visible = false
@@ -100,6 +101,8 @@ func _spawn_players():
 
 func _process(delta):
 	if game_ended: return
+	
+	elapsed_time += delta
 	
 	# Update Global Cooldown
 	if skill_cooldown_timer > 0:
