@@ -82,7 +82,7 @@ const SCROLL_SPEED: float = 60.0
 
 @onready var scroll_container: ScrollContainer = $ScrollContainer
 @onready var credits_label: RichTextLabel      = $ScrollContainer/CreditsLabel
-@onready var close_btn: Button                 = $CloseBtn
+@onready var close_btn: TextureButton          = $CloseBtn
 @onready var overlay_bg: ColorRect             = $OverlayBg
 
 var _scrolling: bool = true
@@ -109,6 +109,7 @@ func _ready() -> void:
 	_scroll_target = 0.0
 
 	# Close button
+	close_btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	close_btn.pressed.connect(_on_close_pressed)
 	close_btn.mouse_entered.connect(func():
 		var tw = create_tween()
