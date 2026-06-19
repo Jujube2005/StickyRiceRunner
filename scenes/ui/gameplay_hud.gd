@@ -410,23 +410,23 @@ func update_rice_bar(player_num: int, count: int) -> void:
 func _input(event):
 	if event is InputEventKey and event.pressed:
 		match event.keycode:
-			KEY_F1:
+			KEY_1:
 				if player1: player1.debug_add_charge(1)
 				if player2: player2.debug_add_charge(1)
-				print("[DEBUG] F1: Add 1 Charge to both players")
-			KEY_F2:
+				print("[DEBUG] 1: Add 1 Charge to both players")
+			KEY_2:
 				if player1: player1.debug_add_charge(5)
 				if player2: player2.debug_add_charge(5)
-				print("[DEBUG] F2: Add 5 Charges to both players")
-			KEY_F3:
+				print("[DEBUG] 2: Add 5 Charges to both players")
+			KEY_3:
 				if player1: player1.debug_set_distance(player1.distance + 100)
 				if player2: player2.debug_set_distance(player2.distance + 100)
-				print("[DEBUG] F3: Skip 100m distance")
-			KEY_F4:
+				print("[DEBUG] 3: Skip 100m distance")
+			KEY_4:
 				if player1: player1.debug_set_distance(950)
 				if player2: player2.debug_set_distance(950)
-				print("[DEBUG] F4: Jump to 950m (Near Finish)")
-			KEY_F5:
+				print("[DEBUG] 4: Jump to 950m (Near Finish)")
+			KEY_5:
 				if player1 and player1.has_method("add_skill"):
 					var scene = get_tree().current_scene
 					var gm = scene.find_child("GameManager", true, false)
@@ -434,8 +434,8 @@ func _input(event):
 					var s2 = gm.get_random_skill() if gm else "Pha Khao Ma"
 					player1.add_skill(s1)
 					player1.add_skill(s2)
-					print("[DEBUG] F5: Added random skills to Player 1: ", s1, ", ", s2)
-			KEY_F6:
+					print("[DEBUG] 5: Added random skills to Player 1: ", s1, ", ", s2)
+			KEY_6:
 				if player2 and player2.has_method("add_skill"):
 					var scene = get_tree().current_scene
 					var gm = scene.find_child("GameManager", true, false)
@@ -443,7 +443,7 @@ func _input(event):
 					var s2 = gm.get_random_skill() if gm else "Pha Khao Ma"
 					player2.add_skill(s1)
 					player2.add_skill(s2)
-					print("[DEBUG] F6: Added random skills to Player 2: ", s1, ", ", s2)
+					print("[DEBUG] 6: Added random skills to Player 2: ", s1, ", ", s2)
 
 func _on_pause_pressed():
 	var pause_panel = get_tree().current_scene.find_child("PausePanel", true, false)

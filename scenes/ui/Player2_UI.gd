@@ -67,9 +67,8 @@ func _ready():
 	_setup_debug_menu()
 
 func _input(event):
-	var pressed_debug_action = InputMap.has_action("ui_f3") and event.is_action_pressed("ui_f3")
-	var pressed_f3_key = event is InputEventKey and event.keycode == KEY_F3 and event.pressed
-	if pressed_debug_action or pressed_f3_key:
+	var pressed_9_key = event is InputEventKey and event.keycode == KEY_9 and event.pressed
+	if pressed_9_key:
 		if debug_panel:
 			debug_panel.visible = !debug_panel.visible
 
@@ -232,7 +231,7 @@ func _setup_debug_menu():
 	debug_panel.add_child(v_box)
 	
 	var d_title = Label.new()
-	d_title.text = "DEBUG (F3)"
+	d_title.text = "DEBUG (9)"
 	d_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	v_box.add_child(d_title)
 	
