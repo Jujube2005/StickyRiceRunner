@@ -1,0 +1,183 @@
+extends Node
+# =============================================================================
+# CutscenePlayer — Data-driven sequential timeline engine
+#
+# Usage:
+#   var player = CutscenePlayer.new()
+#   add_child(player)
+#   player.setup(image_rect, overlay_rect, char_left, char_right, dialogue_panel, dialogue_label)
+#   player.play_timeline(timeline_array)
+#   await player.finished
+#
+# Supported action types (Dictionary with "action" key):
+#   show_image   { path, duration, zoom }
+#   fade_out     { duration }
+#   fade_in      { duration }
+#   show_char    { path, side: "left"|"right", duration }
+#   hide_char    { side: "left"|"right" }
+#   show_dialogue { text_th, text_en, speaker }
+#   hide_dialogue {}
+#   wait         { duration }
+#   play_sfx     { sfx_name }
+#   play_music   { music_name }
+#   stop_music   {}
+# =============================================================================
+
+signal finished
+signal action_completed(index: int)
+
+# --- Node references (set via setup()) ---
+var _image_rect: TextureRect        = null  # Main image display
+var _overlay: ColorRect             = null  # Black fade overlay
+var _char_left: TextureRect         = null  # Left character sprite
+var _char_right: TextureRect        = null  # Right character sprite
+var _dialogue_panel: PanelContainer = null  # Dialogue box container
+var _dialogue_label: RichTextLabel  = null  # Dialogue text label
+var _speaker_label: Label           = null  # Speaker name label
+
+var _timeline: Array[Dictionary] = []
+var _current_index: int = 0
+var _is_playing: bool = false
+var _skip_requested: bool = false
+
+func setup(
+	image_rect: TextureRect,
+	overlay: ColorRect,
+	char_left: TextureRect,
+	char_right: TextureRect,
+	dialogue_panel: PanelContainer,
+	dialogue_label: RichTextLabel,
+	speaker_label: Label = null
+) -> void:
+	_image_rect    = image_rect
+	_overlay       = overlay
+	_char_left     = char_left
+	_char_right    = char_right
+	_dialogue_panel = dialogue_panel
+	_dialogue_label = dialogue_label
+	_speaker_label  = speaker_label
+
+func play_timeline(timeline: Array[Dictionary]) -> void:
+	_timeline = timeline
+	_current_index = 0
+	_is_playing = true
+	_skip_requested = false
+	_run()
+
+func request_skip() -> void:
+	_skip_requested = true
+
+func _run() -> void:
+	for i in _timeline.size():
+		_current_index = i
+		await _execute(_timeline[i])
+		action_completed.emit(i)
+		if _skip_requested:
+			break
+	_is_playing = false
+	finished.emit()
+
+# ─────────────────────────────────────────────────────────────
+func _execute(action: Dictionary) -> void:
+	var type: String = action.get("action", "wait")
+	match type:
+		"show_image":
+			await _do_show_image(action)
+		"fade_out":
+			await _do_fade(_overlay, 0.0, 1.0, action.get("duration", 0.5))
+		"fade_in":
+			await _do_fade(_overlay, 1.0, 0.0, action.get("duration", 0.5))
+		"show_char":
+			await _do_show_char(action)
+		"hide_char":
+			_do_hide_char(action.get("side", "left"))
+		"show_dialogue":
+			_do_show_dialogue(action)
+		"hide_dialogue":
+			if _dialogue_panel:
+				_dialogue_panel.visible = false
+		"wait":
+			await get_tree().create_timer(action.get("duration", 1.0)).timeout
+		"play_sfx":
+			AudioManager.play_sfx(action.get("sfx_name", ""))
+		"play_music":
+			AudioManager.play_music_by_name(action.get("music_name", ""))
+		"stop_music":
+			AudioManager.stop_music()
+
+# ─────────────────────────────────────────────────────────────
+# Show image with optional zoom tween, then wait duration
+func _do_show_image(action: Dictionary) -> void:
+	if not _image_rect:
+		return
+	var path: String = action.get("path", "")
+	var duration: float = action.get("duration", 2.5)
+	var zoom: float = action.get("zoom", 1.0)
+
+	if ResourceLoader.exists(path):
+		_image_rect.texture = load(path)
+	_image_rect.scale = Vector2.ONE
+	_image_rect.pivot_offset = _image_rect.size / 2.0
+	_image_rect.visible = true
+
+	if zoom > 1.0:
+		var tween = create_tween()
+		tween.tween_property(_image_rect, "scale",
+			Vector2(zoom, zoom), duration
+		).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+		await get_tree().create_timer(duration).timeout
+		_image_rect.scale = Vector2.ONE
+	else:
+		await get_tree().create_timer(duration).timeout
+
+# ─────────────────────────────────────────────────────────────
+func _do_fade(target: ColorRect, from_alpha: float, to_alpha: float, duration: float) -> void:
+	if not target:
+		return
+	target.visible = true
+	target.color.a = from_alpha
+	var tween = create_tween()
+	tween.tween_property(target, "color:a", to_alpha, duration).set_trans(Tween.TRANS_QUAD)
+	await tween.finished
+	if to_alpha <= 0.0:
+		target.visible = false
+
+# ─────────────────────────────────────────────────────────────
+func _do_show_char(action: Dictionary) -> void:
+	var path: String = action.get("path", "")
+	var side: String = action.get("side", "left")
+	var duration: float = action.get("duration", 0.4)
+	var target: TextureRect = _char_left if side == "left" else _char_right
+	if not target:
+		return
+	if ResourceLoader.exists(path):
+		target.texture = load(path)
+	target.modulate.a = 0.0
+	target.visible = true
+	var tween = create_tween()
+	tween.tween_property(target, "modulate:a", 1.0, duration).set_trans(Tween.TRANS_QUAD)
+	await tween.finished
+
+func _do_hide_char(side: String) -> void:
+	var target: TextureRect = _char_left if side == "left" else _char_right
+	if not target:
+		return
+	var tween = create_tween()
+	tween.tween_property(target, "modulate:a", 0.0, 0.3)
+	await tween.finished
+	target.visible = false
+
+# ─────────────────────────────────────────────────────────────
+func _do_show_dialogue(action: Dictionary) -> void:
+	if not _dialogue_panel or not _dialogue_label:
+		return
+	var locale = LanguageManager.current_locale
+	var text: String = action.get("text_" + locale, action.get("text_th", ""))
+	_dialogue_label.text = text
+	if _speaker_label:
+		_speaker_label.text = action.get("speaker", "")
+	_dialogue_panel.visible = true
+	_dialogue_panel.modulate.a = 0.0
+	var tween = create_tween()
+	tween.tween_property(_dialogue_panel, "modulate:a", 1.0, 0.25)
+	await tween.finished

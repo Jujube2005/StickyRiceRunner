@@ -16,6 +16,15 @@ const TEX_BTN_ORANGE = "res://assets/textures/UI/Buttons/buttonOrange.png"
 const TEX_BTN_YELLOW = "res://assets/textures/UI/Buttons/buttonYellow.png"
 
 func _ready():
+	# On first ever launch, play the opening cutscene sequence
+	if not FileAccess.file_exists("user://cutscene_played.dat"):
+		var f = FileAccess.open("user://cutscene_played.dat", FileAccess.WRITE)
+		if f:
+			f.store_string("1")
+			f.close()
+		get_tree().change_scene_to_file("res://cutscene/opening_cutscene.tscn")
+		return
+
 	_setup_ui_styles()
 	_animate_entrance()
 	_update_button_texts()
