@@ -391,29 +391,24 @@ func _build_celebration_effects() -> void:
 	fw_setup.call(fireworks_right, Vector2(1620, 800))
 
 	# Banner
-	champion_banner = Control.new()
+	champion_banner = Label.new()
+	champion_banner.text = "CHAMPION"
+	champion_banner.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	champion_banner.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	champion_banner.layout_mode = 1
-	champion_banner.anchor_left = 0.3
-	champion_banner.anchor_right = 0.7
-	champion_banner.anchor_top = 0.05
-	champion_banner.anchor_bottom = 0.16
+	champion_banner.anchor_left = 0.0
+	champion_banner.anchor_right = 1.0
+	champion_banner.anchor_top = 0.0
+	champion_banner.anchor_bottom = 0.15
 	champion_banner.modulate = Color(1, 1, 1, 0)
 	champion_banner.visible = false
 	
-	var vbox = VBoxContainer.new()
-	vbox.alignment = BoxContainer.ALIGNMENT_CENTER
-	champion_banner.add_child(vbox)
-	
-	var title = Label.new()
-	title.text = "CHAMPION"
-	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	title.add_theme_font_size_override("font_size", 100)
-	title.add_theme_color_override("font_color", Color(1, 0.84, 0))
-	title.add_theme_color_override("font_outline_color", Color.BLACK)
-	title.add_theme_constant_override("outline_size", 20)
+	champion_banner.add_theme_font_size_override("font_size", 100)
+	champion_banner.add_theme_color_override("font_color", Color(1, 0.84, 0))
+	champion_banner.add_theme_color_override("font_outline_color", Color.BLACK)
+	champion_banner.add_theme_constant_override("outline_size", 20)
 	var font = load("res://assets/textures/UI/Font/Mitr/Mitr-Bold.ttf")
-	title.add_theme_font_override("font", font)
-	vbox.add_child(title)
+	champion_banner.add_theme_font_override("font", font)
 	
 	add_child(champion_banner)
 
