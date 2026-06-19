@@ -67,7 +67,7 @@ func _ready():
 	_setup_debug_menu()
 
 func _input(event):
-	var pressed_9_key = event is InputEventKey and event.keycode == KEY_9 and event.pressed
+	var pressed_9_key = event is InputEventKey and event.physical_keycode == KEY_9 and event.pressed
 	if pressed_9_key:
 		if debug_panel:
 			debug_panel.visible = !debug_panel.visible

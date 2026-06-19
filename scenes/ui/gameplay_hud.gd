@@ -409,15 +409,15 @@ func update_rice_bar(player_num: int, count: int) -> void:
 
 func _input(event):
 	if event is InputEventKey and event.pressed:
-		match event.keycode:
+		match event.physical_keycode:
 			KEY_1:
-				if player1: player1.debug_add_charge(1)
-				if player2: player2.debug_add_charge(1)
-				print("[DEBUG] 1: Add 1 Charge to both players")
+				if player1: player1.add_kratip(1)
+				if player2: player2.add_kratip(1)
+				print("[DEBUG] 1: Add 1 Kratip to both players")
 			KEY_2:
-				if player1: player1.debug_add_charge(5)
-				if player2: player2.debug_add_charge(5)
-				print("[DEBUG] 2: Add 5 Charges to both players")
+				if player1: player1.add_kratip(5)
+				if player2: player2.add_kratip(5)
+				print("[DEBUG] 2: Add 5 Kratips to both players")
 			KEY_3:
 				if player1: player1.debug_set_distance(player1.distance + 100)
 				if player2: player2.debug_set_distance(player2.distance + 100)
