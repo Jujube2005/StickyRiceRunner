@@ -428,10 +428,10 @@ func _build_celebration_effects() -> void:
 	# Banner
 	champion_banner = PanelContainer.new()
 	champion_banner.layout_mode = 1
-	champion_banner.anchor_left = 0.2
-	champion_banner.anchor_right = 0.8
+	champion_banner.anchor_left = 0.3
+	champion_banner.anchor_right = 0.7
 	champion_banner.anchor_top = 0.05
-	champion_banner.anchor_bottom = 0.2
+	champion_banner.anchor_bottom = 0.16
 	champion_banner.modulate = Color(1, 1, 1, 0)
 	champion_banner.visible = false
 	var style = StyleBoxFlat.new()
@@ -472,11 +472,17 @@ func _build_celebration_effects() -> void:
 	
 	var m_btn = TextureButton.new()
 	m_btn.texture_normal = load("res://assets/textures/UI/Buttons/btn_menu.png")
+	m_btn.ignore_texture_size = true
+	m_btn.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
+	m_btn.custom_minimum_size = Vector2(100, 100)
 	m_btn.pressed.connect(_on_menu_pressed)
 	new_btn_container.add_child(m_btn)
 	
 	var r_btn = TextureButton.new()
 	r_btn.texture_normal = load("res://assets/textures/UI/Buttons/btn_restart.png")
+	r_btn.ignore_texture_size = true
+	r_btn.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
+	r_btn.custom_minimum_size = Vector2(100, 100)
 	r_btn.pressed.connect(_on_restart_pressed)
 	new_btn_container.add_child(r_btn)
 	
