@@ -18,8 +18,8 @@ const CHAR_PATHS = {
 	"man_sad":     "res://cutscene/characters/man/man_sad.png",
 	"woman_happy": "res://cutscene/characters/woman/woman_happy.png",
 	"woman_sad":   "res://cutscene/characters/woman/woman_sad.png",
-	# NPC fallback — replace with actual asset when ready
-	"npc_sad":     "",
+	# NPC fallback
+	"npc_sad":     "res://cutscene/characters/npc/npc_lose.png",
 }
 
 # ── Data passed in from caller ──────────────────────────────
@@ -58,6 +58,21 @@ func _ready() -> void:
 	podium_bg.visible = false
 	continue_btn.visible = false
 
+	# Shrink podium size and anchor to bottom center
+	get_tree().process_frame.connect(func():
+		var center_bottom = Vector2(size.x / 2.0, size.y)
+		podium_bg.pivot_offset = center_bottom
+		$Podium.pivot_offset = center_bottom
+		
+		var shrink_scale = Vector2(0.7, 0.7) # Adjust this value (e.g. 0.7 = 70% size)
+		podium_bg.scale = shrink_scale
+		$Podium.scale = shrink_scale
+		
+		# Move podium down and characters up so they stand on the boxes
+		podium_bg.position.y += 80
+		$Podium.position.y -= 160
+	, CONNECT_ONE_SHOT)
+
 	# Hide all chars initially
 	for c in [char_1st, char_2nd, char_3rd]:
 		c.visible = false
@@ -76,17 +91,15 @@ func _run_sequence() -> void:
 	_fade_in(0.8)
 	await get_tree().create_timer(2.5).timeout
 
-	# Fade out → transition
-	_fade_out(0.5)
-	await get_tree().create_timer(0.6).timeout
-
-	# Phase 2: Show podium background
-	bg_rect.texture = load(PATH_PODIUM_BG)
+	# Phase 2: Fade in Podium smoothly over end_scene
+	podium_bg.texture = load(PATH_PODIUM_BG)
 	podium_bg.visible = true
+	podium_bg.modulate.a = 0.0
 	title_label.text = "🏆 " + LanguageManager.t("LBL_FINAL_RESULT") + " 🏆"
 
-	_fade_in(0.6)
-	await get_tree().create_timer(0.5).timeout
+	var tween = create_tween()
+	tween.tween_property(podium_bg, "modulate:a", 1.0, 1.0)
+	await tween.finished
 
 	# Determine ranking
 	var ranking = _calculate_ranking()
