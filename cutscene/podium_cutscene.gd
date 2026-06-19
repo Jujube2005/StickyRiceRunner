@@ -113,7 +113,7 @@ func _run_sequence() -> void:
 	podium_bg.texture = load(PATH_PODIUM_BG)
 	podium_bg.visible = true
 	podium_bg.modulate.a = 0.0
-	title_label.text = "🏆 " + LanguageManager.t("LBL_FINAL_RESULT") + " 🏆"
+	title_label.text = ""
 
 	var tween = create_tween()
 	tween.tween_property(podium_bg, "modulate:a", 1.0, 1.0)
@@ -204,6 +204,7 @@ func _spawn_character(
 	var target_scale = Vector2.ONE
 	if data["char_key"] == "woman":
 		target_scale = Vector2(1.15, 1.15) # ขยายผู้หญิงขึ้น 15% เพื่อชดเชยขอบใส
+		char_rect.position.y += 20 # เลื่อนลงมาให้เท้าพอดีกล่อง
 		
 	# Scale from bottom center so feet stay planted
 	char_rect.pivot_offset = Vector2(char_rect.size.x / 2.0, char_rect.size.y)
@@ -211,8 +212,8 @@ func _spawn_character(
 	# Pop-in animation
 	char_rect.scale   = Vector2(0.1, 0.1)
 	char_rect.visible = true
-	name_label.visible  = true
-	rank_badge.visible  = true
+	name_label.visible  = false # ซ่อนชื่อ
+	rank_badge.visible  = false # ซ่อนเหรียญ
 
 	var tween = create_tween().set_parallel(true)
 	tween.tween_property(char_rect, "scale", target_scale, duration).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
