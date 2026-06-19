@@ -29,6 +29,8 @@ func _ready():
 	$MenuContainer/ButtonList/SettingsBtn.pressed.connect(_on_settings_pressed)
 	$MenuContainer/ButtonList/HowToBtn.pressed.connect(_on_how_to_pressed)
 	$MenuContainer/ButtonList/CollectionBtn.pressed.connect(_on_collection_pressed)
+	$CreditsBtn.pressed.connect(_on_credits_pressed)
+	_apply_button_theme($CreditsBtn)
 	LanguageManager.language_changed.connect(func(_l): _update_button_texts())
 	
 	# เล่นเพลง Main Menu
@@ -161,6 +163,14 @@ func _on_collection_pressed():
 	var collection_instance = collection_scene.instantiate()
 	collection_instance.name = "CollectionMenu"
 	add_child(collection_instance)
+
+func _on_credits_pressed():
+	if has_node("CreditsMenu"):
+		return
+	var credits_scene = load("res://scenes/main_menu/credits_menu.tscn")
+	var credits_instance = credits_scene.instantiate()
+	credits_instance.name = "CreditsMenu"
+	add_child(credits_instance)
 
 func _on_quit_pressed():
 	get_tree().quit()
