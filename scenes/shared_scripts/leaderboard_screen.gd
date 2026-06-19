@@ -45,36 +45,65 @@ func _setup_button_hover(btn: TextureButton):
 		tween.tween_property(btn, "scale", Vector2(1.0, 1.0), 0.15).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	)
 
+const SAVE_PATH = "user://leaderboard_data.json"
+
+static func load_data() -> Dictionary:
+	if FileAccess.file_exists(SAVE_PATH):
+		var file = FileAccess.open(SAVE_PATH, FileAccess.READ)
+		var text = file.get_as_text()
+		var res = JSON.parse_string(text)
+		if res is Dictionary:
+			if not res.has("top_3_times"): res["top_3_times"] = []
+			return res
+	return {
+		"best_distance": 0,
+		"best_time": 999999,
+		"most_silk": 0,
+		"p1_wins": 0,
+		"p2_wins": 0,
+		"top_3_times": []
+	}
+
+static func save_data(data: Dictionary):
+	var file = FileAccess.open(SAVE_PATH, FileAccess.WRITE)
+	file.store_string(JSON.stringify(data))
+
 func show_result(winner_name: String, _p1_score: int, _p2_score: int, p1_distance: int, p2_distance: int):
-	var scene_root = get_tree().current_scene
-	var gm = scene_root.find_child("GameManager", true, false)
-
-	var p1_kratips = 0
-	var p2_kratips = 0
+	var data = load_data()
 	
-	# Try to get data from GameManager
-	if gm:
-		if gm.p1: p1_kratips = gm.p1.kratips_collected
-		if gm.p2: p2_kratips = gm.p2.kratips_collected
-
-	var max_dist = max(p1_distance, p2_distance)
-	var max_kratips = max(p1_kratips, p2_kratips)
-	
-	# Format Best Time (Dummy data for now unless we have a game timer)
+	# Format Best Time
 	var time_text = "--:--"
-	if gm and "elapsed_time" in gm:
-		var total_secs = int(gm.elapsed_time)
-		var mins = total_secs / 60
-		var secs = total_secs % 60
+	if data.best_time < 999999:
+		var mins = data.best_time / 60
+		var secs = data.best_time % 60
 		time_text = "%02d:%02d" % [mins, secs]
 	
-	if val_dist: val_dist.text = "%dm" % max_dist
+	if val_dist: val_dist.text = "%dm" % data.best_distance
 	if val_time: val_time.text = time_text
-	if val_silk: val_silk.text = "%d" % max_kratips
+	if val_silk: val_silk.text = "%d" % data.most_silk
 	
-	# Example data for P1/P2 Wins (In a real game, save these in an Autoload/GlobalData)
-	if val_p1_wins: val_p1_wins.text = "1" if winner_name == "Player 1" else "0"
-	if val_p2_wins: val_p2_wins.text = "1" if winner_name == "Player 2" else "0"
+	if val_p1_wins: val_p1_wins.text = str(data.p1_wins)
+	if val_p2_wins: val_p2_wins.text = str(data.p2_wins)
+
+	# Format Top 3 Times
+	var time1st = get_node_or_null("Board/Paper/VBox/Top3Wrapper/Top3/Time1st/Panel/Label")
+	var time2nd = get_node_or_null("Board/Paper/VBox/Top3Wrapper/Top3/Time2nd/Panel/Label")
+	var time3rd = get_node_or_null("Board/Paper/VBox/Top3Wrapper/Top3/Time3rd/Panel/Label")
+	
+	var t1 = "--:--"
+	var t2 = "--:--"
+	var t3 = "--:--"
+	var times = data.top_3_times
+	if times.size() > 0:
+		t1 = "%02d:%02d" % [times[0] / 60, times[0] % 60]
+	if times.size() > 1:
+		t2 = "%02d:%02d" % [times[1] / 60, times[1] % 60]
+	if times.size() > 2:
+		t3 = "%02d:%02d" % [times[2] / 60, times[2] % 60]
+
+	if time1st: time1st.text = t1
+	if time2nd: time2nd.text = t2
+	if time3rd: time3rd.text = t3
 
 	# Champion Section Update
 	if winner_name == "Player 1":

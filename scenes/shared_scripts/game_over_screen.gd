@@ -51,7 +51,19 @@ func _setup_button_hover(btn: TextureButton):
 		tween.tween_property(btn, "scale", Vector2(1.0, 1.0), 0.15).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	)
 
+var current_winner = ""
+var current_p1_score = 0
+var current_p2_score = 0
+var current_p1_dist = 0
+var current_p2_dist = 0
+
 func show_result(winner_name: String, _p1_score: int, _p2_score: int, _p1_distance: int, _p2_distance: int):
+	current_winner = winner_name
+	current_p1_score = _p1_score
+	current_p2_score = _p2_score
+	current_p1_dist = _p1_distance
+	current_p2_dist = _p2_distance
+	
 	var scene_root = get_tree().current_scene
 	var gm = scene_root.find_child("GameManager", true, false)
 
@@ -67,6 +79,36 @@ func show_result(winner_name: String, _p1_score: int, _p2_score: int, _p1_distan
 		if gm.p2:
 			p2_kratips = gm.p2.kratips_collected
 			p2_dist = int(gm.p2.distance)
+
+	var max_dist = max(p1_dist, p2_dist)
+	var max_kratips = max(p1_kratips, p2_kratips)
+	
+	var leaderboard_script = preload("res://scenes/shared_scripts/leaderboard_screen.gd")
+	var data = leaderboard_script.load_data()
+	
+	if max_dist > data.best_distance:
+		data.best_distance = max_dist
+	if max_kratips > data.most_silk:
+		data.most_silk = max_kratips
+	
+	if winner_name == "Player 1":
+		data.p1_wins += 1
+	elif winner_name == "Player 2":
+		data.p2_wins += 1
+	
+	var current_time = 0
+	if gm and "elapsed_time" in gm:
+		current_time = int(gm.elapsed_time)
+	
+	if current_time > 0 and winner_name != "":
+		data.top_3_times.append(current_time)
+		data.top_3_times.sort()
+		if data.top_3_times.size() > 3:
+			data.top_3_times = data.top_3_times.slice(0, 3)
+		if current_time < data.best_time:
+			data.best_time = current_time
+
+	leaderboard_script.save_data(data)
 
 	var goal_dist = 1000.0
 	if gm:
@@ -126,6 +168,7 @@ func on_leaderboard_pressed():
 	if leaderboard_scene:
 		var leaderboard = leaderboard_scene.instantiate()
 		get_parent().add_child(leaderboard)
+		leaderboard.show_result(current_winner, current_p1_score, current_p2_score, current_p1_dist, current_p2_dist)
 		hide()
 
 
