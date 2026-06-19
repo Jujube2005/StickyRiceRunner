@@ -5,7 +5,7 @@ extends Control
 # Skip: press Enter, Space, or Escape
 # =============================================================================
 
-const NEXT_SCENE = "res://scenes/main_menu/main_menu.tscn"
+const NEXT_SCENE = "res://scenes/main_menu/select_mode.tscn"
 
 const PATH_BACKDROP = "res://cutscene/opening/openscene7.png"
 const PATH_MAN      = "res://cutscene/characters/man/man_intro.png"

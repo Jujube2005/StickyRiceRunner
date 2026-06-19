@@ -15,16 +15,10 @@ const TEX_BOX_MENU = "res://assets/textures/UI/Buttons/board_bg.png"
 const TEX_BTN_ORANGE = "res://assets/textures/UI/Buttons/buttonOrange.png"
 const TEX_BTN_YELLOW = "res://assets/textures/UI/Buttons/buttonYellow.png"
 
-func _ready():
-	# On first ever launch, play the opening cutscene sequence
-	if not FileAccess.file_exists("user://cutscene_played.dat"):
-		var f = FileAccess.open("user://cutscene_played.dat", FileAccess.WRITE)
-		if f:
-			f.store_string("1")
-			f.close()
-		get_tree().change_scene_to_file("res://cutscene/opening_cutscene.tscn")
-		return
+# Session flag — plays cutscene once per app launch
+static var _cutscene_played_this_session: bool = false
 
+func _ready():
 	_setup_ui_styles()
 	_animate_entrance()
 	_update_button_texts()
@@ -132,6 +126,13 @@ func _update_button_texts():
 func _on_play_pressed():
 	if has_node("SelectMode"):
 		return
+	# Play cutscene once per session on the first Play press
+	if not _cutscene_played_this_session:
+		_cutscene_played_this_session = true
+		# Launch opening → intro cutscene, which ends at select_mode
+		get_tree().change_scene_to_file("res://cutscene/opening_cutscene.tscn")
+		return
+	# Subsequent presses: go straight to SelectMode
 	var select_mode_scene = load("res://scenes/main_menu/select_mode.tscn")
 	var select_mode_instance = select_mode_scene.instantiate()
 	select_mode_instance.name = "SelectMode"
