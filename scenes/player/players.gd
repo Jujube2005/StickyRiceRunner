@@ -905,16 +905,21 @@ func apply_prank(skill_name):
 			effect_durations["invert_controls"] = 4.5
 			AudioManager.play_sfx("skill_use")
 			emit_signal("prank_flash", Color(1.0, 0.9, 0.0, 0.25))  # 🟡 เหลือง
-		"Field Wind":
+		"Field Wind", "Wind Push":
 			# ลมทุ่ง — ตัวสั่นแรง
 			effect_durations["wind_push"] = 4.0
 			AudioManager.play_sfx("skill_wind")
 			emit_signal("prank_flash", Color(0.4, 0.9, 1.0, 0.30))  # 🔵 ฟ้าลม
-		"Wind Push":
-			# Legacy alias — same as Field Wind
-			effect_durations["wind_push"] = 4.0
-			AudioManager.play_sfx("skill_wind")
-			emit_signal("prank_flash", Color(0.4, 0.9, 1.0, 0.30))  # 🔵 ฟ้าลม
+			var tornado_res = load("res://assets/textures/brackeys_vfx_bundle/particles/hurricane/hurricane.tscn")
+			if tornado_res:
+				var tornado = tornado_res.instantiate()
+				add_child(tornado)
+				tornado.position = Vector3(0, 0.5, 0)
+				tornado.scale = Vector3(4.0, 4.0, 4.0)
+				if "visibility_aabb" in tornado:
+					tornado.visibility_aabb = AABB(Vector3(-20, -20, -20), Vector3(40, 40, 40))
+				# Auto free after 4.0s (duration of wind_push)
+				get_tree().create_timer(4.0).timeout.connect(func(): if is_instance_valid(tornado): tornado.queue_free())
 		_:
 			AudioManager.play_sfx("skill_use")
 			emit_signal("prank_flash", Color(0.6, 0.0, 1.0, 0.30))
