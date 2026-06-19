@@ -5,7 +5,7 @@ extends Control
 # Skip: press Enter, Space, or Escape
 # =============================================================================
 
-const NEXT_SCENE = "res://scenes/main_menu/main_menu.tscn"
+const NEXT_SCENE = "res://cutscene/intro_cutscene.tscn"
 
 const OPENING_IMAGES: Array[String] = [
 	"res://cutscene/opening/openscene1.png",
