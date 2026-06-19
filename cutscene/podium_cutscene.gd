@@ -394,12 +394,13 @@ func _build_celebration_effects() -> void:
 	champion_banner = Label.new()
 	champion_banner.text = "CHAMPION"
 	champion_banner.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	champion_banner.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	champion_banner.vertical_alignment = VERTICAL_ALIGNMENT_TOP
 	champion_banner.layout_mode = 1
 	champion_banner.anchor_left = 0.0
 	champion_banner.anchor_right = 1.0
 	champion_banner.anchor_top = 0.0
 	champion_banner.anchor_bottom = 0.15
+	champion_banner.offset_top = 20
 	champion_banner.modulate = Color(1, 1, 1, 0)
 	champion_banner.visible = false
 	
