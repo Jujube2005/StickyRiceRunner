@@ -242,10 +242,10 @@ func _setup_shield_vfx():
 	
 	var mat = StandardMaterial3D.new()
 	mat.transparency = StandardMaterial3D.TRANSPARENCY_ALPHA
-	mat.albedo_color = Color(1.0, 0.8, 0.2, 0.3) # Golden translucent
+	mat.albedo_color = Color(1.0, 0.8, 0.2, 0.1) # Golden translucent (fainter)
 	mat.emission_enabled = true
 	mat.emission = Color(1.0, 0.6, 0.0)
-	mat.emission_energy_multiplier = 2.0
+	mat.emission_energy_multiplier = 1.0
 	shield_vfx.material_override = mat
 	
 	add_child(shield_vfx)
@@ -793,7 +793,7 @@ func _show_shield_vfx():
 	fade_tween.tween_callback(func(): 
 		shield_vfx.visible = false
 		shield_vfx.scale = Vector3.ONE
-		shield_vfx.material_override.albedo_color.a = 0.3
+		shield_vfx.material_override.albedo_color.a = 0.1
 	)
 
 func add_skill(skill_name: String) -> bool:

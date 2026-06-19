@@ -240,29 +240,9 @@ func _on_p2_kratip_changed(current: int, needed: int):
 	if p2_kratip_label:
 		p2_kratip_label.text = str(current) + "/" + str(needed)
 
-func _create_kratip_label(parent_node: Control) -> Label:
-	if !parent_node: return null
-	var lbl = Label.new()
-	lbl.name = "CountLabel"
-	
-	var ls = LabelSettings.new()
-	ls.font_size = 20
-	if font_resource: ls.font = font_resource
-	ls.font_color = Color.WHITE
-	ls.outline_size = 4
-	ls.outline_color = Color.BLACK
-	lbl.label_settings = ls
-	
-	if parent_node.get_parent().name == "TopRight":
-		# Position to the left of the kratip icon for Player 2
-		lbl.position = Vector2(-45, parent_node.size.y / 2.0 - 15)
-	else:
-		# Position to the right of the kratip icon for Player 1
-		lbl.position = Vector2(parent_node.size.x + 5, parent_node.size.y / 2.0 - 15)
-		
-	parent_node.add_child(lbl)
-	return lbl
-
+func _create_kratip_label(_parent_node: Control) -> Label:
+	# User requested to remove kratip counting numbers
+	return null
 func show_silk_fly_in(player_name: String, silk_name: String, silk_tex_path: String, is_new: bool):
 	# Start position = center of the player's own half-screen
 	var half_w = size.x / 2.0
