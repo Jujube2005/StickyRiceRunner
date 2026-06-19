@@ -4,6 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://bwu1pxobu8j8i" path="res://assets/textures/UI/Backgrounds/BG.png" id="2_bg"]
 [ext_resource type="Texture2D" uid="uid://b5gv2k1bjufe1" path="res://assets/textures/UI/Logo/game_logo.png" id="3_logo"]
 [ext_resource type="FontFile" uid="uid://iqch0hhb2rhf" path="res://assets/textures/UI/Font/Mitr/Mitr-Regular.ttf" id="4_uqeha"]
+[ext_resource type="Texture2D" uid="uid://d4ind4g5e4476" path="res://assets/textures/UI/Buttons/about.png" id="5_wem23"]
 
 [node name="MainMenu" type="Control" unique_id=577320393]
 layout_mode = 3
@@ -93,19 +94,20 @@ theme_override_font_sizes/font_size = 13
 text = "Version 0.1 By Hungry Sleep"
 horizontal_alignment = 1
 
-[node name="CreditsBtn" type="Button" parent="."]
+[node name="CreditsBtn" type="TextureButton" parent="."]
 layout_mode = 1
 anchors_preset = 3
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -120.0
-offset_top = -45.0
-offset_right = -12.0
-offset_bottom = -12.0
+offset_left = -70.0
+offset_top = -70.0
+offset_right = -20.0
+offset_bottom = -20.0
 grow_horizontal = 0
 grow_vertical = 0
-theme_override_fonts/font = ExtResource("4_uqeha")
-theme_override_font_sizes/font_size = 14
-text = "Credits"
+pivot_offset = Vector2(25, 25)
+texture_normal = ExtResource("5_wem23")
+ignore_texture_size = true
+stretch_mode = 5

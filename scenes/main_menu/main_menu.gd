@@ -30,7 +30,9 @@ func _ready():
 	$MenuContainer/ButtonList/HowToBtn.pressed.connect(_on_how_to_pressed)
 	$MenuContainer/ButtonList/CollectionBtn.pressed.connect(_on_collection_pressed)
 	$CreditsBtn.pressed.connect(_on_credits_pressed)
-	_apply_button_theme($CreditsBtn)
+	$CreditsBtn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	$CreditsBtn.mouse_entered.connect(func(): _animate_icon_button($CreditsBtn, true))
+	$CreditsBtn.mouse_exited.connect(func(): _animate_icon_button($CreditsBtn, false))
 	LanguageManager.language_changed.connect(func(_l): _update_button_texts())
 	
 	# เล่นเพลง Main Menu
@@ -110,7 +112,14 @@ func _animate_entrance():
 func _animate_button_hover(btn: Button, is_hover: bool):
 	var tween = create_tween()
 	if is_hover:
-		tween.tween_property(btn, "scale", Vector2(1.10, 1.10), 0.15).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+		tween.tween_property(btn, "scale", Vector2(1.05, 1.05), 0.1).set_trans(Tween.TRANS_SINE)
+	else:
+		tween.tween_property(btn, "scale", Vector2(1.0, 1.0), 0.15).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+
+func _animate_icon_button(btn: TextureButton, is_hover: bool):
+	var tween = create_tween()
+	if is_hover:
+		tween.tween_property(btn, "scale", Vector2(1.1, 1.1), 0.1).set_trans(Tween.TRANS_SINE)
 	else:
 		tween.tween_property(btn, "scale", Vector2(1.0, 1.0), 0.15).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 
