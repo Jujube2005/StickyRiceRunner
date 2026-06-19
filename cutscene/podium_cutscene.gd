@@ -440,7 +440,7 @@ func _build_celebration_effects() -> void:
 
 	# Banner
 	champion_banner = PanelContainer.new()
-	champion_banner.layout_mode = Control.LAYOUT_MODE_ANCHORS
+	champion_banner.layout_mode = 1
 	champion_banner.anchor_left = 0.2
 	champion_banner.anchor_right = 0.8
 	champion_banner.anchor_top = 0.05
@@ -478,7 +478,7 @@ func _build_celebration_effects() -> void:
 
 	# Buttons
 	new_btn_container = HBoxContainer.new()
-	new_btn_container.layout_mode = Control.LAYOUT_MODE_ANCHORS
+	new_btn_container.layout_mode = 1
 	new_btn_container.anchor_top = 1.0
 	new_btn_container.anchor_bottom = 1.0
 	new_btn_container.anchor_left = 0.0
