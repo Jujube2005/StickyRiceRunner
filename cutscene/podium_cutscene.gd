@@ -400,7 +400,7 @@ func _build_celebration_effects() -> void:
 	champion_banner.anchor_right = 1.0
 	champion_banner.anchor_top = 0.0
 	champion_banner.anchor_bottom = 0.15
-	champion_banner.offset_top = 20
+	champion_banner.offset_top = -40
 	champion_banner.modulate = Color(1, 1, 1, 0)
 	champion_banner.visible = false
 	
