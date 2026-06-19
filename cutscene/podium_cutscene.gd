@@ -112,6 +112,7 @@ func _ready() -> void:
 	# continue_btn.pressed.connect(_on_continue_pressed)
 
 	# Start sequence
+	AudioManager.play_music_by_name("musicEnd")
 	_run_sequence()
 
 func _run_sequence() -> void:

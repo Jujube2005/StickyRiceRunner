@@ -28,6 +28,10 @@ SkillProjectileManager="*res://scenes/shared_scripts/skill_projectile_manager.gd
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/sky_3d/plugin.cfg")
+
 [input]
 
 p1_left={
