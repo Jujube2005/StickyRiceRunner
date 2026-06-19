@@ -27,6 +27,9 @@ func _ready():
 	$MenuContainer/ButtonList/HowToBtn.pressed.connect(_on_how_to_pressed)
 	$MenuContainer/ButtonList/CollectionBtn.pressed.connect(_on_collection_pressed)
 	LanguageManager.language_changed.connect(func(_l): _update_button_texts())
+	
+	# เล่นเพลง Main Menu
+	AudioManager.play_music_by_name("musicMainMenu")
 
 func _setup_ui_styles():
 	# Ensure Logo does not block mouse clicks even if it overlaps
@@ -118,14 +121,12 @@ func _update_button_texts():
 
 # --- CALLBACKS ---
 func _on_play_pressed():
-	print("Starting game...")
-	var tween = create_tween()
-	tween.tween_property(self, "modulate:a", 0.0, 0.5)
-	tween.tween_callback(func(): 
-		var error = get_tree().change_scene_to_file("res://scenes/main/main.tscn")
-		if error != OK:
-			print("Error loading game scene: ", error)
-	)
+	if has_node("SelectMode"):
+		return
+	var select_mode_scene = load("res://scenes/main_menu/select_mode.tscn")
+	var select_mode_instance = select_mode_scene.instantiate()
+	select_mode_instance.name = "SelectMode"
+	add_child(select_mode_instance)
 
 func _on_settings_pressed():
 	if has_node("SettingsMenu"):

@@ -62,9 +62,30 @@ func play_music(stream: AudioStream, loop := true):
 	_music_player.stream     = stream
 	_music_player.volume_db  = _music_volume_db
 	_music_player.bus        = "Music" if AudioServer.get_bus_index("Music") != -1 else "Master"
-	if loop and stream is AudioStreamWAV:
-		(stream as AudioStreamWAV).loop_mode = AudioStreamWAV.LOOP_FORWARD
+	if loop:
+		if stream is AudioStreamMP3:
+			(stream as AudioStreamMP3).loop = true
+		elif stream is AudioStreamWAV:
+			(stream as AudioStreamWAV).loop_mode = AudioStreamWAV.LOOP_FORWARD
 	_music_player.play()
+
+func play_music_by_name(file_name: String, loop := true):
+	# file_name: e.g. "musicInGame" or "musicMainMenu" (without extension)
+	var extensions: Array[String] = [".mp3", ".wav", ".ogg"]
+	for ext in extensions:
+		var path: String = AUDIO_DIR + file_name + ext
+		if ResourceLoader.exists(path):
+			var stream = load(path)
+			play_music(stream, loop)
+			print("[Audio] Playing music: ", path)
+			return
+	print("[Audio] WARNING: Music file not found: ", file_name)
+
+func stop_music():
+	if _music_player:
+		_music_player.stop()
+		_music_player.queue_free()
+		_music_player = null
 
 func set_sfx_volume(linear: float):
 	_sfx_volume_db = linear_to_db(max(linear, 0.001))

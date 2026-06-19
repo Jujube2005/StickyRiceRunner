@@ -45,6 +45,8 @@ var game_ended = false
 func _ready():
 	ui_gameover.visible = false
 	_spawn_players()
+	# เล่นเพลง In-Game
+	AudioManager.play_music_by_name("musicInGame")
 
 func _spawn_players():
 	var players_node = get_node("../Players")
@@ -261,6 +263,7 @@ func _determine_winner_by_score():
 	game_over(winner)
 
 func game_over(winner_text: String):
+	AudioManager.stop_music()
 	var spawner = get_parent().get_node("ObstacleSpawner")
 	if spawner: spawner.set_process(false)
 	var players_root = get_parent().get_node("Players")

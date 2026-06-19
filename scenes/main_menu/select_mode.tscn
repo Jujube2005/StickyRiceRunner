@@ -1,0 +1,246 @@
+[gd_scene format=3 uid="uid://cv8epi0ekcnsy"]
+
+[ext_resource type="Script" uid="uid://byotllcieu0d5" path="res://scenes/main_menu/select_mode.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://cdo4b81jc1e7e" path="res://assets/textures/UI/Buttons/title_header.png" id="2_8li85"]
+[ext_resource type="Texture2D" uid="uid://bwu1pxobu8j8i" path="res://assets/textures/UI/Backgrounds/BG.png" id="2_jxamu"]
+[ext_resource type="Texture2D" uid="uid://bhsve3pa8sgpx" path="res://assets/textures/UI/Buttons/wooden_sign.png" id="3_title"]
+[ext_resource type="FontFile" uid="uid://2d6rvw7lnbb6" path="res://assets/textures/UI/Font/Mitr/Mitr-Bold.ttf" id="4_font"]
+[ext_resource type="Texture2D" uid="uid://dr4g0lewx4iau" path="res://assets/textures/UI/Buttons/popup_paused.png" id="5_jxamu"]
+[ext_resource type="Texture2D" uid="uid://ddlfr5ngk7i1a" path="res://assets/textures/UI/Buttons/btn_play.png" id="5_play"]
+[ext_resource type="Texture2D" uid="uid://dnvchpd7n2b0x" path="res://assets/textures/UI/Buttons/close.png" id="6_close"]
+
+[node name="SelectMode" type="Control" unique_id=779840873]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_script")
+
+[node name="Background" type="TextureRect" parent="." unique_id=849664120]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_jxamu")
+expand_mode = 1
+
+[node name="Overlay" type="ColorRect" parent="." unique_id=1921360358]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.35)
+
+[node name="Content" type="Control" parent="." unique_id=774113228]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Header" type="TextureRect" parent="Content" unique_id=2094274029]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -259.99997
+offset_top = 20.000002
+offset_right = 402.0
+offset_bottom = 212.0
+grow_horizontal = 2
+scale = Vector2(0.7865655, 0.7865655)
+texture = ExtResource("2_8li85")
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="Content/Header" unique_id=2119115454]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -217.84991
+offset_top = -47.688698
+offset_right = 182.15009
+offset_bottom = 41.31131
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.0901961, 1.0901961)
+theme_override_colors/font_color = Color(0.99, 0.96, 0.89, 1)
+theme_override_colors/font_outline_color = Color(0.29, 0.16, 0.07, 1)
+theme_override_constants/outline_size = 20
+theme_override_fonts/font = ExtResource("4_font")
+theme_override_font_sizes/font_size = 56
+text = "SELECT MODE"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="Content/Header" unique_id=226613994]
+layout_mode = 0
+offset_left = 151.29062
+offset_top = 133.49174
+offset_right = 502.7424
+offset_bottom = 273.34027
+texture = ExtResource("3_title")
+expand_mode = 1
+
+[node name="LabelSub" type="Label" parent="Content/Header/TextureRect" unique_id=1882010675]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -204.96695
+offset_top = -96.62263
+offset_right = 95.03305
+offset_bottom = -56.622627
+grow_horizontal = 2
+grow_vertical = 0
+scale = Vector2(1.39432, 1.39432)
+theme_override_colors/font_color = Color(0.99, 0.96, 0.89, 1)
+theme_override_colors/font_outline_color = Color(0.29, 0.16, 0.07, 1)
+theme_override_constants/outline_size = 12
+theme_override_fonts/font = ExtResource("4_font")
+theme_override_font_sizes/font_size = 24
+text = "เลือกโหมดการเล่น"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Modes" type="HBoxContainer" parent="Content" unique_id=2078821627]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -450.0
+offset_top = -60.0
+offset_right = 450.0
+offset_bottom = 260.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 120
+alignment = 1
+
+[node name="RaceBtn" type="TextureButton" parent="Content/Modes" unique_id=900129093]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(320, 320)
+layout_mode = 2
+texture_normal = ExtResource("5_jxamu")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="Content/Modes/RaceBtn" unique_id=1721269223]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -147.0
+offset_top = -107.0
+offset_right = 133.0
+offset_bottom = 19.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.99, 0.96, 0.89, 1)
+theme_override_colors/font_outline_color = Color(0.29, 0.16, 0.07, 1)
+theme_override_constants/line_spacing = -20
+theme_override_constants/outline_size = 18
+theme_override_fonts/font = ExtResource("4_font")
+theme_override_font_sizes/font_size = 46
+text = "Race 
+Mode"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="PlayIcon" type="TextureRect" parent="Content/Modes/RaceBtn" unique_id=1267066263]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -47.0
+offset_top = -112.0
+offset_right = 53.0
+offset_bottom = -12.0
+grow_horizontal = 2
+grow_vertical = 0
+scale = Vector2(0.7710459, 0.7710459)
+texture = ExtResource("5_play")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="EndlessBtn" type="TextureButton" parent="Content/Modes" unique_id=2065438510]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(320, 320)
+layout_mode = 2
+texture_normal = ExtResource("5_jxamu")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="Content/Modes/EndlessBtn" unique_id=1222152993]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -162.0
+offset_top = -123.0
+offset_right = 158.0
+offset_bottom = 26.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.99, 0.96, 0.89, 1)
+theme_override_colors/font_outline_color = Color(0.29, 0.16, 0.07, 1)
+theme_override_constants/line_spacing = -20
+theme_override_constants/outline_size = 18
+theme_override_fonts/font = ExtResource("4_font")
+theme_override_font_sizes/font_size = 46
+text = "Endless 
+Mode"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="PlayIcon" type="TextureRect" parent="Content/Modes/EndlessBtn" unique_id=1795215003]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -41.0
+offset_top = -112.0
+offset_right = 59.0
+offset_bottom = -12.0
+grow_horizontal = 2
+grow_vertical = 0
+scale = Vector2(0.7795063, 0.7795063)
+texture = ExtResource("5_play")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CloseBtn" type="TextureButton" parent="Content" unique_id=1665028071]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -83.0
+offset_top = 25.0
+offset_right = -23.0
+offset_bottom = 85.0
+grow_horizontal = 0
+texture_normal = ExtResource("6_close")
+ignore_texture_size = true
+stretch_mode = 5
