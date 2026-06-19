@@ -363,52 +363,39 @@ func _build_celebration_effects() -> void:
 		char_node.add_child(slabel)
 		score_labels.append(slabel)
 
-	# Confetti
-	confetti_node = CPUParticles2D.new()
-	confetti_node.texture = load("res://assets/textures/brackeys_vfx_bundle/particles/alpha/circle_01_a.png")
-	confetti_node.position = Vector2(960, -50)
-	confetti_node.emission_shape = CPUParticles2D.EMISSION_SHAPE_RECTANGLE
-	confetti_node.emission_rect_extents = Vector2(960, 10)
-	confetti_node.direction = Vector2(0, 1)
-	confetti_node.spread = 20
-	confetti_node.gravity = Vector2(0, 300)
-	confetti_node.initial_velocity_min = 50
-	confetti_node.initial_velocity_max = 200
-	confetti_node.angular_velocity_min = -100
-	confetti_node.angular_velocity_max = 100
-	confetti_node.scale_amount_min = 0.05
-	confetti_node.scale_amount_max = 0.15
-	var grad = Gradient.new()
-	grad.add_point(0.0, Color.RED)
-	grad.add_point(0.25, Color.GREEN)
-	grad.add_point(0.5, Color.BLUE)
-	grad.add_point(0.75, Color.YELLOW)
-	grad.add_point(1.0, Color.MAGENTA)
-	confetti_node.color_initial_ramp = grad
-	confetti_node.amount = 150
-	confetti_node.lifetime = 5.0
-	confetti_node.emitting = false
-	add_child(confetti_node)
+	# Confetti (Paper fireworks from corners)
+	var cf_setup = func(cf: CPUParticles2D, pos: Vector2, dir: Vector2):
+		cf.texture = load("res://assets/textures/brackeys_vfx_bundle/particles/alpha/circle_01_a.png")
+		cf.position = pos
+		cf.direction = dir
+		cf.spread = 30
+		cf.gravity = Vector2(0, 600)
+		cf.initial_velocity_min = 800
+		cf.initial_velocity_max = 1400
+		cf.angular_velocity_min = -200
+		cf.angular_velocity_max = 200
+		cf.scale_amount_min = 0.05
+		cf.scale_amount_max = 0.15
+		var grad = Gradient.new()
+		grad.add_point(0.0, Color.RED)
+		grad.add_point(0.25, Color.GREEN)
+		grad.add_point(0.5, Color.BLUE)
+		grad.add_point(0.75, Color.YELLOW)
+		grad.add_point(1.0, Color.MAGENTA)
+		cf.color_initial_ramp = grad
+		cf.amount = 100
+		cf.lifetime = 3.0
+		cf.explosiveness = 0.8
+		cf.emitting = false
+		cf.one_shot = true
+		add_child(cf)
 
-	# Stars
-	stars_node = CPUParticles2D.new()
-	stars_node.texture = load("res://assets/textures/brackeys_vfx_bundle/particles/alpha/star_01_a.png")
-	stars_node.position = Vector2(char_1st.size.x/2, char_1st.size.y/2)
-	stars_node.emission_shape = CPUParticles2D.EMISSION_SHAPE_SPHERE
-	stars_node.emission_sphere_radius = 180
-	stars_node.gravity = Vector2(0, -50)
-	stars_node.scale_amount_min = 0.03
-	stars_node.scale_amount_max = 0.1
-	var star_grad = Gradient.new()
-	star_grad.add_point(0.0, Color(1,1,1,0))
-	star_grad.add_point(0.2, Color(1,1,0.5,1))
-	star_grad.add_point(0.8, Color(1,1,0.5,1))
-	star_grad.add_point(1.0, Color(1,1,1,0))
-	stars_node.color_ramp = star_grad
-	stars_node.amount = 30
-	stars_node.lifetime = 2.0
-	stars_node.emitting = false
-	char_1st.add_child(stars_node)
+	confetti_node = CPUParticles2D.new()
+	cf_setup.call(confetti_node, Vector2(100, 1080), Vector2(1, -1.5))
+	
+	var confetti_right = CPUParticles2D.new()
+	cf_setup.call(confetti_right, Vector2(1820, 1080), Vector2(-1, -1.5))
+	stars_node = confetti_right # Repurpose stars_node to trigger right confetti
 
 	# Fireworks
 	var fw_setup = func(fw: CPUParticles2D, pos: Vector2):
@@ -468,12 +455,6 @@ func _build_celebration_effects() -> void:
 	title.add_theme_constant_override("outline_size", 12)
 	vbox.add_child(title)
 	
-	var subtitle = Label.new()
-	subtitle.text = "Sticky Rice Runner"
-	subtitle.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	subtitle.add_theme_font_size_override("font_size", 30)
-	vbox.add_child(subtitle)
-	
 	add_child(champion_banner)
 
 	# Buttons
@@ -489,22 +470,14 @@ func _build_celebration_effects() -> void:
 	new_btn_container.add_theme_constant_override("separation", 50)
 	new_btn_container.visible = false
 	
-	var m_btn = Button.new()
-	m_btn.text = " 🏠 Main Menu "
-	m_btn.add_theme_font_size_override("font_size", 36)
+	var m_btn = TextureButton.new()
+	m_btn.texture_normal = load("res://assets/textures/UI/Buttons/btn_menu.png")
 	m_btn.pressed.connect(_on_menu_pressed)
 	new_btn_container.add_child(m_btn)
 	
-	var r_btn = Button.new()
-	r_btn.text = " 🔄 Play Again "
-	r_btn.add_theme_font_size_override("font_size", 36)
+	var r_btn = TextureButton.new()
+	r_btn.texture_normal = load("res://assets/textures/UI/Buttons/btn_restart.png")
 	r_btn.pressed.connect(_on_restart_pressed)
 	new_btn_container.add_child(r_btn)
-	
-	var res_btn = Button.new()
-	res_btn.text = " 📊 View Results "
-	res_btn.add_theme_font_size_override("font_size", 36)
-	res_btn.pressed.connect(_on_results_pressed)
-	new_btn_container.add_child(res_btn)
 	
 	add_child(new_btn_container)
