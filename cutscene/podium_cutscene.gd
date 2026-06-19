@@ -70,7 +70,20 @@ func _ready() -> void:
 		
 		# Move podium down and characters up so they stand on the boxes
 		podium_bg.position.y += 80
-		$Podium.position.y -= 160
+		$Podium.position.y -= 85
+		
+		# ---- ปรับให้คนที่ 2 และ 3 ยืนต่ำลงมาเพื่อให้พอดีกับกล่อง ----
+		var side_offset = 60  # <<-- แก้ตัวเลขตรงนี้! (ยิ่งเยอะ คนข้างๆ ยิ่งต่ำลง)
+		
+		# ปรับคนที่ 2 (ซ้าย)
+		char_2nd.position.y += side_offset
+		label_2nd.position.y += side_offset
+		rank_label_2nd.position.y += side_offset
+		
+		# ปรับคนที่ 3 (ขวา)
+		char_3rd.position.y += side_offset
+		label_3rd.position.y += side_offset
+		rank_label_3rd.position.y += side_offset
 	, CONNECT_ONE_SHOT)
 
 	# Hide all chars initially
