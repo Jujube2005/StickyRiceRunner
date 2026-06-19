@@ -4,8 +4,9 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://cdhlj5eiybe20"
 path.s3tc="res://.godot/imported/ambulan-v1_5.webp-f5e4ebb3ec55e7e31b8c25cad5097814.s3tc.ctex"
+path.etc2="res://.godot/imported/ambulan-v1_5.webp-f5e4ebb3ec55e7e31b8c25cad5097814.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -15,7 +16,7 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/models/ground/ambulan-v1_5.webp"
-dest_files=["res://.godot/imported/ambulan-v1_5.webp-f5e4ebb3ec55e7e31b8c25cad5097814.s3tc.ctex"]
+dest_files=["res://.godot/imported/ambulan-v1_5.webp-f5e4ebb3ec55e7e31b8c25cad5097814.s3tc.ctex", "res://.godot/imported/ambulan-v1_5.webp-f5e4ebb3ec55e7e31b8c25cad5097814.etc2.ctex"]
 
 [params]
 

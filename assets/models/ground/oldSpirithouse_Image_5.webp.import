@@ -4,8 +4,9 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://cxwl8ssgo2i64"
 path.s3tc="res://.godot/imported/oldSpirithouse_Image_5.webp-7890a53dfc4173fd464c69a811bd564f.s3tc.ctex"
+path.etc2="res://.godot/imported/oldSpirithouse_Image_5.webp-7890a53dfc4173fd464c69a811bd564f.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -15,7 +16,7 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/models/ground/oldSpirithouse_Image_5.webp"
-dest_files=["res://.godot/imported/oldSpirithouse_Image_5.webp-7890a53dfc4173fd464c69a811bd564f.s3tc.ctex"]
+dest_files=["res://.godot/imported/oldSpirithouse_Image_5.webp-7890a53dfc4173fd464c69a811bd564f.s3tc.ctex", "res://.godot/imported/oldSpirithouse_Image_5.webp-7890a53dfc4173fd464c69a811bd564f.etc2.ctex"]
 
 [params]
 

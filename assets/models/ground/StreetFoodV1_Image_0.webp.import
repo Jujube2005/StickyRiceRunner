@@ -4,8 +4,9 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://c0aiymtylcuv1"
 path.s3tc="res://.godot/imported/StreetFoodV1_Image_0.webp-9af77a18b20e4c0027628be0b3c70a6b.s3tc.ctex"
+path.etc2="res://.godot/imported/StreetFoodV1_Image_0.webp-9af77a18b20e4c0027628be0b3c70a6b.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -15,7 +16,7 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/models/ground/StreetFoodV1_Image_0.webp"
-dest_files=["res://.godot/imported/StreetFoodV1_Image_0.webp-9af77a18b20e4c0027628be0b3c70a6b.s3tc.ctex"]
+dest_files=["res://.godot/imported/StreetFoodV1_Image_0.webp-9af77a18b20e4c0027628be0b3c70a6b.s3tc.ctex", "res://.godot/imported/StreetFoodV1_Image_0.webp-9af77a18b20e4c0027628be0b3c70a6b.etc2.ctex"]
 
 [params]
 

@@ -4,8 +4,9 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://bcxeys0y5iqnv"
 path.s3tc="res://.godot/imported/bigrock_2.webp-33d5cc0aafb3ff913c9e391aacd48abb.s3tc.ctex"
+path.etc2="res://.godot/imported/bigrock_2.webp-33d5cc0aafb3ff913c9e391aacd48abb.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -15,7 +16,7 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/models/kratip/bigrock_2.webp"
-dest_files=["res://.godot/imported/bigrock_2.webp-33d5cc0aafb3ff913c9e391aacd48abb.s3tc.ctex"]
+dest_files=["res://.godot/imported/bigrock_2.webp-33d5cc0aafb3ff913c9e391aacd48abb.s3tc.ctex", "res://.godot/imported/bigrock_2.webp-33d5cc0aafb3ff913c9e391aacd48abb.etc2.ctex"]
 
 [params]
 

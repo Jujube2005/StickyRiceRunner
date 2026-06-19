@@ -4,8 +4,9 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://clctlprar44pj"
 path.s3tc="res://.godot/imported/Kiln_Image_2.webp-6f8bae2265dadb38fffdcb059e9f5616.s3tc.ctex"
+path.etc2="res://.godot/imported/Kiln_Image_2.webp-6f8bae2265dadb38fffdcb059e9f5616.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -15,7 +16,7 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/models/ground/Kiln_Image_2.webp"
-dest_files=["res://.godot/imported/Kiln_Image_2.webp-6f8bae2265dadb38fffdcb059e9f5616.s3tc.ctex"]
+dest_files=["res://.godot/imported/Kiln_Image_2.webp-6f8bae2265dadb38fffdcb059e9f5616.s3tc.ctex", "res://.godot/imported/Kiln_Image_2.webp-6f8bae2265dadb38fffdcb059e9f5616.etc2.ctex"]
 
 [params]
 

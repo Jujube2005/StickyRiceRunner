@@ -4,8 +4,9 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://dsrj6o72mk5rw"
 path.s3tc="res://.godot/imported/Rice_Image_1.webp-3a8cb5e6586fc4ff75dac7f633c36458.s3tc.ctex"
+path.etc2="res://.godot/imported/Rice_Image_1.webp-3a8cb5e6586fc4ff75dac7f633c36458.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -15,7 +16,7 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/models/kratip/Rice_Image_1.webp"
-dest_files=["res://.godot/imported/Rice_Image_1.webp-3a8cb5e6586fc4ff75dac7f633c36458.s3tc.ctex"]
+dest_files=["res://.godot/imported/Rice_Image_1.webp-3a8cb5e6586fc4ff75dac7f633c36458.s3tc.ctex", "res://.godot/imported/Rice_Image_1.webp-3a8cb5e6586fc4ff75dac7f633c36458.etc2.ctex"]
 
 [params]
 

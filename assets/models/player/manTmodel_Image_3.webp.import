@@ -4,8 +4,9 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://gwyb50qpgp0g"
 path.s3tc="res://.godot/imported/manTmodel_Image_3.webp-e6f15e24c560bf27e4967d1aee7e82d9.s3tc.ctex"
+path.etc2="res://.godot/imported/manTmodel_Image_3.webp-e6f15e24c560bf27e4967d1aee7e82d9.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -15,7 +16,7 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/models/player/manTmodel_Image_3.webp"
-dest_files=["res://.godot/imported/manTmodel_Image_3.webp-e6f15e24c560bf27e4967d1aee7e82d9.s3tc.ctex"]
+dest_files=["res://.godot/imported/manTmodel_Image_3.webp-e6f15e24c560bf27e4967d1aee7e82d9.s3tc.ctex", "res://.godot/imported/manTmodel_Image_3.webp-e6f15e24c560bf27e4967d1aee7e82d9.etc2.ctex"]
 
 [params]
 

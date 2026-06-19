@@ -177,7 +177,7 @@ func _load_model():
 	if !model_file:
 		return
 		
-	if !FileAccess.file_exists(model_file):
+	if !ResourceLoader.exists(model_file):
 		print("[MODEL] File not found: ", model_file)
 		return
 		
@@ -1003,8 +1003,15 @@ func _auto_assign_files():
 		if !jump_file: jump_file = "res://assets/animation/jump.glb"
 		if !stun_file: stun_file = "res://assets/animation/Stun.glb"
 
+		# 🧨 SAFETY CHECK ใส่ตรงนี้ ใส่เพิ่มมา
+	if model_file and ResourceLoader.exists(model_file):
+		print("MODEL OK:", model_file)
+	else:
+		push_error("Missing model file: " + str(model_file))
+		return
+
 func _import_anim(path: String, target_name: String):
-	if !FileAccess.file_exists(path): 
+	if !ResourceLoader.exists(path): 
 		print("[ANIM] File not found: ", path)
 		return
 		

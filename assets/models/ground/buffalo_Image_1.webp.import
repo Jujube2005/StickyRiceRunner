@@ -4,8 +4,9 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://clohfx04eh5nx"
 path.s3tc="res://.godot/imported/buffalo_Image_1.webp-06d543ded21ed367ad344421f28ff863.s3tc.ctex"
+path.etc2="res://.godot/imported/buffalo_Image_1.webp-06d543ded21ed367ad344421f28ff863.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -15,7 +16,7 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/models/ground/buffalo_Image_1.webp"
-dest_files=["res://.godot/imported/buffalo_Image_1.webp-06d543ded21ed367ad344421f28ff863.s3tc.ctex"]
+dest_files=["res://.godot/imported/buffalo_Image_1.webp-06d543ded21ed367ad344421f28ff863.s3tc.ctex", "res://.godot/imported/buffalo_Image_1.webp-06d543ded21ed367ad344421f28ff863.etc2.ctex"]
 
 [params]
 

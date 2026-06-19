@@ -4,8 +4,9 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://cught1wjelmvl"
 path.s3tc="res://.godot/imported/Phimai_2.webp-b917a01824c4c04347dec524b51b26b0.s3tc.ctex"
+path.etc2="res://.godot/imported/Phimai_2.webp-b917a01824c4c04347dec524b51b26b0.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -15,7 +16,7 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/models/ground/Phimai_2.webp"
-dest_files=["res://.godot/imported/Phimai_2.webp-b917a01824c4c04347dec524b51b26b0.s3tc.ctex"]
+dest_files=["res://.godot/imported/Phimai_2.webp-b917a01824c4c04347dec524b51b26b0.s3tc.ctex", "res://.godot/imported/Phimai_2.webp-b917a01824c4c04347dec524b51b26b0.etc2.ctex"]
 
 [params]
 
