@@ -126,13 +126,13 @@ func _update_button_texts():
 func _on_play_pressed():
 	if has_node("SelectMode"):
 		return
-	# Play cutscene once per session on the first Play press
-	if not _cutscene_played_this_session:
-		_cutscene_played_this_session = true
-		# Launch opening → intro cutscene, which ends at select_mode
-		get_tree().change_scene_to_file("res://cutscene/opening_cutscene.tscn")
-		return
-	# Subsequent presses: go straight to SelectMode
+	# TODO: Play cutscene once per session on the first Play press (hidden for now)
+	# if not _cutscene_played_this_session:
+	# 	_cutscene_played_this_session = true
+	# 	get_tree().change_scene_to_file("res://cutscene/opening_cutscene.tscn")
+	# 	return
+
+	# Go straight to SelectMode
 	var select_mode_scene = load("res://scenes/main_menu/select_mode.tscn")
 	var select_mode_instance = select_mode_scene.instantiate()
 	select_mode_instance.name = "SelectMode"
