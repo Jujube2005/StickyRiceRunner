@@ -22,7 +22,7 @@
 [ext_resource type="Texture2D" uid="uid://c63tshlsmuwvs" path="res://assets/textures/UI/Buttons/bg1.png" id="17_s46g7"]
 [ext_resource type="Texture2D" uid="uid://dd2pqki3ugew2" path="res://assets/textures/UI/Buttons/bg3.png" id="19_mhyp6"]
 
-[node name="GameOverPanel" type="Panel" unique_id=311387029]
+[node name="GameOverPanel2" type="Panel" unique_id=311387029]
 z_index = 10
 anchors_preset = 15
 anchor_right = 1.0
@@ -77,10 +77,10 @@ stretch_mode = 5
 
 [node name="TextureRect" type="TextureRect" parent="Board/Paper" unique_id=1714633232]
 layout_mode = 0
-offset_left = 115.88397
+offset_left = 91.859245
 offset_top = 440.92426
-offset_right = 1470.092
-offset_bottom = 1010.31024
+offset_right = 1597.7386
+offset_bottom = 1015.6823
 scale = Vector2(0.26089397, 0.26309252)
 texture = ExtResource("4_s4b4v")
 expand_mode = 1
@@ -406,7 +406,7 @@ custom_minimum_size = Vector2(0, 2)
 layout_mode = 2
 color = Color(0.6, 0.4, 0.2, 0.5)
 
-[node name="Top3Wrapper" type="VBoxContainer" parent="Board/Paper/VBox"]
+[node name="Top3Wrapper" type="VBoxContainer" parent="Board/Paper/VBox" unique_id=1907195100]
 layout_mode = 2
 theme_override_constants/separation = -5
 
