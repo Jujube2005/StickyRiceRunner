@@ -335,7 +335,7 @@ func _build_celebration_effects() -> void:
 	spotlight_node.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	spotlight_node.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	spotlight_node.modulate = Color(1, 1, 0.8, 0.7)
-	spotlight_node.layout_mode = Control.LAYOUT_MODE_ANCHORS
+	spotlight_node.layout_mode = 1
 	spotlight_node.anchor_left = 0.35
 	spotlight_node.anchor_right = 0.65
 	spotlight_node.anchor_top = -0.5
@@ -349,7 +349,7 @@ func _build_celebration_effects() -> void:
 	for char_node in [char_1st, char_2nd, char_3rd]:
 		var slabel = Label.new()
 		slabel.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		slabel.layout_mode = Control.LAYOUT_MODE_ANCHORS
+		slabel.layout_mode = 1
 		slabel.anchor_top = 1.05
 		slabel.anchor_bottom = 1.2
 		slabel.anchor_left = -0.5
@@ -507,4 +507,3 @@ func _build_celebration_effects() -> void:
 	new_btn_container.add_child(res_btn)
 	
 	add_child(new_btn_container)
-
