@@ -148,18 +148,21 @@ func show_result(winner_name: String, _p1_score: int, _p2_score: int, _p1_distan
 		if p1_avatar: p1_avatar.texture = tex_p1_lose
 		if p2_avatar: p2_avatar.texture = tex_p2_lose
 
-	# Launch Podium Cutscene instead of showing board immediately
-	var p1_char = "man"   # default — extend later per character selection
-	var p2_char = "woman"
-	var podium_script = load("res://cutscene/podium_cutscene.gd")
-	var _podium_instance = podium_script.launch(
-		get_tree(),
-		winner_name,
-		p1_char, p2_char,
-		p1_kratips, p2_kratips,
-		p1_dist, p2_dist,
-		_show_board
-	)
+	# TODO: Launch Podium Cutscene instead of showing board immediately (hidden for now)
+	# var p1_char = "man"   # default — extend later per character selection
+	# var p2_char = "woman"
+	# var podium_script = load("res://cutscene/podium_cutscene.gd")
+	# var _podium_instance = podium_script.launch(
+	# 	get_tree(),
+	# 	winner_name,
+	# 	p1_char, p2_char,
+	# 	p1_kratips, p2_kratips,
+	# 	p1_dist, p2_dist,
+	# 	_show_board
+	# )
+
+	# Go straight to the board for now
+	_show_board()
 
 func _show_board() -> void:
 	# Pop-in animation using the editor-defined scale
