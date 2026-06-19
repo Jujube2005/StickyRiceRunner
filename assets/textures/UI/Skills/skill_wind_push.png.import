@@ -2,12 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cpms280k2wjgb"
-valid=false
+uid="uid://87bqcdbtvscm"
+path="res://.godot/imported/skill_wind_push.png-03188afe9165edbb1d79651a71b44994.ctex"
+metadata={
+"vram_texture": false
+}
 
 [deps]
 
 source_file="res://assets/textures/UI/Skills/skill_wind_push.png"
+dest_files=["res://.godot/imported/skill_wind_push.png-03188afe9165edbb1d79651a71b44994.ctex"]
 
 [params]
 
