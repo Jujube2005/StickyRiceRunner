@@ -406,7 +406,11 @@ custom_minimum_size = Vector2(0, 2)
 layout_mode = 2
 color = Color(0.6, 0.4, 0.2, 0.5)
 
-[node name="Top3Header" type="Label" parent="Board/Paper/VBox" unique_id=1475395685]
+[node name="Top3Wrapper" type="VBoxContainer" parent="Board/Paper/VBox"]
+layout_mode = 2
+theme_override_constants/separation = -5
+
+[node name="Top3Header" type="Label" parent="Board/Paper/VBox/Top3Wrapper" unique_id=1475395685]
 layout_mode = 2
 size_flags_vertical = 0
 size_flags_stretch_ratio = 0.5
@@ -416,29 +420,29 @@ theme_override_font_sizes/font_size = 16
 text = "top 3 fastest time"
 horizontal_alignment = 1
 
-[node name="Top3" type="HBoxContainer" parent="Board/Paper/VBox" unique_id=2132080962]
+[node name="Top3" type="HBoxContainer" parent="Board/Paper/VBox/Top3Wrapper" unique_id=2132080962]
 layout_mode = 2
 size_flags_stretch_ratio = 0.0
 theme_override_constants/separation = 5
 alignment = 1
 
-[node name="Time2nd" type="VBoxContainer" parent="Board/Paper/VBox/Top3" unique_id=833729161]
+[node name="Time2nd" type="VBoxContainer" parent="Board/Paper/VBox/Top3Wrapper/Top3" unique_id=833729161]
 layout_mode = 2
 alignment = 2
 
-[node name="Medal" type="TextureRect" parent="Board/Paper/VBox/Top3/Time2nd" unique_id=1009681676]
+[node name="Medal" type="TextureRect" parent="Board/Paper/VBox/Top3Wrapper/Top3/Time2nd" unique_id=1009681676]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 texture = ExtResource("14_icon_2nd")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Panel" type="TextureRect" parent="Board/Paper/VBox/Top3/Time2nd" unique_id=535708710]
+[node name="Panel" type="TextureRect" parent="Board/Paper/VBox/Top3Wrapper/Top3/Time2nd" unique_id=535708710]
 custom_minimum_size = Vector2(80, 20)
 layout_mode = 2
 texture = ExtResource("16_fsi3f")
 
-[node name="Label" type="Label" parent="Board/Paper/VBox/Top3/Time2nd/Panel" unique_id=6472000]
+[node name="Label" type="Label" parent="Board/Paper/VBox/Top3Wrapper/Top3/Time2nd/Panel" unique_id=6472000]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -452,23 +456,23 @@ text = "--:--"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Time1st" type="VBoxContainer" parent="Board/Paper/VBox/Top3" unique_id=549737591]
+[node name="Time1st" type="VBoxContainer" parent="Board/Paper/VBox/Top3Wrapper/Top3" unique_id=549737591]
 layout_mode = 2
 alignment = 2
 
-[node name="Medal" type="TextureRect" parent="Board/Paper/VBox/Top3/Time1st" unique_id=1990371146]
+[node name="Medal" type="TextureRect" parent="Board/Paper/VBox/Top3Wrapper/Top3/Time1st" unique_id=1990371146]
 custom_minimum_size = Vector2(60, 60)
 layout_mode = 2
 texture = ExtResource("9_big_trophy")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Panel" type="TextureRect" parent="Board/Paper/VBox/Top3/Time1st" unique_id=1443370037]
+[node name="Panel" type="TextureRect" parent="Board/Paper/VBox/Top3Wrapper/Top3/Time1st" unique_id=1443370037]
 custom_minimum_size = Vector2(80, 20)
 layout_mode = 2
 texture = ExtResource("17_s46g7")
 
-[node name="Label" type="Label" parent="Board/Paper/VBox/Top3/Time1st/Panel" unique_id=1553479103]
+[node name="Label" type="Label" parent="Board/Paper/VBox/Top3Wrapper/Top3/Time1st/Panel" unique_id=1553479103]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -482,23 +486,23 @@ text = "--:--"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Time3rd" type="VBoxContainer" parent="Board/Paper/VBox/Top3" unique_id=623930033]
+[node name="Time3rd" type="VBoxContainer" parent="Board/Paper/VBox/Top3Wrapper/Top3" unique_id=623930033]
 layout_mode = 2
 alignment = 2
 
-[node name="Medal" type="TextureRect" parent="Board/Paper/VBox/Top3/Time3rd" unique_id=1351618450]
+[node name="Medal" type="TextureRect" parent="Board/Paper/VBox/Top3Wrapper/Top3/Time3rd" unique_id=1351618450]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 texture = ExtResource("15_icon_3rd")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Panel" type="TextureRect" parent="Board/Paper/VBox/Top3/Time3rd" unique_id=1441818406]
+[node name="Panel" type="TextureRect" parent="Board/Paper/VBox/Top3Wrapper/Top3/Time3rd" unique_id=1441818406]
 custom_minimum_size = Vector2(80, 20)
 layout_mode = 2
 texture = ExtResource("19_mhyp6")
 
-[node name="Label" type="Label" parent="Board/Paper/VBox/Top3/Time3rd/Panel" unique_id=1703310293]
+[node name="Label" type="Label" parent="Board/Paper/VBox/Top3Wrapper/Top3/Time3rd/Panel" unique_id=1703310293]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
