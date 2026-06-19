@@ -486,7 +486,7 @@ func _build_celebration_effects() -> void:
 	new_btn_container.offset_top = -120
 	new_btn_container.offset_bottom = -40
 	new_btn_container.alignment = BoxContainer.ALIGNMENT_CENTER
-	new_btn_container.theme_override_constants = {"separation": 50}
+	new_btn_container.add_theme_constant_override("separation", 50)
 	new_btn_container.visible = false
 	
 	var m_btn = Button.new()
