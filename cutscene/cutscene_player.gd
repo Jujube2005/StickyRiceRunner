@@ -83,6 +83,8 @@ func _execute(action: Dictionary) -> void:
 	match type:
 		"show_image":
 			await _do_show_image(action)
+		"crossfade_image":
+			await _do_crossfade_image(action)
 		"fade_out":
 			await _do_fade(_overlay, 0.0, 1.0, action.get("duration", 0.5))
 		"fade_in":
@@ -129,6 +131,50 @@ func _do_show_image(action: Dictionary) -> void:
 		_image_rect.scale = Vector2.ONE
 	else:
 		await get_tree().create_timer(duration).timeout
+
+# ─────────────────────────────────────────────────────────────
+# Crossfade to a new image with zoom
+func _do_crossfade_image(action: Dictionary) -> void:
+	if not _image_rect:
+		return
+	var path: String = action.get("path", "")
+	var duration: float = action.get("duration", 2.5)
+	var fade_time: float = action.get("fade_time", 1.0)
+	var zoom: float = action.get("zoom", 1.0)
+
+	var old_rect = TextureRect.new()
+	old_rect.texture = _image_rect.texture
+	old_rect.layout_mode = _image_rect.layout_mode
+	old_rect.anchors_preset = _image_rect.anchors_preset
+	old_rect.anchor_right = _image_rect.anchor_right
+	old_rect.anchor_bottom = _image_rect.anchor_bottom
+	old_rect.grow_horizontal = _image_rect.grow_horizontal
+	old_rect.grow_vertical = _image_rect.grow_vertical
+	old_rect.expand_mode = _image_rect.expand_mode
+	old_rect.stretch_mode = _image_rect.stretch_mode
+	old_rect.pivot_offset = _image_rect.pivot_offset
+	old_rect.scale = _image_rect.scale
+	
+	_image_rect.get_parent().add_child(old_rect)
+	_image_rect.get_parent().move_child(old_rect, _image_rect.get_index())
+	
+	if ResourceLoader.exists(path):
+		_image_rect.texture = load(path)
+	_image_rect.scale = Vector2.ONE
+	_image_rect.modulate.a = 0.0
+	
+	var tween = create_tween()
+	tween.set_parallel(true)
+	tween.tween_property(_image_rect, "modulate:a", 1.0, fade_time)
+	if zoom > 1.0:
+		tween.tween_property(_image_rect, "scale", Vector2(zoom, zoom), duration).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	
+	var old_tween = create_tween()
+	old_tween.tween_property(old_rect, "modulate:a", 0.0, fade_time)
+	old_tween.finished.connect(old_rect.queue_free)
+	
+	await get_tree().create_timer(duration).timeout
+	_image_rect.scale = Vector2.ONE
 
 # ─────────────────────────────────────────────────────────────
 func _do_fade(target: ColorRect, from_alpha: float, to_alpha: float, duration: float) -> void:

@@ -5,7 +5,7 @@ extends Control
 # Skip: press Enter, Space, or Escape
 # =============================================================================
 
-const NEXT_SCENE = "res://cutscene/intro_cutscene.tscn"
+const NEXT_SCENE = "res://scenes/main_menu/main_menu.tscn"
 
 const OPENING_IMAGES: Array[String] = [
 	"res://cutscene/opening/openscene1.png",
@@ -21,7 +21,7 @@ const PANEL_DURATION: float = 3.0
 # Zoom scale reached by end of each panel
 const PANEL_ZOOM: float = 1.08
 # Fade duration between panels
-const FADE_DURATION: float = 0.4
+const FADE_DURATION: float = 0.8
 
 @onready var image_rect: TextureRect     = $ImageRect
 @onready var overlay: ColorRect          = $Overlay
@@ -50,21 +50,32 @@ func _ready() -> void:
 	var timeline: Array[Dictionary] = []
 	timeline.append({ "action": "play_music", "music_name": "musicMainMenu" })
 
+	timeline.append({
+		"action": "fade_in",
+		"duration": 0.5
+	})
+
 	for i in OPENING_IMAGES.size():
-		timeline.append({
-			"action": "fade_in",
-			"duration": FADE_DURATION
-		})
-		timeline.append({
-			"action": "show_image",
-			"path": OPENING_IMAGES[i],
-			"duration": PANEL_DURATION,
-			"zoom": PANEL_ZOOM
-		})
-		timeline.append({
-			"action": "fade_out",
-			"duration": FADE_DURATION
-		})
+		if i == 0:
+			timeline.append({
+				"action": "show_image",
+				"path": OPENING_IMAGES[i],
+				"duration": PANEL_DURATION,
+				"zoom": PANEL_ZOOM
+			})
+		else:
+			timeline.append({
+				"action": "crossfade_image",
+				"path": OPENING_IMAGES[i],
+				"duration": PANEL_DURATION,
+				"fade_time": FADE_DURATION,
+				"zoom": PANEL_ZOOM
+			})
+
+	timeline.append({
+		"action": "fade_out",
+		"duration": 0.5
+	})
 
 	_player.finished.connect(_on_cutscene_finished)
 	_player.play_timeline(timeline)
