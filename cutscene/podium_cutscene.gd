@@ -125,11 +125,11 @@ func _run_sequence() -> void:
 
 	# Spawn characters one by one with pop animation
 	await get_tree().create_timer(0.3).timeout
-	_spawn_character(char_3rd, label_3rd, rank_label_3rd, ranking[2], "🥉", 0.4)
+	_spawn_character(char_3rd, label_3rd, rank_label_3rd, ranking[2], 0.4)
 	await get_tree().create_timer(0.5).timeout
-	_spawn_character(char_2nd, label_2nd, rank_label_2nd, ranking[1], "🥈", 0.4)
+	_spawn_character(char_2nd, label_2nd, rank_label_2nd, ranking[1], 0.4)
 	await get_tree().create_timer(0.5).timeout
-	_spawn_character(char_1st, label_1st, rank_label_1st, ranking[0], "🥇", 0.4)
+	_spawn_character(char_1st, label_1st, rank_label_1st, ranking[0], 0.4)
 	AudioManager.play_sfx("skill_pickup")
 
 	await get_tree().create_timer(1.0).timeout
@@ -187,7 +187,6 @@ func _spawn_character(
 	name_label: Label,
 	rank_badge: Label,
 	data: Dictionary,
-	badge_text: String,
 	duration: float
 ) -> void:
 	var path = _get_char_texture_path(data["char_key"], data["is_winner"])
@@ -198,13 +197,13 @@ func _spawn_character(
 		char_rect.texture = null
 
 	name_label.text  = data["display_name"]
-	rank_badge.text  = badge_text
+	# rank_badge.text is no longer set since badge_text argument was removed
 
 	# Custom scale multiplier to fix empty space in image files
 	var target_scale = Vector2.ONE
 	if data["char_key"] == "woman":
-		target_scale = Vector2(1.15, 1.15) # ขยายผู้หญิงขึ้น 15% เพื่อชดเชยขอบใส
-		char_rect.position.y += 20 # เลื่อนลงมาให้เท้าพอดีกล่อง
+		target_scale = Vector2(1.15, 1.15)
+		char_rect.position.y += 20 
 		
 	# Scale from bottom center so feet stay planted
 	char_rect.pivot_offset = Vector2(char_rect.size.x / 2.0, char_rect.size.y)
