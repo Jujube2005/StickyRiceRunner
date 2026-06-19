@@ -72,7 +72,7 @@ func _ready() -> void:
 		$Podium.position.y -= 85
 		
 		var side_offset = 95
-		var spread_offset = 150 # ขยับซ้ายขวาออกไปอี
+		var spread_offset = 150
 		
 		char_2nd.position.y += side_offset
 		label_2nd.position.y += side_offset
@@ -200,6 +200,14 @@ func _spawn_character(
 	name_label.text  = data["display_name"]
 	rank_badge.text  = badge_text
 
+	# Custom scale multiplier to fix empty space in image files
+	var target_scale = Vector2.ONE
+	if data["char_key"] == "woman":
+		target_scale = Vector2(1.15, 1.15) # ขยายผู้หญิงขึ้น 15% เพื่อชดเชยขอบใส
+		
+	# Scale from bottom center so feet stay planted
+	char_rect.pivot_offset = Vector2(char_rect.size.x / 2.0, char_rect.size.y)
+
 	# Pop-in animation
 	char_rect.scale   = Vector2(0.1, 0.1)
 	char_rect.visible = true
@@ -207,7 +215,7 @@ func _spawn_character(
 	rank_badge.visible  = true
 
 	var tween = create_tween().set_parallel(true)
-	tween.tween_property(char_rect, "scale", Vector2.ONE, duration).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tween.tween_property(char_rect, "scale", target_scale, duration).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	tween.tween_property(rank_badge, "modulate:a", 1.0, duration * 0.5)
 	await tween.finished
 
