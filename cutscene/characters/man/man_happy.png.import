@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bboos03k2woks"
-path="res://.godot/imported/openscene1.png-100ded646bbdbec14ebb49345adb95cb.ctex"
+uid="uid://coydjoxbi5mn3"
+path="res://.godot/imported/man_happy.png-1ef4a08d7a416360c33206ed8de578be.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://cutscene/openscene1.png"
-dest_files=["res://.godot/imported/openscene1.png-100ded646bbdbec14ebb49345adb95cb.ctex"]
+source_file="res://cutscene/characters/man/man_happy.png"
+dest_files=["res://.godot/imported/man_happy.png-1ef4a08d7a416360c33206ed8de578be.ctex"]
 
 [params]
 

@@ -22,7 +22,7 @@ var tex_p1_lose = preload("res://assets/textures/UI/avatarPlayer/avatarP1_lose.p
 var tex_p2_win = preload("res://assets/textures/UI/avatarPlayer/avatarP2_win.png")
 var tex_p2_lose = preload("res://assets/textures/UI/avatarPlayer/avatarP2_lose.png")
 
-@onready var btn_restart: TextureButton = $Board/ButtonBox/BtnRestart
+@onready var btn_leaderbord: TextureButton = $Board/ButtonBox/BtnLeaderbord
 @onready var btn_play: TextureButton = $Board/ButtonBox/BtnPlay
 @onready var btn_menu: TextureButton = $Board/ButtonBox/BtnMenu
 
@@ -30,12 +30,12 @@ func _ready():
 	hide()
 	
 	# Connect button pressed signals
-	if btn_restart: btn_restart.pressed.connect(on_restart_pressed)
+	if btn_leaderbord: btn_leaderbord.pressed.connect(on_leaderboard_pressed)
 	if btn_play: btn_play.pressed.connect(on_restart_pressed)
 	if btn_menu: btn_menu.pressed.connect(on_menu_pressed)
 	
 	# Connect hover effects
-	if btn_restart: _setup_button_hover(btn_restart)
+	if btn_leaderbord: _setup_button_hover(btn_leaderbord)
 	if btn_play: _setup_button_hover(btn_play)
 	if btn_menu: _setup_button_hover(btn_menu)
 
@@ -118,7 +118,16 @@ func show_result(winner_name: String, _p1_score: int, _p2_score: int, _p1_distan
 	tween.tween_property(board_rect, "scale", default_scale, 0.45).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 
 func on_restart_pressed():
+	get_tree().paused = false
 	get_tree().reload_current_scene()
+
+func on_leaderboard_pressed():
+	var leaderboard_scene = load("res://scenes/ui/leaderboard_screen.tscn")
+	if leaderboard_scene:
+		var leaderboard = leaderboard_scene.instantiate()
+		get_parent().add_child(leaderboard)
+		hide()
+
 
 func on_menu_pressed():
 	get_tree().change_scene_to_file("res://scenes/main_menu/main_menu.tscn")

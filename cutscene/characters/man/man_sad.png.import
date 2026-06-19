@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cse56e11rn4nu"
-path="res://.godot/imported/openscene5.png-8c0445f3b90f4eb313f8f1637bae12c7.ctex"
+uid="uid://cpx8j2t50uuq5"
+path="res://.godot/imported/man_sad.png-56de5729219a4478b46ab376f417fb94.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://cutscene/openscene5.png"
-dest_files=["res://.godot/imported/openscene5.png-8c0445f3b90f4eb313f8f1637bae12c7.ctex"]
+source_file="res://cutscene/characters/man/man_sad.png"
+dest_files=["res://.godot/imported/man_sad.png-56de5729219a4478b46ab376f417fb94.ctex"]
 
 [params]
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://disneo07pa3ms"
-path="res://.godot/imported/openscene7.png-8a89c1a99da3e8d8712470c9a71fab01.ctex"
+uid="uid://cse56e11rn4nu"
+path="res://.godot/imported/openscene5.png-5ea746fd4534112f3eff183d481b9290.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://cutscene/openscene7.png"
-dest_files=["res://.godot/imported/openscene7.png-8a89c1a99da3e8d8712470c9a71fab01.ctex"]
+source_file="res://cutscene/opening/openscene5.png"
+dest_files=["res://.godot/imported/openscene5.png-5ea746fd4534112f3eff183d481b9290.ctex"]
 
 [params]
 
