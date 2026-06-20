@@ -38,7 +38,9 @@ var _speaker_label: Label           = null  # Speaker name label
 var _timeline: Array[Dictionary] = []
 var _current_index: int = 0
 var _is_playing: bool = false
-var _skip_requested: bool = false
+
+var _action_timer: Timer
+var _current_tween: Tween
 
 func setup(
 	image_rect: TextureRect,
@@ -56,26 +58,37 @@ func setup(
 	_dialogue_panel = dialogue_panel
 	_dialogue_label = dialogue_label
 	_speaker_label  = speaker_label
+	
+	if not _action_timer:
+		_action_timer = Timer.new()
+		_action_timer.one_shot = true
+		add_child(_action_timer)
 
 func play_timeline(timeline: Array[Dictionary]) -> void:
 	_timeline = timeline
 	_current_index = 0
 	_is_playing = true
-	_skip_requested = false
 	_run()
 
 func request_skip() -> void:
-	_skip_requested = true
+	if _current_tween and _current_tween.is_valid():
+		_current_tween.custom_step(9999.0)
+	if _action_timer and not _action_timer.is_stopped():
+		_action_timer.emit_signal("timeout")
+		_action_timer.stop()
 
 func _run() -> void:
 	for i in _timeline.size():
 		_current_index = i
 		await _execute(_timeline[i])
 		action_completed.emit(i)
-		if _skip_requested:
-			break
 	_is_playing = false
 	finished.emit()
+
+func _interruptible_wait(duration: float) -> void:
+	if duration <= 0: return
+	_action_timer.start(duration)
+	await _action_timer.timeout
 
 # ─────────────────────────────────────────────────────────────
 func _execute(action: Dictionary) -> void:
@@ -101,7 +114,7 @@ func _execute(action: Dictionary) -> void:
 			if _speaker_label and _speaker_label.get_parent() != _dialogue_panel:
 				_speaker_label.visible = false
 		"wait":
-			await get_tree().create_timer(action.get("duration", 1.0)).timeout
+			await _interruptible_wait(action.get("duration", 1.0))
 		"play_sfx":
 			AudioManager.play_sfx(action.get("sfx_name", ""))
 		"play_music":
@@ -125,14 +138,14 @@ func _do_show_image(action: Dictionary) -> void:
 	_image_rect.visible = true
 
 	if zoom > 1.0:
-		var tween = create_tween()
-		tween.tween_property(_image_rect, "scale",
+		_current_tween = create_tween()
+		_current_tween.tween_property(_image_rect, "scale",
 			Vector2(zoom, zoom), duration
 		).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
-		await get_tree().create_timer(duration).timeout
+		await _interruptible_wait(duration)
 		_image_rect.scale = Vector2.ONE
 	else:
-		await get_tree().create_timer(duration).timeout
+		await _interruptible_wait(duration)
 
 # ─────────────────────────────────────────────────────────────
 # Crossfade to a new image with zoom
@@ -165,17 +178,16 @@ func _do_crossfade_image(action: Dictionary) -> void:
 	_image_rect.scale = Vector2.ONE
 	_image_rect.modulate.a = 0.0
 	
-	var tween = create_tween()
-	tween.set_parallel(true)
-	tween.tween_property(_image_rect, "modulate:a", 1.0, fade_time)
+	_current_tween = create_tween()
+	_current_tween.set_parallel(true)
+	_current_tween.tween_property(_image_rect, "modulate:a", 1.0, fade_time)
 	if zoom > 1.0:
-		tween.tween_property(_image_rect, "scale", Vector2(zoom, zoom), duration).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+		_current_tween.tween_property(_image_rect, "scale", Vector2(zoom, zoom), duration).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 	
-	var old_tween = create_tween()
-	old_tween.tween_property(old_rect, "modulate:a", 0.0, fade_time)
-	old_tween.finished.connect(old_rect.queue_free)
+	_current_tween.tween_property(old_rect, "modulate:a", 0.0, fade_time)
+	_current_tween.chain().tween_callback(old_rect.queue_free)
 	
-	await get_tree().create_timer(duration).timeout
+	await _interruptible_wait(duration)
 	_image_rect.scale = Vector2.ONE
 
 # ─────────────────────────────────────────────────────────────
@@ -184,9 +196,9 @@ func _do_fade(target: ColorRect, from_alpha: float, to_alpha: float, duration: f
 		return
 	target.visible = true
 	target.color.a = from_alpha
-	var tween = create_tween()
-	tween.tween_property(target, "color:a", to_alpha, duration).set_trans(Tween.TRANS_QUAD)
-	await tween.finished
+	_current_tween = create_tween()
+	_current_tween.tween_property(target, "color:a", to_alpha, duration).set_trans(Tween.TRANS_QUAD)
+	await _current_tween.finished
 	if to_alpha <= 0.0:
 		target.visible = false
 
@@ -202,17 +214,17 @@ func _do_show_char(action: Dictionary) -> void:
 		target.texture = load(path)
 	target.modulate.a = 0.0
 	target.visible = true
-	var tween = create_tween()
-	tween.tween_property(target, "modulate:a", 1.0, duration).set_trans(Tween.TRANS_QUAD)
-	await tween.finished
+	_current_tween = create_tween()
+	_current_tween.tween_property(target, "modulate:a", 1.0, duration).set_trans(Tween.TRANS_QUAD)
+	await _current_tween.finished
 
 func _do_hide_char(side: String) -> void:
 	var target: TextureRect = _char_left if side == "left" else _char_right
 	if not target:
 		return
-	var tween = create_tween()
-	tween.tween_property(target, "modulate:a", 0.0, 0.3)
-	await tween.finished
+	_current_tween = create_tween()
+	_current_tween.tween_property(target, "modulate:a", 0.0, 0.3)
+	await _current_tween.finished
 	target.visible = false
 
 # ─────────────────────────────────────────────────────────────
@@ -225,15 +237,19 @@ func _do_show_dialogue(action: Dictionary) -> void:
 	if _speaker_label:
 		_speaker_label.text = action.get("speaker", "")
 	
-	_dialogue_panel.visible = true
-	_dialogue_panel.modulate.a = 0.0
-	var tween = create_tween()
-	tween.tween_property(_dialogue_panel, "modulate:a", 1.0, 0.25)
+	_current_tween = create_tween()
+	_current_tween.set_parallel(true)
+	
+	if text != "":
+		_dialogue_panel.visible = true
+		_dialogue_panel.modulate.a = 0.0
+		_current_tween.tween_property(_dialogue_panel, "modulate:a", 1.0, 0.25)
+	else:
+		_dialogue_panel.visible = false
 	
 	if _speaker_label and _speaker_label.get_parent() != _dialogue_panel:
 		_speaker_label.visible = true
 		_speaker_label.modulate.a = 0.0
-		var label_tween = create_tween()
-		label_tween.tween_property(_speaker_label, "modulate:a", 1.0, 0.25)
+		_current_tween.tween_property(_speaker_label, "modulate:a", 1.0, 0.25)
 		
-	await tween.finished
+	await _current_tween.finished

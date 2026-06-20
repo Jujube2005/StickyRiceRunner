@@ -94,8 +94,8 @@ func _build_timeline() -> Array[Dictionary]:
 	t.append({
 		"action": "show_dialogue",
 		"speaker": "ไอนาย",
-		"text_th": "สวัสดีครับ! ผมชื่อไอนาย นักวิ่งจากอีสาน\nวันนี้เราจะมาแข่งวิ่งกันที่งานบุญบั้งไฟครับ!",
-		"text_en": "Hello! My name is Inai, a runner from Isan.\nToday we race at the Boon Bang Fai Festival!"
+		"text_th": "",
+		"text_en": ""
 	})
 	t.append({ "action": "wait", "duration": 3.5 })
 	t.append({ "action": "hide_dialogue" })
@@ -114,8 +114,8 @@ func _build_timeline() -> Array[Dictionary]:
 	t.append({
 		"action": "show_dialogue",
 		"speaker": "อีนาง",
-		"text_th": "สวัสดีค่ะ! ฉันชื่ออีนาง ชาวนาจากทุ่งกว้าง\nมาพิสูจน์ความเร็วของเราสิ!",
-		"text_en": "Hello! I'm E-Nang, a farmer from the open fields.\nLet's prove our speed!"
+		"text_th": "",
+		"text_en": ""
 	})
 	t.append({ "action": "wait", "duration": 3.5 })
 	t.append({ "action": "hide_dialogue" })
