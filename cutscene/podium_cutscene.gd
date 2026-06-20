@@ -434,8 +434,8 @@ func _build_celebration_effects() -> void:
 	new_btn_container.visible = false
 	
 	var board_btn = TextureButton.new()
-	if ResourceLoader.exists("res://assets/textures/UI/Buttons/gamepad.png"):
-		board_btn.texture_normal = load("res://assets/textures/UI/Buttons/gamepad.png")
+	if ResourceLoader.exists("res://assets/textures/UI/Buttons/leaderboard_btn.png"):
+		board_btn.texture_normal = load("res://assets/textures/UI/Buttons/leaderboard_btn.png")
 	else:
 		board_btn.texture_normal = load("res://assets/textures/UI/Buttons/icon_smallTrophy.png")
 	board_btn.ignore_texture_size = true
