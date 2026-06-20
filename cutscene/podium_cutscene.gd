@@ -294,6 +294,13 @@ static func launch(
 	scene_tree.current_scene.add_child(instance)
 	return instance
 
+func _on_show_leaderboard_pressed() -> void:
+	var board_scene = load("res://scenes/ui/leaderboard_screen.tscn")
+	if board_scene:
+		var instance = board_scene.instantiate()
+		add_child(instance)
+		instance.show_result(winner_name, p1_kratips, p2_kratips, p1_distance, p2_distance)
+
 func _on_menu_pressed() -> void:
 	overlay.visible = true
 	var tween = create_tween()
@@ -426,20 +433,15 @@ func _build_celebration_effects() -> void:
 	new_btn_container.add_theme_constant_override("separation", 50)
 	new_btn_container.visible = false
 	
-	var m_btn = TextureButton.new()
-	m_btn.texture_normal = load("res://assets/textures/UI/Buttons/btn_menu.png")
-	m_btn.ignore_texture_size = true
-	m_btn.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
-	m_btn.custom_minimum_size = Vector2(100, 100)
-	m_btn.pressed.connect(_on_menu_pressed)
-	new_btn_container.add_child(m_btn)
-	
-	var r_btn = TextureButton.new()
-	r_btn.texture_normal = load("res://assets/textures/UI/Buttons/btn_restart.png")
-	r_btn.ignore_texture_size = true
-	r_btn.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
-	r_btn.custom_minimum_size = Vector2(100, 100)
-	r_btn.pressed.connect(_on_restart_pressed)
-	new_btn_container.add_child(r_btn)
+	var board_btn = TextureButton.new()
+	if ResourceLoader.exists("res://assets/textures/UI/Buttons/gamepad.png"):
+		board_btn.texture_normal = load("res://assets/textures/UI/Buttons/gamepad.png")
+	else:
+		board_btn.texture_normal = load("res://assets/textures/UI/Buttons/icon_smallTrophy.png")
+	board_btn.ignore_texture_size = true
+	board_btn.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
+	board_btn.custom_minimum_size = Vector2(120, 120)
+	board_btn.pressed.connect(_on_show_leaderboard_pressed)
+	new_btn_container.add_child(board_btn)
 	
 	add_child(new_btn_container)
