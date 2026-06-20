@@ -529,13 +529,13 @@ offset_right = 85.991425
 offset_bottom = -57.845093
 grow_horizontal = 2
 grow_vertical = 0
-scale = Vector2(1.0, 1.0)
+scale = Vector2(1.27, 1.27)
 theme_override_constants/separation = 40
 alignment = 1
 
 [node name="BtnRestart" type="TextureButton" parent="Board/ButtonBox" unique_id=1679429827]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(60, 60)
+custom_minimum_size = Vector2(80, 80)
 layout_mode = 2
 texture_normal = ExtResource("16_btn_restart")
 ignore_texture_size = true
@@ -543,7 +543,7 @@ stretch_mode = 5
 
 [node name="BtnMenu" type="TextureButton" parent="Board/ButtonBox" unique_id=134177333]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(60, 60)
+custom_minimum_size = Vector2(80, 80)
 layout_mode = 2
 texture_normal = ExtResource("17_btn_menu")
 ignore_texture_size = true
