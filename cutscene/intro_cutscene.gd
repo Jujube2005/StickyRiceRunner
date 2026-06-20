@@ -93,7 +93,7 @@ func _build_timeline() -> Array[Dictionary]:
 	# 3. Man's dialogue
 	t.append({
 		"action": "show_dialogue",
-		"speaker": "Inai",
+		"speaker": "ไอนาย",
 		"text_th": "",
 		"text_en": ""
 	})
@@ -113,7 +113,7 @@ func _build_timeline() -> Array[Dictionary]:
 	# 6. Woman's dialogue
 	t.append({
 		"action": "show_dialogue",
-		"speaker": "E-Nang",
+		"speaker": "อีนาง",
 		"text_th": "",
 		"text_en": ""
 	})
