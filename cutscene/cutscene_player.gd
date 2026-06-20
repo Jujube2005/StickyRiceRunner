@@ -98,6 +98,8 @@ func _execute(action: Dictionary) -> void:
 		"hide_dialogue":
 			if _dialogue_panel:
 				_dialogue_panel.visible = false
+			if _speaker_label and _speaker_label.get_parent() != _dialogue_panel:
+				_speaker_label.visible = false
 		"wait":
 			await get_tree().create_timer(action.get("duration", 1.0)).timeout
 		"play_sfx":
@@ -222,8 +224,16 @@ func _do_show_dialogue(action: Dictionary) -> void:
 	_dialogue_label.text = text
 	if _speaker_label:
 		_speaker_label.text = action.get("speaker", "")
+	
 	_dialogue_panel.visible = true
 	_dialogue_panel.modulate.a = 0.0
 	var tween = create_tween()
 	tween.tween_property(_dialogue_panel, "modulate:a", 1.0, 0.25)
+	
+	if _speaker_label and _speaker_label.get_parent() != _dialogue_panel:
+		_speaker_label.visible = true
+		_speaker_label.modulate.a = 0.0
+		var label_tween = create_tween()
+		label_tween.tween_property(_speaker_label, "modulate:a", 1.0, 0.25)
+		
 	await tween.finished

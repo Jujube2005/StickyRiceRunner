@@ -26,6 +26,36 @@ var _waiting_for_tap: bool = false
 
 # ─────────────────────────────────────────────────────────────
 func _ready() -> void:
+	# Center the characters and make them huge
+	char_left.set_anchors_preset(PRESET_FULL_RECT)
+	char_left.offset_left = 0
+	char_left.offset_top = 0
+	char_left.offset_right = 0
+	char_left.offset_bottom = 0
+	char_left.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+
+	char_right.set_anchors_preset(PRESET_FULL_RECT)
+	char_right.offset_left = 0
+	char_right.offset_top = 0
+	char_right.offset_right = 0
+	char_right.offset_bottom = 0
+	char_right.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+
+	# Move speaker label to Top Left and style it beautifully
+	speaker_label.get_parent().remove_child(speaker_label)
+	add_child(speaker_label)
+	speaker_label.layout_mode = 1
+	speaker_label.set_anchors_preset(PRESET_TOP_LEFT)
+	speaker_label.position = Vector2(80, 80)
+	speaker_label.add_theme_font_size_override("font_size", 100)
+	speaker_label.add_theme_color_override("font_color", Color(1, 0.84, 0))
+	speaker_label.add_theme_color_override("font_outline_color", Color.BLACK)
+	speaker_label.add_theme_constant_override("outline_size", 25)
+	var font = load("res://assets/textures/UI/Font/Mitr/Mitr-Bold.ttf")
+	if font:
+		speaker_label.add_theme_font_override("font", font)
+	speaker_label.visible = false
+
 	var cp_script = load("res://cutscene/cutscene_player.gd")
 	_player = cp_script.new()
 	_player.name = "CutscenePlayer"
@@ -63,9 +93,9 @@ func _build_timeline() -> Array[Dictionary]:
 	# 3. Man's dialogue
 	t.append({
 		"action": "show_dialogue",
-		"speaker": "สมชาย",
-		"text_th": "สวัสดีครับ! ผมชื่อสมชาย นักวิ่งจากอีสาน\nวันนี้เราจะมาแข่งวิ่งกันที่งานบุญบั้งไฟครับ!",
-		"text_en": "Hello! My name is Somchai, a runner from Isan.\nToday we race at the Boon Bang Fai Festival!"
+		"speaker": "ไอนาย",
+		"text_th": "สวัสดีครับ! ผมชื่อไอนาย นักวิ่งจากอีสาน\nวันนี้เราจะมาแข่งวิ่งกันที่งานบุญบั้งไฟครับ!",
+		"text_en": "Hello! My name is Inai, a runner from Isan.\nToday we race at the Boon Bang Fai Festival!"
 	})
 	t.append({ "action": "wait", "duration": 3.5 })
 	t.append({ "action": "hide_dialogue" })
@@ -83,9 +113,9 @@ func _build_timeline() -> Array[Dictionary]:
 	# 6. Woman's dialogue
 	t.append({
 		"action": "show_dialogue",
-		"speaker": "สมหญิง",
-		"text_th": "สวัสดีค่ะ! ฉันชื่อสมหญิง ชาวนาจากทุ่งกว้าง\nมาพิสูจน์ความเร็วของเราสิ!",
-		"text_en": "Hello! I'm Somying, a farmer from the open fields.\nLet's prove our speed!"
+		"speaker": "อีนาง",
+		"text_th": "สวัสดีค่ะ! ฉันชื่ออีนาง ชาวนาจากทุ่งกว้าง\nมาพิสูจน์ความเร็วของเราสิ!",
+		"text_en": "Hello! I'm E-Nang, a farmer from the open fields.\nLet's prove our speed!"
 	})
 	t.append({ "action": "wait", "duration": 3.5 })
 	t.append({ "action": "hide_dialogue" })
