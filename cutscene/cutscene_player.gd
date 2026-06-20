@@ -71,24 +71,21 @@ func play_timeline(timeline: Array[Dictionary]) -> void:
 	_run()
 
 func request_skip() -> void:
-	if _current_tween and _current_tween.is_valid():
-		_current_tween.custom_step(9999.0)
-	if _action_timer and not _action_timer.is_stopped():
-		_action_timer.emit_signal("timeout")
-		_action_timer.stop()
+	Engine.time_scale = 100.0
 
 func _run() -> void:
 	for i in _timeline.size():
 		_current_index = i
+		Engine.time_scale = 1.0
 		await _execute(_timeline[i])
 		action_completed.emit(i)
 	_is_playing = false
+	Engine.time_scale = 1.0
 	finished.emit()
 
 func _interruptible_wait(duration: float) -> void:
 	if duration <= 0: return
-	_action_timer.start(duration)
-	await _action_timer.timeout
+	await get_tree().create_timer(duration).timeout
 
 # ─────────────────────────────────────────────────────────────
 func _execute(action: Dictionary) -> void:
