@@ -16,9 +16,9 @@
 [ext_resource type="Texture2D" uid="uid://dn2v2i10w6prn" path="res://assets/textures/UI/Buttons/icon_run.png" id="13_icon_run"]
 [ext_resource type="Texture2D" uid="uid://blaflxb7qye32" path="res://assets/textures/UI/Buttons/icon_2nd.png" id="14_icon_2nd"]
 [ext_resource type="Texture2D" uid="uid://pvdaxagtdmy5" path="res://assets/textures/UI/Buttons/icon_3rd.png" id="15_icon_3rd"]
-[ext_resource type="Texture2D" uid="uid://3ibk5pytdjb4" path="res://assets/textures/UI/Buttons/btn_restart.png" id="16_btn_restart"]
+[ext_resource type="Texture2D" uid="uid://3ibk5pytdjb4" path="res://assets/textures/UI/Buttons/restart.png" id="16_btn_restart"]
 [ext_resource type="Texture2D" uid="uid://dr3j8380p5l4s" path="res://assets/textures/UI/Buttons/bg2.png" id="16_fsi3f"]
-[ext_resource type="Texture2D" uid="uid://bx1bvstpk3k0k" path="res://assets/textures/UI/Buttons/btn_menu.png" id="17_btn_menu"]
+[ext_resource type="Texture2D" uid="uid://bx1bvstpk3k0k" path="res://assets/textures/UI/Buttons/menu.png" id="17_btn_menu"]
 [ext_resource type="Texture2D" uid="uid://c63tshlsmuwvs" path="res://assets/textures/UI/Buttons/bg1.png" id="17_s46g7"]
 [ext_resource type="Texture2D" uid="uid://dd2pqki3ugew2" path="res://assets/textures/UI/Buttons/bg3.png" id="19_mhyp6"]
 
@@ -535,7 +535,7 @@ alignment = 1
 
 [node name="BtnRestart" type="TextureButton" parent="Board/ButtonBox" unique_id=1679429827]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(80, 80)
+custom_minimum_size = Vector2(60, 60)
 layout_mode = 2
 texture_normal = ExtResource("16_btn_restart")
 ignore_texture_size = true
@@ -543,7 +543,7 @@ stretch_mode = 5
 
 [node name="BtnMenu" type="TextureButton" parent="Board/ButtonBox" unique_id=134177333]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(80, 80)
+custom_minimum_size = Vector2(60, 60)
 layout_mode = 2
 texture_normal = ExtResource("17_btn_menu")
 ignore_texture_size = true
