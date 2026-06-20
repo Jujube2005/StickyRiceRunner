@@ -266,10 +266,18 @@ func _determine_winner_by_score():
 	game_over(winner)
 
 func game_over(winner_text: String):
+	if game_ended: return
+	game_ended = true
 	AudioManager.stop_music()
-	var spawner = get_parent().get_node("ObstacleSpawner")
+	
+	var tween = create_tween()
+	tween.tween_property(Engine, "time_scale", 0.3, 0.8)
+	await get_tree().create_timer(1.2 * Engine.time_scale).timeout
+	Engine.time_scale = 1.0
+	
+	var spawner = get_parent().get_node_or_null("ObstacleSpawner")
 	if spawner: spawner.set_process(false)
-	var players_root = get_parent().get_node("Players")
+	var players_root = get_parent().get_node_or_null("Players")
 	if players_root:
 		for child in players_root.get_children():
 			child.set("finished", true)

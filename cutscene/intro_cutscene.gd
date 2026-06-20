@@ -70,7 +70,7 @@ func _ready() -> void:
 	char_right.visible = false
 	dialogue_panel.visible = false
 	tap_hint.visible = false
-	skip_label.text  = "กด Enter / Space เพื่อข้าม"
+	skip_label.text  = "Press Enter / Space to skip"
 
 	var timeline: Array[Dictionary] = _build_timeline()
 	_player.finished.connect(_on_cutscene_finished)
@@ -93,7 +93,7 @@ func _build_timeline() -> Array[Dictionary]:
 	# 3. Man's dialogue
 	t.append({
 		"action": "show_dialogue",
-		"speaker": "ไอนาย",
+		"speaker": "Inai",
 		"text_th": "",
 		"text_en": ""
 	})
@@ -113,7 +113,7 @@ func _build_timeline() -> Array[Dictionary]:
 	# 6. Woman's dialogue
 	t.append({
 		"action": "show_dialogue",
-		"speaker": "อีนาง",
+		"speaker": "E-Nang",
 		"text_th": "",
 		"text_en": ""
 	})

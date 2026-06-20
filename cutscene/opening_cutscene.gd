@@ -44,7 +44,7 @@ func _ready() -> void:
 	overlay.color = Color(0, 0, 0, 1.0)
 	overlay.visible = true
 
-	skip_label.text = "กด Enter / Space เพื่อข้าม"
+	skip_label.text = "Press Enter / Space to skip"
 	skip_label.visible = true
 
 	var timeline: Array[Dictionary] = []
