@@ -440,7 +440,7 @@ func _build_celebration_effects() -> void:
 		board_btn.texture_normal = load("res://assets/textures/UI/Buttons/icon_smallTrophy.png")
 	board_btn.ignore_texture_size = true
 	board_btn.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
-	board_btn.custom_minimum_size = Vector2(120, 120)
+	board_btn.custom_minimum_size = Vector2(80, 80)
 	board_btn.pressed.connect(_on_show_leaderboard_pressed)
 	new_btn_container.add_child(board_btn)
 	
