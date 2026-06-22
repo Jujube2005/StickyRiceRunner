@@ -129,15 +129,15 @@ func _safe_connect(node: Node, sig_name: String, callable: Callable):
 		node.connect(sig_name, callable)
 
 func _on_race_start_cooldown_changed(remaining: float):
+	var cd_label = get_node_or_null("CenterTop/CooldownLabel")
+	
 	if remaining <= 0:
-		var cd_label = get_node_or_null("CenterTop/CooldownLabel")
 		if cd_label:
 			var tw = create_tween()
 			tw.tween_property(cd_label, "modulate:a", 0.0, 0.3)
 			tw.tween_callback(cd_label.queue_free)
 		return
 	
-	var cd_label = get_node_or_null("CenterTop/CooldownLabel")
 	if !cd_label:
 		cd_label = Label.new()
 		cd_label.name = "CooldownLabel"
