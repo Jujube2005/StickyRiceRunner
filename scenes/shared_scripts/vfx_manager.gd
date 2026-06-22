@@ -60,6 +60,10 @@ func spawn(effect_name: String, world_pos: Vector3) -> void:
 		"shockwave":      _fx_shockwave(scene_root, world_pos)
 		"silk_unlock":    _fx_silk_unlock(scene_root, world_pos)
 		"confetti":       _fx_confetti(scene_root, world_pos)
+		"incoming_warning": _fx_incoming_warning(scene_root, world_pos)
+		"spawn_shield_hit": _fx_spawn_shield_hit(scene_root, world_pos)
+		"skill_hit_generic": _fx_skill_hit_generic(scene_root, world_pos)
+		"bad_box_pickup": _fx_bad_box_pickup(scene_root, world_pos)
 
 # --- EFFECT DEFINITIONS -------------------------------------------------------
 
@@ -67,33 +71,35 @@ func spawn(effect_name: String, world_pos: Vector3) -> void:
 func _fx_obstacle_hit(root: Node, pos: Vector3) -> void:
 	# Spark burst (fast, outward)
 	var sparks := _make_particles(root, pos)
-	sparks.amount               = 24
+	sparks.amount               = 36
 	sparks.lifetime             = 0.6
 	_set_tex(sparks, _tex.get("spark"))
 	sparks.direction            = Vector3(0, 1, 0)
 	sparks.spread               = 180.0
 	sparks.gravity              = Vector3(0, -6.0, 0)
-	sparks.initial_velocity_min = 3.5
-	sparks.initial_velocity_max = 7.0
-	sparks.scale_amount_min     = 0.12
-	sparks.scale_amount_max     = 0.28
-	sparks.color                = Color(1.0, 0.5, 0.1, 1.0)
-	sparks.color_ramp           = _gradient([Color(1.0, 0.6, 0.1, 1.0), Color(1.0, 0.2, 0.0, 0.0)])
+	sparks.initial_velocity_min = 4.5
+	sparks.initial_velocity_max = 8.0
+	sparks.scale_amount_min     = 0.15
+	sparks.scale_amount_max     = 0.35
+	sparks.color                = Color(1.0, 0.4, 0.1, 1.0)
+	sparks.color_ramp           = _gradient([Color(1.0, 0.5, 0.1, 1.0), Color(1.0, 0.1, 0.0, 0.0)])
 
 	# Smoke puff (slow, floats up)
 	var smoke := _make_particles(root, pos + Vector3(0, 0.5, 0))
-	smoke.amount               = 10
+	smoke.amount               = 15
 	smoke.lifetime             = 0.8
 	_set_tex(smoke, _tex.get("smoke"))
 	smoke.direction            = Vector3(0, 1, 0)
-	smoke.spread               = 40.0
+	smoke.spread               = 50.0
 	smoke.gravity              = Vector3(0, 0.5, 0)
-	smoke.initial_velocity_min = 0.5
-	smoke.initial_velocity_max = 1.5
-	smoke.scale_amount_min     = 0.3
-	smoke.scale_amount_max     = 0.6
+	smoke.initial_velocity_min = 1.0
+	smoke.initial_velocity_max = 2.5
+	smoke.scale_amount_min     = 0.4
+	smoke.scale_amount_max     = 0.8
 	smoke.color                = Color(0.9, 0.8, 0.7, 0.7)
 
+	_flash(root, pos + Vector3(0, 0.5, 0), Color(1.0, 0.3, 0.0, 0.9), 1.5, 0.25)
+	
 	_auto_free(sparks, 1.2)
 	_auto_free(smoke,  1.5)
 
@@ -429,3 +435,85 @@ func _fx_confetti(root: Node, pos: Vector3) -> void:
 		p.color_ramp           = _gradient([c, Color(c.r, c.g, c.b, 0.0)])
 		_auto_free(p, 3.5)
 	_flash(root, pos + Vector3(0, 2.0, 0), Color(1.0, 0.92, 0.3, 1.0), 2.0, 0.4)
+
+func _fx_incoming_warning(root: Node, pos: Vector3) -> void:
+	var ring := _make_particles(root, pos + Vector3(0, 0.15, 0))
+	ring.amount               = 1
+	ring.lifetime             = 1.5
+	_set_tex(ring, _tex.get("circle3", _tex.get("circle")))
+	ring.emission_shape       = CPUParticles3D.EMISSION_SHAPE_RING
+	ring.emission_ring_axis   = Vector3(0, 1, 0)
+	ring.emission_ring_radius = 0.05
+	ring.direction            = Vector3(0, 1, 0)
+	ring.spread               = 0.0
+	ring.gravity              = Vector3.ZERO
+	ring.initial_velocity_min = 0.0
+	ring.initial_velocity_max = 0.0
+	ring.scale_amount_min     = 1.0
+	ring.scale_amount_max     = 1.0
+	
+	# Create scaling animation curve
+	var curve = Curve.new()
+	curve.add_point(Vector2(0, 0.2))
+	curve.add_point(Vector2(0.2, 1.0))
+	curve.add_point(Vector2(1.0, 1.2))
+	ring.scale_amount_curve = curve
+	
+	ring.color                = Color(1.0, 0.2, 0.2, 1.0)
+	ring.color_ramp           = _gradient([Color(1.0, 0.3, 0.1, 0.8), Color(1.0, 0.0, 0.0, 0.0)])
+	
+	_auto_free(ring, 1.6)
+
+func _fx_spawn_shield_hit(root: Node, pos: Vector3) -> void:
+	var sparks := _make_particles(root, pos + Vector3(0, 1.0, 0))
+	sparks.amount               = 20
+	sparks.lifetime             = 0.6
+	_set_tex(sparks, _tex.get("circle", _tex.get("spark")))
+	sparks.direction            = Vector3(0, 1, 0)
+	sparks.spread               = 180.0
+	sparks.gravity              = Vector3(0, -3.0, 0)
+	sparks.initial_velocity_min = 2.5
+	sparks.initial_velocity_max = 6.0
+	sparks.scale_amount_min     = 0.1
+	sparks.scale_amount_max     = 0.25
+	sparks.color                = Color(0.2, 0.6, 1.0, 1.0)
+	sparks.color_ramp           = _gradient([Color(0.4, 0.8, 1.0, 1.0), Color(0.1, 0.5, 1.0, 0.0)])
+
+	_flash(root, pos + Vector3(0, 1.0, 0), Color(0.2, 0.6, 1.0, 0.8), 1.0, 0.2)
+	_auto_free(sparks, 1.0)
+
+func _fx_skill_hit_generic(root: Node, pos: Vector3) -> void:
+	var energy := _make_particles(root, pos + Vector3(0, 1.0, 0))
+	energy.amount               = 30
+	energy.lifetime             = 0.7
+	_set_tex(energy, _tex.get("muzzle", _tex.get("magic")))
+	energy.direction            = Vector3(0, 1, 0)
+	energy.spread               = 180.0
+	energy.gravity              = Vector3(0, 0.5, 0)
+	energy.initial_velocity_min = 3.0
+	energy.initial_velocity_max = 7.0
+	energy.scale_amount_min     = 0.15
+	energy.scale_amount_max     = 0.35
+	energy.color                = Color(0.8, 0.3, 1.0, 1.0)
+	energy.color_ramp           = _gradient([Color(0.9, 0.5, 1.0, 1.0), Color(0.6, 0.2, 1.0, 0.0)])
+
+	_flash(root, pos + Vector3(0, 1.0, 0), Color(0.8, 0.4, 1.0, 0.9), 1.5, 0.25)
+	_auto_free(energy, 1.5)
+
+func _fx_bad_box_pickup(root: Node, pos: Vector3) -> void:
+	var sparks := _make_particles(root, pos + Vector3(0, 1.0, 0))
+	sparks.amount               = 25
+	sparks.lifetime             = 0.6
+	_set_tex(sparks, _tex.get("spark"))
+	sparks.direction            = Vector3(0, -1, 0)
+	sparks.spread               = 90.0
+	sparks.gravity              = Vector3(0, -8.0, 0)
+	sparks.initial_velocity_min = 3.0
+	sparks.initial_velocity_max = 6.0
+	sparks.scale_amount_min     = 0.1
+	sparks.scale_amount_max     = 0.3
+	sparks.color                = Color(1.0, 0.1, 0.1, 1.0)
+	sparks.color_ramp           = _gradient([Color(1.0, 0.2, 0.2, 1.0), Color(0.8, 0.0, 0.0, 0.0)])
+
+	_flash(root, pos + Vector3(0, 1.0, 0), Color(1.0, 0.1, 0.1, 0.9), 1.2, 0.25)
+	_auto_free(sparks, 1.0)

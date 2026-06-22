@@ -46,6 +46,7 @@ var trail_vfx : CPUParticles3D = null          # Gold energy trail (silk protect
 var dust_trail_vfx : CPUParticles3D = null     # Dirt dust while running on ground
 var speed_trail_vfx : CPUParticles3D = null    # Speed streak at high velocity
 var energy_trail_vfx : CPUParticles3D = null   # Glow overlay during invincibility
+var spawn_shield_vfx : MeshInstance3D = null   # Blue shield for spawn
 var _was_on_floor := false                     # For landing detection
 var anim_player : AnimationPlayer = null
 var current_anim : String = ""
@@ -91,6 +92,7 @@ func _ready():
 	axis_lock_angular_z = true
 	start_z = global_position.z
 	_setup_shield_vfx()
+	_setup_spawn_shield_vfx()
 	_setup_trail_vfx()
 	
 	# Dynamically locate GameManager as fallback
@@ -251,6 +253,24 @@ func _setup_shield_vfx():
 	add_child(shield_vfx)
 	shield_vfx.visible = false
 
+func _setup_spawn_shield_vfx():
+	spawn_shield_vfx = MeshInstance3D.new()
+	var sphere = SphereMesh.new()
+	sphere.radius = 1.6
+	sphere.height = 3.2
+	spawn_shield_vfx.mesh = sphere
+	
+	var mat = StandardMaterial3D.new()
+	mat.transparency = StandardMaterial3D.TRANSPARENCY_ALPHA
+	mat.albedo_color = Color(0.2, 0.6, 1.0, 0.15) # Blue translucent
+	mat.emission_enabled = true
+	mat.emission = Color(0.1, 0.5, 1.0)
+	mat.emission_energy_multiplier = 1.2
+	spawn_shield_vfx.material_override = mat
+	
+	add_child(spawn_shield_vfx)
+	spawn_shield_vfx.visible = false
+
 func _setup_trail_vfx():
 	# ── Gold Energy Trail (toggled by silk protection) ──
 	trail_vfx = CPUParticles3D.new()
@@ -403,7 +423,18 @@ func _physics_process(delta):
 					shield_vfx.scale = Vector3.ONE
 					shield_vfx.material_override.albedo_color.a = 0.3
 				)
-				# Also stop the trail when silk protection ends
+			
+			if spawn_shield_vfx and spawn_shield_vfx.visible:
+				var fade_tween = create_tween()
+				fade_tween.tween_property(spawn_shield_vfx, "scale", Vector3(1.6, 1.6, 1.6), 0.2)
+				fade_tween.parallel().tween_property(spawn_shield_vfx, "material_override:albedo_color:a", 0.0, 0.2)
+				fade_tween.tween_callback(func(): 
+					spawn_shield_vfx.visible = false
+					spawn_shield_vfx.scale = Vector3.ONE
+					spawn_shield_vfx.material_override.albedo_color.a = 0.15
+				)
+				
+			# Also stop the trail when silk protection ends
 				if trail_vfx:
 					trail_vfx.emitting = false
 
@@ -674,6 +705,10 @@ func grant_silk_protection():
 	if trail_vfx:
 		trail_vfx.emitting = true
 
+func grant_spawn_shield(duration: float = 3.0):
+	silk_protection_timer = duration
+	_show_spawn_shield_vfx()
+
 func add_penalty(amount):
 	penalties += amount
 	_calculate_total_score()
@@ -694,6 +729,9 @@ func die() -> void:
 		var tween = create_tween()
 		tween.tween_property($Model, "scale", Vector3(1.3, 1.3, 1.3), 0.08)
 		tween.tween_property($Model, "scale", Vector3(1.0, 1.0, 1.0), 0.12)
+		
+		if spawn_shield_vfx and spawn_shield_vfx.visible:
+			VfxManager.spawn("spawn_shield_hit", global_position + Vector3(0, 1.0, 0))
 		return
 	# Normal crash
 	add_penalty(100) # Crashing penalty
@@ -712,7 +750,7 @@ func stun(duration: float = 2.0):
 	VfxManager.spawn("obstacle_hit", global_position + Vector3(0, 1.0, 0))
 	var cam = get_viewport().get_camera_3d()
 	if cam and cam.has_method("shake"):
-		cam.shake(0.08, 0.12)
+		cam.shake(0.15, 0.20)
 
 func add_charge(amount):
 	if !can_charge:
@@ -796,6 +834,23 @@ func _show_shield_vfx():
 		shield_vfx.material_override.albedo_color.a = 0.1
 	)
 
+func _show_spawn_shield_vfx():
+	if !spawn_shield_vfx: return
+	
+	spawn_shield_vfx.visible = true
+	spawn_shield_vfx.scale = Vector3.ZERO
+	spawn_shield_vfx.material_override.albedo_color.a = 0.15
+	
+	var tween = create_tween()
+	# Pop in
+	tween.tween_property(spawn_shield_vfx, "scale", Vector3(1.2, 1.2, 1.2), 0.15).set_trans(Tween.TRANS_BACK)
+	tween.tween_property(spawn_shield_vfx, "scale", Vector3(1.0, 1.0, 1.0), 0.1)
+	
+	# Pulse effect while active
+	var pulse_tween = create_tween().set_loops(10)
+	pulse_tween.tween_property(spawn_shield_vfx, "scale", Vector3(1.05, 1.05, 1.05), 0.3)
+	pulse_tween.tween_property(spawn_shield_vfx, "scale", Vector3(1.0, 1.0, 1.0), 0.3)
+
 func add_skill(skill_name: String) -> bool:
 	if skills.size() < 2:
 		skills.append(skill_name)
@@ -866,7 +921,14 @@ func apply_prank(skill_name):
 		var tween = create_tween()
 		tween.tween_property($Model, "scale", Vector3(1.3, 1.3, 1.3), 0.08)
 		tween.tween_property($Model, "scale", Vector3(1.0, 1.0, 1.0), 0.12)
+		
+		if spawn_shield_vfx and spawn_shield_vfx.visible:
+			VfxManager.spawn("spawn_shield_hit", global_position + Vector3(0, 1.0, 0))
+		else:
+			VfxManager.spawn("shield_block", global_position + Vector3(0, 1.0, 0))
 		return
+	
+	VfxManager.spawn("skill_hit_generic", global_position + Vector3(0, 1.0, 0))
 	
 	# Per-skill SFX + flash color (Receiver side only)
 	match skill_name:

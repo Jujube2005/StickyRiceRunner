@@ -21,6 +21,7 @@ class Prank:
 # --- SIGNALS ---
 signal prank_state_changed(prank: Prank)
 signal global_cooldown_changed(active: bool)
+signal race_start_cooldown_changed(remaining: float)
 signal zone_changed(new_zone: int)
 
 # --- CONFIGURATION ---
@@ -29,7 +30,7 @@ var current_zone: int = 1  # 1: Oxcart, 2: Phimai, 3: Yamo
 @export var player_scene: PackedScene = preload("res://scenes/player/players.tscn")
 @export var skill_cooldown_min := 3.0
 @export var skill_cooldown_max := 5.0
-const WARNING_DURATION = 0.8
+@export var dodge_window := 1.5
 const GOAL_DISTANCE = 1000
 
 # --- STATE ---
@@ -45,6 +46,7 @@ var elapsed_time = 0.0
 
 func _ready():
 	ui_gameover.visible = false
+	skill_cooldown_timer = 5.0 # Race start cooldown
 	_spawn_players()
 	# เล่นเพลง In-Game
 	AudioManager.play_music_by_name("musicInGame")
@@ -83,9 +85,18 @@ func _spawn_players():
 	p2.position = Vector3(3, 0, 0)
 	players_node.add_child(p2)
 	
+	# Handle single player mode
+	if ResourceLoader.has_cached("res://scenes/shared_scripts/game_config.gd"):
+		if GameConfig.game_mode == "singleplayer":
+			p2.is_bot = true
+	
 	# Connect signals
 	p1.distance_changed.connect(_check_distance_goal)
 	p2.distance_changed.connect(_check_distance_goal)
+	
+	# Grant spawn shield (3s invincibility)
+	if p1.has_method("grant_spawn_shield"): p1.grant_spawn_shield(3.0)
+	if p2.has_method("grant_spawn_shield"): p2.grant_spawn_shield(3.0)
 	
 	# Update Camera targets if they exist
 	var cam_p1 = get_tree().current_scene.find_child("CameraP1", true, false)
@@ -107,6 +118,8 @@ func _process(delta):
 	# Update Global Cooldown
 	if skill_cooldown_timer > 0:
 		skill_cooldown_timer -= delta
+		if elapsed_time <= 5.0:
+			emit_signal("race_start_cooldown_changed", skill_cooldown_timer)
 		if skill_cooldown_timer <= 0:
 			emit_signal("global_cooldown_changed", false)
 
@@ -167,9 +180,14 @@ func request_skill(attacker, skill_name = "") -> bool:
 	emit_signal("global_cooldown_changed", true)
 	
 	# Arm the prank
-	new_prank.timer = WARNING_DURATION
+	new_prank.timer = dodge_window
 	_transition_prank(new_prank, PrankState.ARMED)
+	_show_dodge_warning(new_prank)
 	return true
+
+func _show_dodge_warning(prank: Prank):
+	if is_instance_valid(prank.target):
+		VfxManager.spawn("incoming_warning", prank.target.global_position)
 
 
 

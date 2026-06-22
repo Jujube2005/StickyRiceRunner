@@ -22,6 +22,7 @@ AudioManager="*res://scenes/shared_scripts/audio_manager.gd"
 VfxManager="*res://scenes/shared_scripts/vfx_manager.gd"
 CollectionManager="*res://scenes/shared_scripts/collection_manager.gd"
 SkillProjectileManager="*res://scenes/shared_scripts/skill_projectile_manager.gd"
+GameConfig="*res://scenes/shared_scripts/game_config.gd"
 
 [display]
 

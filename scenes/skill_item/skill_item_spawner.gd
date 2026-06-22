@@ -48,8 +48,30 @@ func spawn_skill_item():
 	if item:
 		var lane_x = lanes[randi() % lanes.size()]
 		var pos = Vector3(lane_x, 0.5, spawn_z)
-		item.activate(pos)
-		print("[SPAWN] Skill Item spawned at lane %d, Z %d" % [lane_x, int(spawn_z)])
+		
+		# Risk-Reward Placement: offset box near an obstacle if one exists nearby
+		var obstacles = get_tree().get_nodes_in_group("obstacle")
+		var nearby_obs = null
+		for obs in obstacles:
+			if abs(obs.global_position.z - spawn_z) < 15.0:
+				nearby_obs = obs
+				break
+				
+		if nearby_obs:
+			# Place box adjacent to the obstacle
+			pos.z = nearby_obs.global_position.z
+			if nearby_obs.global_position.x >= 0:
+				pos.x = nearby_obs.global_position.x - 3.0 # Shift left
+			else:
+				pos.x = nearby_obs.global_position.x + 3.0 # Shift right
+				
+			# Keep within bounds
+			pos.x = clamp(pos.x, -3.0, 3.0)
+		
+		# 15% chance for a bad box
+		var box_type = "bad" if randf() < 0.15 else "good"
+		item.activate(pos, box_type)
+		print("[SPAWN] Skill Item (", box_type, ") spawned at X %.1f, Z %d" % [pos.x, int(spawn_z)])
 
 	# Determine next spawn Z
 	var interval = spawn_distance_interval + randf_range(-spawn_distance_random, spawn_distance_random)

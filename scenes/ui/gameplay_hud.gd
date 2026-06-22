@@ -120,10 +120,40 @@ func _ready():
 	# Hide leader indicators initially
 	if p1_leader_label: p1_leader_label.visible = false
 	if p2_leader_label: p2_leader_label.visible = false
+	
+	if game_manager and game_manager.has_signal("race_start_cooldown_changed"):
+		_safe_connect(game_manager, "race_start_cooldown_changed", _on_race_start_cooldown_changed)
 
 func _safe_connect(node: Node, sig_name: String, callable: Callable):
 	if node and !node.is_connected(sig_name, callable):
 		node.connect(sig_name, callable)
+
+func _on_race_start_cooldown_changed(remaining: float):
+	if remaining <= 0:
+		var cd_label = get_node_or_null("CenterTop/CooldownLabel")
+		if cd_label:
+			var tw = create_tween()
+			tw.tween_property(cd_label, "modulate:a", 0.0, 0.3)
+			tw.tween_callback(cd_label.queue_free)
+		return
+	
+	var cd_label = get_node_or_null("CenterTop/CooldownLabel")
+	if !cd_label:
+		cd_label = Label.new()
+		cd_label.name = "CooldownLabel"
+		var ls = LabelSettings.new()
+		ls.font_size = 48
+		if font_resource: ls.font = font_resource
+		ls.font_color = Color(1.0, 0.3, 0.3)
+		ls.outline_size = 8
+		ls.outline_color = Color.BLACK
+		cd_label.label_settings = ls
+		cd_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		cd_label.position = Vector2(0, 100)
+		cd_label.size = Vector2(size.x, 80)
+		$CenterTop.add_child(cd_label)
+	
+	cd_label.text = "SKILLS READY IN " + str(ceil(remaining))
 
 func _on_p1_screen_blackout(duration: float):
 	_show_half_vignette(duration, false)  # false = left half (Player 1)

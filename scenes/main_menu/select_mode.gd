@@ -13,9 +13,17 @@ func _ready():
 	endless_btn.pressed.connect(_on_endless_pressed)
 	close_btn.pressed.connect(_on_close_pressed)
 
-	# Disable Endless Mode for now
-	endless_btn.disabled = true
-	endless_btn.modulate = Color(0.6, 0.6, 0.6, 0.8)
+	# Setup buttons for Single Player and Multiplayer modes
+	endless_btn.disabled = false
+	endless_btn.modulate = Color.WHITE
+	
+	var race_lbl = race_btn.get_node_or_null("Label")
+	if race_lbl:
+		race_lbl.text = "Single Player"
+		
+	var endless_lbl = endless_btn.get_node_or_null("Label")
+	if endless_lbl:
+		endless_lbl.text = "Multiplayer"
 
 	_apply_button_hover(race_btn)
 	_apply_button_hover(endless_btn)
@@ -55,17 +63,19 @@ func _on_close_pressed():
 	tween.chain().tween_callback(queue_free)
 
 func _on_race_pressed():
-	# Transition to game (Race Mode)
-	_start_game("race")
+	# Transition to game (Single Player Mode)
+	_start_game("singleplayer")
 
 func _on_endless_pressed():
-	# Transition to game (Endless Mode)
-	_start_game("endless")
+	# Transition to game (Multiplayer Mode)
+	_start_game("multiplayer")
 
 func _start_game(mode: String):
 	print("Starting game mode: ", mode)
 	
-	# Pass mode to somewhere else if needed later, for now just change scene
+	# Pass mode to GameConfig
+	if ResourceLoader.has_cached("res://scenes/shared_scripts/game_config.gd"):
+		GameConfig.game_mode = mode
 	
 	AudioManager.stop_music()
 	var tween = create_tween()
