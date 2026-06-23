@@ -128,6 +128,98 @@ func _safe_connect(node: Node, sig_name: String, callable: Callable):
 	if node and !node.is_connected(sig_name, callable):
 		node.connect(sig_name, callable)
 
+func show_countdown(count: int, on_done: Callable):
+	"""แสดงนับถอยหลัง 3-2-1-GO! ก่อนเริ่มเกม"""
+	# สร้าง overlay ทึบแสงกลางจอ
+	var overlay = ColorRect.new()
+	overlay.name = "CountdownOverlay"
+	overlay.color = Color(0.0, 0.0, 0.0, 0.0)
+	overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	overlay.z_index = 200
+	add_child(overlay)
+	await get_tree().process_frame
+	overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
+	
+	# Label ตัวเลข
+	var lbl = Label.new()
+	var ls = LabelSettings.new()
+	ls.font_size = 200
+	if font_resource: ls.font = font_resource
+	ls.font_color = Color(1.0, 0.92, 0.3)
+	ls.outline_size = 14
+	ls.outline_color = Color(0.6, 0.2, 0.0)
+	ls.shadow_size = 8
+	ls.shadow_color = Color(0.0, 0.0, 0.0, 0.6)
+	ls.shadow_offset = Vector2(4, 6)
+	lbl.label_settings = ls
+	lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	lbl.set_anchors_preset(Control.PRESET_FULL_RECT)
+	lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	lbl.modulate.a = 0.0
+	overlay.add_child(lbl)
+	
+	# Fade overlay เข้ามาเบาๆ
+	var bg_tween = create_tween()
+	bg_tween.tween_property(overlay, "color", Color(0.0, 0.0, 0.0, 0.45), 0.3)
+	
+	# นับ 3, 2, 1 แต่ละตัว
+	var numbers = [str(count), str(count - 1), str(count - 2)]
+	var colors = [
+		Color(1.0, 0.35, 0.25),  # 3 - แดงส้ม
+		Color(1.0, 0.85, 0.1),   # 2 - ทอง
+		Color(0.3, 1.0, 0.4),    # 1 - เขียว
+	]
+	
+	for i in range(numbers.size()):
+		lbl.text = numbers[i]
+		ls.font_color = colors[i]
+		# เริ่มต้นที่ scale ใหญ่ fade in
+		lbl.scale = Vector2(2.0, 2.0)
+		lbl.pivot_offset = Vector2(size.x / 2.0, size.y / 2.0)
+		lbl.modulate.a = 0.0
+		
+		var tw = create_tween()
+		tw.set_parallel(true)
+		tw.tween_property(lbl, "modulate:a", 1.0, 0.15)
+		tw.tween_property(lbl, "scale", Vector2(1.0, 1.0), 0.25).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+		await tw.finished
+		
+		# ถือไว้
+		await get_tree().create_timer(0.6).timeout
+		
+		# Fade out
+		var out_tw = create_tween()
+		out_tw.tween_property(lbl, "modulate:a", 0.0, 0.2)
+		await out_tw.finished
+		await get_tree().create_timer(0.05).timeout
+	
+	# แสดง GO!
+	lbl.text = "GO!"
+	ls.font_color = Color(0.3, 1.0, 0.4)
+	ls.font_size = 220
+	lbl.scale = Vector2(0.5, 0.5)
+	lbl.pivot_offset = Vector2(size.x / 2.0, size.y / 2.0)
+	lbl.modulate.a = 0.0
+	
+	var go_tw = create_tween()
+	go_tw.set_parallel(true)
+	go_tw.tween_property(lbl, "modulate:a", 1.0, 0.1)
+	go_tw.tween_property(lbl, "scale", Vector2(1.2, 1.2), 0.2).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	await go_tw.finished
+	
+	# เรียก callback ให้เกมเริ่ม
+	on_done.call()
+	
+	# Fade ออก
+	await get_tree().create_timer(0.5).timeout
+	var final_tw = create_tween()
+	final_tw.set_parallel(true)
+	final_tw.tween_property(lbl, "modulate:a", 0.0, 0.4)
+	final_tw.tween_property(overlay, "color:a", 0.0, 0.5)
+	await final_tw.finished
+	overlay.queue_free()
+
 func _on_race_start_cooldown_changed(remaining: float):
 	var cd_label = get_node_or_null("CenterTop/CooldownLabel")
 	

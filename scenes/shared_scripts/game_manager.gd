@@ -43,13 +43,18 @@ var prank_id_counter = 0
 var skill_cooldown_timer = 0.0
 var game_ended = false
 var elapsed_time = 0.0
+var countdown_active = true
 
 func _ready():
 	ui_gameover.visible = false
-	skill_cooldown_timer = 5.0 # Race start cooldown
+	skill_cooldown_timer = 3.0 # Race start cooldown
 	_spawn_players()
-	# เล่นเพลง In-Game
+
 	AudioManager.play_music_by_name("musicInGame")
+
+	countdown_active = true
+	_freeze_players(true)
+	_start_countdown()
 
 func _spawn_players():
 	var players_node = get_node("../Players")
@@ -110,8 +115,38 @@ func _spawn_players():
 	if hud and hud.has_method("_ready"):
 		hud._ready() # Re-run ready to find players
 
+func _freeze_players(freeze: bool):
+	if p1 and p1.has_method("set_process"):
+		p1.set_process(!freeze)
+		p1.set_physics_process(!freeze)
+		if freeze and p1.has_method("set"):
+			p1.set("finished", true)
+		else:
+			p1.set("finished", false)
+	if p2 and p2.has_method("set_process"):
+		p2.set_process(!freeze)
+		p2.set_physics_process(!freeze)
+		if freeze and p2.has_method("set"):
+			p2.set("finished", true)
+		else:
+			p2.set("finished", false)
+
+func _start_countdown():
+	var hud = get_tree().current_scene.find_child("GameplayHUD", true, false)
+	if hud and hud.has_method("show_countdown"):
+		hud.show_countdown(3, func(): _on_countdown_finished())
+	else:
+		# ถ้าไม่มี HUD ให้รอ 3 วิแล้วเริ่มเลย
+		get_tree().create_timer(3.0).timeout.connect(_on_countdown_finished)
+
+func _on_countdown_finished():
+	countdown_active = false
+	_freeze_players(false)
+
+
 func _process(delta):
 	if game_ended: return
+	if countdown_active: return
 	
 	elapsed_time += delta
 	
