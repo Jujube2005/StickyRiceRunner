@@ -85,7 +85,13 @@ func _build_step2_buttons():
 	if !modes_node:
 		return
 
-	# Clear old buttons
+	# ถอด step1 buttons ออกโดยไม่ free เพื่อให้ใช้ซ้ำตอน back ได้
+	if is_instance_valid(race_btn) and race_btn.get_parent() == modes_node:
+		modes_node.remove_child(race_btn)
+	if is_instance_valid(endless_btn) and endless_btn.get_parent() == modes_node:
+		modes_node.remove_child(endless_btn)
+
+	# Clear เฉพาะ children ที่เหลือ (ถ้ามี)
 	for child in modes_node.get_children():
 		child.queue_free()
 
@@ -132,7 +138,6 @@ func _make_mode_button(label_text: String, icon: String) -> TextureButton:
 	# Icon label (emoji on top)
 	var icon_lbl = Label.new()
 	icon_lbl.text = icon
-	icon_lbl.layout_mode = Control.LAYOUT_MODE_ANCHORS
 	icon_lbl.anchor_left = 0.5; icon_lbl.anchor_right = 0.5
 	icon_lbl.anchor_top = 0.5; icon_lbl.anchor_bottom = 0.5
 	icon_lbl.offset_left = -80; icon_lbl.offset_right = 80
@@ -147,7 +152,6 @@ func _make_mode_button(label_text: String, icon: String) -> TextureButton:
 	# Text label
 	var text_lbl = Label.new()
 	text_lbl.text = label_text
-	text_lbl.layout_mode = Control.LAYOUT_MODE_ANCHORS
 	text_lbl.anchor_left = 0.5; text_lbl.anchor_right = 0.5
 	text_lbl.anchor_top = 0.5; text_lbl.anchor_bottom = 0.5
 	text_lbl.offset_left = -120; text_lbl.offset_right = 120
