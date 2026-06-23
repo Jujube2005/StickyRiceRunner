@@ -48,6 +48,7 @@ var speed_trail_vfx : CPUParticles3D = null    # Speed streak at high velocity
 var energy_trail_vfx : CPUParticles3D = null   # Glow overlay during invincibility
 var spawn_shield_vfx : MeshInstance3D = null   # Blue shield for spawn
 var _was_on_floor := false                     # For landing detection
+var _pending_spawn_shield_duration := 0.0      # Shield grant queued before _ready() finished
 var anim_player : AnimationPlayer = null
 var current_anim : String = ""
 
@@ -146,6 +147,11 @@ func _ready():
 	# This fixes the "character sinks into ground" issue caused by GLB pivot offset
 	await get_tree().process_frame
 	_auto_fix_model_y_offset()
+	
+	# Apply any spawn shield that was granted before _ready() finished
+	if _pending_spawn_shield_duration > 0.0:
+		grant_spawn_shield(_pending_spawn_shield_duration)
+		_pending_spawn_shield_duration = 0.0
 
 func _find_animation_player() -> AnimationPlayer:
 	# 1. Direct search
@@ -256,17 +262,19 @@ func _setup_shield_vfx():
 func _setup_spawn_shield_vfx():
 	spawn_shield_vfx = MeshInstance3D.new()
 	var sphere = SphereMesh.new()
-	sphere.radius = 1.6
-	sphere.height = 3.2
+	sphere.radius = 1.7
+	sphere.height = 3.4
 	spawn_shield_vfx.mesh = sphere
 	
 	var mat = StandardMaterial3D.new()
 	mat.transparency = StandardMaterial3D.TRANSPARENCY_ALPHA
-	mat.albedo_color = Color(0.2, 0.6, 1.0, 0.15) # Blue translucent
+	mat.cull_mode = BaseMaterial3D.CULL_DISABLED  # Visible from inside too
+	mat.albedo_color = Color(0.15, 0.55, 1.0, 0.55) # Brighter blue, more opaque
 	mat.emission_enabled = true
-	mat.emission = Color(0.1, 0.5, 1.0)
-	mat.emission_energy_multiplier = 1.2
+	mat.emission = Color(0.2, 0.6, 1.0)
+	mat.emission_energy_multiplier = 3.5
 	spawn_shield_vfx.material_override = mat
+	spawn_shield_vfx.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	
 	add_child(spawn_shield_vfx)
 	spawn_shield_vfx.visible = false
@@ -431,7 +439,7 @@ func _physics_process(delta):
 				fade_tween.tween_callback(func(): 
 					spawn_shield_vfx.visible = false
 					spawn_shield_vfx.scale = Vector3.ONE
-					spawn_shield_vfx.material_override.albedo_color.a = 0.15
+					spawn_shield_vfx.material_override.albedo_color.a = 0.4
 				)
 				
 			# Also stop the trail when silk protection ends
@@ -643,6 +651,7 @@ func _physics_process(delta):
 			global_position.z = other_player.global_position.z + 10.0
 			
 		stun(2.0)
+		grant_spawn_shield(3.0)
 
 func _update_effects(delta):
 	for effect in effect_durations.keys():
@@ -706,6 +715,11 @@ func grant_silk_protection():
 		trail_vfx.emitting = true
 
 func grant_spawn_shield(duration: float = 3.0):
+	# If VFX node isn't ready yet (called before _ready finishes), queue it
+	if spawn_shield_vfx == null:
+		_pending_spawn_shield_duration = duration
+		silk_protection_timer = duration  # Still apply protection even if VFX not ready
+		return
 	silk_protection_timer = duration
 	_show_spawn_shield_vfx()
 
@@ -839,28 +853,45 @@ func _show_spawn_shield_vfx():
 	
 	spawn_shield_vfx.visible = true
 	spawn_shield_vfx.scale = Vector3.ZERO
-	spawn_shield_vfx.material_override.albedo_color.a = 0.15
+	spawn_shield_vfx.material_override.albedo_color.a = 0.55
 	
 	var tween = create_tween()
-	# Pop in
-	tween.tween_property(spawn_shield_vfx, "scale", Vector3(1.2, 1.2, 1.2), 0.15).set_trans(Tween.TRANS_BACK)
-	tween.tween_property(spawn_shield_vfx, "scale", Vector3(1.0, 1.0, 1.0), 0.1)
+	# Pop in with bounce
+	tween.tween_property(spawn_shield_vfx, "scale", Vector3(1.3, 1.3, 1.3), 0.2).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tween.tween_property(spawn_shield_vfx, "scale", Vector3(1.0, 1.0, 1.0), 0.12)
 	
-	# Pulse effect while active
-	var pulse_tween = create_tween().set_loops(10)
-	pulse_tween.tween_property(spawn_shield_vfx, "scale", Vector3(1.05, 1.05, 1.05), 0.3)
-	pulse_tween.tween_property(spawn_shield_vfx, "scale", Vector3(1.0, 1.0, 1.0), 0.3)
+	# Pulse effect — loops for ~3 seconds (6 loops × 0.5s)
+	var pulse_tween = create_tween().set_loops(6)
+	pulse_tween.tween_property(spawn_shield_vfx, "scale", Vector3(1.08, 1.08, 1.08), 0.25)
+	pulse_tween.tween_property(spawn_shield_vfx, "scale", Vector3(1.0, 1.0, 1.0), 0.25)
+	
+	# Auto-hide after shield duration expires (fade out)
+	var shield_duration = silk_protection_timer
+	get_tree().create_timer(max(shield_duration - 0.4, 0.1)).timeout.connect(func():
+		if is_instance_valid(spawn_shield_vfx) and spawn_shield_vfx.visible:
+			var fade = create_tween()
+			fade.tween_property(spawn_shield_vfx, "material_override:albedo_color:a", 0.0, 0.4)
+			fade.parallel().tween_property(spawn_shield_vfx, "scale", Vector3(1.4, 1.4, 1.4), 0.4)
+			fade.tween_callback(func():
+				if is_instance_valid(spawn_shield_vfx):
+					spawn_shield_vfx.visible = false
+					spawn_shield_vfx.scale = Vector3.ONE
+					spawn_shield_vfx.material_override.albedo_color.a = 0.55
+			)
+	)
 
 func add_skill(skill_name: String) -> bool:
 	if skills.size() < 2:
 		skills.append(skill_name)
-		emit_signal("skills_changed", skills)
-		var warn_msg = LanguageManager.t("WARN_OBTAINED") + skill_name
-		set_warning(warn_msg)
-		# clear message
-		get_tree().create_timer(1.5).timeout.connect(clear_warning.bind(warn_msg))
-		return true
-	return false
+	else:
+		skills[1] = skill_name # Replace the second skill slot
+		
+	emit_signal("skills_changed", skills)
+	var warn_msg = LanguageManager.t("WARN_OBTAINED") + skill_name
+	set_warning(warn_msg)
+	# clear message
+	get_tree().create_timer(1.5).timeout.connect(clear_warning.bind(warn_msg))
+	return true
 
 func use_skill_at_slot(slot_index: int):
 	if slot_index < skills.size():

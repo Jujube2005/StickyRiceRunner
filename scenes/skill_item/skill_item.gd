@@ -8,6 +8,7 @@ var start_y: float = 0.0
 var is_active := true
 @export var box_type := "good" # "good" or "bad"
 var collected_by: Array = []
+var active_timer := 0.0
 
 func _ready():
 	add_to_group("skill_item")
@@ -28,6 +29,12 @@ func _tint_box_mesh():
 func _process(delta):
 	if !is_active: return
 	
+	if active_timer > 0:
+		active_timer -= delta
+		if active_timer <= 0:
+			deactivate()
+			return
+			
 	# Float animation
 	global_position.y = start_y + sin(Time.get_ticks_msec() * 0.001 * float_speed) * float_amplitude
 	
@@ -41,6 +48,7 @@ func activate(pos: Vector3, type: String = "good"):
 	visible = true
 	box_type = type
 	collected_by.clear()
+	active_timer = 0.0
 	$CollisionShape3D.set_deferred("disabled", false)
 	_tint_box_mesh()
 
@@ -64,7 +72,7 @@ func _on_body_entered(body):
 	
 	if collected_by.size() == 1:
 		# Start 3 second timeout for second player to grab
-		get_tree().create_timer(3.0).timeout.connect(deactivate)
+		active_timer = 3.0
 	
 	if box_type == "good":
 		var gm = get_tree().current_scene.find_child("GameManager", true, false)
