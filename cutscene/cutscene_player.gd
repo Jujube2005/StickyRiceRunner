@@ -140,19 +140,17 @@ func _do_show_image(action: Dictionary) -> void:
 		_image_rect.texture = load(path)
 	_image_rect.scale = Vector2.ONE
 	_image_rect.visible = true
-	# Set pivot after layout so size is valid
-	_image_rect.call_deferred("set", "pivot_offset", _image_rect.size / 2.0)
-	await get_tree().process_frame
-	_image_rect.pivot_offset = _image_rect.size / 2.0
+	# Use viewport center as pivot — always valid regardless of layout timing
+	var vp_center = get_viewport().get_visible_rect().size / 2.0
+	_image_rect.pivot_offset = vp_center
 
 	if zoom > 1.0:
 		_current_tween = create_tween()
-		# LINEAR for perfectly smooth, non-eased dolly-in
 		_current_tween.tween_property(_image_rect, "scale",
 			Vector2(zoom, zoom), duration
-		).set_trans(Tween.TRANS_LINEAR).set_ease(Tween.EASE_IN_OUT)
+		).set_trans(Tween.TRANS_LINEAR)
 		await _interruptible_wait(duration)
-		# Do NOT reset scale — next brush_wipe captures the current scale
+		# Do NOT reset scale — brush_wipe captures the current scale
 	else:
 		await _interruptible_wait(duration)
 
@@ -233,10 +231,10 @@ func _do_brush_wipe_image(action: Dictionary) -> void:
 	# New image starts at 1.0 and zooms linearly
 	_image_rect.scale = Vector2.ONE
 	_image_rect.modulate.a = 1.0
-	# Set pivot for new image
-	await get_tree().process_frame
-	_image_rect.pivot_offset = _image_rect.size / 2.0
-	old_rect.pivot_offset = old_rect.size / 2.0
+	# Use viewport center as pivot — always valid
+	var vp_center = get_viewport().get_visible_rect().size / 2.0
+	_image_rect.pivot_offset = vp_center
+	old_rect.pivot_offset = vp_center
 	
 	var mat = ShaderMaterial.new()
 	mat.shader = load("res://cutscene/brush_wipe.gdshader")
@@ -254,7 +252,7 @@ func _do_brush_wipe_image(action: Dictionary) -> void:
 	
 	# New image: smooth linear dolly-in
 	if zoom > 1.0:
-		_current_tween.tween_property(_image_rect, "scale", Vector2(zoom, zoom), duration).set_trans(Tween.TRANS_LINEAR).set_ease(Tween.EASE_IN_OUT)
+		_current_tween.tween_property(_image_rect, "scale", Vector2(zoom, zoom), duration).set_trans(Tween.TRANS_LINEAR)
 	
 	# Old image: continue its zoom seamlessly during the wipe
 	_current_tween.tween_property(old_rect, "scale", old_current_scale * (1.0 + (zoom - 1.0) * fade_time / duration), fade_time).set_trans(Tween.TRANS_LINEAR)
