@@ -80,8 +80,8 @@ func _ready() -> void:
 		podium_bg.scale = shrink_scale
 		$Podium.scale = shrink_scale
 		
-		podium_bg.position.y += 80  # ขยับโพเดียมขึ้น (จาก 130)
-		$Podium.position.y -= 60    # ขยับตัวละครขึ้นตามโพเดียม
+		podium_bg.position.y += 80  
+		$Podium.position.y -= 42
 		
 		# Make characters larger relative to the podium
 		var char_scale = Vector2(10.0, 10.0)
@@ -89,11 +89,11 @@ func _ready() -> void:
 			c.pivot_offset = Vector2(c.size.x / 2.0, c.size.y)
 			c.scale = char_scale
 			# Offset feet slightly so they stand better on the smaller steps
-			c.position.y -= 20
+			c.position.y += 15 # เปลี่ยนจาก -20 เป็น +15 เพื่อขยับตัวละครทุกตัวลงมาให้เท้าแตะพื้น
 		
 		var spread_offset = 150
-		var side_offset_2nd = 125 # ขยับที่สองต่ำลง (เดิม 95)
-		var side_offset_3rd = 155 # ขยับที่สามต่ำกว่าที่สอง
+		var side_offset_2nd = 125 
+		var side_offset_3rd = 155
 		
 		char_2nd.position.y += side_offset_2nd
 		label_2nd.position.y += side_offset_2nd
@@ -228,8 +228,10 @@ func _spawn_character(
 	var base_scale = Vector2(2.0, 2.0) # Adjust character size here!
 	var target_scale = base_scale
 	if data["char_key"] == "woman":
-		target_scale = base_scale * 1.15
+		target_scale = base_scale * 1.05 
 		char_rect.position.y += 20 
+	elif data["char_key"] == "npc":
+		target_scale = base_scale * 1.15 
 		
 	# Scale from bottom center so feet stay planted
 	char_rect.pivot_offset = Vector2(char_rect.size.x / 2.0, char_rect.size.y)
