@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://dr4g0lewx4iau" path="res://assets/textures/UI/Buttons/popup_paused.png" id="5_jxamu"]
 [ext_resource type="Texture2D" uid="uid://ddlfr5ngk7i1a" path="res://assets/textures/UI/Buttons/btn_play.png" id="5_play"]
 [ext_resource type="Texture2D" uid="uid://dnvchpd7n2b0x" path="res://assets/textures/UI/Buttons/close.png" id="6_close"]
+[ext_resource type="Texture2D" uid="uid://c3x77aeygtd0c" path="res://assets/textures/UI/Buttons/prew.png" id="7_prew"]
 
 [node name="SelectMode" type="Control" unique_id=779840873]
 layout_mode = 3
@@ -242,5 +243,17 @@ offset_right = -23.0
 offset_bottom = 85.0
 grow_horizontal = 0
 texture_normal = ExtResource("6_close")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="PrewBtn" type="TextureButton" parent="Content"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+offset_left = 25.0
+offset_top = 25.0
+offset_right = 85.0
+offset_bottom = 85.0
+texture_normal = ExtResource("7_prew")
 ignore_texture_size = true
 stretch_mode = 5

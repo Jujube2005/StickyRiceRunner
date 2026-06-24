@@ -9,6 +9,7 @@ var chosen_player_mode := ""  # "singleplayer" or "multiplayer"
 @onready var overlay = $Overlay
 @onready var content = $Content
 @onready var close_btn = %CloseBtn
+@onready var prew_btn = %PrewBtn
 
 # Step 1 — existing buttons repurposed
 @onready var race_btn = %RaceBtn    # → Single Player
@@ -22,6 +23,7 @@ func _ready():
 	_setup_step1()
 	_animate_in()
 	close_btn.pressed.connect(_on_close_pressed)
+	prew_btn.pressed.connect(_go_back_to_step1)
 
 # ────────────────────────────────────────────────────
 # STEP 1: Choose Player Mode
@@ -50,6 +52,7 @@ func _setup_step1():
 	_apply_button_hover(race_btn)
 	_apply_button_hover(endless_btn)
 	_apply_button_hover(close_btn)
+	_apply_button_hover(prew_btn)
 
 func _on_player_mode_selected(mode: String):
 	chosen_player_mode = mode
@@ -60,6 +63,7 @@ func _on_player_mode_selected(mode: String):
 # ────────────────────────────────────────────────────
 func _transition_to_step2():
 	current_step = Step.GAME_MODE
+	prew_btn.visible = true
 
 	# Animate Step 1 out (slide left)
 	var modes_node = content.find_child("Modes", true, false)
@@ -170,6 +174,7 @@ func _make_mode_button(label_text: String, _icon: String) -> TextureButton:
 func _go_back_to_step1():
 	chosen_player_mode = ""
 	current_step = Step.PLAYER_MODE
+	prew_btn.visible = false
 
 	var modes_node = content.find_child("Modes", true, false)
 	if modes_node:
