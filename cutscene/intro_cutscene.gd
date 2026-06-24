@@ -109,9 +109,9 @@ func _spawn_leaves() -> void:
 	_leaf_particles.angular_velocity_min = -60.0
 	_leaf_particles.angular_velocity_max =  60.0
 
-	# Scale — varied leaf sizes
-	_leaf_particles.scale_amount_min = 0.5
-	_leaf_particles.scale_amount_max = 1.0
+	# Scale — varied leaf sizes (reduced by ~70%)
+	_leaf_particles.scale_amount_min = 0.15
+	_leaf_particles.scale_amount_max = 0.30
 
 	# Colors - use original texture color, just slight transparency
 	_leaf_particles.color = Color(1.0, 1.0, 1.0, 0.85)
