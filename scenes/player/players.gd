@@ -451,7 +451,7 @@ func _physics_process(delta):
 		speed_factor *= 0.7
 		
 	$Model.scale = Vector3(1.0, 1.0, 1.0)
-	$Model.rotation.y = -PI # หันกลับไป -180 องศาตามที่ผู้เล่นระบุ
+	$Model.rotation.y = 0.0 # หันไป 0 องศา (หันไปทางลู่วิ่ง)
 		
 	# Pin model to body every frame (fixes sinking)
 	_sync_model_to_body()
