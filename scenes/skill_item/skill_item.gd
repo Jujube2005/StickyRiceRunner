@@ -49,10 +49,10 @@ func activate(pos: Vector3, type: String = "good"):
 	box_type = type
 	collected_by.clear()
 	
-	if $MeshInstance3D:
-		$MeshInstance3D.set_layer_mask_value(1, true)
-		$MeshInstance3D.set_layer_mask_value(2, false)
-		$MeshInstance3D.set_layer_mask_value(3, false)
+	if has_node("Model"):
+		_set_layer_mask($Model, 1, true)
+		_set_layer_mask($Model, 2, false)
+		_set_layer_mask($Model, 3, false)
 		
 	$CollisionShape3D.set_deferred("disabled", false)
 	_tint_box_mesh()
@@ -98,13 +98,19 @@ func _on_body_entered(body):
 
 	# Visual hide per player
 	if body.name == "Player1":
-		if $MeshInstance3D:
-			$MeshInstance3D.set_layer_mask_value(1, false)
-			$MeshInstance3D.set_layer_mask_value(3, true) # Only P2 can see
+		if has_node("Model"):
+			_set_layer_mask($Model, 1, false)
+			_set_layer_mask($Model, 3, true) # Only P2 can see
 	elif body.name == "Player2":
-		if $MeshInstance3D:
-			$MeshInstance3D.set_layer_mask_value(1, false)
-			$MeshInstance3D.set_layer_mask_value(2, true) # Only P1 can see
+		if has_node("Model"):
+			_set_layer_mask($Model, 1, false)
+			_set_layer_mask($Model, 2, true) # Only P1 can see
 
 	if collected_by.size() >= 2:
 		deactivate()
+
+func _set_layer_mask(node: Node, layer: int, value: bool):
+	if node is VisualInstance3D:
+		node.set_layer_mask_value(layer, value)
+	for child in node.get_children():
+		_set_layer_mask(child, layer, value)

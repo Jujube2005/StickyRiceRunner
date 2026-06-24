@@ -68,13 +68,19 @@ func _on_body_entered(body):
 		# Visual hide per player
 		if body.name == "Player1":
 			if $Model:
-				$Model.set_layer_mask_value(1, false)
-				$Model.set_layer_mask_value(3, true) # Only P2 can see now
+				_set_layer_mask($Model, 1, false)
+				_set_layer_mask($Model, 3, true) # Only P2 can see now
 		elif body.name == "Player2":
 			if $Model:
-				$Model.set_layer_mask_value(1, false)
-				$Model.set_layer_mask_value(2, true) # Only P1 can see now
+				_set_layer_mask($Model, 1, false)
+				_set_layer_mask($Model, 2, true) # Only P1 can see now
 		
 		# If both players collected it (or single player edge case), fully deactivate
 		if collected_by.size() >= 2:
 			deactivate()
+
+func _set_layer_mask(node: Node, layer: int, value: bool):
+	if node is VisualInstance3D:
+		node.set_layer_mask_value(layer, value)
+	for child in node.get_children():
+		_set_layer_mask(child, layer, value)
