@@ -265,6 +265,8 @@ func _do_brush_wipe_image(action: Dictionary) -> void:
 	_zoom_mat = _make_zoom_material()
 	_set_image_zoom(1.0)
 	
+	AudioManager.play_sfx("Drawing")
+	
 	_current_tween = create_tween()
 	_current_tween.set_parallel(true)
 	
