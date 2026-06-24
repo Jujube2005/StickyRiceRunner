@@ -26,7 +26,8 @@ const FADE_DURATION: float = 3.2
 @onready var skip_label: Label           = $SkipLabel
 @onready var cutscene_player_node: Node  = $CutscenePlayerNode
 
-var _player: Node  # CutscenePlayer instance
+var _player: Node
+var _has_skipped: bool = false
 
 func _ready() -> void:
 	# Instantiate the CutscenePlayer script onto the helper node
@@ -86,11 +87,14 @@ func _input(event: InputEvent) -> void:
 		_skip()
 
 func _skip() -> void:
+	if _has_skipped:
+		return
+	_has_skipped = true
 	if _player:
 		_player.request_skip()
 
 func _on_cutscene_finished() -> void:
-	# Fade to black then change scene
+	Engine.time_scale = 1.0  # Always reset before scene change
 	overlay.visible = true
 	var tween = create_tween()
 	tween.tween_property(overlay, "color:a", 1.0, 0.5)

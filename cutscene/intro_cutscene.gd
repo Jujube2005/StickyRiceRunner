@@ -26,6 +26,7 @@ const PATH_NAME_WOMAN = "res://cutscene/opening/name_woman.png"
 
 var _player: Node
 var _waiting_for_tap: bool = false
+var _has_skipped: bool = false
 
 # ─────────────────────────────────────────────────────────────
 func _ready() -> void:
@@ -157,10 +158,14 @@ func _input(event: InputEvent) -> void:
 		_skip()
 
 func _skip() -> void:
+	if _has_skipped:
+		return
+	_has_skipped = true
 	if _player:
 		_player.request_skip()
 
 func _on_cutscene_finished() -> void:
+	Engine.time_scale = 1.0  # Always reset before scene change
 	overlay.visible = true
 	var tween = create_tween()
 	tween.tween_property(overlay, "color:a", 1.0, 0.6)
