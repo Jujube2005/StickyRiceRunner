@@ -31,7 +31,7 @@ var current_zone: int = 1  # 1: Oxcart, 2: Phimai, 3: Yamo
 @export var skill_cooldown_min := 3.0
 @export var skill_cooldown_max := 5.0
 @export var dodge_window := 1.5
-const GOAL_DISTANCE = 1000
+const GOAL_DISTANCE = 2000
 
 # --- STATE ---
 var p1 = null

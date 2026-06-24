@@ -475,10 +475,10 @@ func show_silk_unlock(player_name: String, silk_name: String, silk_tex_path: Str
 
 func _process(delta):
 	if player1:
-		p1_distance.text = str(int(player1.distance)) + "m"
+		p1_distance.text = str(int(player1.distance)) + "/2000m"
 		
 	if player2:
-		p2_distance.text = str(int(player2.distance)) + "m"
+		p2_distance.text = str(int(player2.distance)) + "/2000m"
 		
 	# Compare distances and update LEADING indicators
 	if player1 and player2:
