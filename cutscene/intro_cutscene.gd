@@ -7,9 +7,11 @@ extends Control
 
 const NEXT_SCENE = "res://scenes/main_menu/main_menu.tscn"
 
-const PATH_BACKDROP = "res://cutscene/opening/openscene5.png"
-const PATH_MAN      = "res://cutscene/characters/man/man_intro.png"
-const PATH_WOMAN    = "res://cutscene/characters/woman/woman_intro.png"
+const PATH_BACKDROP  = "res://cutscene/opening/openscene5.png"
+const PATH_MAN       = "res://cutscene/characters/man/man_intro.png"
+const PATH_WOMAN     = "res://cutscene/characters/woman/woman_intro.png"
+const PATH_NAME_MAN  = "res://cutscene/opening/name_man.png"
+const PATH_NAME_WOMAN = "res://cutscene/opening/name_woman.png"
 
 @onready var image_rect: TextureRect        = $BackdropRect
 @onready var char_left: TextureRect         = $CharLeft
@@ -20,6 +22,7 @@ const PATH_WOMAN    = "res://cutscene/characters/woman/woman_intro.png"
 @onready var speaker_label: Label           = $DialoguePanel/VBox/SpeakerName
 @onready var skip_label: Label              = $SkipLabel
 @onready var tap_hint: Label                = $TapHint
+@onready var name_overlay: TextureRect      = $NameOverlay
 
 var _player: Node
 var _waiting_for_tap: bool = false
@@ -41,20 +44,9 @@ func _ready() -> void:
 	char_right.offset_bottom = 0
 	char_right.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 
-	# Move speaker label to Top Left and style it beautifully
-	speaker_label.get_parent().remove_child(speaker_label)
-	add_child(speaker_label)
-	speaker_label.layout_mode = 1
-	speaker_label.set_anchors_preset(PRESET_TOP_LEFT)
-	speaker_label.position = Vector2(80, 80)
-	speaker_label.add_theme_font_size_override("font_size", 100)
-	speaker_label.add_theme_color_override("font_color", Color(1, 0.84, 0))
-	speaker_label.add_theme_color_override("font_outline_color", Color.BLACK)
-	speaker_label.add_theme_constant_override("outline_size", 25)
-	var font = load("res://assets/textures/UI/Font/Mitr/Mitr-Bold.ttf")
-	if font:
-		speaker_label.add_theme_font_override("font", font)
+	# speaker_label stays inside DialoguePanel (not repositioned)
 	speaker_label.visible = false
+	name_overlay.visible = false
 
 	var cp_script = load("res://cutscene/cutscene_player.gd")
 	_player = cp_script.new()
@@ -74,6 +66,7 @@ func _ready() -> void:
 
 	var timeline: Array[Dictionary] = _build_timeline()
 	_player.finished.connect(_on_cutscene_finished)
+	_player.custom_action.connect(_on_custom_action)
 	_player.play_timeline(timeline)
 
 # ─────────────────────────────────────────────────────────────
@@ -81,54 +74,79 @@ func _build_timeline() -> Array[Dictionary]:
 	var t: Array[Dictionary] = []
 
 	# 1. Fade in backdrop
-	t.append({ "action": "fade_in",  "duration": 0.6 })
+	t.append({ "action": "fade_in",    "duration": 0.6 })
 	t.append({ "action": "show_image", "path": PATH_BACKDROP, "duration": 0.8, "zoom": 1.0 })
-	t.append({ "action": "wait", "duration": 0.5 })
+	t.append({ "action": "wait",       "duration": 0.4 })
 
-	# 2. Show Man on LEFT
+	# 2. Show Man
 	t.append({ "action": "show_char", "path": PATH_MAN, "side": "left", "duration": 0.5 })
-	t.append({ "action": "wait", "duration": 0.3 })
-	t.append({ "action": "play_sfx", "sfx_name": "skill_ready" })
+	t.append({ "action": "wait",      "duration": 0.2 })
 
-	# 3. Man's dialogue
-	t.append({
-		"action": "show_dialogue",
-		"speaker": "ไอนาย",
-		"text_th": "",
-		"text_en": ""
-	})
-	t.append({ "action": "wait", "duration": 3.5 })
-	t.append({ "action": "hide_dialogue" })
-	t.append({ "action": "wait", "duration": 0.3 })
+	# 3. Show Man's name with brush wipe
+	t.append({ "action": "show_name_image", "path": PATH_NAME_MAN })
+	t.append({ "action": "wait", "duration": 2.5 })
 
-	# 4. Hide Man
+	# 4. Hide name + Man
+	t.append({ "action": "hide_name_image" })
+	t.append({ "action": "wait", "duration": 0.3 })
 	t.append({ "action": "hide_char", "side": "left" })
 	t.append({ "action": "wait", "duration": 0.5 })
 
-	# 5. Show Woman on RIGHT
+	# 5. Show Woman
 	t.append({ "action": "show_char", "path": PATH_WOMAN, "side": "right", "duration": 0.5 })
-	t.append({ "action": "wait", "duration": 0.3 })
-	t.append({ "action": "play_sfx", "sfx_name": "skill_ready" })
+	t.append({ "action": "wait", "duration": 0.2 })
 
-	# 6. Woman's dialogue
-	t.append({
-		"action": "show_dialogue",
-		"speaker": "อีนาง",
-		"text_th": "",
-		"text_en": ""
-	})
-	t.append({ "action": "wait", "duration": 3.5 })
-	t.append({ "action": "hide_dialogue" })
-	t.append({ "action": "wait", "duration": 0.3 })
+	# 6. Show Woman's name with brush wipe
+	t.append({ "action": "show_name_image", "path": PATH_NAME_WOMAN })
+	t.append({ "action": "wait", "duration": 2.5 })
 
-	# 7. Hide Woman
+	# 7. Hide name + Woman
+	t.append({ "action": "hide_name_image" })
+	t.append({ "action": "wait", "duration": 0.3 })
 	t.append({ "action": "hide_char", "side": "right" })
 	t.append({ "action": "wait", "duration": 0.5 })
 
-	# 8. Fade out → done
+	# 8. Fade out
 	t.append({ "action": "fade_out", "duration": 0.8 })
 
 	return t
+
+# ─────────────────────────────────────────────────────────────
+# Show name image with brush wipe effect
+func _show_name_with_brush(path: String) -> void:
+	if not name_overlay:
+		return
+	if ResourceLoader.exists(path):
+		name_overlay.texture = load(path)
+	name_overlay.modulate.a = 1.0
+	name_overlay.scale = Vector2.ONE
+	name_overlay.visible = true
+
+	var mat = ShaderMaterial.new()
+	mat.shader = load("res://cutscene/brush_wipe.gdshader")
+	mat.set_shader_parameter("cutoff", 0.0)
+	name_overlay.material = mat
+
+	var tween = create_tween()
+	var update_shader = func(val: float):
+		if mat:
+			mat.set_shader_parameter("cutoff", val)
+	tween.tween_method(update_shader, 0.0, 1.0, 1.0)
+	await tween.finished
+	name_overlay.material = null
+
+# Handle custom actions from CutscenePlayer
+func _on_custom_action(action: Dictionary) -> void:
+	match action.get("action", ""):
+		"show_name_image":
+			_show_name_with_brush(action.get("path", ""))
+		"hide_name_image":
+			if name_overlay:
+				var tween = create_tween()
+				tween.tween_property(name_overlay, "modulate:a", 0.0, 0.4)
+				await tween.finished
+				name_overlay.visible = false
+				name_overlay.modulate.a = 1.0
 
 # ─────────────────────────────────────────────────────────────
 func _input(event: InputEvent) -> void:

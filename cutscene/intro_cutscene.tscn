@@ -72,6 +72,22 @@ bbcode_enabled = true
 text = "..."
 fit_content = true
 
+[node name="NameOverlay" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 0
+anchor_left = 0.0
+anchor_top = 1.0
+anchor_right = 0.0
+anchor_bottom = 1.0
+offset_left = 40.0
+offset_top = -280.0
+offset_right = 640.0
+offset_bottom = -40.0
+grow_vertical = 0
+expand_mode = 1
+stretch_mode = 5
+visible = false
+
 [node name="Overlay" type="ColorRect" parent="."]
 layout_mode = 1
 anchors_preset = 15

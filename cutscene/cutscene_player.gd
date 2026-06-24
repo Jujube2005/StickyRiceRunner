@@ -25,6 +25,7 @@ extends Node
 
 signal finished
 signal action_completed(index: int)
+signal custom_action(action: Dictionary)  # Emitted for app-specific actions
 
 # --- Node references (set via setup()) ---
 var _image_rect: TextureRect        = null  # Main image display
@@ -120,6 +121,11 @@ func _execute(action: Dictionary) -> void:
 			AudioManager.play_music_by_name(action.get("music_name", ""))
 		"stop_music":
 			AudioManager.stop_music()
+		# App-specific custom actions — emit signal and let the scene handle them
+		"show_name_image", "hide_name_image":
+			custom_action.emit(action)
+			# Wait for the scene to finish the animation (1.2s max)
+			await _interruptible_wait(action.get("duration", 1.2))
 
 # ─────────────────────────────────────────────────────────────
 # Show image with optional zoom tween, then wait duration
