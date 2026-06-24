@@ -18,8 +18,13 @@ var chosen_player_mode := ""  # "singleplayer" or "multiplayer"
 # Step 2 — created at runtime
 var step2_container : Control = null
 var header_label : Label = null
+var _modes_default_x: float = 0.0
 
 func _ready():
+	var modes_node = content.find_child("Modes", true, false)
+	if modes_node:
+		_modes_default_x = modes_node.position.x
+
 	_setup_step1()
 	_animate_in()
 	close_btn.pressed.connect(_on_close_pressed)
@@ -69,12 +74,12 @@ func _transition_to_step2():
 	var modes_node = content.find_child("Modes", true, false)
 	if modes_node:
 		var out_tween = create_tween()
-		out_tween.tween_property(modes_node, "position:x", -500.0, 0.22).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
+		out_tween.tween_property(modes_node, "position:x", _modes_default_x - 500.0, 0.22).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
 		out_tween.parallel().tween_property(modes_node, "modulate:a", 0.0, 0.18)
 		await out_tween.finished
 		modes_node.visible = false
 		modes_node.modulate.a = 1.0
-		modes_node.position.x = 0.0
+		modes_node.position.x = _modes_default_x
 
 	# Update header
 	if header_label:
@@ -111,12 +116,12 @@ func _build_step2_buttons():
 
 
 	# Animate Step 2 in (slide from right)
-	modes_node.position.x = 500.0
+	modes_node.position.x = _modes_default_x + 500.0
 	modes_node.modulate.a = 0.0
 	modes_node.visible = true
 
 	var in_tween = create_tween()
-	in_tween.tween_property(modes_node, "position:x", 0.0, 0.25).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	in_tween.tween_property(modes_node, "position:x", _modes_default_x, 0.25).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	in_tween.parallel().tween_property(modes_node, "modulate:a", 1.0, 0.2)
 
 func _make_mode_button(label_text: String, _icon: String) -> TextureButton:
@@ -130,12 +135,12 @@ func _make_mode_button(label_text: String, _icon: String) -> TextureButton:
 	btn.ignore_texture_size = true
 	btn.stretch_mode = TextureButton.STRETCH_SCALE
 
-	# Text label — same style/offsets as tscn Step-1 buttons
+	# Text label — perfectly centered horizontally
 	var text_lbl = Label.new()
 	text_lbl.text = label_text
 	text_lbl.anchor_left  = 0.5; text_lbl.anchor_right  = 0.5
 	text_lbl.anchor_top   = 0.5; text_lbl.anchor_bottom = 0.5
-	text_lbl.offset_left  = -147; text_lbl.offset_right  = 133
+	text_lbl.offset_left  = -150; text_lbl.offset_right  = 150
 	text_lbl.offset_top   = -107; text_lbl.offset_bottom =  19
 	text_lbl.grow_horizontal = Control.GROW_DIRECTION_BOTH
 	text_lbl.grow_vertical   = Control.GROW_DIRECTION_BOTH
@@ -150,14 +155,14 @@ func _make_mode_button(label_text: String, _icon: String) -> TextureButton:
 	text_lbl.add_theme_constant_override("line_spacing", -20)
 	btn.add_child(text_lbl)
 
-	# Play icon — same position/scale as tscn Step-1 buttons
+	# Play icon — perfectly centered horizontally
 	var play_icon = TextureRect.new()
 	play_icon.texture = play_tex
 	play_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	play_icon.stretch_mode = TextureRect.STRETCH_SCALE
 	play_icon.anchor_left  = 0.5; play_icon.anchor_right  = 0.5
 	play_icon.anchor_top   = 1.0; play_icon.anchor_bottom = 1.0
-	play_icon.offset_left  = -47; play_icon.offset_right  =  53
+	play_icon.offset_left  = -50; play_icon.offset_right  =  50
 	play_icon.offset_top   = -112; play_icon.offset_bottom = -12
 	play_icon.grow_horizontal = Control.GROW_DIRECTION_BOTH
 	play_icon.grow_vertical   = Control.GROW_DIRECTION_BEGIN
@@ -175,7 +180,7 @@ func _go_back_to_step1():
 	if modes_node:
 		# Slide out right
 		var out_tween = create_tween()
-		out_tween.tween_property(modes_node, "position:x", 500.0, 0.2).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
+		out_tween.tween_property(modes_node, "position:x", _modes_default_x + 500.0, 0.2).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
 		out_tween.parallel().tween_property(modes_node, "modulate:a", 0.0, 0.15)
 		await out_tween.finished
 
@@ -192,11 +197,11 @@ func _go_back_to_step1():
 			header_label.text = "PLAYER MODE"
 
 		# Slide back in from left
-		modes_node.position.x = -500.0
+		modes_node.position.x = _modes_default_x - 500.0
 		modes_node.modulate.a = 0.0
 		modes_node.visible = true
 		var in_tween = create_tween()
-		in_tween.tween_property(modes_node, "position:x", 0.0, 0.25).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+		in_tween.tween_property(modes_node, "position:x", _modes_default_x, 0.25).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 		in_tween.parallel().tween_property(modes_node, "modulate:a", 1.0, 0.2)
 
 # ────────────────────────────────────────────────────
