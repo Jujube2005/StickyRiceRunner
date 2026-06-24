@@ -82,22 +82,28 @@ func setup(
 		_action_timer.one_shot = true
 		add_child(_action_timer)
 
+var _is_skipping: bool = false
+
 func play_timeline(timeline: Array[Dictionary]) -> void:
 	_timeline = timeline
 	_current_index = 0
 	_is_playing = true
+	_is_skipping = false
 	_run()
 
 func request_skip() -> void:
+	_is_skipping = true
 	Engine.time_scale = 100.0
 
 func _run() -> void:
 	for i in _timeline.size():
 		_current_index = i
-		Engine.time_scale = 1.0
+		if not _is_skipping:
+			Engine.time_scale = 1.0
 		await _execute(_timeline[i])
 		action_completed.emit(i)
 	_is_playing = false
+	_is_skipping = false
 	Engine.time_scale = 1.0
 	finished.emit()
 
