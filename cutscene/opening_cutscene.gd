@@ -64,7 +64,7 @@ func _ready() -> void:
 			})
 		else:
 			timeline.append({
-				"action": "crossfade_image",
+				"action": "brush_wipe_image",
 				"path": OPENING_IMAGES[i],
 				"duration": PANEL_DURATION,
 				"fade_time": FADE_DURATION,

@@ -80,26 +80,21 @@ func _transition_to_step2():
 	if header_label:
 		header_label.text = "GAME MODE"
 
-	# Build Step 2 buttons
 	_build_step2_buttons()
 
 func _build_step2_buttons():
-	# Reuse existing Modes HBoxContainer from .tscn (we hide original btns and add new content)
 	var modes_node = content.find_child("Modes", true, false)
 	if !modes_node:
 		return
 
-	# ถอด step1 buttons ออกโดยไม่ free เพื่อให้ใช้ซ้ำตอน back ได้
 	if is_instance_valid(race_btn) and race_btn.get_parent() == modes_node:
 		modes_node.remove_child(race_btn)
 	if is_instance_valid(endless_btn) and endless_btn.get_parent() == modes_node:
 		modes_node.remove_child(endless_btn)
 
-	# Clear เฉพาะ children ที่เหลือ (ถ้ามี)
 	for child in modes_node.get_children():
 		child.queue_free()
 
-	# Wait for cleanup
 	await get_tree().process_frame
 
 	# ── Race button ──
