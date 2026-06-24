@@ -85,7 +85,6 @@ func _spawn_leaves() -> void:
 
 	_leaf_particles = CPUParticles2D.new()
 	_leaf_particles.name = "LeafParticles"
-	_leaf_particles.z_index = 10  # Ensure it renders on top of the backdrop
 
 	# Position at top edge, full width
 	var vp = get_viewport().get_visible_rect()
