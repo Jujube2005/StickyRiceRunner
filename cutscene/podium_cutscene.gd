@@ -407,25 +407,26 @@ func _build_celebration_effects() -> void:
 	fw_setup.call(fireworks_right, Vector2(1620, 800))
 
 	# Banner
-	champion_banner = Label.new()
-	champion_banner.text = "CHAMPION"
-	champion_banner.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	champion_banner.vertical_alignment = VERTICAL_ALIGNMENT_TOP
+	var tex_rect = TextureRect.new()
+	var banner_tex: Texture2D = null
+	var b_img = Image.load_from_file("res://cutscene/ending/championtext.png")
+	if b_img:
+		banner_tex = ImageTexture.create_from_image(b_img)
+	if banner_tex:
+		tex_rect.texture = banner_tex
+	
+	tex_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	tex_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	
+	champion_banner = tex_rect
 	champion_banner.layout_mode = 1
 	champion_banner.anchor_left = 0.0
 	champion_banner.anchor_right = 1.0
 	champion_banner.anchor_top = 0.0
-	champion_banner.anchor_bottom = 0.15
-	champion_banner.offset_top = -16
+	champion_banner.anchor_bottom = 0.25 # Adjust as needed to fit the image
+	champion_banner.offset_top = 10
 	champion_banner.modulate = Color(1, 1, 1, 0)
 	champion_banner.visible = false
-	
-	champion_banner.add_theme_font_size_override("font_size", 100)
-	champion_banner.add_theme_color_override("font_color", Color(1, 0.84, 0))
-	champion_banner.add_theme_color_override("font_outline_color", Color.BLACK)
-	champion_banner.add_theme_constant_override("outline_size", 20)
-	var font = load("res://assets/textures/UI/Font/Mitr/Mitr-Bold.ttf")
-	champion_banner.add_theme_font_override("font", font)
 	
 	add_child(champion_banner)
 
