@@ -224,31 +224,7 @@ func show_countdown(count: int, on_done: Callable):
 	panel.queue_free()
 
 func _on_race_start_cooldown_changed(remaining: float):
-	var cd_label = get_node_or_null("CenterTop/CooldownLabel")
-	
-	if remaining <= 0:
-		if cd_label:
-			var tw = create_tween()
-			tw.tween_property(cd_label, "modulate:a", 0.0, 0.3)
-			tw.tween_callback(cd_label.queue_free)
-		return
-	
-	if !cd_label:
-		cd_label = Label.new()
-		cd_label.name = "CooldownLabel"
-		var ls = LabelSettings.new()
-		ls.font_size = 48
-		if font_resource: ls.font = font_resource
-		ls.font_color = Color(1.0, 0.3, 0.3)
-		ls.outline_size = 8
-		ls.outline_color = Color.BLACK
-		cd_label.label_settings = ls
-		cd_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		cd_label.position = Vector2(0, 100)
-		cd_label.size = Vector2(size.x, 80)
-		$CenterTop.add_child(cd_label)
-	
-	cd_label.text = "SKILLS READY IN " + str(ceil(remaining))
+	pass # ผู้เล่นให้เอาข้อความนี้ออก
 
 func _on_p1_screen_blackout(duration: float):
 	_show_half_vignette(duration, false)  # false = left half (Player 1)
