@@ -80,8 +80,8 @@ func _ready() -> void:
 		podium_bg.scale = shrink_scale
 		$Podium.scale = shrink_scale
 		
-		podium_bg.position.y += 130
-		$Podium.position.y -= 10
+		podium_bg.position.y += 80  # ขยับโพเดียมขึ้น (จาก 130)
+		$Podium.position.y -= 60    # ขยับตัวละครขึ้นตามโพเดียม
 		
 		# Make characters larger relative to the podium
 		var char_scale = Vector2(10.0, 10.0)
@@ -91,20 +91,21 @@ func _ready() -> void:
 			# Offset feet slightly so they stand better on the smaller steps
 			c.position.y -= 20
 		
-		var side_offset = 95
 		var spread_offset = 150
+		var side_offset_2nd = 125 # ขยับที่สองต่ำลง (เดิม 95)
+		var side_offset_3rd = 155 # ขยับที่สามต่ำกว่าที่สอง
 		
-		char_2nd.position.y += side_offset
-		label_2nd.position.y += side_offset
-		rank_label_2nd.position.y += side_offset
+		char_2nd.position.y += side_offset_2nd
+		label_2nd.position.y += side_offset_2nd
+		rank_label_2nd.position.y += side_offset_2nd
 		
 		char_2nd.position.x -= spread_offset
 		label_2nd.position.x -= spread_offset
 		rank_label_2nd.position.x -= spread_offset
 		
-		char_3rd.position.y += side_offset
-		label_3rd.position.y += side_offset
-		rank_label_3rd.position.y += side_offset
+		char_3rd.position.y += side_offset_3rd
+		label_3rd.position.y += side_offset_3rd
+		rank_label_3rd.position.y += side_offset_3rd
 		
 		char_3rd.position.x += spread_offset
 		label_3rd.position.x += spread_offset
@@ -424,7 +425,7 @@ func _build_celebration_effects() -> void:
 	champion_banner.anchor_left = 0.0
 	champion_banner.anchor_right = 1.0
 	champion_banner.anchor_top = 0.0
-	champion_banner.anchor_bottom = 0.50 # Adjust as needed to fit the image
+	champion_banner.anchor_bottom = 0.35 # ลดขนาดรูปลง (จาก 0.50)
 	champion_banner.offset_top = -50     # เลื่อนขึ้น (ค่าติดลบยิ่งขึ้นบน)
 	champion_banner.offset_bottom = -50  # เลื่อนขอบล่างขึ้นด้วย
 	champion_banner.modulate = Color(1, 1, 1, 0)
