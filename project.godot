@@ -19,11 +19,11 @@ config/icon="res://assets/icon.svg"
 
 LanguageManager="*res://scenes/shared_scripts/language_manager.gd"
 AudioManager="*res://scenes/shared_scripts/audio_manager.gd"
-UIClickSound="*res://scenes/shared_scripts/ui_click_sound.gd"
 VfxManager="*res://scenes/shared_scripts/vfx_manager.gd"
 CollectionManager="*res://scenes/shared_scripts/collection_manager.gd"
 SkillProjectileManager="*res://scenes/shared_scripts/skill_projectile_manager.gd"
 GameConfig="*res://scenes/shared_scripts/game_config.gd"
+UIClickSound="*res://scenes/shared_scripts/ui_click_sound.gd"
 
 [display]
 

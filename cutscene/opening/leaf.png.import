@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bv71hhsn0i61n"
-path="res://.godot/imported/npc_lose.png-03e5f5e7d39e377722e26f5eaad461f1.ctex"
+uid="uid://83r1h00sfcfd"
+path="res://.godot/imported/leaf.png-3ac46e67d6b59f338ef0ea94e9413de4.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://cutscene/characters/npc/npc_lose.png"
-dest_files=["res://.godot/imported/npc_lose.png-03e5f5e7d39e377722e26f5eaad461f1.ctex"]
+source_file="res://cutscene/opening/leaf.png"
+dest_files=["res://.godot/imported/leaf.png-3ac46e67d6b59f338ef0ea94e9413de4.ctex"]
 
 [params]
 
