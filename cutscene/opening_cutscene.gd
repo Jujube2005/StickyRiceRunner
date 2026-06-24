@@ -12,7 +12,6 @@ const OPENING_IMAGES: Array[String] = [
 	"res://cutscene/opening/openscene2.png",
 	"res://cutscene/opening/openscene3.png",
 	"res://cutscene/opening/openscene4.png",
-	"res://cutscene/opening/openscene5.png",
 ]
 
 # Duration each panel is shown (seconds)
@@ -20,7 +19,7 @@ const PANEL_DURATION: float = 3.0
 # Zoom scale reached by end of each panel
 const PANEL_ZOOM: float = 1.08
 # Fade duration between panels
-const FADE_DURATION: float = 0.8
+const FADE_DURATION: float = 1.6
 
 @onready var image_rect: TextureRect     = $ImageRect
 @onready var overlay: ColorRect          = $Overlay
