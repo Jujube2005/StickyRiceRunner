@@ -19,7 +19,7 @@ const PANEL_DURATION: float = 3.0
 # Zoom scale reached by end of each panel
 const PANEL_ZOOM: float = 1.08
 # Fade duration between panels
-const FADE_DURATION: float = 2.2
+const FADE_DURATION: float = 3.2
 
 @onready var image_rect: TextureRect     = $ImageRect
 @onready var overlay: ColorRect          = $Overlay

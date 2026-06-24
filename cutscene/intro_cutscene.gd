@@ -131,7 +131,7 @@ func _show_name_with_brush(path: String) -> void:
 	var update_shader = func(val: float):
 		if mat:
 			mat.set_shader_parameter("cutoff", val)
-	tween.tween_method(update_shader, 0.0, 1.0, 1.8)
+	tween.tween_method(update_shader, 0.0, 1.0, 2.8)
 	await tween.finished
 	name_overlay.material = null
 
