@@ -147,9 +147,9 @@ func show_countdown(count: int, on_done: Callable):
 	panel.position = Vector2(cx - panel_w / 2.0, cy - panel_h / 2.0)
 	add_child(panel)
 	
-	# Fade panel เข้า
+	# Fade panel เข้า (ปรับให้สีพื้นหลังโปร่งใส)
 	var bg_tw = create_tween()
-	bg_tw.tween_property(panel, "color:a", 0.82, 0.25)
+	bg_tw.tween_property(panel, "color:a", 0.0, 0.25)
 	
 	# --- Label ตัวเลข ---
 	var lbl = Label.new()
