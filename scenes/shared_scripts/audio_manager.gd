@@ -49,9 +49,10 @@ func _ready():
 
 # --- PUBLIC API ---
 
-func play_sfx(sfx_name: String, volume_offset: float = 0.0):
+@discardable_result
+func play_sfx(sfx_name: String, volume_offset: float = 0.0) -> AudioStreamPlayer:
 	if not _streams.has(sfx_name):
-		return
+		return null
 	var p := AudioStreamPlayer.new()
 	add_child(p)
 	p.stream      = _streams[sfx_name]
@@ -59,6 +60,7 @@ func play_sfx(sfx_name: String, volume_offset: float = 0.0):
 	p.bus         = "SFX" if AudioServer.get_bus_index("SFX") != -1 else "Master"
 	p.play()
 	p.finished.connect(p.queue_free)
+	return p
 
 func play_music(stream: AudioStream, loop := true):
 	if _music_player:
