@@ -105,10 +105,14 @@ func _spawn_players():
 	
 	# Update Camera targets if they exist
 	var cam_p1 = get_tree().current_scene.find_child("CameraP1", true, false)
-	if cam_p1: cam_p1.target = p1
+	if cam_p1: 
+		cam_p1.target = p1
+		cam_p1.set_cull_mask_value(3, false) # P1 camera does not see Layer 3
 	
 	var cam_p2 = get_tree().current_scene.find_child("CameraP2", true, false)
-	if cam_p2: cam_p2.target = p2
+	if cam_p2: 
+		cam_p2.target = p2
+		cam_p2.set_cull_mask_value(2, false) # P2 camera does not see Layer 2
 	
 	# Inform HUD about new players
 	var hud = get_tree().current_scene.find_child("GameplayHUD", true, false)

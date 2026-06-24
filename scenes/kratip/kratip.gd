@@ -5,7 +5,7 @@ extends Area3D
 @export var float_speed := 1.5
 @export var float_amplitude := 0.2
 
-var is_collected := false
+var collected_by: Array = []
 var is_active := false
 var start_y := 0.0
 var time_passed := 0.0
@@ -18,7 +18,12 @@ func _ready():
 
 func activate(pos: Vector3):
 	is_active = true
-	is_collected = false
+	collected_by.clear()
+	if $Model:
+		$Model.set_layer_mask_value(1, true)
+		$Model.set_layer_mask_value(2, false)
+		$Model.set_layer_mask_value(3, false)
+		
 	position = pos
 	start_y = pos.y
 	time_passed = randf() * PI * 2
@@ -38,7 +43,7 @@ func deactivate():
 	set_deferred("monitorable", false)
 
 func _process(delta):
-	if !is_active or is_collected: return
+	if !is_active: return
 	
 	time_passed += delta
 	
@@ -49,21 +54,27 @@ func _process(delta):
 	position.y = start_y + sin(time_passed * float_speed) * float_amplitude
 
 func _on_body_entered(body):
-	if !is_active or is_collected:
+	if !is_active or body in collected_by:
 		return
 		
 	if body.name == "Player1" or body.name == "Player2":
-		is_collected = true
+		collected_by.append(body)
 		body.add_score(value)
 		if body.has_method("add_charge"):
 			body.add_charge(value)
 		
-		# VFX + SFX
-		#VfxManager.spawn("kratib_pickup", global_position)
 		AudioManager.play_sfx("pickup")
 		
-		# Pulse effect before deactivating (optional juice)
-		var tween = create_tween()
-		tween.tween_property($Model, "scale", Vector3(1.5, 1.5, 1.5), 0.1)
-		tween.tween_callback(deactivate)
-		tween.tween_property($Model, "scale", Vector3(1.0, 1.0, 1.0), 0.0)
+		# Visual hide per player
+		if body.name == "Player1":
+			if $Model:
+				$Model.set_layer_mask_value(1, false)
+				$Model.set_layer_mask_value(3, true) # Only P2 can see now
+		elif body.name == "Player2":
+			if $Model:
+				$Model.set_layer_mask_value(1, false)
+				$Model.set_layer_mask_value(2, true) # Only P1 can see now
+		
+		# If both players collected it (or single player edge case), fully deactivate
+		if collected_by.size() >= 2:
+			deactivate()

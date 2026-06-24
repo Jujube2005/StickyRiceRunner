@@ -48,7 +48,12 @@ func activate(pos: Vector3, type: String = "good"):
 	visible = true
 	box_type = type
 	collected_by.clear()
-	active_timer = 0.0
+	
+	if $MeshInstance3D:
+		$MeshInstance3D.set_layer_mask_value(1, true)
+		$MeshInstance3D.set_layer_mask_value(2, false)
+		$MeshInstance3D.set_layer_mask_value(3, false)
+		
 	$CollisionShape3D.set_deferred("disabled", false)
 	_tint_box_mesh()
 
@@ -70,10 +75,6 @@ func _on_body_entered(body):
 		
 	collected_by.append(body)
 	
-	if collected_by.size() == 1:
-		# Start 3 second timeout for second player to grab
-		active_timer = 3.0
-	
 	if box_type == "good":
 		var gm = get_tree().current_scene.find_child("GameManager", true, false)
 		var skill_name := ""
@@ -94,6 +95,16 @@ func _on_body_entered(body):
 		body.apply_prank(bad_skill)
 		VfxManager.spawn("bad_box_pickup", global_position)
 		AudioManager.play_sfx("obstacle_hit") # Play a negative sound
+
+	# Visual hide per player
+	if body.name == "Player1":
+		if $MeshInstance3D:
+			$MeshInstance3D.set_layer_mask_value(1, false)
+			$MeshInstance3D.set_layer_mask_value(3, true) # Only P2 can see
+	elif body.name == "Player2":
+		if $MeshInstance3D:
+			$MeshInstance3D.set_layer_mask_value(1, false)
+			$MeshInstance3D.set_layer_mask_value(2, true) # Only P1 can see
 
 	if collected_by.size() >= 2:
 		deactivate()
