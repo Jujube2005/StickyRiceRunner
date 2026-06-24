@@ -451,6 +451,8 @@ func _physics_process(delta):
 		speed_factor *= 0.7
 		
 	$Model.scale = Vector3(1.0, 1.0, 1.0)
+	# โค้ดที่ผู้เล่นใส่ 180 ไปเมื่อกี้ทำให้ตัวละครเฉียงเพราะ Godot ใช้หน่วย Radian ไม่ใช่ Degree ครับ!
+	# ถ้าจะใช้องศาต้องพิมพ์ deg_to_rad(180) (ซึ่งก็คือค่า PI นั่นเอง)
 	# หันหน้าเข้าหากล้อง (0.0) ตอนนับถอยหลัง และหันหลังวิ่ง (PI) ตอนเริ่มเกม
 	if game_manager and game_manager.get("countdown_active") == true:
 		$Model.rotation.y = 0.0
