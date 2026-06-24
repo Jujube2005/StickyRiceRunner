@@ -229,7 +229,10 @@ func _do_brush_wipe_image(action: Dictionary) -> void:
 	_current_tween.set_parallel(true)
 	
 	# Animate cutoff
-	_current_tween.tween_method(func(val): if mat: mat.set_shader_parameter("cutoff", val), 0.0, 1.0, fade_time)
+	var update_shader = func(val: float):
+		if mat:
+			mat.set_shader_parameter("cutoff", val)
+	_current_tween.tween_method(update_shader, 0.0, 1.0, fade_time)
 	
 	if zoom > 1.0:
 		_current_tween.tween_property(_image_rect, "scale", Vector2(zoom, zoom), duration).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)

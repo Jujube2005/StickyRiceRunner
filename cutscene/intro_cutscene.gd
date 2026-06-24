@@ -7,7 +7,7 @@ extends Control
 
 const NEXT_SCENE = "res://scenes/main_menu/main_menu.tscn"
 
-const PATH_BACKDROP = "res://cutscene/opening/openscene7.png"
+const PATH_BACKDROP = "res://cutscene/opening/openscene5.png"
 const PATH_MAN      = "res://cutscene/characters/man/man_intro.png"
 const PATH_WOMAN    = "res://cutscene/characters/woman/woman_intro.png"
 
