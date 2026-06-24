@@ -22,8 +22,4 @@ shape = SubResource("CapsuleShape3D_3d750")
 [node name="Rice" parent="Model" unique_id=1378908268 instance=ExtResource("1_w36du")]
 transform = Transform3D(3.9999998, 0, 0, 0, 3.9999998, 0, 0, 0, 3.9999998, 0, -3.4082818, 0)
 
-[node name="GlowLight" type="OmniLight3D" parent="." unique_id=20240529]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0.4, 0)
-light_color = Color(1, 0.8, 0.3, 1)
-light_energy = 0.8
-omni_range = 1.5
+

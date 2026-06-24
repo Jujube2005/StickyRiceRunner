@@ -6,6 +6,19 @@
 radius = 0.20019531
 height = 1.8047028
 
+[sub_resource type="Gradient" id="Gradient_shadow"]
+interpolation_mode = 2
+offsets = PackedFloat32Array(0, 0.55, 1)
+colors = PackedColorArray(0, 0, 0, 0.85, 0, 0, 0, 0.35, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_shadow"]
+gradient = SubResource("Gradient_shadow")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.5, 0)
+width = 128
+height = 128
+
 [node name="Players" type="CharacterBody3D" unique_id=1649001234]
 script = ExtResource("1_n4luv")
 
@@ -16,5 +29,11 @@ shape = SubResource("CapsuleShape3D_hti1j")
 [node name="Rig" type="Node3D" parent="." unique_id=167856694]
 
 [node name="Model" type="Node3D" parent="." unique_id=1547751969]
+
+[node name="BlobShadow" type="Decal" parent="." unique_id=987654321]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+size = Vector3(1.2, 4.0, 1.2)
+texture_albedo = SubResource("GradientTexture2D_shadow")
+cull_mask = 1048573
 
 [node name="CameraHolder" type="Node3D" parent="." unique_id=1291734684]

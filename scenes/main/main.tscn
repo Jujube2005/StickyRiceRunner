@@ -29,7 +29,7 @@ sky_material = SubResource("ProceduralSkyMaterial_sky")
 background_mode = 2
 sky = SubResource("Sky_sky")
 tonemap_mode = 2
-glow_enabled = true
+glow_enabled = false
 glow_intensity = 0.1
 glow_strength = 0.3
 glow_bloom = 0.05
@@ -41,7 +41,7 @@ fog_aerial_perspective = 0.25
 fog_sky_affect = 0.3
 fog_height = -2.5
 fog_height_density = 0.06
-volumetric_fog_enabled = true
+volumetric_fog_enabled = false
 volumetric_fog_density = 0.001
 volumetric_fog_albedo = Color(0.85, 0.78, 0.62, 1)
 volumetric_fog_emission = Color(0.55, 0.4, 0.18, 1)
@@ -113,7 +113,7 @@ size = Vector2(0.5, 0.22)
 transform = Transform3D(1, 0, 0, 0, 0.9563048, 0.29237172, 0, -0.29237172, 0.9563048, 0, 8, -12)
 light_color = Color(1, 0.92, 0.72, 1)
 light_energy = 0.6
-shadow_enabled = true
+shadow_enabled = false
 shadow_opacity = 0.4
 shadow_blur = 1.5
 
@@ -202,20 +202,4 @@ script = ExtResource("5_1gmgm")
 [node name="SkyEffects" type="Node3D" parent="." unique_id=920381447]
 script = ExtResource("20_skyeff")
 
-[node name="DustParticles" type="GPUParticles3D" parent="SkyEffects" unique_id=920381448]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 5)
-amount = 28
-lifetime = 5.5
-preprocess = 2.5
-randomness = 0.5
-process_material = SubResource("PPM_dust")
-draw_pass_1 = SubResource("QuadMesh_dust")
 
-[node name="BirdsParticles" type="GPUParticles3D" parent="SkyEffects" unique_id=920381450]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 13, -45)
-amount = 6
-lifetime = 22.0
-preprocess = 5.0
-randomness = 0.6
-process_material = SubResource("PPM_birds")
-draw_pass_1 = SubResource("QuadMesh_birds")
