@@ -14,11 +14,11 @@ const OPENING_IMAGES: Array[String] = [
 	"res://cutscene/opening/openscene4.png",
 ]
 
-# Duration each panel is shown (seconds)
-const PANEL_DURATION: float = 3.0
+# Duration each panel is shown (MUST be > FADE_DURATION)
+const PANEL_DURATION: float = 5.0
 # Zoom scale reached by end of each panel
 const PANEL_ZOOM: float = 1.08
-# Fade duration between panels
+# Brush wipe duration between panels (must be < PANEL_DURATION)
 const FADE_DURATION: float = 3.2
 
 @onready var image_rect: TextureRect     = $ImageRect
