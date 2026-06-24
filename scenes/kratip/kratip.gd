@@ -20,9 +20,9 @@ func activate(pos: Vector3):
 	is_active = true
 	collected_by.clear()
 	if $Model:
-		$Model.set_layer_mask_value(1, true)
-		$Model.set_layer_mask_value(2, false)
-		$Model.set_layer_mask_value(3, false)
+		_set_layer_mask($Model, 1, true)
+		_set_layer_mask($Model, 2, false)
+		_set_layer_mask($Model, 3, false)
 		
 	position = pos
 	start_y = pos.y
