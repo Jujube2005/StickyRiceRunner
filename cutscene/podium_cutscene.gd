@@ -91,9 +91,12 @@ func _ready() -> void:
 			# Offset feet slightly so they stand better on the smaller steps
 			c.position.y += 15 # เปลี่ยนจาก -20 เป็น +15 เพื่อขยับตัวละครทุกตัวลงมาให้เท้าแตะพื้น
 		
+		# Specific vertical offsets to fine-tune feet placement
+		char_1st.position.y -= 25 # ขยับ P1 ขึ้น
+		
 		var spread_offset = 150
-		var side_offset_2nd = 125 
-		var side_offset_3rd = 155
+		var side_offset_2nd = 100 # ลดค่าลง = ขยับ P2 ขึ้น
+		var side_offset_3rd = 175 # เพิ่มค่าขึ้น = ขยับ NPC ลง
 		
 		char_2nd.position.y += side_offset_2nd
 		label_2nd.position.y += side_offset_2nd
