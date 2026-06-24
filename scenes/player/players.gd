@@ -451,7 +451,11 @@ func _physics_process(delta):
 		speed_factor *= 0.7
 		
 	$Model.scale = Vector3(1.0, 1.0, 1.0)
-	$Model.rotation.y = 0.0 # หันไป 0 องศา (หันไปทางลู่วิ่ง)
+	# หันหน้าเข้าหากล้อง (0.0) ตอนนับถอยหลัง และหันหลังวิ่ง (PI) ตอนเริ่มเกม
+	if game_manager and game_manager.get("countdown_active") == true:
+		$Model.rotation.y = 0.0
+	else:
+		$Model.rotation.y = PI
 		
 	# Pin model to body every frame (fixes sinking)
 	_sync_model_to_body()
