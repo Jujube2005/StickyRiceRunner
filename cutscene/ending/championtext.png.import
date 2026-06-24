@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cwsjoraub3nbp"
-path="res://.godot/imported/misic.png-83c23615b177dfc6fc11e9db48997c85.ctex"
+uid="uid://c8p83ncb1ov0s"
+path="res://.godot/imported/championtext.png-1f209b9beea77bd1b4182a66e6ef9156.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/textures/UI/Buttons/misic.png"
-dest_files=["res://.godot/imported/misic.png-83c23615b177dfc6fc11e9db48997c85.ctex"]
+source_file="res://cutscene/ending/championtext.png"
+dest_files=["res://.godot/imported/championtext.png-1f209b9beea77bd1b4182a66e6ef9156.ctex"]
 
 [params]
 

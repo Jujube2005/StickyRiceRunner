@@ -88,15 +88,14 @@ func _ready() -> void:
 		for c in [char_1st, char_2nd, char_3rd]:
 			c.pivot_offset = Vector2(c.size.x / 2.0, c.size.y)
 			c.scale = char_scale
-			# Offset feet slightly so they stand better on the smaller steps
-			c.position.y += 15 # เปลี่ยนจาก -20 เป็น +15 เพื่อขยับตัวละครทุกตัวลงมาให้เท้าแตะพื้น
+			c.position.y += 15 
 		
 		# Specific vertical offsets to fine-tune feet placement
-		char_1st.position.y -= 25 # ขยับ P1 ขึ้น
+		char_1st.position.y -= 25 
 		
 		var spread_offset = 150
-		var side_offset_2nd = 100 # ลดค่าลง = ขยับ P2 ขึ้น
-		var side_offset_3rd = 175 # เพิ่มค่าขึ้น = ขยับ NPC ลง
+		var side_offset_2nd = 100 
+		var side_offset_3rd = 175 
 		
 		char_2nd.position.y += side_offset_2nd
 		label_2nd.position.y += side_offset_2nd
