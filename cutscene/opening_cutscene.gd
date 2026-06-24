@@ -13,7 +13,6 @@ const OPENING_IMAGES: Array[String] = [
 	"res://cutscene/opening/openscene3.png",
 	"res://cutscene/opening/openscene4.png",
 	"res://cutscene/opening/openscene5.png",
-	"res://cutscene/opening/openscene6.png",
 ]
 
 # Duration each panel is shown (seconds)
