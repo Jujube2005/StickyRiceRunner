@@ -84,7 +84,7 @@ func _ready() -> void:
 		$Podium.position.y -= 10
 		
 		# Make characters larger relative to the podium
-		var char_scale = Vector2(1.7, 1.7)
+		var char_scale = Vector2(10.0, 10.0)
 		for c in [char_1st, char_2nd, char_3rd]:
 			c.pivot_offset = Vector2(c.size.x / 2.0, c.size.y)
 			c.scale = char_scale
@@ -224,9 +224,10 @@ func _spawn_character(
 	# rank_badge.text is no longer set since badge_text argument was removed
 
 	# Custom scale multiplier to fix empty space in image files
-	var target_scale = Vector2.ONE
+	var base_scale = Vector2(2.0, 2.0) # Adjust character size here!
+	var target_scale = base_scale
 	if data["char_key"] == "woman":
-		target_scale = Vector2(1.15, 1.15)
+		target_scale = base_scale * 1.15
 		char_rect.position.y += 20 
 		
 	# Scale from bottom center so feet stay planted
@@ -423,8 +424,9 @@ func _build_celebration_effects() -> void:
 	champion_banner.anchor_left = 0.0
 	champion_banner.anchor_right = 1.0
 	champion_banner.anchor_top = 0.0
-	champion_banner.anchor_bottom = 0.25 # Adjust as needed to fit the image
-	champion_banner.offset_top = 10
+	champion_banner.anchor_bottom = 0.50 # Adjust as needed to fit the image
+	champion_banner.offset_top = -50     # เลื่อนขึ้น (ค่าติดลบยิ่งขึ้นบน)
+	champion_banner.offset_bottom = -50  # เลื่อนขอบล่างขึ้นด้วย
 	champion_banner.modulate = Color(1, 1, 1, 0)
 	champion_banner.visible = false
 	
