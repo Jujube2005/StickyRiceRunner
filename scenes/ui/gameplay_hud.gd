@@ -426,7 +426,7 @@ func show_silk_fly_in(player_name: String, silk_name: String, silk_tex_path: Str
 func show_silk_unlock(player_name: String, silk_name: String, silk_tex_path: String = ""):
 	var popup = VBoxContainer.new()
 	popup.alignment = BoxContainer.ALIGNMENT_CENTER
-	popup.add_theme_constant_override("separation", 4)
+	popup.add_theme_constant_override("separation", -5)
 	
 	# Small thumbnail
 	if silk_tex_path != "" and ResourceLoader.exists(silk_tex_path):
@@ -434,15 +434,15 @@ func show_silk_unlock(player_name: String, silk_name: String, silk_tex_path: Str
 		thumb.texture = load(silk_tex_path)
 		thumb.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		thumb.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		thumb.custom_minimum_size = Vector2(72, 72)
+		thumb.custom_minimum_size = Vector2(48, 48)
 		thumb.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 		popup.add_child(thumb)
 	
 	# Unlock text
 	var lbl = Label.new()
-	lbl.text = LanguageManager.t("LBL_UNLOCK") + silk_name + "!"
+	lbl.text = "ได้รับผ้าไหม" + silk_name + "มาปกป้อง!"
 	var ls = LabelSettings.new()
-	ls.font_size = 26
+	ls.font_size = 18
 	if font_resource: ls.font = font_resource
 	ls.font_color = Color(0.95, 0.8, 1.0)
 	ls.outline_size = 6
