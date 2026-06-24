@@ -27,6 +27,7 @@ const SFX_LIST := [
 	"charge_full",    # ชาร์จครบ
 	"skill_ready",    # สุ่มสกิลได้แล้ว — 2 โน้ตไต่ขึ้น
 	"skill_impact",   # โปรเจกไทล์กระทบ — thwack + golden shimmer
+	"ui_click",       # กดปุ่ม UI ทั่วไป
 ]
 
 func _ready():
