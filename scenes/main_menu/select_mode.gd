@@ -110,11 +110,6 @@ func _build_step2_buttons():
 	endless2.pressed.connect(_start_game.bind("endless"))
 	_apply_button_hover(endless2)
 
-	# ── Back button ──
-	var back_btn = _make_back_button()
-	modes_node.add_child(back_btn)
-	back_btn.pressed.connect(_go_back_to_step1)
-	_apply_button_hover(back_btn)
 
 	# Animate Step 2 in (slide from right)
 	modes_node.position.x = 500.0
@@ -125,60 +120,51 @@ func _build_step2_buttons():
 	in_tween.tween_property(modes_node, "position:x", 0.0, 0.25).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	in_tween.parallel().tween_property(modes_node, "modulate:a", 1.0, 0.2)
 
-func _make_mode_button(label_text: String, icon: String) -> TextureButton:
+func _make_mode_button(label_text: String, _icon: String) -> TextureButton:
 	var font_res = load("res://assets/textures/UI/Font/Mitr/Mitr-Bold.ttf")
 	var popup_tex = load("res://assets/textures/UI/Buttons/popup_paused.png")
+	var play_tex  = load("res://assets/textures/UI/Buttons/btn_play.png")
 
 	var btn = TextureButton.new()
-	btn.custom_minimum_size = Vector2(280, 280)
+	btn.custom_minimum_size = Vector2(320, 320)
 	btn.texture_normal = popup_tex
 	btn.ignore_texture_size = true
 	btn.stretch_mode = TextureButton.STRETCH_SCALE
 
-	# Icon label (emoji on top)
-	var icon_lbl = Label.new()
-	icon_lbl.text = icon
-	icon_lbl.anchor_left = 0.5; icon_lbl.anchor_right = 0.5
-	icon_lbl.anchor_top = 0.5; icon_lbl.anchor_bottom = 0.5
-	icon_lbl.offset_left = -80; icon_lbl.offset_right = 80
-	icon_lbl.offset_top = -90; icon_lbl.offset_bottom = -30
-	icon_lbl.grow_horizontal = Control.GROW_DIRECTION_BOTH
-	icon_lbl.grow_vertical = Control.GROW_DIRECTION_BOTH
-	icon_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	icon_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	icon_lbl.add_theme_font_size_override("font_size", 42)
-	btn.add_child(icon_lbl)
-
-	# Text label
+	# Text label — same style/offsets as tscn Step-1 buttons
 	var text_lbl = Label.new()
 	text_lbl.text = label_text
-	text_lbl.anchor_left = 0.5; text_lbl.anchor_right = 0.5
-	text_lbl.anchor_top = 0.5; text_lbl.anchor_bottom = 0.5
-	text_lbl.offset_left = -120; text_lbl.offset_right = 120
-	text_lbl.offset_top = -20; text_lbl.offset_bottom = 80
+	text_lbl.anchor_left  = 0.5; text_lbl.anchor_right  = 0.5
+	text_lbl.anchor_top   = 0.5; text_lbl.anchor_bottom = 0.5
+	text_lbl.offset_left  = -147; text_lbl.offset_right  = 133
+	text_lbl.offset_top   = -107; text_lbl.offset_bottom =  19
 	text_lbl.grow_horizontal = Control.GROW_DIRECTION_BOTH
-	text_lbl.grow_vertical = Control.GROW_DIRECTION_BOTH
+	text_lbl.grow_vertical   = Control.GROW_DIRECTION_BOTH
 	text_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	text_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	text_lbl.vertical_alignment   = VERTICAL_ALIGNMENT_CENTER
 	if font_res:
 		text_lbl.add_theme_font_override("font", font_res)
-	text_lbl.add_theme_font_size_override("font_size", 40)
+	text_lbl.add_theme_font_size_override("font_size", 46)
 	text_lbl.add_theme_color_override("font_color", Color(0.99, 0.96, 0.89, 1))
 	text_lbl.add_theme_color_override("font_outline_color", Color(0.29, 0.16, 0.07, 1))
-	text_lbl.add_theme_constant_override("outline_size", 16)
+	text_lbl.add_theme_constant_override("outline_size", 18)
+	text_lbl.add_theme_constant_override("line_spacing", -20)
 	btn.add_child(text_lbl)
 
-	return btn
+	# Play icon — same position/scale as tscn Step-1 buttons
+	var play_icon = TextureRect.new()
+	play_icon.texture = play_tex
+	play_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	play_icon.stretch_mode = TextureRect.STRETCH_SCALE
+	play_icon.anchor_left  = 0.5; play_icon.anchor_right  = 0.5
+	play_icon.anchor_top   = 1.0; play_icon.anchor_bottom = 1.0
+	play_icon.offset_left  = -47; play_icon.offset_right  =  53
+	play_icon.offset_top   = -112; play_icon.offset_bottom = -12
+	play_icon.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	play_icon.grow_vertical   = Control.GROW_DIRECTION_BEGIN
+	play_icon.scale = Vector2(0.771, 0.771)
+	btn.add_child(play_icon)
 
-func _make_back_button() -> TextureButton:
-	var font_res = load("res://assets/textures/UI/Font/Mitr/Mitr-Bold.ttf")
-	var close_tex = load("res://assets/textures/UI/Buttons/close.png")
-
-	var btn = TextureButton.new()
-	btn.custom_minimum_size = Vector2(60, 60)
-	btn.texture_normal = close_tex
-	btn.ignore_texture_size = true
-	btn.stretch_mode = TextureButton.STRETCH_SCALE
 	return btn
 
 func _go_back_to_step1():
