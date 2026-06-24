@@ -24,6 +24,8 @@ const PATH_NAME_WOMAN = "res://cutscene/opening/name_woman.png"
 @onready var tap_hint: Label                = $TapHint
 @onready var name_overlay: TextureRect      = $NameOverlay
 
+var _leaf_particles: CPUParticles2D = null
+
 var _player: Node
 var _waiting_for_tap: bool = false
 var _has_skipped: bool = false
@@ -69,6 +71,65 @@ func _ready() -> void:
 	_player.finished.connect(_on_cutscene_finished)
 	_player.custom_action.connect(_on_custom_action)
 	_player.play_timeline(timeline)
+
+	# Start leaf particles after a short delay
+	_spawn_leaves()
+
+# ─────────────────────────────────────────────────────────────
+# Falling leaf particle effect
+func _spawn_leaves() -> void:
+	var leaf_tex: Texture2D = null
+	var leaf_path = "res://cutscene/opening/leaf.png"
+	if ResourceLoader.exists(leaf_path):
+		leaf_tex = load(leaf_path)
+
+	_leaf_particles = CPUParticles2D.new()
+	_leaf_particles.name = "LeafParticles"
+
+	# Position at top edge, full width
+	var vp = get_viewport().get_visible_rect()
+	_leaf_particles.position = Vector2(vp.size.x / 2.0, -20)
+
+	# Emitter settings
+	_leaf_particles.amount          = 25
+	_leaf_particles.lifetime        = 12.0   # slow fall
+	_leaf_particles.preprocess      = 6.0    # start with some already falling
+	_leaf_particles.emission_shape  = CPUParticles2D.EMISSION_SHAPE_RECTANGLE
+	_leaf_particles.emission_rect_extents = Vector2(vp.size.x / 2.0, 10)
+
+	# Fall direction: downward with some horizontal spread
+	_leaf_particles.direction       = Vector2(0.2, 1.0)
+	_leaf_particles.spread          = 25.0
+	_leaf_particles.gravity         = Vector2(0, 18)
+	_leaf_particles.initial_velocity_min = 20.0
+	_leaf_particles.initial_velocity_max = 55.0
+
+	# Rotation — leaves tumble as they fall
+	_leaf_particles.angular_velocity_min = -60.0
+	_leaf_particles.angular_velocity_max =  60.0
+
+	# Scale — varied leaf sizes
+	_leaf_particles.scale_amount_min = 0.18
+	_leaf_particles.scale_amount_max = 0.38
+	_leaf_particles.scale_amount_curve = null
+
+	# Colors — mix of greens and golden-autumn
+	_leaf_particles.color = Color(0.45, 0.72, 0.25, 0.9)
+	var gradient = Gradient.new()
+	gradient.add_point(0.0, Color(0.35, 0.68, 0.22, 0.9))
+	gradient.add_point(0.4, Color(0.60, 0.78, 0.18, 0.88))
+	gradient.add_point(0.8, Color(0.78, 0.65, 0.12, 0.7))
+	gradient.add_point(1.0, Color(0.70, 0.55, 0.10, 0.0))
+	_leaf_particles.color_ramp = gradient
+
+	# Texture
+	if leaf_tex:
+		_leaf_particles.texture = leaf_tex
+
+	# Insert above name_overlay but below chars
+	add_child(_leaf_particles)
+	move_child(_leaf_particles, name_overlay.get_index())
+	_leaf_particles.emitting = true
 
 # ─────────────────────────────────────────────────────────────
 func _build_timeline() -> Array[Dictionary]:
