@@ -451,9 +451,6 @@ func _physics_process(delta):
 		speed_factor *= 0.7
 		
 	$Model.scale = Vector3(1.0, 1.0, 1.0)
-	# โค้ดที่ผู้เล่นใส่ 180 ไปเมื่อกี้ทำให้ตัวละครเฉียงเพราะ Godot ใช้หน่วย Radian ไม่ใช่ Degree ครับ!
-	# ถ้าจะใช้องศาต้องพิมพ์ deg_to_rad(180) (ซึ่งก็คือค่า PI นั่นเอง)
-	# หันหน้าเข้าหากล้อง (0.0) ตอนนับถอยหลัง และหันหลังวิ่ง (PI) ตอนเริ่มเกม
 	if game_manager and game_manager.get("countdown_active") == true:
 		$Model.rotation.y = 0.0
 	else:
@@ -689,25 +686,21 @@ func add_kratip(amount: int = 1):
 func _spawn_collect_sparkle():
 	VfxManager.spawn("kratip_pickup", global_position + Vector3(0, 1.0, 0))
 	
-	# Every 10 kratips → grant a Silk collectible
+	# Every 10 kratips → grant a Shield
 	if kratip_milestone_count >= 10:
 		kratip_milestone_count = 0
 		emit_signal("kratip_count_changed", 0, 10)
 		
-		# Roll random silk
-		var silk_data = CollectionManager.roll_random_silk()
-		var is_new = CollectionManager.add_silk(silk_data["id"])
-		
 		# SFX
 		AudioManager.play_sfx("pickup")
 		
-		# Tell HUD to show cinematic fly-in
+		# Tell HUD to show shield popup
 		var hud = get_tree().current_scene.find_child("GameplayHUD", true, false)
-		if hud and hud.has_method("show_silk_fly_in"):
-			hud.show_silk_fly_in(self.name, silk_data["name"], silk_data.get("texture", ""), is_new)
+		if hud and hud.has_method("show_shield_unlock"):
+			hud.show_shield_unlock(self.name)
 			
-		# Grant silk protection (delay slightly to match fly-in animation)
-		get_tree().create_timer(0.6).timeout.connect(grant_silk_protection)
+		# Grant shield protection immediately
+		grant_silk_protection()
 
 func grant_silk_protection():
 	"""Grant or refresh the 5-second collision-immunity from a silk collectible."""

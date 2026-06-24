@@ -255,25 +255,7 @@ func _choose_skill():
 func get_random_skill():
 	return _choose_skill()
 
-func spawn_silk_for_player(target):
-	"""Spawns a Silk collectible ahead of the player when they collect 10 Kratips."""
-	var SILK_SCENE = load("res://scenes/silk/silk.tscn")
-	var silk = SILK_SCENE.instantiate()
-	var spawn_parent = get_parent().get_node_or_null("Obstacles")
-	if !spawn_parent:
-		spawn_parent = get_parent()
-	spawn_parent.add_child(silk)
-	
-	# Spawn about 35 units ahead of the player in their current lane
-	var spawn_z = target.global_position.z - 35.0
-	var spawn_x = target.lane * 3.0
-	var pos = Vector3(spawn_x, 0.5, spawn_z)
-	
-	# Get a random silk type from CollectionManager
-	var silk_data = CollectionManager.roll_random_silk()
-	
-	silk.activate(pos, silk_data)
-	print("[GAME MANAGER] Spawned ", silk_data["name"], " for ", target.name, " at Z:", int(spawn_z))
+
 
 func spawn_lane_block(target):
 	var spawner = get_parent().get_node("ObstacleSpawner")

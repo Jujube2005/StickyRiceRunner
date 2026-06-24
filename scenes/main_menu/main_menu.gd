@@ -35,7 +35,11 @@ func _ready():
 	$MenuContainer/ButtonList/QuitBtn.pressed.connect(_on_quit_pressed)
 	$MenuContainer/ButtonList/SettingsBtn.pressed.connect(_on_settings_pressed)
 	$MenuContainer/ButtonList/HowToBtn.pressed.connect(_on_how_to_pressed)
-	$MenuContainer/ButtonList/CollectionBtn.pressed.connect(_on_collection_pressed)
+	
+	var col_btn = $MenuContainer/ButtonList.get_node_or_null("CollectionBtn")
+	if col_btn:
+		col_btn.visible = false
+		
 	$CreditsBtn.pressed.connect(_on_credits_pressed)
 	$CreditsBtn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	$CreditsBtn.mouse_entered.connect(func(): _animate_icon_button($CreditsBtn, true))
