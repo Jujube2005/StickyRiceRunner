@@ -78,13 +78,11 @@ func _ready() -> void:
 # ─────────────────────────────────────────────────────────────
 # Falling leaf particle effect
 func _spawn_leaves() -> void:
-	var leaf_tex: Texture2D = null
-	var leaf_path = "res://cutscene/opening/leaf.png"
-	if ResourceLoader.exists(leaf_path):
-		leaf_tex = load(leaf_path)
+	var leaf_tex: Texture2D = load("res://cutscene/opening/leaf.png")
 
 	_leaf_particles = CPUParticles2D.new()
 	_leaf_particles.name = "LeafParticles"
+	_leaf_particles.z_index = 10  # Ensure it renders on top of the backdrop
 
 	# Position at top edge, full width
 	var vp = get_viewport().get_visible_rect()
@@ -109,18 +107,11 @@ func _spawn_leaves() -> void:
 	_leaf_particles.angular_velocity_max =  60.0
 
 	# Scale — varied leaf sizes
-	_leaf_particles.scale_amount_min = 0.18
-	_leaf_particles.scale_amount_max = 0.38
-	_leaf_particles.scale_amount_curve = null
+	_leaf_particles.scale_amount_min = 0.5
+	_leaf_particles.scale_amount_max = 1.0
 
-	# Colors — mix of greens and golden-autumn
-	_leaf_particles.color = Color(0.45, 0.72, 0.25, 0.9)
-	var gradient = Gradient.new()
-	gradient.add_point(0.0, Color(0.35, 0.68, 0.22, 0.9))
-	gradient.add_point(0.4, Color(0.60, 0.78, 0.18, 0.88))
-	gradient.add_point(0.8, Color(0.78, 0.65, 0.12, 0.7))
-	gradient.add_point(1.0, Color(0.70, 0.55, 0.10, 0.0))
-	_leaf_particles.color_ramp = gradient
+	# Colors - use original texture color, just slight transparency
+	_leaf_particles.color = Color(1.0, 1.0, 1.0, 0.85)
 
 	# Texture
 	if leaf_tex:
