@@ -75,12 +75,21 @@ func _ready() -> void:
 		podium_bg.pivot_offset = center_bottom
 		$Podium.pivot_offset = center_bottom
 		
-		var shrink_scale = Vector2(0.7, 0.7) # Adjust this value (e.g. 0.7 = 70% size)
+		# Make podium smaller
+		var shrink_scale = Vector2(0.55, 0.55) 
 		podium_bg.scale = shrink_scale
 		$Podium.scale = shrink_scale
 		
-		podium_bg.position.y += 80
-		$Podium.position.y -= 85
+		podium_bg.position.y += 130
+		$Podium.position.y -= 10
+		
+		# Make characters larger relative to the podium
+		var char_scale = Vector2(1.7, 1.7)
+		for c in [char_1st, char_2nd, char_3rd]:
+			c.pivot_offset = Vector2(c.size.x / 2.0, c.size.y)
+			c.scale = char_scale
+			# Offset feet slightly so they stand better on the smaller steps
+			c.position.y -= 20
 		
 		var side_offset = 95
 		var spread_offset = 150
