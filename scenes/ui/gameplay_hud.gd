@@ -440,7 +440,7 @@ func show_silk_unlock(player_name: String, silk_name: String, silk_tex_path: Str
 	
 	# Unlock text
 	var lbl = Label.new()
-	lbl.text = "ได้รับผ้าไหม" + silk_name + "มาปกป้อง!"
+	lbl.text = LanguageManager.t("LBL_UNLOCK") + silk_name + "!"
 	var ls = LabelSettings.new()
 	ls.font_size = 18
 	if font_resource: ls.font = font_resource
@@ -456,13 +456,13 @@ func show_silk_unlock(player_name: String, silk_name: String, silk_tex_path: Str
 	# Wait 1 frame for size
 	await get_tree().process_frame
 	
-	# Anchor at center of the player's own half-screen
-	var half_w = size.x / 2.0
+	# Anchor at edges (P1 on the left, P2 on the right)
 	var anchor_pos: Vector2
+	var padding = 40.0
 	if player_name == "Player1":
-		anchor_pos = Vector2(half_w / 2.0, size.y / 2.0)
+		anchor_pos = Vector2(padding + popup.size.x / 2.0, size.y / 2.0)
 	else:
-		anchor_pos = Vector2(half_w + half_w / 2.0, size.y / 2.0)
+		anchor_pos = Vector2(size.x - padding - popup.size.x / 2.0, size.y / 2.0)
 	
 	popup.pivot_offset = popup.size / 2.0
 	popup.global_position = anchor_pos - popup.size / 2.0
