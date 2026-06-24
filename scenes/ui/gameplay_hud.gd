@@ -292,7 +292,9 @@ void fragment() {
 	get_tree().create_timer(duration).timeout.connect(func():
 		if is_instance_valid(particles):
 			particles.emitting = false
-			get_tree().create_timer(2.6).timeout.connect(overlay.queue_free)
+			get_tree().create_timer(2.6).timeout.connect(func():
+				if is_instance_valid(overlay): overlay.queue_free()
+			)
 	)
 
 func show_skill_flash(is_right_half: bool, skill_color: Color):
