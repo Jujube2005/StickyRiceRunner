@@ -27,7 +27,6 @@ const PATH_NAME_WOMAN = "res://cutscene/opening/name_woman.png"
 var _leaf_particles: CPUParticles2D = null
 
 var _player: Node
-var _waiting_for_tap: bool = false
 var _has_skipped: bool = false
 
 # ─────────────────────────────────────────────────────────────

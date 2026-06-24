@@ -105,8 +105,9 @@ func set_music_volume(linear: float):
 
 # --- ROUTER ---
 
-func _generate(name: String) -> AudioStreamWAV:
-	match name:
+func _generate(sfx_name: String) -> AudioStreamWAV:
+	# A tiny fallback or procedural "click" or "thud" just so something plays.
+	match sfx_name:
 		"pickup":         return _gen_pickup()
 		"skill_pickup":   return _gen_skill_pickup()
 		"obstacle_hit":   return _gen_obstacle_hit()

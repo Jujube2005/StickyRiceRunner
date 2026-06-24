@@ -199,7 +199,7 @@ func _update_projectile(pd: Dictionary, delta: float) -> void:
 # IMPACT
 # ─────────────────────────────────────────────────────────────
 
-func _on_impact(proj: Node3D, target: Node3D, skill_name: String, skill_color: Color) -> void:
+func _on_impact(proj: Node3D, target: Node3D, _skill_name: String, skill_color: Color) -> void:
 	var impact_pos : Vector3 = target.global_position + Vector3(0, 1.2, 0) \
 		if is_instance_valid(target) else proj.global_position
 	var scene_root : Node = get_tree().current_scene
