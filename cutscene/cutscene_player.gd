@@ -133,16 +133,20 @@ func _do_show_image(action: Dictionary) -> void:
 	if ResourceLoader.exists(path):
 		_image_rect.texture = load(path)
 	_image_rect.scale = Vector2.ONE
-	_image_rect.pivot_offset = _image_rect.size / 2.0
 	_image_rect.visible = true
+	# Set pivot after layout so size is valid
+	_image_rect.call_deferred("set", "pivot_offset", _image_rect.size / 2.0)
+	await get_tree().process_frame
+	_image_rect.pivot_offset = _image_rect.size / 2.0
 
 	if zoom > 1.0:
 		_current_tween = create_tween()
+		# LINEAR for perfectly smooth, non-eased dolly-in
 		_current_tween.tween_property(_image_rect, "scale",
 			Vector2(zoom, zoom), duration
-		).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+		).set_trans(Tween.TRANS_LINEAR).set_ease(Tween.EASE_IN_OUT)
 		await _interruptible_wait(duration)
-		_image_rect.scale = Vector2.ONE
+		# Do NOT reset scale — next brush_wipe captures the current scale
 	else:
 		await _interruptible_wait(duration)
 
@@ -199,6 +203,9 @@ func _do_brush_wipe_image(action: Dictionary) -> void:
 	var fade_time: float = action.get("fade_time", 1.0)
 	var zoom: float = action.get("zoom", 1.0)
 
+	# Snapshot the current scale of the outgoing image
+	var old_current_scale = _image_rect.scale
+
 	var old_rect = TextureRect.new()
 	old_rect.texture = _image_rect.texture
 	old_rect.layout_mode = _image_rect.layout_mode
@@ -210,15 +217,20 @@ func _do_brush_wipe_image(action: Dictionary) -> void:
 	old_rect.expand_mode = _image_rect.expand_mode
 	old_rect.stretch_mode = _image_rect.stretch_mode
 	old_rect.pivot_offset = _image_rect.pivot_offset
-	old_rect.scale = _image_rect.scale
+	old_rect.scale = old_current_scale
 	
 	_image_rect.get_parent().add_child(old_rect)
 	_image_rect.get_parent().move_child(old_rect, _image_rect.get_index())
 	
 	if ResourceLoader.exists(path):
 		_image_rect.texture = load(path)
+	# New image starts at 1.0 and zooms linearly
 	_image_rect.scale = Vector2.ONE
 	_image_rect.modulate.a = 1.0
+	# Set pivot for new image
+	await get_tree().process_frame
+	_image_rect.pivot_offset = _image_rect.size / 2.0
+	old_rect.pivot_offset = old_rect.size / 2.0
 	
 	var mat = ShaderMaterial.new()
 	mat.shader = load("res://cutscene/brush_wipe.gdshader")
@@ -228,24 +240,24 @@ func _do_brush_wipe_image(action: Dictionary) -> void:
 	_current_tween = create_tween()
 	_current_tween.set_parallel(true)
 	
-	# Animate cutoff
+	# Animate brush wipe cutoff
 	var update_shader = func(val: float):
 		if mat:
 			mat.set_shader_parameter("cutoff", val)
 	_current_tween.tween_method(update_shader, 0.0, 1.0, fade_time)
 	
+	# New image: smooth linear dolly-in
 	if zoom > 1.0:
-		_current_tween.tween_property(_image_rect, "scale", Vector2(zoom, zoom), duration).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
-		
-	# Keep old rect zooming seamlessly during transition
-	var old_start_scale = old_rect.scale
-	_current_tween.tween_property(old_rect, "scale", old_start_scale * 1.025, fade_time).set_trans(Tween.TRANS_LINEAR)
+		_current_tween.tween_property(_image_rect, "scale", Vector2(zoom, zoom), duration).set_trans(Tween.TRANS_LINEAR).set_ease(Tween.EASE_IN_OUT)
+	
+	# Old image: continue its zoom seamlessly during the wipe
+	_current_tween.tween_property(old_rect, "scale", old_current_scale * (1.0 + (zoom - 1.0) * fade_time / duration), fade_time).set_trans(Tween.TRANS_LINEAR)
 	
 	_current_tween.chain().tween_callback(old_rect.queue_free)
 	_current_tween.chain().tween_callback(func(): _image_rect.material = null)
 	
 	await _interruptible_wait(duration)
-	_image_rect.scale = Vector2.ONE
+	# Do NOT reset scale — preserve for next transition
 
 # ─────────────────────────────────────────────────────────────
 func _do_fade(target: ColorRect, from_alpha: float, to_alpha: float, duration: float) -> void:
