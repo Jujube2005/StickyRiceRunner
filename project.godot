@@ -11,7 +11,8 @@ config_version=5
 [application]
 
 config/name="stickyRiceRunner"
-run/main_scene="res://cutscene/opening_cutscene.tscn"
+;run/main_scene="res://cutscene/opening_cutscene.tscn"
+run/main_scene="res://scenes/main_menu/main_menu.tscn"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://assets/icon.svg"
 
