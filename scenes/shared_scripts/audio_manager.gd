@@ -49,7 +49,6 @@ func _ready():
 
 # --- PUBLIC API ---
 
-@discardable_result
 func play_sfx(sfx_name: String, volume_offset: float = 0.0) -> AudioStreamPlayer:
 	if not _streams.has(sfx_name):
 		return null
