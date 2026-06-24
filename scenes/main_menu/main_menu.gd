@@ -6,6 +6,7 @@ extends Control
 @onready var menu_container = $MenuContainer
 @onready var button_list = $MenuContainer/ButtonList
 @onready var version_label = $VersionLabel
+@onready var music_btn: TextureButton = $MusicBtn
 
 # --- ASSETS ---
 const FONT_BOLD = "res://assets/textures/UI/Font/Mitr/Mitr-Bold.ttf"
@@ -14,6 +15,12 @@ const FONT_REGULAR = "res://assets/textures/UI/Font/Mitr/Mitr-Regular.ttf"
 const TEX_BOX_MENU = "res://assets/textures/UI/Buttons/board_bg.png"
 const TEX_BTN_ORANGE = "res://assets/textures/UI/Buttons/buttonOrange.png"
 const TEX_BTN_YELLOW = "res://assets/textures/UI/Buttons/buttonYellow.png"
+
+const TEX_MUSIC_ON  = preload("res://assets/textures/UI/Buttons/misic.png")
+const TEX_MUSIC_OFF = preload("res://assets/textures/UI/Buttons/music_off.png")
+
+# Persistent mute state across scenes
+static var _music_muted: bool = false
 
 # Session flag — plays cutscene once per app launch
 static var _cutscene_played_this_session: bool = false
@@ -37,6 +44,17 @@ func _ready():
 	
 	# เล่นเพลง Main Menu
 	AudioManager.play_music_by_name("musicMainMenu")
+	
+	# Setup Music Toggle Button
+	_update_music_btn_icon()
+	if _music_muted:
+		AudioManager.set_music_volume(0.0)
+	else:
+		AudioManager.set_music_volume(0.5)
+	music_btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	music_btn.pressed.connect(_on_music_btn_pressed)
+	music_btn.mouse_entered.connect(func(): _animate_icon_button(music_btn, true))
+	music_btn.mouse_exited.connect(func(): _animate_icon_button(music_btn, false))
 
 func _setup_ui_styles():
 	# Ensure Logo does not block mouse clicks even if it overlaps
@@ -183,3 +201,15 @@ func _on_credits_pressed():
 
 func _on_quit_pressed():
 	get_tree().quit()
+
+func _on_music_btn_pressed():
+	_music_muted = !_music_muted
+	_update_music_btn_icon()
+	if _music_muted:
+		AudioManager.set_music_volume(0.0)
+	else:
+		AudioManager.set_music_volume(0.5)
+
+func _update_music_btn_icon():
+	if music_btn:
+		music_btn.texture_normal = TEX_MUSIC_OFF if _music_muted else TEX_MUSIC_ON

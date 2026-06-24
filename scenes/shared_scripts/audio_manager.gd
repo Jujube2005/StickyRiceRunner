@@ -30,6 +30,11 @@ const SFX_LIST := [
 ]
 
 func _ready():
+	# Set default master volume to 50%
+	var master_bus = AudioServer.get_bus_index("Master")
+	if master_bus != -1:
+		AudioServer.set_bus_volume_db(master_bus, linear_to_db(0.5))
+		
 	for sfx in SFX_LIST:
 		var sfx_name: String = sfx
 		var path: String = AUDIO_DIR + sfx_name + ".wav"
