@@ -42,6 +42,23 @@ var _is_playing: bool = false
 
 var _action_timer: Timer
 var _current_tween: Tween
+var _zoom_mat: ShaderMaterial = null  # Persistent zoom shader on _image_rect
+
+# ─── Shader-based zoom helpers ───────────────────────────────
+func _make_zoom_material() -> ShaderMaterial:
+	var m = ShaderMaterial.new()
+	m.shader = load("res://cutscene/dolly_zoom.gdshader")
+	m.set_shader_parameter("zoom", 1.0)
+	return m
+
+func _get_image_zoom() -> float:
+	if _zoom_mat:
+		return _zoom_mat.get_shader_parameter("zoom")
+	return 1.0
+
+func _set_image_zoom(val: float) -> void:
+	if _zoom_mat:
+		_zoom_mat.set_shader_parameter("zoom", val)
 
 func setup(
 	image_rect: TextureRect,
@@ -128,7 +145,7 @@ func _execute(action: Dictionary) -> void:
 			await _interruptible_wait(action.get("duration", 1.2))
 
 # ─────────────────────────────────────────────────────────────
-# Show image with optional zoom tween, then wait duration
+# Show image with optional shader-based zoom (no scale, no pivot issues)
 func _do_show_image(action: Dictionary) -> void:
 	if not _image_rect:
 		return
@@ -138,19 +155,20 @@ func _do_show_image(action: Dictionary) -> void:
 
 	if ResourceLoader.exists(path):
 		_image_rect.texture = load(path)
-	_image_rect.scale = Vector2.ONE
 	_image_rect.visible = true
-	# Use viewport center as pivot — always valid regardless of layout timing
-	var vp_center = get_viewport().get_visible_rect().size / 2.0
-	_image_rect.pivot_offset = vp_center
+
+	# Apply / reuse zoom shader
+	if not _zoom_mat:
+		_zoom_mat = _make_zoom_material()
+	_set_image_zoom(1.0)
+	_image_rect.material = _zoom_mat
 
 	if zoom > 1.0:
 		_current_tween = create_tween()
-		_current_tween.tween_property(_image_rect, "scale",
-			Vector2(zoom, zoom), duration
-		).set_trans(Tween.TRANS_LINEAR)
+		var set_z = func(v: float): _set_image_zoom(v)
+		_current_tween.tween_method(set_z, 1.0, zoom, duration).set_trans(Tween.TRANS_LINEAR)
 		await _interruptible_wait(duration)
-		# Do NOT reset scale — brush_wipe captures the current scale
+		# Leave zoom at its current value — brush_wipe will read it
 	else:
 		await _interruptible_wait(duration)
 
@@ -198,7 +216,7 @@ func _do_crossfade_image(action: Dictionary) -> void:
 	_image_rect.scale = Vector2.ONE
 
 # ─────────────────────────────────────────────────────────────
-# Brush wipe transition with shader and continuous zoom
+# Brush wipe transition with shader and continuous shader-based zoom
 func _do_brush_wipe_image(action: Dictionary) -> void:
 	if not _image_rect:
 		return
@@ -207,8 +225,8 @@ func _do_brush_wipe_image(action: Dictionary) -> void:
 	var fade_time: float = action.get("fade_time", 1.0)
 	var zoom: float = action.get("zoom", 1.0)
 
-	# Snapshot the current scale of the outgoing image
-	var old_current_scale = _image_rect.scale
+	# Snapshot the current zoom of the outgoing image
+	var old_zoom = _get_image_zoom()
 
 	var old_rect = TextureRect.new()
 	old_rect.texture = _image_rect.texture
@@ -220,48 +238,58 @@ func _do_brush_wipe_image(action: Dictionary) -> void:
 	old_rect.grow_vertical = _image_rect.grow_vertical
 	old_rect.expand_mode = _image_rect.expand_mode
 	old_rect.stretch_mode = _image_rect.stretch_mode
-	old_rect.pivot_offset = _image_rect.pivot_offset
-	old_rect.scale = old_current_scale
+	# Give old_rect its own zoom shader at the current zoom value
+	var old_zoom_mat = _make_zoom_material()
+	old_zoom_mat.set_shader_parameter("zoom", old_zoom)
+	old_rect.material = old_zoom_mat
 	
 	_image_rect.get_parent().add_child(old_rect)
 	_image_rect.get_parent().move_child(old_rect, _image_rect.get_index())
 	
 	if ResourceLoader.exists(path):
 		_image_rect.texture = load(path)
-	# New image starts at 1.0 and zooms linearly
-	_image_rect.scale = Vector2.ONE
 	_image_rect.modulate.a = 1.0
-	# Use viewport center as pivot — always valid
-	var vp_center = get_viewport().get_visible_rect().size / 2.0
-	_image_rect.pivot_offset = vp_center
-	old_rect.pivot_offset = vp_center
 	
-	var mat = ShaderMaterial.new()
-	mat.shader = load("res://cutscene/brush_wipe.gdshader")
-	mat.set_shader_parameter("cutoff", 0.0)
-	_image_rect.material = mat
+	# Set up combined brush-wipe + zoom shader on new image
+	var wipe_mat = ShaderMaterial.new()
+	wipe_mat.shader = load("res://cutscene/brush_wipe.gdshader")
+	wipe_mat.set_shader_parameter("cutoff", 0.0)
+	_image_rect.material = wipe_mat
+	# Re-assign zoom_mat reference so _set_image_zoom works after wipe
+	_zoom_mat = _make_zoom_material()
+	_set_image_zoom(1.0)
 	
 	_current_tween = create_tween()
 	_current_tween.set_parallel(true)
 	
 	# Animate brush wipe cutoff
-	var update_shader = func(val: float):
-		if mat:
-			mat.set_shader_parameter("cutoff", val)
-	_current_tween.tween_method(update_shader, 0.0, 1.0, fade_time)
+	var update_wipe = func(val: float):
+		if wipe_mat:
+			wipe_mat.set_shader_parameter("cutoff", val)
+	_current_tween.tween_method(update_wipe, 0.0, 1.0, fade_time)
 	
-	# New image: smooth linear dolly-in
+	# New image: shader dolly-in via wipe shader zoom param
 	if zoom > 1.0:
-		_current_tween.tween_property(_image_rect, "scale", Vector2(zoom, zoom), duration).set_trans(Tween.TRANS_LINEAR)
+		var set_new_z = func(v: float):
+			if wipe_mat:
+				wipe_mat.set_shader_parameter("zoom", v)
+		_current_tween.tween_method(set_new_z, 1.0, zoom, duration).set_trans(Tween.TRANS_LINEAR)
 	
-	# Old image: continue its zoom seamlessly during the wipe
-	_current_tween.tween_property(old_rect, "scale", old_current_scale * (1.0 + (zoom - 1.0) * fade_time / duration), fade_time).set_trans(Tween.TRANS_LINEAR)
+	# Old image: continue its zoom during the wipe
+	var old_end_zoom = old_zoom + (zoom - 1.0) * fade_time / duration
+	var set_old_z = func(v: float):
+		if old_zoom_mat:
+			old_zoom_mat.set_shader_parameter("zoom", v)
+	_current_tween.tween_method(set_old_z, old_zoom, old_end_zoom, fade_time)
 	
 	_current_tween.chain().tween_callback(old_rect.queue_free)
-	_current_tween.chain().tween_callback(func(): _image_rect.material = null)
+	_current_tween.chain().tween_callback(func():
+		# After wipe: switch from wipe_mat to pure zoom_mat
+		_image_rect.material = _zoom_mat
+		_set_image_zoom(_get_image_zoom() if wipe_mat == null else wipe_mat.get_shader_parameter("zoom"))
+	)
 	
 	await _interruptible_wait(duration)
-	# Do NOT reset scale — preserve for next transition
 
 # ─────────────────────────────────────────────────────────────
 func _do_fade(target: ColorRect, from_alpha: float, to_alpha: float, duration: float) -> void:

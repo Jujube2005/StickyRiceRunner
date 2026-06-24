@@ -1,7 +1,11 @@
 shader_type canvas_item;
 
-uniform float cutoff : hint_range(0.0, 1.0) = 0.0;
+// Brush-wipe transition with built-in zoom support
+// cutoff 0.0 = fully visible new image; 1.0 = fully replaced
+uniform float cutoff      : hint_range(0.0, 1.0) = 0.0;
 uniform float smooth_size : hint_range(0.0, 1.0) = 0.12;
+// zoom for new image: 1.0 = no zoom, >1.0 = zoom in
+uniform float zoom        : hint_range(1.0, 3.0)  = 1.0;
 
 float hash(vec2 p) {
     return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453);
@@ -18,7 +22,7 @@ float noise(vec2 p) {
 float fbm(vec2 p) {
     float v = 0.0;
     float a = 0.5;
-    for(int i = 0; i < 4; i++) {
+    for (int i = 0; i < 4; i++) {
         v += a * noise(p);
         p *= 2.0;
         a *= 0.5;
@@ -27,23 +31,16 @@ float fbm(vec2 p) {
 }
 
 void fragment() {
-    // Diagonal wipe axis: top-left → bottom-right
-    // Mixing UV.x and UV.y gives a 45-degree diagonal
-    float diag = (UV.x + UV.y) * 0.5;
+    // Apply zoom to UV (scale around center)
+    vec2 zoomed_uv = (UV - 0.5) / zoom + 0.5;
+    COLOR = texture(TEXTURE, zoomed_uv);
 
-    // Streaky noise along the diagonal to mimic bristles
-    // Rotate UV 45° for bristle direction perpendicular to wipe
+    // Diagonal wipe mask (top-left → bottom-right)
+    float diag = (UV.x + UV.y) * 0.5;
     vec2 bristle_uv = vec2(UV.x - UV.y, UV.x + UV.y) * vec2(20.0, 3.0);
     float n = fbm(bristle_uv);
-
-    // Add noise offset to create jagged brush edges
     float value = diag + (n - 0.5) * 0.4;
-
-    // Map cutoff (0 to 1) to cover the full noisy range
     float mapped_cutoff = cutoff * 1.6 - 0.3;
-
-    // Smooth transition at the edge
     float alpha = smoothstep(value - smooth_size, value + smooth_size, mapped_cutoff);
-
     COLOR.a *= alpha;
 }
