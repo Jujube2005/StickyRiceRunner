@@ -78,7 +78,10 @@ func _ready() -> void:
 # ─────────────────────────────────────────────────────────────
 # Falling leaf particle effect
 func _spawn_leaves() -> void:
-	var leaf_tex: Texture2D = load("res://cutscene/opening/leaf.png")
+	var leaf_tex: Texture2D = null
+	var img = Image.load_from_file("res://cutscene/opening/leaf.png")
+	if img:
+		leaf_tex = ImageTexture.create_from_image(img)
 
 	_leaf_particles = CPUParticles2D.new()
 	_leaf_particles.name = "LeafParticles"
