@@ -183,11 +183,23 @@ func _show_name_with_brush(path: String) -> void:
 	mat.set_shader_parameter("cutoff", 0.0)
 	name_overlay.material = mat
 
+	var sfx = AudioManager.play_sfx("Drawing", -16.0)
+	
 	var tween = create_tween()
 	var update_shader = func(val: float):
 		if mat:
 			mat.set_shader_parameter("cutoff", val)
 	tween.tween_method(update_shader, 0.0, 1.0, 2.8)
+	
+	var sfx_timer = create_tween()
+	sfx_timer.tween_interval(1.8)
+	sfx_timer.tween_callback(func():
+		if is_instance_valid(sfx) and sfx.playing:
+			var sfx_fade = create_tween()
+			sfx_fade.tween_property(sfx, "volume_db", -60.0, 0.2)
+			sfx_fade.tween_callback(sfx.queue_free)
+	)
+	
 	await tween.finished
 	name_overlay.material = null
 

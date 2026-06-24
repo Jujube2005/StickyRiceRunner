@@ -265,7 +265,17 @@ func _do_brush_wipe_image(action: Dictionary) -> void:
 	_zoom_mat = _make_zoom_material()
 	_set_image_zoom(1.0)
 	
-	var sfx = AudioManager.play_sfx("Drawing")
+	var sfx = AudioManager.play_sfx("Drawing", -16.0)
+	
+	if is_instance_valid(sfx):
+		var sfx_timer = create_tween()
+		sfx_timer.tween_interval(fade_time)
+		sfx_timer.tween_callback(func():
+			if is_instance_valid(sfx) and sfx.playing:
+				var sfx_fade = create_tween()
+				sfx_fade.tween_property(sfx, "volume_db", -60.0, 0.2)
+				sfx_fade.tween_callback(sfx.queue_free)
+		)
 	
 	_current_tween = create_tween()
 	_current_tween.set_parallel(true)
@@ -295,12 +305,6 @@ func _do_brush_wipe_image(action: Dictionary) -> void:
 		# After wipe: switch from wipe_mat to pure zoom_mat
 		_image_rect.material = _zoom_mat
 		_set_image_zoom(_get_image_zoom() if wipe_mat == null else wipe_mat.get_shader_parameter("zoom"))
-		
-		# Fade out SFX when wipe finishes
-		if is_instance_valid(sfx) and sfx.playing:
-			var sfx_tween = create_tween()
-			sfx_tween.tween_property(sfx, "volume_db", -60.0, 0.3)
-			sfx_tween.tween_callback(sfx.queue_free)
 	)
 	
 	await _interruptible_wait(duration)
