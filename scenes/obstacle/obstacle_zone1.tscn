@@ -1,9 +1,10 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://d356yrxtr400t"]
 
-[ext_resource type="PackedScene" path="res://assets/models/obstacle/Hurdle.glb" id="1_hurdle"]
+[ext_resource type="PackedScene" uid="uid://xwmr1q1entdh" path="res://assets/models/obstacle/roadbarrier02.glb" id="1_lacuo"]
+[ext_resource type="PackedScene" uid="uid://bv568dsh2s7it" path="res://assets/models/obstacle/roadbarrier03.glb" id="2_eioof"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_zone3"]
-size = Vector3(1.0844727, 0.6, 0.1038208)
+size = Vector3(1.4033203, 0.6880859, 0.1038208)
 
 [node name="Obstacle" type="Area3D" unique_id=382382368]
 transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 1, 0)
@@ -11,12 +12,11 @@ collision_layer = 8
 collision_mask = 3
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=390459934]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.009521484, -0.20000002, -0.021759033)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.008056641, -0.21435556, -0.021759033)
 shape = SubResource("BoxShape3D_zone3")
 
-[node name="model_low" parent="." unique_id=616748129 instance=ExtResource("1_hurdle")]
-transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, -0.5, 0)
+[node name="model_high" parent="." unique_id=1274682360 instance=ExtResource("1_lacuo")]
+transform = Transform3D(-8.742278e-09, 0, 0.09707444, 0, 0.28104907, 0, -0.20000002, 0, -4.243259e-09, -0.10860133, -0.53444886, 0)
 
-[node name="model_high" parent="." unique_id=781977772 instance=ExtResource("1_hurdle")]
-transform = Transform3D(0.1, 0, 0, 0, 0.2, 0, 0, 0, 0.1, 0, -0.5, 0)
-
+[node name="model_low" parent="." unique_id=854008876 instance=ExtResource("2_eioof")]
+transform = Transform3D(0.119351946, 0, 0, 0, 0.3643535, 0, 0, 0, 0.005623275, -0.88040304, -0.5985348, -0.12923178)
