@@ -11,16 +11,22 @@ var _base_mesh : MeshInstance3D = null
 var _label : Label3D = null
 
 func _ready() -> void:
-	_base_mesh = MeshInstance3D.new()
-	var box: BoxMesh = BoxMesh.new()
-	box.size = Vector3(3.0, 4.0, 5.0)
-	_base_mesh.mesh = box
-	var mat: StandardMaterial3D = StandardMaterial3D.new()
-	mat.albedo_color = Color(0.45, 0.45, 0.50, 1.0)
-	mat.roughness = 0.9
-	_base_mesh.material_override = mat
-	_base_mesh.position = Vector3(0, 2.0, 0)
-	add_child(_base_mesh)
+	var elephant_scene: PackedScene = load("res://assets/models/elephant/elephant.glb")
+	if elephant_scene:
+		var elephant_model: Node3D = elephant_scene.instantiate()
+		elephant_model.position = Vector3(0, 0, 0)
+		add_child(elephant_model)
+	else:
+		_base_mesh = MeshInstance3D.new()
+		var box: BoxMesh = BoxMesh.new()
+		box.size = Vector3(3.0, 4.0, 5.0)
+		_base_mesh.mesh = box
+		var mat: StandardMaterial3D = StandardMaterial3D.new()
+		mat.albedo_color = Color(0.45, 0.45, 0.50, 1.0)
+		mat.roughness = 0.9
+		_base_mesh.material_override = mat
+		_base_mesh.position = Vector3(0, 2.0, 0)
+		add_child(_base_mesh)
 
 	_label = Label3D.new()
 	_label.text = "ELEPHANT"
