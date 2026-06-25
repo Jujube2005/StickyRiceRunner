@@ -6,6 +6,7 @@ extends Node3D
 ## Set target_player before adding to the tree.
 
 @export var target_player : Node3D = null
+var player_id: int = 1
 
 var _base_mesh : MeshInstance3D = null
 var anim_player: AnimationPlayer = null
@@ -41,6 +42,16 @@ func _ready() -> void:
 		_base_mesh.material_override = mat
 		_base_mesh.position = Vector3(0, 2.0, 0)
 		add_child(_base_mesh)
+
+	_apply_visibility_layer(self, player_id)
+
+func _apply_visibility_layer(node: Node, pid: int):
+	var layer_bit = 2 if pid == 1 else 3
+	if node is VisualInstance3D:
+		node.layers = (1 << (layer_bit - 1))
+	
+	for child in node.get_children():
+		_apply_visibility_layer(child, pid)
 
 	# Label removed
 
