@@ -108,12 +108,10 @@ func _build_step2_buttons():
 	race2.pressed.connect(_start_game.bind("race"))
 	_apply_button_hover(race2)
 
-	# ── Endless button (Coming Soon) ──
+	# ── Endless button ──
 	var endless2 = _make_mode_button("Endless\nMode", "♾️")
 	modes_node.add_child(endless2)
-	endless2.disabled = true
-	endless2.modulate = Color(0.5, 0.5, 0.5, 0.6) # ทำให้สีจางลงเพื่อบอกว่ากดไม่ได้
-	# endless2.pressed.connect(_start_game.bind("endless"))
+	endless2.pressed.connect(_start_game.bind("endless"))
 	_apply_button_hover(endless2)
 
 
