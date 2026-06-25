@@ -17,7 +17,7 @@ albedo_color = Color(0.35, 0.35, 0.35, 1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_dirt"]
 material = SubResource("StandardMaterial3D_dirt")
-size = Vector3(15, 0.5, 10.4)
+size = Vector3(100, 0.5, 10.4)
 
 [node name="Ground" type="StaticBody3D" unique_id=1642254633]
 collision_layer = 6
@@ -31,11 +31,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
 shape = SubResource("BoxShape3D_lv0v5")
 
 [node name="SideGroundLeft" type="MeshInstance3D" parent="." unique_id=888888881]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1.6, -11.554779, -0.25, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1.6, -79.554779, -0.25, 0)
 mesh = SubResource("BoxMesh_dirt")
 
 [node name="SideGroundRight" type="MeshInstance3D" parent="." unique_id=888888882]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1.6, 11.5, -0.25, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1.6, 79.5, -0.25, 0)
 mesh = SubResource("BoxMesh_dirt")
 
 [node name="SceneryPoints" type="Node3D" parent="." unique_id=1760085451]

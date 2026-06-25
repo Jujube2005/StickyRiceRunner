@@ -10,8 +10,8 @@ size = Vector3(30, 2, 10.4)
 albedo_color = Color(0.08, 0.28, 0.05, 1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_dirt4"]
-material = SubResource("StandardMaterial3D_dirt4")
-size = Vector3(15, 0.5, 10.4)
+	material = SubResource("StandardMaterial3D_dirt4")
+	size = Vector3(100, 0.5, 10.4)
 
 [node name="Ground" type="StaticBody3D" unique_id=1642254634]
 collision_layer = 6
@@ -22,12 +22,12 @@ script = ExtResource("1_zone4script")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
 shape = SubResource("BoxShape3D_zone4")
 
-[node name="SideGroundLeft" type="MeshInstance3D" parent="." unique_id=888888883]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1.6, -11.554779, -0.25, 0)
+	[node name="SideGroundLeft" type="MeshInstance3D" parent="." unique_id=888888883]
+	transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1.6, -79.554779, -0.25, 0)
 mesh = SubResource("BoxMesh_dirt4")
 
-[node name="SideGroundRight" type="MeshInstance3D" parent="." unique_id=888888884]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1.6, 11.5, -0.25, 0)
+	[node name="SideGroundRight" type="MeshInstance3D" parent="." unique_id=888888884]
+	transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1.6, 79.5, -0.25, 0)
 mesh = SubResource("BoxMesh_dirt4")
 
 [node name="road-v1" parent="." unique_id=1215348768 instance=ExtResource("2_road")]
