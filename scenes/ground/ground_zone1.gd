@@ -39,12 +39,27 @@ func _mirror_custom_decorations():
 				nodes_to_duplicate.append(child)
 				
 	for node in nodes_to_duplicate:
-		var duplicate = node.duplicate()
-		add_child(duplicate)
-		# Mirror X position and invert Y rotation (or keep Y rotation, but mirroring usually means X = -X)
-		duplicate.position.x = -node.position.x
-		# Optional: Flip rotation Y so it faces the same way relative to the road
-		duplicate.rotation.y = -node.rotation.y
+		# 1. Randomize the original (left side) node so each tile looks different!
+		node.position.x += randf_range(-1.5, 1.5)
+		node.position.z += randf_range(-4.0, 4.0)
+		node.rotation.y += randf_range(-0.3, 0.3)
+		
+		# Randomly hide some nodes on the left to make it less perfectly dense
+		if randf() < 0.15:
+			node.visible = false
+			
+		# 2. Duplicate to the right side (also with chance to skip)
+		if randf() > 0.15:
+			var duplicate = node.duplicate()
+			add_child(duplicate)
+			duplicate.visible = true
+			
+			# Mirror X, random Z offset
+			duplicate.position.x = -node.position.x + randf_range(-1.5, 1.5)
+			duplicate.position.z = node.position.z + randf_range(-4.0, 4.0)
+			
+			# Rotate 180 degrees (PI) so it faces the opposite direction, plus some random tilt
+			duplicate.rotation.y = node.rotation.y + PI + randf_range(-0.3, 0.3)
 
 func _spawn_decorations():
 	_used_positions.clear()

@@ -4,6 +4,8 @@
 [ext_resource type="PackedScene" uid="uid://cdj4snfl561xr" path="res://assets/models/ground/oldroad.glb" id="2_d4l17"]
 [ext_resource type="PackedScene" uid="uid://wtlsifuaqf1r" path="res://assets/models/ground/treeV1.glb" id="3_t3agl"]
 [ext_resource type="PackedScene" uid="uid://c3wl2hoenmsmt" path="res://assets/models/ground/rock.glb" id="4_p3dfm"]
+[ext_resource type="PackedScene" uid="uid://c2jqarvh3ujpu" path="res://assets/models/ground/Kinareemimus khonkaenesis.glb" id="5_p3dfm"]
+[ext_resource type="PackedScene" uid="uid://5rb001llwocq" path="res://assets/models/ground/Phuwiangosaurus sirindhornae.glb" id="6_83c17"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_zone4"]
 size = Vector3(30, 2, 10.4)
@@ -69,3 +71,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.028943, 0, 6.3111024)
 
 [node name="rock4" parent="." unique_id=477494002 instance=ExtResource("4_p3dfm")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.6755953, -0.025612116, -3.0689514)
+
+[node name="Sketchfab_Scene" parent="." unique_id=1421409945 instance=ExtResource("5_p3dfm")]
+transform = Transform3D(-8.742278e-09, 0, 0.2, 0, 0.2, 0, -0.2, 0, -8.742278e-09, -8.746833, -0.021294981, 5.45389)
+
+[node name="Sketchfab_Scene2" parent="." unique_id=279703989 instance=ExtResource("5_p3dfm")]
+transform = Transform3D(-0.1, 0, -1.509958e-08, 0, 0.1, 0, 1.509958e-08, 0, -0.1, -6.01764, -0.2182503, -4.686182)
+
+[node name="Sketchfab_Scene3" parent="." unique_id=1826260868 instance=ExtResource("6_83c17")]
+transform = Transform3D(-0.7, 0, -1.0569706e-07, 0, 0.7, 0, 1.0569706e-07, 0, -0.7, -10.4144535, 0, 1.27283)
