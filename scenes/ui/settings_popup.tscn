@@ -131,7 +131,7 @@ offset_bottom = 6.0
 grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(0.9063848, 0.9063848)
-theme_override_constants/separation = -50
+theme_override_constants/separation = 15
 
 [node name="Master" type="HBoxContainer" parent="Board/Content" unique_id=724954978]
 layout_mode = 2

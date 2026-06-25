@@ -31,6 +31,24 @@ func _ready():
 	_animate_in()
 	_update_label_texts()
 	
+	var grabber_tex = GradientTexture2D.new()
+	grabber_tex.width = 28
+	grabber_tex.height = 28
+	grabber_tex.fill = GradientTexture2D.FILL_RADIAL
+	grabber_tex.fill_from = Vector2(0.5, 0.5)
+	grabber_tex.fill_to = Vector2(0.95, 0.5)
+	var grad = Gradient.new()
+	grad.offsets = PackedFloat32Array([0.8, 0.9, 1.0])
+	grad.colors = PackedColorArray([Color(1,1,1,1), Color(1,1,1,1), Color(1,1,1,0)])
+	grabber_tex.gradient = grad
+
+	master_slider.add_theme_icon_override("grabber", grabber_tex)
+	master_slider.add_theme_icon_override("grabber_highlight", grabber_tex)
+	music_slider.add_theme_icon_override("grabber", grabber_tex)
+	music_slider.add_theme_icon_override("grabber_highlight", grabber_tex)
+	sfx_slider.add_theme_icon_override("grabber", grabber_tex)
+	sfx_slider.add_theme_icon_override("grabber_highlight", grabber_tex)
+	
 	# Connect Signals
 	master_slider.value_changed.connect(_on_master_volume_changed)
 	music_slider.value_changed.connect(_on_music_volume_changed)

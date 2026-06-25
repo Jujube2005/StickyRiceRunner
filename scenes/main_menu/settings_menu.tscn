@@ -203,7 +203,7 @@ text = "AUDIO"
 
 [node name="AudioSliders" type="VBoxContainer" parent="Panel/MarginOuter/VBoxMain/InnerPanel/MarginInner/Content" unique_id=987654321]
 layout_mode = 2
-theme_override_constants/separation = -35
+theme_override_constants/separation = 15
 
 [node name="Master" type="HBoxContainer" parent="Panel/MarginOuter/VBoxMain/InnerPanel/MarginInner/Content/AudioSliders" unique_id=396862945]
 layout_mode = 2
