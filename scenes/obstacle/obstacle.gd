@@ -99,8 +99,12 @@ func _on_body_entered(body) -> void:
 	if !is_active: return
 	
 	var node_body := body as Node
-	if node_body and node_body.has_method("stun"):
-		node_body.call("stun", 2.0)
-		AudioManager.play_sfx("obstacle_hit")
-		# Instead of queue_free, we deactivate
-		deactivate()
+	if node_body:
+		if node_body.has_method("die"):
+			node_body.call("die")
+			AudioManager.play_sfx("obstacle_hit")
+			deactivate()
+		elif node_body.has_method("stun"):
+			node_body.call("stun", 2.0)
+			AudioManager.play_sfx("obstacle_hit")
+			deactivate()
