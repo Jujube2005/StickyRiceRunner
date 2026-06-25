@@ -74,6 +74,7 @@ var current_anim : String = ""
 @export var anim_jump : String = "jump"
 @export var anim_stun : String = "stun"
 @export var anim_slide : String = "slide"
+@export var anim_buffalo_ride : String = "buffalo_ride"
 
 @export_group("Animation Files")
 @export_file("*.glb") var model_file : String
@@ -562,6 +563,10 @@ func _physics_process(delta):
 		if slide_timer > 0:
 			play_animation(anim_slide)
 			if anim_player:
+				anim_player.speed_scale = 1.0
+		elif is_riding_buffalo:
+			play_animation(anim_buffalo_ride)
+			if anim_player and current_anim == anim_buffalo_ride:
 				anim_player.speed_scale = 1.0
 		else:
 			play_animation(anim_run)

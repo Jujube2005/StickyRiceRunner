@@ -273,7 +273,7 @@ func _update_strike_gap(player: Node, gap_var: String, delta: float) -> void:
 	if strikes >= 3:
 		target_gap = 0.0 # Caught
 	elif strikes == 2:
-		target_gap = 4.0 # Very close, visible
+		target_gap = 1.5 # Very close, visible in camera
 	elif strikes <= 1:
 		target_gap = 30.0 # Hidden
 		
