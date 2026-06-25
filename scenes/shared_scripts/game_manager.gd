@@ -308,9 +308,14 @@ func _player_caught_by_elephant(caught_player: Node) -> void:
 	
 	print("[ENDLESS] CAUGHT: ", caught_player.name, " at ", int(caught_player.distance), "m")
 	
-	# Freeze the caught player in stun
-	if caught_player.has_method("stun"):
-		caught_player.stun(99.0)  # Long stun = "caught" animation
+	# Elephant caught player: Player dies immediately (fall flat)
+	caught_player.set("alive", false)
+	var model = caught_player.get_node_or_null("Model")
+	if model:
+		model.rotation.x = deg_to_rad(90)
+	
+	if caught_player.get("anim_player"):
+		caught_player.get("anim_player").play(caught_player.get("anim_stun"))
 	
 	# Determine winner by distance
 	var winner := "Draw"
