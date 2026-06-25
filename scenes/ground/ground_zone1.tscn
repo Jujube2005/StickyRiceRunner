@@ -79,7 +79,7 @@ transform = Transform3D(-8.742278e-09, 0, 0.2, 0, 0.2, 0, -0.2, 0, -8.742278e-09
 transform = Transform3D(-0.1, 0, -1.509958e-08, 0, 0.1, 0, 1.509958e-08, 0, -0.1, -6.01764, -0.2182503, -4.686182)
 
 [node name="Sketchfab_Scene3" parent="." unique_id=257207723 instance=ExtResource("6_p3dfm")]
-transform = Transform3D(-8.742278e-08, 0, 2, 0, 2, 0, -2, 0, -8.742278e-08, -6.0120416, 0.52615166, 1.0324093)
+transform = Transform3D(-8.742278e-08, 0, 2, 0, 2, 0, -2, 0, -8.742278e-08, -6.735072, 0.52615166, 1.0324093)
 
 [node name="treeV6" parent="." unique_id=1125470677 instance=ExtResource("3_t3agl")]
 transform = Transform3D(1500, 0, 0, 0, 1500, 0, 0, 0, 1500, -11.596054, -0.32307863, -5.1445365)
