@@ -208,17 +208,19 @@ func _spawn_elephants() -> void:
 	
 	if is_instance_valid(p1):
 		_elephant_p1 = Node3D.new()
+		_elephant_p1.name = "ElephantP1"
 		_elephant_p1.set_script(elephant_script)
 		_elephant_p1.set("target_player", p1)
 		_elephant_p1.set("player_id", 1)
-		get_parent().add_child.call_deferred(_elephant_p1)
+		add_child.call_deferred(_elephant_p1)
 	
 	if is_instance_valid(p2):
 		_elephant_p2 = Node3D.new()
+		_elephant_p2.name = "ElephantP2"
 		_elephant_p2.set_script(elephant_script)
 		_elephant_p2.set("target_player", p2)
 		_elephant_p2.set("player_id", 2)
-		get_parent().add_child.call_deferred(_elephant_p2)
+		add_child.call_deferred(_elephant_p2)
 
 
 func _update_endless(delta: float) -> void:
@@ -300,6 +302,10 @@ func _update_strike_gap(player: Node, gap_var: String, delta: float) -> void:
 		if current_gap > target_gap:
 			current_gap = target_gap
 			
+	# Debug gap as requested by user
+	if gap_var == "elephant_gap_p1" and current_gap < 30.0:
+		print("gap=", snapped(current_gap, 0.1))
+			
 	player.set("elephant_gap", current_gap)
 	set(gap_var, current_gap)
 
@@ -319,6 +325,7 @@ func _player_caught_by_elephant(caught_player: Node) -> void:
 	if game_ended: return
 	game_ended = true
 	
+	print("ELEPHANT CAUGHT ", caught_player.name.to_upper())
 	print("[ENDLESS] CAUGHT: ", caught_player.name, " at ", int(caught_player.distance), "m")
 	
 	# Elephant caught player: Player dies immediately (fall flat)
