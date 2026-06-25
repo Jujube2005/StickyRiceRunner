@@ -12,10 +12,10 @@ var _label : Label3D = null
 
 func _ready() -> void:
 	_base_mesh = MeshInstance3D.new()
-	var box := BoxMesh.new()
+	var box: BoxMesh = BoxMesh.new()
 	box.size = Vector3(3.0, 4.0, 5.0)
 	_base_mesh.mesh = box
-	var mat := StandardMaterial3D.new()
+	var mat: StandardMaterial3D = StandardMaterial3D.new()
 	mat.albedo_color = Color(0.45, 0.45, 0.50, 1.0)
 	mat.roughness = 0.9
 	_base_mesh.material_override = mat
@@ -35,7 +35,7 @@ func _process(_delta: float) -> void:
 	if not is_instance_valid(target_player):
 		return
 
-	var gap := 20.0
+	var gap: float = 20.0
 	if "elephant_gap" in target_player:
 		gap = float(target_player.get("elephant_gap"))
 	gap = max(gap, 0.0)

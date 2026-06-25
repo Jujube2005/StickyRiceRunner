@@ -198,7 +198,7 @@ func _process(delta):
 
 func _spawn_elephants() -> void:
 	"""Create one ElephantChaser per player in Endless Mode."""
-	var elephant_script := load("res://scenes/chaser/elephant_chaser.gd")
+	var elephant_script: Script = load("res://scenes/chaser/elephant_chaser.gd")
 	if elephant_script == null:
 		push_warning("[GameManager] elephant_chaser.gd not found!")
 		return
