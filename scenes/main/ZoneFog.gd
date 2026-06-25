@@ -67,3 +67,10 @@ func _process(_delta):
 
 	environment.fog_light_color = environment.fog_light_color.lerp(target_color, 0.04)
 	environment.fog_density     = lerp(environment.fog_density, target_density, 0.04)
+	
+	# Match sky horizon and ground colors to the fog color to seamlessly blend the edge of the world
+	if environment.sky and environment.sky.sky_material is ProceduralSkyMaterial:
+		var sky_mat = environment.sky.sky_material as ProceduralSkyMaterial
+		sky_mat.sky_horizon_color = sky_mat.sky_horizon_color.lerp(target_color, 0.04)
+		sky_mat.ground_horizon_color = sky_mat.ground_horizon_color.lerp(target_color, 0.04)
+		sky_mat.ground_bottom_color = sky_mat.ground_bottom_color.lerp(target_color.darkened(0.2), 0.04)

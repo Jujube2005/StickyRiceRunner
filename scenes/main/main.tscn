@@ -15,10 +15,10 @@
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_sky"]
 sky_top_color = Color(0.12, 0.42, 0.82, 1)
-sky_horizon_color = Color(0.78, 0.88, 0.98, 1)
+sky_horizon_color = Color(0.28, 0.52, 0.28, 1) # Green to match fog
 sky_curve = 0.09
-ground_bottom_color = Color(0.52, 0.38, 0.18, 1)
-ground_horizon_color = Color(0.88, 0.72, 0.35, 1)
+ground_bottom_color = Color(0.18, 0.42, 0.18, 1) # Darker green
+ground_horizon_color = Color(0.28, 0.52, 0.28, 1) # Green to match fog
 ground_curve = 0.04
 sun_angle_max = 5.5
 energy_multiplier = 1.05
