@@ -7,7 +7,7 @@
 size = Vector3(1.4033203, 0.6880859, 0.1038208)
 
 [node name="Obstacle" type="Area3D" unique_id=382382368]
-transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 1, 0)
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 0.5, 0)
 collision_layer = 8
 collision_mask = 3
 
