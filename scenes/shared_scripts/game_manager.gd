@@ -226,14 +226,14 @@ func _update_endless(delta: float) -> void:
 	# Update zone transitions (reuse same thresholds, but endless has no finish)
 	_check_endless_zone(max_dist)
 	
-	# Update elephant gaps
-	_update_elephant_gap(p1, "elephant_gap_p1", delta)
-	_update_elephant_gap(p2, "elephant_gap_p2", delta)
+	# Update elephant gaps smoothly based on strikes
+	_update_strike_gap(p1, "elephant_gap_p1", delta)
+	_update_strike_gap(p2, "elephant_gap_p2", delta)
 	
-	# Check if elephant caught either player
-	if elephant_gap_p1 <= 0.0 and not p1.get("finished"):
+	# Check if elephant caught either player (3 strikes)
+	if p1.get("obstacle_strikes") >= 3 and not p1.get("finished"):
 		_player_caught_by_elephant(p1)
-	elif elephant_gap_p2 <= 0.0 and not p2.get("finished"):
+	elif p2.get("obstacle_strikes") >= 3 and not p2.get("finished"):
 		_player_caught_by_elephant(p2)
 
 
@@ -261,46 +261,44 @@ func _check_endless_zone(max_dist: float) -> void:
 		print("[ENDLESS] Zone ", current_zone)
 
 
-func _update_elephant_gap(player: Node, gap_var: String, delta: float) -> void:
-	"""Reduce or increase a player's elephant gap based on their state."""
-	var gap: float = float(get(gap_var))
-	if gap <= 0.0: return  # Already caught
+func _update_strike_gap(player: Node, gap_var: String, delta: float) -> void:
+	"""Smoothly interpolate the elephant's distance based on obstacle strikes."""
+	var strikes: int = player.get("obstacle_strikes")
+	var current_gap: float = float(get(gap_var))
 	
-	if player.get("is_riding_buffalo"):
-		# Buffalo ride: elephant FALLS BEHIND
-		gap += ELEPHANT_RECOVER_RATE * delta
-		gap = min(gap, ELEPHANT_START_GAP * 2.0)  # Cap at 2x start gap
-	else:
-		# Normal running: elephant slowly gains
-		gap -= ELEPHANT_GAIN_RATE * delta
-	
-	# Sync to player so the ElephantChaser can read it
-	player.set("elephant_gap", gap)
-	set(gap_var, gap)
-
+	if current_gap <= 0.0 and strikes >= 3:
+		return # Already caught
+		
+	var target_gap: float = 30.0 # Hidden
+	if strikes >= 3:
+		target_gap = 0.0 # Caught
+	elif strikes == 2:
+		target_gap = 4.0 # Very close, visible
+	elif strikes <= 1:
+		target_gap = 30.0 # Hidden
+		
+	# Smoothly move gap towards target
+	if current_gap > target_gap:
+		current_gap -= 30.0 * delta # Elephant rushes in quickly
+		if current_gap < target_gap:
+			current_gap = target_gap
+	elif current_gap < target_gap:
+		current_gap += 10.0 * delta # Elephant falls back slowly
+		if current_gap > target_gap:
+			current_gap = target_gap
+			
+	player.set("elephant_gap", current_gap)
+	set(gap_var, current_gap)
 
 func on_player_crash(player: Node) -> void:
-	"""Called when a player hits an obstacle in Endless Mode. Elephant gains distance."""
-	if GameConfig.race_mode != "endless": return
-	if player == p1:
-		elephant_gap_p1 = max(elephant_gap_p1 - ELEPHANT_CRASH_PENALTY, 0.0)
-		p1.set("elephant_gap", elephant_gap_p1)
-	elif player == p2:
-		elephant_gap_p2 = max(elephant_gap_p2 - ELEPHANT_SKILL_PENALTY, 0.0)
-		p2.set("elephant_gap", elephant_gap_p2)
-
+	"""Called when a player hits an obstacle in Endless Mode."""
+	# The gap logic is now fully handled by strikes in _update_strike_gap
+	pass
 
 func on_buffalo_ride_started(player: Node) -> void:
 	"""Called when a player collects 10 Kratips and mounts the Buffalo."""
-	if GameConfig.race_mode != "endless": return
-	if player == p1:
-		elephant_gap_p1 = min(elephant_gap_p1 + BUFFALO_GAP_BOOST, ELEPHANT_START_GAP * 2.0)
-		p1.set("elephant_gap", elephant_gap_p1)
-		print("[ENDLESS] P1 Buffalo Ride! Elephant gap: ", elephant_gap_p1)
-	elif player == p2:
-		elephant_gap_p2 = min(elephant_gap_p2 + BUFFALO_GAP_BOOST, ELEPHANT_START_GAP * 2.0)
-		p2.set("elephant_gap", elephant_gap_p2)
-		print("[ENDLESS] P2 Buffalo Ride! Elephant gap: ", elephant_gap_p2)
+	# Strikes are reset in players.gd. We don't need to manually boost gap here.
+	pass
 
 
 func _player_caught_by_elephant(caught_player: Node) -> void:

@@ -37,8 +37,10 @@ var can_charge := true
 var effect_durations := {}
 
 # --- ENDLESS MODE: ELEPHANT CHASE ---
-var elephant_gap := 20.0          # Distance (m) between player and elephant
-const ELEPHANT_START_GAP := 20.0
+var elephant_gap := 30.0          # Distance (m) between player and elephant
+const ELEPHANT_START_GAP := 30.0
+var obstacle_strikes: int = 0
+var safe_run_timer: float = 0.0
 
 # --- ENDLESS MODE: BUFFALO RIDE ---
 var is_riding_buffalo := false
@@ -523,6 +525,12 @@ func _physics_process(delta):
 		buffalo_timer -= delta
 		if buffalo_timer <= 0.0:
 			_end_buffalo_ride()
+	elif GameConfig.race_mode == "endless" and alive and stun_timer <= 0.0:
+		# Recover strikes if running safely
+		safe_run_timer += delta
+		if safe_run_timer >= 12.0 and obstacle_strikes > 0:
+			obstacle_strikes -= 1
+			safe_run_timer = 0.0
 
 	# Calculate dynamic speed based on distance (+ global speed scale + buffalo bonus)
 	var gm_speed_scale := 1.0
@@ -828,6 +836,9 @@ func _spawn_collect_sparkle():
 
 func start_buffalo_ride() -> void:
 	"""Activate Buffalo Ride: speed boost + elephant gap recovery + one obstacle shield."""
+	obstacle_strikes = 0  # Reset strikes
+	safe_run_timer = 0.0
+	
 	if is_riding_buffalo:
 		# Refresh timer if already riding
 		buffalo_timer = BUFFALO_DURATION
@@ -933,9 +944,11 @@ func die() -> void:
 			VfxManager.spawn("spawn_shield_hit", global_position + Vector3(0, 1.0, 0))
 		return
 	
-	# Normal crash — reduce elephant gap in Endless Mode
-	if GameConfig.race_mode == "endless" and game_manager and "elephant_gap_p1" in game_manager:
-		if game_manager.has_method("on_player_crash"):
+	# Normal crash — increment strikes in Endless Mode
+	if GameConfig.race_mode == "endless":
+		obstacle_strikes += 1
+		safe_run_timer = 0.0
+		if game_manager and game_manager.has_method("on_player_crash"):
 			game_manager.on_player_crash(self)
 	
 	add_penalty(100)
