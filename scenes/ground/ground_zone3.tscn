@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://b2l6p52b2af6q"]
 
-[ext_resource type="PackedScene" uid="uid://orwbw3xyfods" path="res://assets/models/ground/road-v1.glb" id="1_au3k8"]
+[ext_resource type="PackedScene" uid="uid://5puofchkhk8s" path="res://assets/models/ground/road01.glb" id="1_au3k8"]
 [ext_resource type="PackedScene" uid="uid://drum62fjddmk6" path="res://assets/models/ground/ruinancienttemple.glb" id="3_ruin"]
 [ext_resource type="PackedScene" uid="uid://wtlsifuaqf1r" path="res://assets/models/ground/treeV1.glb" id="4_cplsf"]
 [ext_resource type="PackedScene" uid="uid://cl6t0nmfe0gig" path="res://assets/models/ground/Phimai.glb" id="5_pygj3"]
@@ -34,8 +34,11 @@ transform = Transform3D(1500, 0, 0, 0, 1500, 0, 0, 0, 1500, 5.036103, -0.5760054
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
 shape = SubResource("BoxShape3D_lv0v5")
 
-[node name="road-v1" parent="." unique_id=1049326560 instance=ExtResource("1_au3k8")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1.9, -0.578, 0.023, 0)
+[node name="road01" parent="." unique_id=1049326560 instance=ExtResource("1_au3k8")]
+transform = Transform3D(-3.715468e-07, 0, 6, 0, 6, 0, -8.5, 0, -2.6226832e-07, -1.95, 0, 0)
+
+[node name="road02" parent="." unique_id=764681803 instance=ExtResource("1_au3k8")]
+transform = Transform3D(-3.715468e-07, 0, 6, 0, 6, 0, -8.5, 0, -2.6226832e-07, 2, 0, 0)
 
 [node name="SideGroundLeft" type="MeshInstance3D" parent="." unique_id=888888881]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1.6, -53.832443, -0.3, 0)
