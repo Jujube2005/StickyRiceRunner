@@ -19,7 +19,7 @@ expand_margin_top = 18.0
 expand_margin_bottom = 18.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxTexture_kqam1"]
-bg_color = Color(0.95, 0.75, 0.15, 1)
+bg_color = Color(0.3, 0.8, 0.3, 1)
 corner_radius_top_left = 20
 corner_radius_top_right = 20
 corner_radius_bottom_right = 20
@@ -37,7 +37,7 @@ expand_margin_top = 18.0
 expand_margin_bottom = 18.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxTexture_xykus"]
-bg_color = Color(0.95, 0.75, 0.15, 1)
+bg_color = Color(0.3, 0.8, 0.3, 1)
 corner_radius_top_left = 20
 corner_radius_top_right = 20
 corner_radius_bottom_right = 20
@@ -55,7 +55,7 @@ expand_margin_top = 18.0
 expand_margin_bottom = 18.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxTexture_jwjb4"]
-bg_color = Color(0.95, 0.75, 0.15, 1)
+bg_color = Color(0.3, 0.8, 0.3, 1)
 corner_radius_top_left = 20
 corner_radius_top_right = 20
 corner_radius_bottom_right = 20
@@ -141,8 +141,6 @@ theme_override_constants/separation = 15
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
-theme_override_icons/grabber = ExtResource("4_h7ats")
-theme_override_icons/grabber_highlight = ExtResource("4_h7ats")
 theme_override_styles/slider = SubResource("StyleBoxTexture_h7ats")
 theme_override_styles/grabber_area = SubResource("StyleBoxTexture_kqam1")
 max_value = 1.0
@@ -157,8 +155,6 @@ theme_override_constants/separation = 15
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
-theme_override_icons/grabber = ExtResource("4_h7ats")
-theme_override_icons/grabber_highlight = ExtResource("4_h7ats")
 theme_override_styles/slider = SubResource("StyleBoxTexture_6rodm")
 theme_override_styles/grabber_area = SubResource("StyleBoxTexture_xykus")
 max_value = 1.0
@@ -173,8 +169,6 @@ theme_override_constants/separation = 15
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
-theme_override_icons/grabber = ExtResource("4_h7ats")
-theme_override_icons/grabber_highlight = ExtResource("4_h7ats")
 theme_override_styles/slider = SubResource("StyleBoxTexture_qycpn")
 theme_override_styles/grabber_area = SubResource("StyleBoxTexture_jwjb4")
 max_value = 1.0
