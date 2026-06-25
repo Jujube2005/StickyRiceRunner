@@ -230,10 +230,10 @@ func _update_endless(delta: float) -> void:
 	_update_strike_gap(p1, "elephant_gap_p1", delta)
 	_update_strike_gap(p2, "elephant_gap_p2", delta)
 	
-	# Check if elephant caught either player (3 strikes and gap closed)
-	if p1.get("obstacle_strikes") >= 3 and elephant_gap_p1 <= 0.2 and not p1.get("finished"):
+	# Check if elephant caught either player (3 strikes)
+	if p1.get("obstacle_strikes") >= 3 and not p1.get("finished"):
 		_player_caught_by_elephant(p1)
-	elif p2.get("obstacle_strikes") >= 3 and elephant_gap_p2 <= 0.2 and not p2.get("finished"):
+	elif p2.get("obstacle_strikes") >= 3 and not p2.get("finished"):
 		_player_caught_by_elephant(p2)
 
 
@@ -272,8 +272,9 @@ func _update_strike_gap(player: Node, gap_var: String, delta: float) -> void:
 	var target_gap: float = 30.0 # Hidden
 	if strikes >= 3:
 		target_gap = 0.0 # Caught
+		current_gap = 0.0 # Snap immediately to bite!
 	elif strikes == 2:
-		target_gap = 1.0 # Very close to the player
+		target_gap = 0.5 # Very close to the player (accommodate screen borders)
 	elif strikes <= 1:
 		target_gap = 30.0 # Hidden
 		
@@ -319,10 +320,11 @@ func _player_caught_by_elephant(caught_player: Node) -> void:
 	
 	# Determine winner by distance
 	var winner := "Draw"
-	if caught_player == p1 and is_instance_valid(p2):
-		winner = "Player 2"  # P2 survived longer
-	elif caught_player == p2 and is_instance_valid(p1):
-		winner = "Player 1"  # P1 survived longer
+	if is_instance_valid(p1) and is_instance_valid(p2):
+		if p1.distance > p2.distance:
+			winner = "Player 1"
+		elif p2.distance > p1.distance:
+			winner = "Player 2"
 	
 	game_over(winner)
 
