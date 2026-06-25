@@ -63,10 +63,15 @@ func _spawn_decorations():
 		var s = randf_range(0.2, 0.3)
 		_place(KINARE, Vector3(RIGHT_SIDE_X + randf_range(-2.0, 2.0), 0.0, randf_range(-4.0, 4.0)), Vector3(s, s, s), -90.0)
 
-	# 5. Trees — treeV1, random scatter on far sides
-	for _i in range(randi_range(1, 3)):
-		var side_x = FAR_LEFT_X + randf_range(-3.0, 0.0) if randf() < 0.5 else FAR_RIGHT_X + randf_range(0.0, 3.0)
-		_place(TREEV1, Vector3(side_x, 0.0, randf_range(-4.0, 4.0)), Vector3(1500.0, 1500.0, 1500.0), randf_range(0.0, 360.0))
+	# 5. Trees — treeV1, closer to road on both sides
+	for _i in range(randi_range(2, 4)):
+		# Left side trees closer to road edge
+		var left_x = randf_range(-16.0, -9.0)
+		_place(TREEV1, Vector3(left_x, 0.0, randf_range(-4.0, 4.0)), Vector3(1500.0, 1500.0, 1500.0), randf_range(0.0, 360.0))
+	for _i in range(randi_range(2, 4)):
+		# Right side trees closer to road edge
+		var right_x = randf_range(9.0, 16.0)
+		_place(TREEV1, Vector3(right_x, 0.0, randf_range(-4.0, 4.0)), Vector3(1500.0, 1500.0, 1500.0), randf_range(0.0, 360.0))
 
 func _place(scene: PackedScene, local_pos: Vector3, scale_vec: Vector3, rotation_y: float):
 	if not scene:
