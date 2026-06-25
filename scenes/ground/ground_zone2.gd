@@ -32,9 +32,10 @@ func _ready():
 func _spawn_random(scene: PackedScene, count: int, scale_vec: Vector3, rot_vec: Vector3, radius: float, random_y_rot: bool = false, random_scale_clayjar: bool = false, random_scale_tree: bool = false):
 	for _i in range(count):
 		for _attempt in range(5):
-			# Randomly pick left or right side of the road
+			# Randomly pick left or right side of the road, and keep off the road based on object radius!
+			var min_x = 5.0 + radius
 			var is_left = randf() < 0.5
-			var tx = randf_range(-20.0, -4.5) if is_left else randf_range(4.5, 20.0)
+			var tx = randf_range(-25.0, -min_x) if is_left else randf_range(min_x, 25.0)
 			var tz = randf_range(-4.0, 4.0)
 			var pos = Vector3(tx, 0.0, tz)
 			
