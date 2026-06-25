@@ -1,7 +1,9 @@
 [gd_scene format=3 uid="uid://bi0s62s5q1xvu"]
 
 [ext_resource type="Script" uid="uid://cfuh1qigo0bj2" path="res://scenes/ground/ground_zone1.gd" id="1_zone4script"]
-[ext_resource type="PackedScene" uid="uid://5puofchkhk8s" path="res://assets/models/ground/road01.glb" id="2_road01"]
+[ext_resource type="PackedScene" uid="uid://cdj4snfl561xr" path="res://assets/models/ground/oldroad.glb" id="2_d4l17"]
+[ext_resource type="PackedScene" uid="uid://wtlsifuaqf1r" path="res://assets/models/ground/treeV1.glb" id="3_t3agl"]
+[ext_resource type="PackedScene" uid="uid://c3wl2hoenmsmt" path="res://assets/models/ground/rock.glb" id="4_p3dfm"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_zone4"]
 size = Vector3(30, 2, 10.4)
@@ -30,11 +32,11 @@ mesh = SubResource("BoxMesh_dirt4")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1.6, 53.91716, -0.3, 0)
 mesh = SubResource("BoxMesh_dirt4")
 
-[node name="road01" parent="." unique_id=1215348768 instance=ExtResource("2_road01")]
-transform = Transform3D(-3.715468e-07, 0, 6, 0, 6, 0, -8.5, 0, -2.6226832e-07, -1.95, 0, 0)
+[node name="oldroad" parent="." unique_id=569604573 instance=ExtResource("2_d4l17")]
+transform = Transform3D(-5.6824803e-08, 0, 1.271, 0, 1, 0, -1.3, 0, -5.5557177e-08, -4.4001794, 0.057867765, 0)
 
-[node name="road02" parent="." unique_id=764681803 instance=ExtResource("2_road01")]
-transform = Transform3D(-3.715468e-07, 0, 6, 0, 6, 0, -8.5, 0, -2.6226832e-07, 2, 0, 0)
+[node name="treeV1" parent="." unique_id=1343740223 instance=ExtResource("3_t3agl")]
+transform = Transform3D(1500, 0, 0, 0, 1500, 0, 0, 0, 1500, -6.123848, -0.26773846, 0)
 
 [node name="SceneryPoints" type="Node3D" parent="." unique_id=1760085452]
 
@@ -43,3 +45,27 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0, 0)
 
 [node name="Right" type="Node3D" parent="SceneryPoints" unique_id=39167908]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0, 0)
+
+[node name="treeV2" parent="." unique_id=1385989312 instance=ExtResource("3_t3agl")]
+transform = Transform3D(1500, 0, 0, 0, 1500, 0, 0, 0, 1500, -6.292649, -0.32307863, -3.5591035)
+
+[node name="treeV3" parent="." unique_id=1236958422 instance=ExtResource("3_t3agl")]
+transform = Transform3D(1500, 0, 0, 0, 1500, 0, 0, 0, 1500, -6.0728974, -0.5138433, 3.5931993)
+
+[node name="treeV4" parent="." unique_id=1259680236 instance=ExtResource("3_t3agl")]
+transform = Transform3D(1500, 0, 0, 0, 1500, 0, 0, 0, 1500, -6.2949414, -0.4574405, 6.645298)
+
+[node name="treeV5" parent="." unique_id=594597578 instance=ExtResource("3_t3agl")]
+transform = Transform3D(1500, 0, 0, 0, 1500, 0, 0, 0, 1500, -6.1813607, -0.22043276, -7.205997)
+
+[node name="rock" parent="." unique_id=1271522707 instance=ExtResource("4_p3dfm")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.0443735, 0, 2.410157)
+
+[node name="rock3" parent="." unique_id=1053064039 instance=ExtResource("4_p3dfm")]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -5.586426, 0.117332935, -1.8970453)
+
+[node name="rock2" parent="." unique_id=291447705 instance=ExtResource("4_p3dfm")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.028943, 0, 6.3111024)
+
+[node name="rock4" parent="." unique_id=477494002 instance=ExtResource("4_p3dfm")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.6755953, -0.025612116, -3.0689514)

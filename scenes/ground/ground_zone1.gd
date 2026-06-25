@@ -29,10 +29,11 @@ func _ready():
 	_spawn_decorations()
 
 func _mirror_custom_decorations():
-	var ignore_names = ["CollisionShape3D", "SideGroundLeft", "SideGroundRight", "road01", "road02", "SceneryPoints"]
+	var ignore_names = ["CollisionShape3D", "SideGroundLeft", "SideGroundRight", "SceneryPoints"]
 	var nodes_to_duplicate = []
 	for child in get_children():
-		if child is Node3D and not (child.name in ignore_names):
+		var child_name = child.name.to_lower()
+		if child is Node3D and not (child.name in ignore_names) and not ("road" in child_name):
 			# If it's placed on the left side (X < -3.0)
 			if child.position.x < -3.0:
 				nodes_to_duplicate.append(child)
