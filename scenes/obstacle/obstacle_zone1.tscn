@@ -16,7 +16,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.008056641, -0.21435556, -0
 shape = SubResource("BoxShape3D_zone3")
 
 [node name="model_high" parent="." unique_id=1274682360 instance=ExtResource("1_lacuo")]
-transform = Transform3D(-8.742278e-09, 0, 0.09707444, 0, 0.28104907, 0, -0.20000002, 0, -4.243259e-09, -0.10860133, -0.53444886, 0)
+transform = Transform3D(-8.742278e-09, 0, 0.09707444, 0, 0.28104907, 0, -0.20000002, 0, -4.243259e-09, -0.10860133, -0.654118, 0)
 
 [node name="model_low" parent="." unique_id=854008876 instance=ExtResource("2_eioof")]
 transform = Transform3D(0.119351946, 0, 0, 0, 0.3643535, 0, 0, 0, 0.005623275, -0.88040304, -0.5985348, -0.12923178)

@@ -295,9 +295,9 @@ func _update_strike_gap(player: Node, gap_var: String, delta: float) -> void:
 	# Move gap: charge speed depends on how close the target is
 	var approach_speed: float
 	if strikes >= 3:
-		approach_speed = 25.0  # Fast charge at strike 3
+		approach_speed = 45.0  # Fast charge at strike 3
 	else:
-		approach_speed = 8.0   # Normal approach at strike 2
+		approach_speed = 25.0   # Fast approach at strike 2 so the player sees it soon
 	
 	if current_gap > target_gap:
 		current_gap -= approach_speed * delta
