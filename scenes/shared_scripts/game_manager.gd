@@ -232,10 +232,10 @@ func _update_endless(delta: float) -> void:
 	_update_strike_gap(p1, "elephant_gap_p1", delta)
 	_update_strike_gap(p2, "elephant_gap_p2", delta)
 	
-	# Check if elephant caught either player (3 strikes)
-	if p1.get("obstacle_strikes") >= 3 and not p1.get("finished"):
+	# Check if elephant caught either player (3 strikes and gap closed)
+	if p1.get("obstacle_strikes") >= 3 and elephant_gap_p1 <= 0.2 and not p1.get("finished"):
 		_player_caught_by_elephant(p1)
-	elif p2.get("obstacle_strikes") >= 3 and not p2.get("finished"):
+	elif p2.get("obstacle_strikes") >= 3 and elephant_gap_p2 <= 0.2 and not p2.get("finished"):
 		_player_caught_by_elephant(p2)
 
 
@@ -274,7 +274,6 @@ func _update_strike_gap(player: Node, gap_var: String, delta: float) -> void:
 	var target_gap: float = 30.0 # Hidden
 	if strikes >= 3:
 		target_gap = 0.0 # Caught
-		current_gap = 0.0 # Snap immediately to bite!
 	elif strikes == 2:
 		target_gap = 0.5 # Very close to the player (accommodate screen borders)
 	elif strikes <= 1:
