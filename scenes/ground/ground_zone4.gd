@@ -53,7 +53,7 @@ func _spawn_decorations():
 	if not gate_placed_this_tile and randf() < 0.4:
 		# Randomize which side, how far from road, and how big
 		var side_sign = -1.0 if randf() < 0.5 else 1.0
-		var dist_from_road = randf_range(5.0, 20.0)   # near to far
+		var dist_from_road = randf_range(8.0, 20.0)   # Push further from road (was 5.0)
 		var dino_scale = randf_range(0.6, 1.6)         # small to large
 		var rot_y = 90.0 if side_sign < 0 else -90.0
 		_place(SIRINDHORNAE,
@@ -62,11 +62,11 @@ func _spawn_decorations():
 
 	# 4. Kinareemimus — random, varied near/far + size per side
 	if randf() < 0.5:
-		var dist = randf_range(4.0, 16.0)
+		var dist = randf_range(6.0, 16.0) # Was 4.0, pushing out to avoid road
 		var s = randf_range(0.15, 0.4)
 		_place(KINARE, Vector3(-dist, 0.0, randf_range(-4.0, 4.0)), Vector3(s, s, s), 90.0)
 	if randf() < 0.5:
-		var dist = randf_range(4.0, 16.0)
+		var dist = randf_range(6.0, 16.0) # Was 4.0, pushing out to avoid road
 		var s = randf_range(0.15, 0.4)
 		_place(KINARE, Vector3(dist, 0.0, randf_range(-4.0, 4.0)), Vector3(s, s, s), -90.0)
 
@@ -75,13 +75,13 @@ func _spawn_decorations():
 	var tree_count_right = randi_range(2, 5)
 
 	for _i in range(tree_count_left):
-		# Mix near-road (5) and far (18), random scale for depth illusion
-		var tx = randf_range(-18.0, -5.0)
+		# Mix near-road (8) and far (18), random scale for depth illusion
+		var tx = randf_range(-18.0, -8.0) # Was -5.0, pushed out so big trees don't clip road
 		var ts = randf_range(800.0, 2000.0)
 		_place(TREEV1, Vector3(tx, 0.0, randf_range(-5.0, 5.0)), Vector3(ts, ts, ts), randf_range(0.0, 360.0))
 
 	for _i in range(tree_count_right):
-		var tx = randf_range(5.0, 18.0)
+		var tx = randf_range(8.0, 18.0) # Was 5.0, pushed out so big trees don't clip road
 		var ts = randf_range(800.0, 2000.0)
 		_place(TREEV1, Vector3(tx, 0.0, randf_range(-5.0, 5.0)), Vector3(ts, ts, ts), randf_range(0.0, 360.0))
 

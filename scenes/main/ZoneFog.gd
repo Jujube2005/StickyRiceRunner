@@ -6,11 +6,11 @@ const FOG_ZONE2 := Color(0.80, 0.58, 0.38, 1) # Reddish warm
 const FOG_ZONE3 := Color(0.65, 0.67, 0.70, 1) # Cool grey mist
 const FOG_ZONE4 := Color(0.28, 0.52, 0.28, 1) # Soft green haze
 
-# Zone fog density — higher = thicker fog / shorter visible distance
-const DENSITY_ZONE1 := 0.018
-const DENSITY_ZONE2 := 0.020
-const DENSITY_ZONE3 := 0.022
-const DENSITY_ZONE4 := 0.025
+# Low density — fog only visible at distance (horizon), not near road
+const DENSITY_ZONE1 := 0.007
+const DENSITY_ZONE2 := 0.008
+const DENSITY_ZONE3 := 0.009
+const DENSITY_ZONE4 := 0.010
 
 const Z2_START := 500.0
 const Z3_START := 1000.0
@@ -22,25 +22,26 @@ var _player: Node3D = null
 func _ready():
 	if not environment:
 		return
-	# Fog base settings (Godot 4 valid properties only)
-	environment.fog_enabled      = true
-	environment.fog_light_color  = FOG_ZONE1
-	environment.fog_density      = DENSITY_ZONE1
-	environment.fog_sky_affect   = 0.8
-	environment.fog_aerial_perspective = 0.5
+	environment.fog_enabled             = true
+	environment.fog_light_color         = FOG_ZONE1
+	environment.fog_density             = DENSITY_ZONE1
+	environment.fog_sky_affect          = 0.6
+	environment.fog_aerial_perspective  = 0.3
+	# Height fog — concentrated near ground level → looks like horizon haze
+	environment.fog_height              = -1.5
+	environment.fog_height_density      = 0.04
 
 func _process(_delta):
 	if not environment:
 		return
 
-	# Lazy-find player
 	if not is_instance_valid(_player):
 		_player = get_tree().get_first_node_in_group("player")
 		if not is_instance_valid(_player):
 			return
 
 	var dist: float = 0.0
-	if _player.has_method("get") and "distance" in _player:
+	if "distance" in _player:
 		dist = float(_player.get("distance"))
 	else:
 		dist = abs(_player.global_position.z)
@@ -64,6 +65,5 @@ func _process(_delta):
 		target_color   = FOG_ZONE1
 		target_density = DENSITY_ZONE1
 
-	# Smooth transition
 	environment.fog_light_color = environment.fog_light_color.lerp(target_color, 0.04)
 	environment.fog_density     = lerp(environment.fog_density, target_density, 0.04)
