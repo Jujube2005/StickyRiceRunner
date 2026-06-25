@@ -843,11 +843,11 @@ func start_buffalo_ride() -> void:
 	
 	# Visual: brown placeholder box represents the buffalo
 	_buffalo_mesh = MeshInstance3D.new()
-	var box := BoxMesh.new()
+	var box: BoxMesh = BoxMesh.new()
 	box.size = Vector3(2.0, 1.2, 3.5)
 	_buffalo_mesh.mesh = box
-	var mat := StandardMaterial3D.new()
-	mat.albedo_color = Color(0.40, 0.25, 0.10, 1.0)  # Brown
+	var mat: StandardMaterial3D = StandardMaterial3D.new()
+	mat.albedo_color = Color(0.4, 0.25, 0.15) # Brown
 	mat.roughness = 1.0
 	_buffalo_mesh.material_override = mat
 	_buffalo_mesh.position = Vector3(0, -0.4, 0)  # Under the player
