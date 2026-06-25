@@ -15,8 +15,8 @@ func _ready() -> void:
 	if elephant_scene:
 		var elephant_model: Node3D = elephant_scene.instantiate()
 		elephant_model.position = Vector3(0, 0, 0)
-		elephant_model.scale = Vector3(0.3, 0.3, 0.3)
-		elephant_model.rotation_degrees.y = -180 # Rotate to face -Z exactly
+		elephant_model.scale = Vector3(0.5, 0.5, 0.5)
+		elephant_model.rotation_degrees.y = 270 # User requested 270
 		add_child(elephant_model)
 		
 		# Find and play the first available animation

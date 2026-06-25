@@ -279,7 +279,7 @@ func _update_strike_gap(player: Node, gap_var: String, delta: float) -> void:
 		
 	# Smoothly move gap towards target
 	if current_gap > target_gap:
-		current_gap -= 30.0 * delta # Elephant rushes in quickly
+		current_gap -= 15.0 * delta # Dash at 15m/s (takes ~0.16s from 2.5m)
 		if current_gap < target_gap:
 			current_gap = target_gap
 	elif current_gap < target_gap:
