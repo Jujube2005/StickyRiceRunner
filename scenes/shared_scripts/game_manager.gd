@@ -288,7 +288,7 @@ func _update_strike_gap(player: Node, gap_var: String, delta: float) -> void:
 	if strikes >= 3:
 		target_gap = 0.0 # Caught — elephant charges
 	elif strikes == 2:
-		target_gap = 5.0 # Close behind — clearly visible in camera
+		target_gap = 2.0 # Close behind — clearly visible in camera
 	elif strikes <= 1:
 		target_gap = 30.0 # Far back — hidden off-screen
 		
