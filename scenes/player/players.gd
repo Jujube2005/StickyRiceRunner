@@ -99,6 +99,16 @@ func _ready():
 	axis_lock_angular_z = true
 	start_z = global_position.z
 	_setup_shield_vfx()
+	add_to_group("player")
+	
+	# Make shadow material unique so players jumping don't affect each other's shadow
+	var ray = get_node_or_null("ShadowRay")
+	if ray:
+		var mesh = ray.get_node_or_null("BlobShadowMesh")
+		if mesh and mesh.mesh and mesh.mesh.material:
+			mesh.mesh.material = mesh.mesh.material.duplicate()
+			
+	lane = int(round(position.x / lane_distance))
 	_setup_spawn_shield_vfx()
 	_setup_trail_vfx()
 	
@@ -400,6 +410,7 @@ func _physics_process(delta):
 		if !is_on_floor():
 			velocity.y -= GRAVITY * delta
 		move_and_slide()
+		_update_blob_shadow()
 		
 		# Play stun animation
 		play_animation(anim_stun)
@@ -667,6 +678,7 @@ func _physics_process(delta):
 		position.x += randf_range(-2.0, 2.0) * delta
 
 	move_and_slide()
+	_update_blob_shadow()
 	# (Model Y is always synced via _sync_model_to_body — no global Y override needed)
 
 	# ── Landing detection ──
@@ -728,6 +740,23 @@ func _end_slide():
 
 func _has_effect(effect_name):
 	return effect_durations.has(effect_name)
+
+func _update_blob_shadow():
+	var ray = get_node_or_null("ShadowRay")
+	if ray:
+		var mesh = ray.get_node_or_null("BlobShadowMesh")
+		if mesh:
+			if ray.is_colliding():
+				mesh.global_position = ray.get_collision_point() + Vector3(0, 0.05, 0)
+				mesh.visible = true
+				
+				# Fade shadow based on distance to ground (max fade at 3 units up)
+				var dist = global_position.y - mesh.global_position.y
+				var alpha = clamp(1.0 - (dist / 3.0), 0.0, 1.0) * 0.8
+				if mesh.mesh and mesh.mesh.material:
+					mesh.mesh.material.albedo_color.a = alpha
+			else:
+				mesh.visible = false
 
 func add_score(amount):
 	# Called by kratip.gd on collect — routes through add_kratip

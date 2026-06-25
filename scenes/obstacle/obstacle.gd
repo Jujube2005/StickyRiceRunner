@@ -57,8 +57,13 @@ func activate(pos: Vector3, height: float, high_obstacle: bool):
 		if model_high: model_high.visible = true
 				
 		if collision_shape and collision_shape.shape is BoxShape3D:
-			collision_shape.shape.size = high_shape_size
-			collision_shape.position = high_shape_pos
+			if get_meta("zone_scene", "") == "res://scenes/obstacle/obstacle_zone3.tscn":
+				# Make the Hurdle slideable (gap at the bottom from Y=0 to Y=1.2 globally)
+				collision_shape.shape.size = Vector3(1.18, 0.666, 1.0)
+				collision_shape.position = Vector3(0.0, 0.466, 0.0)
+			else:
+				collision_shape.shape.size = high_shape_size
+				collision_shape.position = high_shape_pos
 	else:
 		add_to_group("low_obstacle")
 		if firewood_mid:

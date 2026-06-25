@@ -414,10 +414,7 @@ func _build_celebration_effects() -> void:
 
 	# Banner
 	var tex_rect = TextureRect.new()
-	var banner_tex: Texture2D = null
-	var b_img = Image.load_from_file("res://cutscene/ending/championtext.png")
-	if b_img:
-		banner_tex = ImageTexture.create_from_image(b_img)
+	var banner_tex = load("res://cutscene/ending/championtext.png")
 	if banner_tex:
 		tex_rect.texture = banner_tex
 	

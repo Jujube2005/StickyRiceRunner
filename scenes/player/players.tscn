@@ -30,10 +30,25 @@ shape = SubResource("CapsuleShape3D_hti1j")
 
 [node name="Model" type="Node3D" parent="." unique_id=1547751969]
 
-[node name="BlobShadow" type="Decal" parent="." unique_id=987654321]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_shadow"]
+transparency = 1
+shading_mode = 0
+albedo_texture = SubResource("GradientTexture2D_shadow")
+albedo_color = Color(1, 1, 1, 0.8)
+disable_receive_shadows = true
+
+[sub_resource type="QuadMesh" id="QuadMesh_shadow"]
+material = SubResource("StandardMaterial3D_shadow")
+size = Vector2(1.2, 1.2)
+
+[node name="ShadowRay" type="RayCast3D" parent="." unique_id=987654321]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
-size = Vector3(1.2, 4.0, 1.2)
-texture_albedo = SubResource("GradientTexture2D_shadow")
-cull_mask = 1048573
+target_position = Vector3(0, -5, 0)
+collision_mask = 11
+
+[node name="BlobShadowMesh" type="MeshInstance3D" parent="ShadowRay" unique_id=987654322]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, -0.5, 0)
+mesh = SubResource("QuadMesh_shadow")
+top_level = true
 
 [node name="CameraHolder" type="Node3D" parent="." unique_id=1291734684]
