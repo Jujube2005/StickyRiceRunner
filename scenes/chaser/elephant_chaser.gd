@@ -8,16 +8,28 @@ extends Node3D
 @export var target_player : Node3D = null
 
 var _base_mesh : MeshInstance3D = null
-var _label : Label3D = null
+var anim_player: AnimationPlayer = null
 
 func _ready() -> void:
 	var elephant_scene: PackedScene = load("res://assets/models/elephant/elephant.glb")
 	if elephant_scene:
 		var elephant_model: Node3D = elephant_scene.instantiate()
 		elephant_model.position = Vector3(0, 0, 0)
-		elephant_model.scale = Vector3(0.15, 0.15, 0.15)
-		elephant_model.rotation_degrees.y = -90 # Rotate from facing left to facing forward
+		elephant_model.scale = Vector3(0.3, 0.3, 0.3)
+		elephant_model.rotation_degrees.y = -180 # Rotate to face -Z exactly
 		add_child(elephant_model)
+		
+		# Find and play the first available animation
+		anim_player = elephant_model.find_child("AnimationPlayer", true, false)
+		if anim_player:
+			var anim_list = anim_player.get_animation_list()
+			for anim_name in anim_list:
+				if anim_name != "RESET":
+					var anim = anim_player.get_animation(anim_name)
+					if anim:
+						anim.loop_mode = Animation.LOOP_LINEAR
+					anim_player.play(anim_name)
+					break
 	else:
 		_base_mesh = MeshInstance3D.new()
 		var box: BoxMesh = BoxMesh.new()
@@ -30,14 +42,7 @@ func _ready() -> void:
 		_base_mesh.position = Vector3(0, 2.0, 0)
 		add_child(_base_mesh)
 
-	_label = Label3D.new()
-	_label.text = "ELEPHANT"
-	_label.font_size = 64
-	_label.modulate = Color(1.0, 0.8, 0.2, 0.85)
-	_label.billboard = BaseMaterial3D.BILLBOARD_ENABLED
-	_label.position = Vector3(0, 5.5, 0)
-	_label.no_depth_test = true
-	add_child(_label)
+	# Label removed
 
 func _process(_delta: float) -> void:
 	if not is_instance_valid(target_player):
@@ -52,12 +57,4 @@ func _process(_delta: float) -> void:
 	var p_pos: Vector3 = target_player.global_position
 	global_position = Vector3(p_pos.x, 0.0, p_pos.z + gap)
 
-	if gap < 5.0:
-		_label.modulate = Color(1.0, 0.0, 0.0, 1.0)
-		_label.text = "NEARLY CAUGHT!"
-	elif gap < 10.0:
-		_label.modulate = Color(1.0, 0.4, 0.0, 1.0)
-		_label.text = "ELEPHANT CLOSE!"
-	else:
-		_label.modulate = Color(1.0, 0.8, 0.2, 0.85)
-		_label.text = "ELEPHANT"
+	# The gap determines Z position behind the player. No text updates needed now.
