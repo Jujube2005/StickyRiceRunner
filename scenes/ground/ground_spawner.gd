@@ -119,13 +119,14 @@ func _update_dirt_color(tile: Node3D, z_pos: float):
 		
 		# Transition over 150 meters to make it seamless
 		if distance >= 1500.0:
-			target_color = Color(0.08, 0.28, 0.05, 1) # Zone 4 (Dark Green)
+			var t = clamp((distance - 1500.0) / 150.0, 0.0, 1.0)
+			target_color = Color(0.35, 0.35, 0.35, 1).lerp(Color(0.08, 0.28, 0.05, 1), t) # Zone 3 → Zone 4 (Grey → Dark Green)
 		elif distance >= 1000.0:
 			var t = clamp((distance - 1000.0) / 150.0, 0.0, 1.0)
-			target_color = Color(0.55, 0.45, 0.3, 1).lerp(Color(0.35, 0.35, 0.35, 1), t) # Zone 2 to Zone 3 (Grey)
+			target_color = Color(0.55, 0.45, 0.3, 1).lerp(Color(0.35, 0.35, 0.35, 1), t) # Zone 2 → Zone 3 (Reddish → Grey)
 		elif distance >= 500.0:
 			var t = clamp((distance - 500.0) / 150.0, 0.0, 1.0)
-			target_color = Color(0.48, 0.45, 0.3, 1).lerp(Color(0.55, 0.45, 0.3, 1), t) # Zone 1 to Zone 2 (Reddish)
+			target_color = Color(0.48, 0.45, 0.3, 1).lerp(Color(0.55, 0.45, 0.3, 1), t) # Zone 1 → Zone 2 (Brown → Reddish)
 			
 		var new_mat = StandardMaterial3D.new()
 		new_mat.albedo_color = target_color
