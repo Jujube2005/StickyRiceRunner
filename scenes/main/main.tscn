@@ -21,7 +21,7 @@ ground_bottom_color = Color(0.18, 0.42, 0.18, 1) # Darker green
 ground_horizon_color = Color(0.28, 0.52, 0.28, 1) # Green to match fog
 ground_curve = 0.04
 sun_angle_max = 5.5
-energy_multiplier = 1.05
+energy_multiplier = 1.25
 
 [sub_resource type="Sky" id="Sky_sky"]
 sky_material = SubResource("ProceduralSkyMaterial_sky")
@@ -111,7 +111,7 @@ size = Vector2(0.5, 0.22)
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=2084994250]
 transform = Transform3D(1, 0, 0, 0, 0.9563048, 0.29237172, 0, -0.29237172, 0.9563048, 0, 8, -12)
 light_color = Color(1, 0.92, 0.72, 1)
-light_energy = 0.6
+light_energy = 1.1
 shadow_enabled = false
 shadow_opacity = 0.4
 shadow_blur = 1.5

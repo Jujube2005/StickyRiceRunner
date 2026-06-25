@@ -78,8 +78,8 @@ func _spawn_decorations():
 			if _place(KINARE, test_pos, Vector3(s, s, s), -90.0, 2.0): break
 
 	# 5. Trees — varied near/far and size, both sides, organic scatter
-	var tree_count_left  = randi_range(2, 5)
-	var tree_count_right = randi_range(2, 5)
+	var tree_count_left  = randi_range(6, 15)
+	var tree_count_right = randi_range(6, 15)
 
 	for _i in range(tree_count_left):
 		var ts = randf_range(800.0, 2000.0)

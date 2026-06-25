@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://bi0s62s5q1xvu"]
 
 [ext_resource type="Script" uid="uid://cfuh1qigo0bj2" path="res://scenes/ground/ground_zone1.gd" id="1_zone4script"]
-[ext_resource type="PackedScene" uid="uid://orwbw3xyfods" path="res://assets/models/ground/road-v1.glb" id="2_road"]
+[ext_resource type="PackedScene" uid="uid://5puofchkhk8s" path="res://assets/models/ground/road01.glb" id="2_road01"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_zone4"]
 size = Vector3(30, 2, 10.4)
@@ -30,8 +30,11 @@ mesh = SubResource("BoxMesh_dirt4")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1.6, 54.395332, -0.25, 0)
 mesh = SubResource("BoxMesh_dirt4")
 
-[node name="road-v1" parent="." unique_id=1215348768 instance=ExtResource("2_road")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1.9, -0.578, 0.023, 0)
+	[node name="road01" parent="." unique_id=1215348768 instance=ExtResource("2_road01")]
+	transform = Transform3D(-3.715468e-07, 0, 6, 0, 6, 0, -8.5, 0, -2.6226832e-07, -1.95, 0, 0)
+
+	[node name="road02" parent="." unique_id=764681803 instance=ExtResource("2_road01")]
+	transform = Transform3D(-3.715468e-07, 0, 6, 0, 6, 0, -8.5, 0, -2.6226832e-07, 2, 0, 0)
 
 [node name="SceneryPoints" type="Node3D" parent="." unique_id=1760085452]
 
