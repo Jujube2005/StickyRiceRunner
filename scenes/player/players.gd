@@ -953,7 +953,8 @@ func _show_spawn_shield_vfx():
 	
 	# Auto-hide after shield duration expires (fade out)
 	var shield_duration = silk_protection_timer
-	get_tree().create_timer(max(shield_duration - 0.4, 0.1)).timeout.connect(func():
+	var delay_tw = create_tween()
+	delay_tw.tween_callback(func():
 		if is_instance_valid(spawn_shield_vfx) and spawn_shield_vfx.visible:
 			var fade = create_tween()
 			fade.tween_property(spawn_shield_vfx, "material_override:albedo_color:a", 0.0, 0.4)
@@ -964,7 +965,7 @@ func _show_spawn_shield_vfx():
 					spawn_shield_vfx.scale = Vector3.ONE
 					spawn_shield_vfx.material_override.albedo_color.a = 0.55
 			)
-	)
+	).set_delay(max(shield_duration - 0.4, 0.1))
 
 func add_skill(skill_name: String) -> bool:
 	if skills.size() < 2:
@@ -1098,7 +1099,8 @@ func apply_prank(skill_name):
 				if "visibility_aabb" in tornado:
 					tornado.visibility_aabb = AABB(Vector3(-20, -20, -20), Vector3(40, 40, 40))
 				# Auto free after 4.0s (duration of wind_push)
-				get_tree().create_timer(4.0).timeout.connect(func(): if is_instance_valid(tornado): tornado.queue_free())
+				var tw = tornado.create_tween()
+				tw.tween_callback(tornado.queue_free).set_delay(4.0)
 		_:
 			AudioManager.play_sfx("skill_use")
 			emit_signal("prank_flash", Color(0.6, 0.0, 1.0, 0.30))
