@@ -288,7 +288,7 @@ func _update_strike_gap(player: Node, gap_var: String, delta: float) -> void:
 	if strikes >= 3:
 		target_gap = 0.0 # Caught
 	elif strikes == 2:
-		target_gap = 0.5 # Very close to the player (accommodate screen borders)
+		target_gap = 0.1 # Extremely close to the player
 	elif strikes <= 1:
 		target_gap = 30.0 # Hidden
 		
@@ -328,8 +328,11 @@ func _player_caught_by_elephant(caught_player: Node) -> void:
 	print("ELEPHANT CAUGHT ", caught_player.name.to_upper())
 	print("[ENDLESS] CAUGHT: ", caught_player.name, " at ", int(caught_player.distance), "m")
 	
-	# Elephant caught player: Player dies immediately (fall flat)
+	# Elephant caught player: Player dies immediately and plays stun effect
 	caught_player.set("alive", false)
+	if caught_player.has_method("stun"):
+		caught_player.call("stun", 10.0)
+		
 	var model = caught_player.get_node_or_null("Model")
 	if model:
 		model.rotation.x = deg_to_rad(90)
