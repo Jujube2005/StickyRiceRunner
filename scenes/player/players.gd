@@ -36,6 +36,18 @@ var charges := 0
 var can_charge := true
 var effect_durations := {}
 
+# --- ENDLESS MODE: ELEPHANT CHASE ---
+var elephant_gap := 20.0          # Distance (m) between player and elephant
+const ELEPHANT_START_GAP := 20.0
+
+# --- ENDLESS MODE: BUFFALO RIDE ---
+var is_riding_buffalo := false
+var buffalo_timer := 0.0
+const BUFFALO_DURATION := 9.0
+const BUFFALO_SPEED_BONUS := 8.0   # Extra forward speed while riding
+var buffalo_obstacle_shield := true # Ignore ONE obstacle collision while riding
+var _buffalo_mesh : MeshInstance3D = null
+
 const SILK_PROTECTION_DURATION := 5.0
 var silk_protection_timer := 0.0  # > 0 means silk protection is active
 
@@ -506,8 +518,18 @@ func _physics_process(delta):
 	else:
 		$Model.rotation.z = 0
 
-	# Calculate dynamic speed based on distance
-	var current_speed = min(BASE_FORWARD_SPEED + (distance * SPEED_SCALE_FACTOR), MAX_FORWARD_SPEED)
+	# --- ENDLESS: Buffalo Ride timer ---
+	if is_riding_buffalo:
+		buffalo_timer -= delta
+		if buffalo_timer <= 0.0:
+			_end_buffalo_ride()
+
+	# Calculate dynamic speed based on distance (+ global speed scale + buffalo bonus)
+	var gm_speed_scale := 1.0
+	if game_manager and "global_speed_scale" in game_manager:
+		gm_speed_scale = game_manager.global_speed_scale
+	var buffalo_bonus := BUFFALO_SPEED_BONUS if is_riding_buffalo else 0.0
+	var current_speed = min((BASE_FORWARD_SPEED + (distance * SPEED_SCALE_FACTOR)) * gm_speed_scale + buffalo_bonus, MAX_FORWARD_SPEED)
 	velocity.z = -current_speed * speed_factor
 
 	# ── Speed trail: when going fast (e.g. > 130% base speed) ──
@@ -788,21 +810,76 @@ func add_kratip(amount: int = 1):
 func _spawn_collect_sparkle():
 	VfxManager.spawn("kratip_pickup", global_position + Vector3(0, 1.0, 0))
 	
-	# Every 10 kratips → grant a Shield
+	# Every 10 kratips → action depends on game mode
 	if kratip_milestone_count >= 10:
 		kratip_milestone_count = 0
 		emit_signal("kratip_count_changed", 0, 10)
-		
-		# SFX
 		AudioManager.play_sfx("pickup")
 		
-		# Tell HUD to show shield popup
-		var hud = get_tree().current_scene.find_child("GameplayHUD", true, false)
-		if hud and hud.has_method("show_shield_unlock"):
-			hud.show_shield_unlock(self.name)
-			
-		# Grant shield protection immediately
-		grant_silk_protection()
+		if GameConfig.race_mode == "endless":
+			# ENDLESS MODE: Ride a Buffalo!
+			start_buffalo_ride()
+		else:
+			# RACE MODE: Grant Pha Khao Ma shield
+			var hud = get_tree().current_scene.find_child("GameplayHUD", true, false)
+			if hud and hud.has_method("show_shield_unlock"):
+				hud.show_shield_unlock(self.name)
+			grant_silk_protection()
+
+func start_buffalo_ride() -> void:
+	"""Activate Buffalo Ride: speed boost + elephant gap recovery + one obstacle shield."""
+	if is_riding_buffalo:
+		# Refresh timer if already riding
+		buffalo_timer = BUFFALO_DURATION
+		return
+	
+	is_riding_buffalo = true
+	buffalo_timer = BUFFALO_DURATION
+	buffalo_obstacle_shield = true
+	
+	# Elephant gains distance boost — give player breathing room
+	if game_manager and game_manager.has_method("on_buffalo_ride_started"):
+		game_manager.on_buffalo_ride_started(self)
+	
+	# Visual: brown placeholder box represents the buffalo
+	_buffalo_mesh = MeshInstance3D.new()
+	var box := BoxMesh.new()
+	box.size = Vector3(2.0, 1.2, 3.5)
+	_buffalo_mesh.mesh = box
+	var mat := StandardMaterial3D.new()
+	mat.albedo_color = Color(0.40, 0.25, 0.10, 1.0)  # Brown
+	mat.roughness = 1.0
+	_buffalo_mesh.material_override = mat
+	_buffalo_mesh.position = Vector3(0, -0.4, 0)  # Under the player
+	add_child(_buffalo_mesh)
+	
+	# Notify HUD
+	var hud = get_tree().current_scene.find_child("GameplayHUD", true, false)
+	if hud and hud.has_method("show_buffalo_ride"):
+		hud.show_buffalo_ride(self.name, BUFFALO_DURATION)
+	
+	# Warning text
+	var msg := "🐃 BUFFALO RIDE!"
+	set_warning(msg)
+	get_tree().create_timer(2.0).timeout.connect(clear_warning.bind(msg))
+	
+	AudioManager.play_sfx("skill_use")  # Placeholder; replace with buffalo SFX
+
+
+func _end_buffalo_ride() -> void:
+	"""Deactivate Buffalo Ride — return to normal speed."""
+	is_riding_buffalo = false
+	buffalo_timer = 0.0
+	buffalo_obstacle_shield = false
+	
+	# Remove buffalo visual
+	if is_instance_valid(_buffalo_mesh):
+		_buffalo_mesh.queue_free()
+		_buffalo_mesh = null
+	
+	var msg := "🐘 Elephant resumes!"
+	set_warning(msg)
+	get_tree().create_timer(2.0).timeout.connect(clear_warning.bind(msg))
 
 func grant_silk_protection():
 	"""Grant or refresh the 5-second collision-immunity from a silk collectible."""
@@ -835,21 +912,33 @@ func _calculate_total_score():
 	emit_signal("score_changed", score)
 
 func die() -> void:
-	# If silk protection is active, block the hit entirely
+	# --- ENDLESS MODE: Buffalo obstacle shield blocks ONE collision ---
+	if GameConfig.race_mode == "endless" and is_riding_buffalo and buffalo_obstacle_shield:
+		buffalo_obstacle_shield = false  # Consume the one-hit shield
+		var warn_msg := "🐃 Buffalo takes the hit!"
+		set_warning(warn_msg)
+		get_tree().create_timer(1.5).timeout.connect(clear_warning.bind(warn_msg))
+		emit_signal("prank_flash", Color(0.6, 0.3, 0.0, 0.35))
+		return
+	
+	# Silk protection (both modes)
 	if silk_protection_timer > 0.0:
 		var warn_msg = LanguageManager.t("WARN_BLOCKED")
 		set_warning(warn_msg)
 		get_tree().create_timer(1.2).timeout.connect(clear_warning.bind(warn_msg))
-		# Light flash instead of stun
 		var tween = create_tween()
 		tween.tween_property($Model, "scale", Vector3(1.3, 1.3, 1.3), 0.08)
 		tween.tween_property($Model, "scale", Vector3(1.0, 1.0, 1.0), 0.12)
-		
 		if spawn_shield_vfx and spawn_shield_vfx.visible:
 			VfxManager.spawn("spawn_shield_hit", global_position + Vector3(0, 1.0, 0))
 		return
-	# Normal crash
-	add_penalty(100) # Crashing penalty
+	
+	# Normal crash — reduce elephant gap in Endless Mode
+	if GameConfig.race_mode == "endless" and game_manager and "elephant_gap_p1" in game_manager:
+		if game_manager.has_method("on_player_crash"):
+			game_manager.on_player_crash(self)
+	
+	add_penalty(100)
 	stun(2.0)
 
 func stun(duration: float = 2.0):

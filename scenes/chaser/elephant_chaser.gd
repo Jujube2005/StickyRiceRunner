@@ -1,0 +1,55 @@
+﻿extends Node3D
+
+## ElephantChaser — Visual-only elephant that follows its assigned player.
+## The actual gap is managed by GameManager; this scene just renders
+## the elephant at the correct distance so the player can see it.
+## Set target_player before adding to the tree.
+
+@export var target_player : Node3D = null
+
+var _base_mesh : MeshInstance3D = null
+var _label : Label3D = null
+
+func _ready() -> void:
+	_base_mesh = MeshInstance3D.new()
+	var box := BoxMesh.new()
+	box.size = Vector3(3.0, 4.0, 5.0)
+	_base_mesh.mesh = box
+	var mat := StandardMaterial3D.new()
+	mat.albedo_color = Color(0.45, 0.45, 0.50, 1.0)
+	mat.roughness = 0.9
+	_base_mesh.material_override = mat
+	_base_mesh.position = Vector3(0, 2.0, 0)
+	add_child(_base_mesh)
+
+	_label = Label3D.new()
+	_label.text = "🐘 ELEPHANT"
+	_label.font_size = 64
+	_label.modulate = Color(1.0, 0.8, 0.2, 0.85)
+	_label.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+	_label.position = Vector3(0, 5.5, 0)
+	_label.no_depth_test = true
+	add_child(_label)
+
+func _process(_delta: float) -> void:
+	if not is_instance_valid(target_player):
+		return
+
+	var gap : float = 20.0
+	if "elephant_gap" in target_player:
+		gap = target_player.elephant_gap
+	gap = max(gap, 0.0)
+
+	# Positive Z = behind the player in Godot's right-hand system
+	var p_pos := target_player.global_position
+	global_position = Vector3(p_pos.x, 0.0, p_pos.z + gap)
+
+	if gap < 5.0:
+		_label.modulate = Color(1.0, 0.0, 0.0, 1.0)
+		_label.text = "🐘 NEARLY CAUGHT!"
+	elif gap < 10.0:
+		_label.modulate = Color(1.0, 0.4, 0.0, 1.0)
+		_label.text = "🐘 ELEPHANT CLOSE!"
+	else:
+		_label.modulate = Color(1.0, 0.8, 0.2, 0.85)
+		_label.text = "🐘 ELEPHANT"

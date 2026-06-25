@@ -25,13 +25,32 @@ signal race_start_cooldown_changed(remaining: float)
 signal zone_changed(new_zone: int)
 
 # --- CONFIGURATION ---
-var current_zone: int = 1  # 1: Oxcart, 2: Phimai, 3: Yamo
+var current_zone: int = 1
 
 @export var player_scene: PackedScene = preload("res://scenes/player/players.tscn")
 @export var skill_cooldown_min := 3.0
 @export var skill_cooldown_max := 5.0
 @export var dodge_window := 1.5
 const GOAL_DISTANCE = 2000
+
+# --- ENDLESS MODE ---
+const ELEPHANT_START_GAP := 20.0
+const ELEPHANT_GAIN_RATE := 1.5      # m/s the elephant gains while player runs normally
+const ELEPHANT_RECOVER_RATE := 3.0  # m/s the player recovers distance from elephant while buffalo-riding
+const ELEPHANT_CRASH_PENALTY := 5.0 # Metres elephant gains per obstacle crash
+const ELEPHANT_SKILL_PENALTY := 3.0 # Metres elephant gains when hit by a prank skill
+const BUFFALO_GAP_BOOST := 12.0     # Instant gap increase when buffalo ride starts
+
+var elephant_gap_p1 := ELEPHANT_START_GAP
+var elephant_gap_p2 := ELEPHANT_START_GAP
+
+# Global speed scale, increases over distance for Endless difficulty
+var global_speed_scale := 1.0
+const SPEED_SCALE_STEP := 0.15  # Extra multiplier added per difficulty band
+
+# Elephant visual followers
+var _elephant_p1 : Node = null
+var _elephant_p2 : Node = null
 
 # --- STATE ---
 var p1 = null
@@ -55,6 +74,10 @@ func _ready():
 	countdown_active = true
 	_freeze_players(true)
 	_start_countdown()
+	
+	# In Endless mode, spawn elephant chasers
+	if GameConfig.race_mode == "endless":
+		_spawn_elephants()
 
 func _spawn_players():
 	var players_node = get_node("../Players")
@@ -164,8 +187,141 @@ func _process(delta):
 		if skill_cooldown_timer <= 0:
 			emit_signal("global_cooldown_changed", false)
 
-	# Update Prank State Machine (Deterministic Tick)
+	# Update Prank State Machine
 	_update_pranks(delta)
+	
+	# Endless Mode exclusive logic
+	if GameConfig.race_mode == "endless":
+		_update_endless(delta)
+
+# ─── ENDLESS MODE LOGIC ───────────────────────────────────────────
+
+func _spawn_elephants() -> void:
+	"""Create one ElephantChaser per player in Endless Mode."""
+	var elephant_script := load("res://scenes/chaser/elephant_chaser.gd")
+	if elephant_script == null:
+		push_warning("[GameManager] elephant_chaser.gd not found!")
+		return
+	
+	if is_instance_valid(p1):
+		_elephant_p1 = Node3D.new()
+		_elephant_p1.set_script(elephant_script)
+		_elephant_p1.set("target_player", p1)
+		get_parent().add_child(_elephant_p1)
+	
+	if is_instance_valid(p2):
+		_elephant_p2 = Node3D.new()
+		_elephant_p2.set_script(elephant_script)
+		_elephant_p2.set("target_player", p2)
+		get_parent().add_child(_elephant_p2)
+
+
+func _update_endless(delta: float) -> void:
+	if not is_instance_valid(p1) or not is_instance_valid(p2): return
+	
+	# Update difficulty: speed scale based on max distance
+	var max_dist := max(p1.distance, p2.distance)
+	_update_difficulty(max_dist)
+	
+	# Update zone transitions (reuse same thresholds, but endless has no finish)
+	_check_endless_zone(max_dist)
+	
+	# Update elephant gaps
+	_update_elephant_gap(p1, "elephant_gap_p1", delta)
+	_update_elephant_gap(p2, "elephant_gap_p2", delta)
+	
+	# Check if elephant caught either player
+	if elephant_gap_p1 <= 0.0 and not p1.get("finished"):
+		_player_caught_by_elephant(p1)
+	elif elephant_gap_p2 <= 0.0 and not p2.get("finished"):
+		_player_caught_by_elephant(p2)
+
+
+func _update_difficulty(max_dist: float) -> void:
+	"""Gradually increase global_speed_scale as distance increases."""
+	if max_dist < 1000:
+		global_speed_scale = 1.0
+	elif max_dist < 2000:
+		global_speed_scale = 1.0 + SPEED_SCALE_STEP          # 1.15×
+	elif max_dist < 3000:
+		global_speed_scale = 1.0 + SPEED_SCALE_STEP * 2.0    # 1.30×
+	else:
+		global_speed_scale = 1.0 + SPEED_SCALE_STEP * 3.0    # 1.45×
+
+
+func _check_endless_zone(max_dist: float) -> void:
+	"""Zone transitions every 1000m in Endless Mode."""
+	var new_zone := current_zone
+	if max_dist >= 3000: new_zone = 4
+	elif max_dist >= 2000: new_zone = 3
+	elif max_dist >= 1000: new_zone = 2
+	if new_zone != current_zone:
+		current_zone = new_zone
+		emit_signal("zone_changed", current_zone)
+		print("[ENDLESS] Zone ", current_zone)
+
+
+func _update_elephant_gap(player: Node, gap_var: String, delta: float) -> void:
+	"""Reduce or increase a player's elephant gap based on their state."""
+	var gap : float = get(gap_var)
+	if gap <= 0.0: return  # Already caught
+	
+	if player.get("is_riding_buffalo"):
+		# Buffalo ride: elephant FALLS BEHIND
+		gap += ELEPHANT_RECOVER_RATE * delta
+		gap = min(gap, ELEPHANT_START_GAP * 2.0)  # Cap at 2x start gap
+	else:
+		# Normal running: elephant slowly gains
+		gap -= ELEPHANT_GAIN_RATE * delta
+	
+	# Sync to player so the ElephantChaser can read it
+	player.set("elephant_gap", gap)
+	set(gap_var, gap)
+
+
+func on_player_crash(player: Node) -> void:
+	"""Called when a player hits an obstacle in Endless Mode. Elephant gains distance."""
+	if GameConfig.race_mode != "endless": return
+	if player == p1:
+		elephant_gap_p1 = max(elephant_gap_p1 - ELEPHANT_CRASH_PENALTY, 0.0)
+		p1.set("elephant_gap", elephant_gap_p1)
+	elif player == p2:
+		elephant_gap_p2 = max(elephant_gap_p2 - ELEPHANT_SKILL_PENALTY, 0.0)
+		p2.set("elephant_gap", elephant_gap_p2)
+
+
+func on_buffalo_ride_started(player: Node) -> void:
+	"""Called when a player collects 10 Kratips and mounts the Buffalo."""
+	if GameConfig.race_mode != "endless": return
+	if player == p1:
+		elephant_gap_p1 = min(elephant_gap_p1 + BUFFALO_GAP_BOOST, ELEPHANT_START_GAP * 2.0)
+		p1.set("elephant_gap", elephant_gap_p1)
+		print("[ENDLESS] P1 Buffalo Ride! Elephant gap: ", elephant_gap_p1)
+	elif player == p2:
+		elephant_gap_p2 = min(elephant_gap_p2 + BUFFALO_GAP_BOOST, ELEPHANT_START_GAP * 2.0)
+		p2.set("elephant_gap", elephant_gap_p2)
+		print("[ENDLESS] P2 Buffalo Ride! Elephant gap: ", elephant_gap_p2)
+
+
+func _player_caught_by_elephant(caught_player: Node) -> void:
+	"""One player was caught. End the game."""
+	if game_ended: return
+	game_ended = true
+	
+	print("[ENDLESS] CAUGHT: ", caught_player.name, " at ", int(caught_player.distance), "m")
+	
+	# Freeze the caught player in stun
+	if caught_player.has_method("stun"):
+		caught_player.stun(99.0)  # Long stun = "caught" animation
+	
+	# Determine winner by distance
+	var winner := "Draw"
+	if caught_player == p1 and is_instance_valid(p2):
+		winner = "Player 2"  # P2 survived longer
+	elif caught_player == p2 and is_instance_valid(p1):
+		winner = "Player 1"  # P1 survived longer
+	
+	game_over(winner)
 
 # --- CENTRAL UPDATE LOOP ---
 func _update_pranks(delta):
@@ -266,10 +422,12 @@ func spawn_lane_block(target):
 
 func _check_distance_goal(_new_dist):
 	if game_ended: return
+	# Endless Mode handles its own zone transitions and end conditions
+	if GameConfig.race_mode == "endless": return
 	
 	var max_dist = max(p1.distance, p2.distance)
 	
-	# Check Zone Transitions
+	# Check Zone Transitions (Race Mode: every 500m of the 2000m goal)
 	var new_zone = current_zone
 	if max_dist >= GOAL_DISTANCE * (3.0 / 4.0):
 		new_zone = 4
