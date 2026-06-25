@@ -33,6 +33,12 @@ func _get_current_zone_scene() -> PackedScene:
 	else:
 		return ground_zone1
 
+func _get_zone_number_for_distance(distance: float) -> int:
+	if distance >= 1500.0: return 4
+	if distance >= 1000.0: return 3
+	if distance >= 500.0:  return 2
+	return 1
+
 func _process(_delta):
 	# เช็กตำแหน่งผู้เล่นทั้งคู่
 	if !is_instance_valid(player1) or !is_instance_valid(player2):
@@ -86,20 +92,18 @@ func _create_pool_tile():
 	pool.append(ground)
 	
 	# Tag it so we know which zone it belongs to
-	var gm = get_tree().current_scene.find_child("GameManager", true, false)
-	ground.set_meta("zone", gm.current_zone if gm else 1)
+	ground.set_meta("zone", _get_zone_number_for_distance(abs(spawn_z)))
 	
 	spawn_z -= tile_length
 
 func _recycle_tile(tile):
-	var gm = get_tree().current_scene.find_child("GameManager", true, false)
-	var active_zone = gm.current_zone if gm else 1
 	var tile_zone = tile.get_meta("zone") if tile.has_meta("zone") else 1
+	var required_zone = _get_zone_number_for_distance(abs(spawn_z))
 	
 	pool.remove_at(0)
 	
-	# If the tile belongs to an old zone, delete it and spawn a new one in its place!
-	if tile_zone != active_zone:
+	# If the tile's visual zone does not match what the road ahead needs, delete and recreate it!
+	if tile_zone != required_zone:
 		tile.queue_free()
 		_create_pool_tile()
 	else:

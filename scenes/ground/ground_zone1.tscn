@@ -23,18 +23,18 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
 shape = SubResource("BoxShape3D_zone4")
 
 [node name="SideGroundLeft" type="MeshInstance3D" parent="." unique_id=888888883]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1.6, -79.554779, -0.3, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1.6, -53.75702, -0.3, 0)
 mesh = SubResource("BoxMesh_dirt4")
 
 [node name="SideGroundRight" type="MeshInstance3D" parent="." unique_id=888888884]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1.6, 79.5, -0.3, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1.6, 53.91716, -0.3, 0)
 mesh = SubResource("BoxMesh_dirt4")
 
-	[node name="road01" parent="." unique_id=1215348768 instance=ExtResource("2_road01")]
-	transform = Transform3D(-3.715468e-07, 0, 6, 0, 6, 0, -8.5, 0, -2.6226832e-07, -1.95, 0, 0)
+[node name="road01" parent="." unique_id=1215348768 instance=ExtResource("2_road01")]
+transform = Transform3D(-3.715468e-07, 0, 6, 0, 6, 0, -8.5, 0, -2.6226832e-07, -1.95, 0, 0)
 
-	[node name="road02" parent="." unique_id=764681803 instance=ExtResource("2_road01")]
-	transform = Transform3D(-3.715468e-07, 0, 6, 0, 6, 0, -8.5, 0, -2.6226832e-07, 2, 0, 0)
+[node name="road02" parent="." unique_id=764681803 instance=ExtResource("2_road01")]
+transform = Transform3D(-3.715468e-07, 0, 6, 0, 6, 0, -8.5, 0, -2.6226832e-07, 2, 0, 0)
 
 [node name="SceneryPoints" type="Node3D" parent="." unique_id=1760085452]
 
