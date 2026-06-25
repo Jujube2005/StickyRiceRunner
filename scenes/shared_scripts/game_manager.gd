@@ -239,7 +239,14 @@ func _update_endless(delta: float) -> void:
 	if p1.get("obstacle_strikes") >= 3 and elephant_gap_p1 <= 0.2 and not p1.get("finished"):
 		_player_caught_by_elephant(p1)
 	elif p2.get("obstacle_strikes") >= 3 and elephant_gap_p2 <= 0.2 and not p2.get("finished"):
-		_player_caught_by_elephant(p2)
+		if GameConfig.game_mode == "singleplayer":
+			p2.set("finished", true)
+			p2.set("alive", false)
+			var model = p2.get_node_or_null("Model")
+			if model:
+				model.rotation.x = deg_to_rad(90)
+		else:
+			_player_caught_by_elephant(p2)
 
 
 func _update_difficulty(max_dist: float) -> void:
