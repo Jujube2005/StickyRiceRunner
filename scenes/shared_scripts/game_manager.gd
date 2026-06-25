@@ -286,23 +286,29 @@ func _update_strike_gap(player: Node, gap_var: String, delta: float) -> void:
 		
 	var target_gap: float = 30.0 # Hidden
 	if strikes >= 3:
-		target_gap = 0.0 # Caught
+		target_gap = 0.0 # Caught — elephant charges
 	elif strikes == 2:
-		target_gap = 0.1 # Extremely close to the player
+		target_gap = 5.0 # Close behind — clearly visible in camera
 	elif strikes <= 1:
-		target_gap = 30.0 # Hidden
+		target_gap = 30.0 # Far back — hidden off-screen
 		
-	# Smoothly move gap towards target
+	# Move gap: charge speed depends on how close the target is
+	var approach_speed: float
+	if strikes >= 3:
+		approach_speed = 25.0  # Fast charge at strike 3
+	else:
+		approach_speed = 8.0   # Normal approach at strike 2
+	
 	if current_gap > target_gap:
-		current_gap -= 8.0 * delta # Dash at 8m/s (so it's visible)
+		current_gap -= approach_speed * delta
 		if current_gap < target_gap:
 			current_gap = target_gap
 	elif current_gap < target_gap:
-		current_gap += 10.0 * delta # Elephant falls back slowly
+		current_gap += 10.0 * delta # Elephant slowly falls back
 		if current_gap > target_gap:
 			current_gap = target_gap
 			
-	# Debug gap as requested by user
+	# Debug
 	if gap_var == "elephant_gap_p1" and current_gap < 30.0:
 		print("gap=", snapped(current_gap, 0.1))
 			
@@ -328,10 +334,10 @@ func _player_caught_by_elephant(caught_player: Node) -> void:
 	print("ELEPHANT CAUGHT ", caught_player.name.to_upper())
 	print("[ENDLESS] CAUGHT: ", caught_player.name, " at ", int(caught_player.distance), "m")
 	
-	# Elephant caught player: Player dies immediately and plays stun effect
+	# Elephant caught player: play stun effect then fall flat
 	caught_player.set("alive", false)
 	if caught_player.has_method("stun"):
-		caught_player.call("stun", 10.0)
+		caught_player.call("stun", 1.5)  # Short visible stun then game over
 		
 	var model = caught_player.get_node_or_null("Model")
 	if model:
@@ -505,4 +511,16 @@ func game_over(winner_text: String):
 		for child in players_root.get_children():
 			child.set("finished", true)
 			if child.has_method("set_process"): child.set_process(false)
-	ui_gameover.show_result(winner_text, calculate_final_score(1), calculate_final_score(2), int(p1.distance), int(p2.distance))
+			
+	var p1_kratips = p1.get("kratips_collected") if is_instance_valid(p1) else 0
+	var p2_kratips = p2.get("kratips_collected") if is_instance_valid(p2) else 0
+	var p1_skills = p1.get("skills_used") if is_instance_valid(p1) else 0
+	var p2_skills = p2.get("skills_used") if is_instance_valid(p2) else 0
+	
+	ui_gameover.show_result(
+		winner_text, 
+		calculate_final_score(1), calculate_final_score(2), 
+		int(p1.distance) if is_instance_valid(p1) else 0, 
+		int(p2.distance) if is_instance_valid(p2) else 0,
+		p1_kratips, p2_kratips, p1_skills, p2_skills
+	)

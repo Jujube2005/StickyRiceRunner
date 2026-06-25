@@ -83,7 +83,10 @@ func _transition_to_step2():
 
 	# Update header
 	if header_label:
-		header_label.text = "GAME MODE"
+		if chosen_player_mode == "singleplayer":
+			header_label.text = "GAME MODE"
+		else:
+			header_label.text = "GAME MODE"
 
 	_build_step2_buttons()
 
@@ -108,11 +111,12 @@ func _build_step2_buttons():
 	race2.pressed.connect(_start_game.bind("race"))
 	_apply_button_hover(race2)
 
-	# ── Endless button ──
-	var endless2 = _make_mode_button("Endless\nMode", "♾️")
-	modes_node.add_child(endless2)
-	endless2.pressed.connect(_start_game.bind("endless"))
-	_apply_button_hover(endless2)
+	# ── Endless Survival Battle button — 2 Players only ──
+	if chosen_player_mode == "multiplayer":
+		var endless2 = _make_mode_button("Endless\nSurvival\nBattle", "♾️")
+		modes_node.add_child(endless2)
+		endless2.pressed.connect(_start_game.bind("endless"))
+		_apply_button_hover(endless2)
 
 
 	# Animate Step 2 in (slide from right)

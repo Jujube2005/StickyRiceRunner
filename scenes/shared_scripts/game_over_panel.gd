@@ -8,6 +8,9 @@ var player2_model_scene: PackedScene
 @onready var distance_label = $DistanceLabel
 @onready var retry_button = $RetryButton
 
+var kratips_label: Label
+var skills_label: Label
+
 var backdrop: ColorRect
 var result_card: PanelContainer
 var content_box: VBoxContainer
@@ -146,8 +149,17 @@ func _build_layout():
 
 	_configure_info_label(final_score_label, 24, Color(1, 1, 1))
 	_configure_info_label(distance_label, 18, Color(0.82, 0.87, 0.96))
+	
+	kratips_label = Label.new()
+	_configure_info_label(kratips_label, 18, Color(0.82, 0.87, 0.96))
+	
+	skills_label = Label.new()
+	_configure_info_label(skills_label, 18, Color(0.82, 0.87, 0.96))
+	
 	content_box.add_child(final_score_label)
 	content_box.add_child(distance_label)
+	content_box.add_child(kratips_label)
+	content_box.add_child(skills_label)
 
 	retry_button.text = LanguageManager.t("BTN_PLAY_AGAIN")
 	retry_button.custom_minimum_size = Vector2(0, 54)
@@ -187,7 +199,7 @@ func _configure_info_label(label: Label, font_size: int, color: Color):
 	info_settings.outline_color = Color(0, 0, 0, 0.5)
 	label.label_settings = info_settings
 
-func show_result(winner_name: String, p1_score: int, p2_score: int, p1_distance: int, p2_distance: int):
+func show_result(winner_name: String, p1_score: int, p2_score: int, p1_distance: int, p2_distance: int, p1_kratips: int = 0, p2_kratips: int = 0, p1_skills: int = 0, p2_skills: int = 0):
 	var winner_id = "draw"
 	var title_text = "DRAW!"
 	var title_color = Color(0.86, 0.91, 1.0)
@@ -214,8 +226,22 @@ func show_result(winner_name: String, p1_score: int, p2_score: int, p1_distance:
 	winner_label.label_settings = title_settings
 	winner_label.text = title_text
 
-	final_score_label.text = LanguageManager.t("LBL_SCORE") % [p1_score, p2_score]
-	distance_label.text = LanguageManager.t("LBL_DISTANCE") % [p1_distance, p2_distance]
+	if GameConfig.race_mode == "endless":
+		section_label.text = LanguageManager.t("LBL_ENDLESS_SURVIVAL")
+		winner_label.text = LanguageManager.t("LBL_WINNER") + ": " + winner_name
+		final_score_label.visible = false
+		distance_label.text = LanguageManager.t("LBL_ENDLESS_DISTANCE") % [p1_distance, p2_distance]
+		kratips_label.text = LanguageManager.t("LBL_KRATIPS") % [p1_kratips, p2_kratips]
+		skills_label.text = LanguageManager.t("LBL_SKILLS_USED") % [p1_skills, p2_skills]
+		kratips_label.visible = true
+		skills_label.visible = true
+	else:
+		final_score_label.visible = true
+		kratips_label.visible = false
+		skills_label.visible = false
+		final_score_label.text = LanguageManager.t("LBL_SCORE") % [p1_score, p2_score]
+		distance_label.text = LanguageManager.t("LBL_DISTANCE") % [p1_distance, p2_distance]
+		
 	_show_winner_model(winner_id)
 
 	self.modulate.a = 0

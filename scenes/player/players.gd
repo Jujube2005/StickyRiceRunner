@@ -27,6 +27,7 @@ var finished = false
 var stun_timer := 0.0
 var kratips_collected := 0      # Total kratips (for scoring)
 var kratip_milestone_count := 0 # Kratips toward next silk (0-9, resets at 10)
+var skills_used := 0            # Total skills used (for Endless results screen)
 var penalties := 0
 
 var slide_timer := 0.0
@@ -47,7 +48,7 @@ var is_riding_buffalo := false
 var buffalo_timer := 0.0
 const BUFFALO_DURATION := 9.0
 const BUFFALO_SPEED_BONUS := 8.0   # Extra forward speed while riding
-var buffalo_obstacle_shield := true # Ignore ONE obstacle collision while riding
+var buffalo_hit_absorb := true # Ignore ONE obstacle collision while riding
 var _buffalo_mesh : MeshInstance3D = null
 
 const SILK_PROTECTION_DURATION := 5.0
@@ -762,7 +763,7 @@ func _physics_process(delta):
 		if is_instance_valid(other_player) and global_position.z > other_player.global_position.z + 10.0:
 			global_position.z = other_player.global_position.z + 10.0
 			
-		stun(2.0)
+		stun(1.5)
 		grant_spawn_shield(3.0)
 
 func _update_effects(delta):
@@ -843,7 +844,7 @@ func _spawn_collect_sparkle():
 			grant_silk_protection()
 
 func start_buffalo_ride() -> void:
-	"""Activate Buffalo Ride: speed boost + elephant gap recovery + one obstacle shield."""
+	"""Activate Buffalo Ride: speed boost + elephant gap recovery + one obstacle hit absorb."""
 	obstacle_strikes = 0  # Reset strikes
 	safe_run_timer = 0.0
 	
@@ -854,23 +855,11 @@ func start_buffalo_ride() -> void:
 	
 	is_riding_buffalo = true
 	buffalo_timer = BUFFALO_DURATION
-	buffalo_obstacle_shield = true
+	buffalo_hit_absorb = true
 	
 	# Elephant gains distance boost — give player breathing room
 	if game_manager and game_manager.has_method("on_buffalo_ride_started"):
 		game_manager.on_buffalo_ride_started(self)
-	
-	# Visual: brown placeholder box represents the buffalo
-	_buffalo_mesh = MeshInstance3D.new()
-	var box: BoxMesh = BoxMesh.new()
-	box.size = Vector3(2.0, 1.2, 3.5)
-	_buffalo_mesh.mesh = box
-	var mat: StandardMaterial3D = StandardMaterial3D.new()
-	mat.albedo_color = Color(0.4, 0.25, 0.15) # Brown
-	mat.roughness = 1.0
-	_buffalo_mesh.material_override = mat
-	_buffalo_mesh.position = Vector3(0, -0.4, 0)  # Under the player
-	add_child(_buffalo_mesh)
 	
 	# Notify HUD
 	var hud = get_tree().current_scene.find_child("GameplayHUD", true, false)
@@ -889,12 +878,7 @@ func _end_buffalo_ride() -> void:
 	"""Deactivate Buffalo Ride — return to normal speed."""
 	is_riding_buffalo = false
 	buffalo_timer = 0.0
-	buffalo_obstacle_shield = false
-	
-	# Remove buffalo visual
-	if is_instance_valid(_buffalo_mesh):
-		_buffalo_mesh.queue_free()
-		_buffalo_mesh = null
+	buffalo_hit_absorb = false
 	
 	var msg := "🐘 Elephant resumes!"
 	set_warning(msg)
@@ -931,10 +915,10 @@ func _calculate_total_score():
 	emit_signal("score_changed", score)
 
 func die() -> void:
-	# --- ENDLESS MODE: Buffalo obstacle shield blocks ONE collision ---
-	if GameConfig.race_mode == "endless" and is_riding_buffalo and buffalo_obstacle_shield:
-		buffalo_obstacle_shield = false  # Consume the one-hit shield
-		var warn_msg := "🐃 Buffalo takes the hit!"
+	# --- ENDLESS MODE: Buffalo hit absorb blocks ONE collision ---
+	if GameConfig.race_mode == "endless" and is_riding_buffalo and buffalo_hit_absorb:
+		buffalo_hit_absorb = false  # Consume the one-hit absorb
+		var warn_msg := "🐃 Buffalo absorbs the hit!"
 		set_warning(warn_msg)
 		get_tree().create_timer(1.5).timeout.connect(clear_warning.bind(warn_msg))
 		emit_signal("prank_flash", Color(0.6, 0.3, 0.0, 0.35))
@@ -960,9 +944,9 @@ func die() -> void:
 			game_manager.on_player_crash(self)
 	
 	add_penalty(100)
-	stun(2.0)
+	stun(1.5)
 
-func stun(duration: float = 2.0):
+func stun(duration: float = 1.5):
 	stun_timer = duration
 	velocity.z = 0
 	# Visual feedback: Scale pulse
@@ -1116,6 +1100,7 @@ func use_skill_at_slot(slot_index: int):
 				success = true
 			
 			if success:
+				skills_used += 1
 				print(name, " using skill: ", skill_name, " from slot ", slot_index)
 				skills.remove_at(slot_index)
 				emit_signal("skills_changed", skills)
@@ -1188,7 +1173,7 @@ func apply_prank(skill_name):
 			# บั้งไฟ — ล้มลงเหมือนชนสิ่งกีดขวาง
 			AudioManager.play_sfx("skill_bang_fai")
 			emit_signal("prank_flash", Color(1.0, 0.4, 0.0, 0.45))  # 🔴 แดงส้ม
-			stun(2.0)
+			stun(1.5)
 		"Screen Blur":
 			# หมอกควัน — วงกลมเบลอขอบ (vignette ฝั่งผู้เล่นที่โดน)
 			AudioManager.play_sfx("skill_wind")

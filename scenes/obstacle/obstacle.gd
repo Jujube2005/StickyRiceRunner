@@ -105,6 +105,6 @@ func _on_body_entered(body) -> void:
 			AudioManager.play_sfx("obstacle_hit")
 			deactivate()
 		elif node_body.has_method("stun"):
-			node_body.call("stun", 2.0)
+			node_body.call("stun", 1.5)
 			AudioManager.play_sfx("obstacle_hit")
 			deactivate()
