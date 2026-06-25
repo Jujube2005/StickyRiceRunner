@@ -9,23 +9,59 @@
 [ext_resource type="Texture2D" uid="uid://hasfww1lxfdx" path="res://assets/textures/UI/Buttons/ok.png" id="8_ok"]
 [ext_resource type="Texture2D" uid="uid://bx1bvstpk3k0k" path="res://assets/textures/UI/Buttons/btn_menu.png" id="9_menu"]
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_h7ats"]
-texture = ExtResource("6_6rodm")
+[sub_resource type="StyleBoxFlat" id="StyleBoxTexture_h7ats"]
+bg_color = Color(0.08, 0.08, 0.1, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+expand_margin_top = 18.0
+expand_margin_bottom = 18.0
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_kqam1"]
-texture = ExtResource("5_kqam1")
+[sub_resource type="StyleBoxFlat" id="StyleBoxTexture_kqam1"]
+bg_color = Color(0.95, 0.75, 0.15, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+expand_margin_top = 14.0
+expand_margin_bottom = 14.0
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_6rodm"]
-texture = ExtResource("6_6rodm")
+[sub_resource type="StyleBoxFlat" id="StyleBoxTexture_6rodm"]
+bg_color = Color(0.08, 0.08, 0.1, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+expand_margin_top = 18.0
+expand_margin_bottom = 18.0
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_xykus"]
-texture = ExtResource("5_kqam1")
+[sub_resource type="StyleBoxFlat" id="StyleBoxTexture_xykus"]
+bg_color = Color(0.95, 0.75, 0.15, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+expand_margin_top = 14.0
+expand_margin_bottom = 14.0
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_qycpn"]
-texture = ExtResource("6_6rodm")
+[sub_resource type="StyleBoxFlat" id="StyleBoxTexture_qycpn"]
+bg_color = Color(0.08, 0.08, 0.1, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+expand_margin_top = 18.0
+expand_margin_bottom = 18.0
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_jwjb4"]
-texture = ExtResource("5_kqam1")
+[sub_resource type="StyleBoxFlat" id="StyleBoxTexture_jwjb4"]
+bg_color = Color(0.95, 0.75, 0.15, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+expand_margin_top = 14.0
+expand_margin_bottom = 14.0
 
 [node name="SettingsPopup" type="Control" unique_id=1629625829]
 process_mode = 3
