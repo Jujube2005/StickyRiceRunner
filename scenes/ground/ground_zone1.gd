@@ -40,8 +40,7 @@ func _mirror_custom_decorations():
 				
 	for node in nodes_to_duplicate:
 		# 1. Randomize the original (left side) node so each tile looks different!
-		# Push further left (more negative) to ensure it stays off the road
-		node.position.x -= randf_range(0.5, 2.0)
+		# Keep X position exactly as the user placed it, only randomize Z and rotation
 		node.position.z += randf_range(-4.0, 4.0)
 		node.rotation.y += randf_range(-0.3, 0.3)
 		
@@ -55,9 +54,8 @@ func _mirror_custom_decorations():
 			add_child(duplicate)
 			duplicate.visible = true
 			
-			# Mirror X, random Z offset
-			# Mirror X will be positive, so we push it further right (positive)
-			duplicate.position.x = -node.position.x + randf_range(0.5, 2.0)
+			# Mirror X exactly as the original user placement
+			duplicate.position.x = -node.position.x
 			duplicate.position.z = node.position.z + randf_range(-4.0, 4.0)
 			
 			# Rotate 180 degrees (PI) so it faces the opposite direction, plus some random tilt
