@@ -65,6 +65,9 @@ var elapsed_time = 0.0
 var countdown_active = true
 
 func _ready():
+	print("========================================")
+	print("[GAME START] Player Mode: ", GameConfig.game_mode, " | Race Mode: ", GameConfig.race_mode)
+	print("========================================")
 	ui_gameover.visible = false
 	skill_cooldown_timer = 3.0 # Race start cooldown
 	_spawn_players()
