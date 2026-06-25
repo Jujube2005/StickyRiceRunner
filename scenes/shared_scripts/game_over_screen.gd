@@ -2,6 +2,7 @@ extends Control
 
 @onready var board_rect: TextureRect = $Board
 @onready var title_rect: Label = $Board/TitleHeader
+@onready var title_rect2: Label = $Board/TitleHeader2
 @onready var default_scale: Vector2 = board_rect.scale
 
 @onready var p1_winner_tag: Label = $Board/P1Stats/WinnerTag
@@ -74,16 +75,20 @@ func show_result(winner_name: String, _p1_score: int, _p2_score: int, _p1_distan
 
 	var p1_kratips = 0
 	var p1_dist = 0
+	var p1_skills = 0
 	var p2_kratips = 0
 	var p2_dist = 0
+	var p2_skills = 0
 
 	if gm:
 		if gm.p1:
 			p1_kratips = gm.p1.kratips_collected
 			p1_dist = int(gm.p1.distance)
+			if "skills_used" in gm.p1: p1_skills = gm.p1.skills_used
 		if gm.p2:
 			p2_kratips = gm.p2.kratips_collected
 			p2_dist = int(gm.p2.distance)
+			if "skills_used" in gm.p2: p2_skills = gm.p2.skills_used
 
 	var max_dist = max(p1_dist, p2_dist)
 	var max_kratips = max(p1_kratips, p2_kratips)
@@ -125,16 +130,27 @@ func show_result(winner_name: String, _p1_score: int, _p2_score: int, _p1_distan
 	if p1_dist_val:
 		p1_dist_val.text = "%dm" % p1_dist
 	if p1_kratib_val:
-		# Total = (Kratib × 100) + Distance
-		p1_kratib_val.text = str((p1_kratips * 100) + p1_dist)
+		if GameConfig.race_mode == "endless":
+			p1_kratib_val.text = "%d 📦 / %d 🪄" % [p1_kratips, p1_skills]
+		else:
+			# Total = (Kratib × 100) + Distance
+			p1_kratib_val.text = str((p1_kratips * 100) + p1_dist)
 
 	if p2_dist_bar:
 		p2_dist_bar.value = clamp((float(p2_dist) / goal_dist) * 100.0, 0.0, 100.0)
 	if p2_dist_val:
 		p2_dist_val.text = "%dm" % p2_dist
 	if p2_kratib_val:
-		# Total = (Kratib × 100) + Distance
-		p2_kratib_val.text = str((p2_kratips * 100) + p2_dist)
+		if GameConfig.race_mode == "endless":
+			p2_kratib_val.text = "%d 📦 / %d 🪄" % [p2_kratips, p2_skills]
+		else:
+			# Total = (Kratib × 100) + Distance
+			p2_kratib_val.text = str((p2_kratips * 100) + p2_dist)
+
+	# Change title for endless mode
+	if GameConfig.race_mode == "endless":
+		if title_rect: title_rect.text = "SURVIVED"
+		if title_rect2: title_rect2.text = "SURVIVED"
 
 	# Winner crowns configuration & Avatar switching
 	if winner_name == "Player 1":

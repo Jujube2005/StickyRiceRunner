@@ -521,6 +521,5 @@ func game_over(winner_text: String):
 		winner_text, 
 		calculate_final_score(1), calculate_final_score(2), 
 		int(p1.distance) if is_instance_valid(p1) else 0, 
-		int(p2.distance) if is_instance_valid(p2) else 0,
-		p1_kratips, p2_kratips, p1_skills, p2_skills
+		int(p2.distance) if is_instance_valid(p2) else 0
 	)
