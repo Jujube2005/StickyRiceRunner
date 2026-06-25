@@ -27,7 +27,7 @@ func _ready():
 	_spawn_random(HAYSTACKV2, randi_range(1, 3), Vector3(5, 5, 5), Vector3.ZERO, 3.0, true)
 	_spawn_random(OLDSPIRITHOUSE, randi_range(0, 1), Vector3(5, 5, 5), Vector3(0.0, deg_to_rad(-90.0), 0.0), 3.0)
 	_spawn_random(BUFFALO, randi_range(1, 3), Vector3(2, 2, 2), Vector3(0.0, deg_to_rad(-180.0), 0.0), 4.0)
-	_spawn_random(ISANTHAIHOUSE, randi_range(0, 1), Vector3(1, 1, 1), Vector3.ZERO, 10.0, true)
+	_spawn_random(ISANTHAIHOUSE, randi_range(0, 1), Vector3(4, 4, 4), Vector3(0.0, deg_to_rad(-180.0), 0.0), 10.0)
 
 func _spawn_random(scene: PackedScene, count: int, scale_vec: Vector3, rot_vec: Vector3, radius: float, random_y_rot: bool = false, random_scale_clayjar: bool = false, random_scale_tree: bool = false):
 	for _i in range(count):
@@ -38,6 +38,13 @@ func _spawn_random(scene: PackedScene, count: int, scale_vec: Vector3, rot_vec: 
 			var tx = randf_range(-25.0, -min_x) if is_left else randf_range(min_x, 25.0)
 			var tz = randf_range(-4.0, 4.0)
 			var pos = Vector3(tx, 0.0, tz)
+			
+			if scene == HOMEKORAT:
+				pos.x = -5.565 if is_left else 5.565
+				pos.y = 0.068
+			elif scene == ISANTHAIHOUSE:
+				pos.x = -13.46 if is_left else 13.46
+				pos.y = -0.34
 			
 			var final_scale = scale_vec
 			if random_scale_clayjar:
