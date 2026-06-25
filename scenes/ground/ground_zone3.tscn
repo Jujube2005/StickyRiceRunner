@@ -45,7 +45,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1.6, -53.832443, -0.3, 0)
 mesh = SubResource("BoxMesh_dirt")
 
 [node name="SideGroundRight" type="MeshInstance3D" parent="." unique_id=888888882]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1.6, 53.55606, -0.3, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1.6, 53.57023, -0.3, -0.14205766)
 mesh = SubResource("BoxMesh_dirt")
 
 [node name="SceneryPoints" type="Node3D" parent="." unique_id=1760085451]
@@ -84,7 +84,7 @@ transform = Transform3D(1.24, 0, 0, 0, 0.99999994, 0, 7.1054274e-15, 0, 0.709999
 transform = Transform3D(1500, 0, 0, 0, 1500, 0, 0, 0, 1500, -4.5776954, -0.1710701, 0.9994364)
 
 [node name="Phimai" parent="." unique_id=220114011 instance=ExtResource("5_pygj3")]
-transform = Transform3D(-3.14722e-07, 0, -6, 0, 6, 0, 7.2, 0, -2.6226832e-07, 10.288, 3, 0)
+transform = Transform3D(-3.14722e-07, 0, -6, 0, 6, 0, 7.2, 0, -2.6226832e-07, 10.288, 2.8515444, 0)
 
 [node name="ruinancienttemple3" parent="." unique_id=1036354889 instance=ExtResource("3_ruin")]
 transform = Transform3D(-6.7228115e-08, 0, 0.512, 0, 1.5, 0, -1.538, 0, -2.2380231e-08, 5.6908917, 0.14272451, 18.215078)
@@ -93,7 +93,7 @@ transform = Transform3D(-6.7228115e-08, 0, 0.512, 0, 1.5, 0, -1.538, 0, -2.23802
 transform = Transform3D(1.24, 0, 1.7763568e-15, 0, 0.99999994, 0, 0, 0, 0.70999986, 11.535988, -0.23958802, 0.32596684)
 
 [node name="Phimai2" parent="." unique_id=1282942214 instance=ExtResource("5_pygj3")]
-transform = Transform3D(-3.14722e-07, 0, 7.2, 0, 6, 0, -7.2, 0, -3.14722e-07, -12.059988, 3, 0)
+transform = Transform3D(-3.14722e-07, 0, 7.2, 0, 6, 0, -7.2, 0, -3.14722e-07, -12.059988, 2.849348, 0)
 
 [node name="treeV2" parent="." unique_id=1311763137 instance=ExtResource("4_cplsf")]
 transform = Transform3D(1500, 0, 0, 0, 2100, 0, 0, 0, 1500, -6.4163356, -0.73049396, -3.522757)

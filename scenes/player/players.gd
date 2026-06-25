@@ -94,6 +94,9 @@ var bot_jump_cooldown := 0.0
 
 var game_manager : Node = null
 
+var sfx_jump: AudioStreamPlayer
+var sfx_slide: AudioStreamPlayer
+
 func _ready():
 	axis_lock_angular_x = true
 	axis_lock_angular_z = true
@@ -111,6 +114,14 @@ func _ready():
 	lane = int(round(position.x / lane_distance))
 	_setup_spawn_shield_vfx()
 	_setup_trail_vfx()
+	
+	sfx_jump = AudioStreamPlayer.new()
+	sfx_jump.stream = load("res://assets/audio/Jump.wav")
+	add_child(sfx_jump)
+	
+	sfx_slide = AudioStreamPlayer.new()
+	sfx_slide.stream = load("res://assets/audio/Slide.wav")
+	add_child(sfx_slide)
 	
 	var shape_node = get_node_or_null("CollisionShape3D")
 	if shape_node and shape_node.shape:
@@ -559,9 +570,11 @@ func _physics_process(delta):
 			if slide_timer > 0:
 				_end_slide()
 			velocity.y = JUMP_FORCE
+			sfx_jump.play()
 
 		if slide_action != "" and Input.is_action_just_pressed(slide_action) and is_on_floor() and slide_timer <= 0:
 			_start_slide()
+			sfx_slide.play()
 
 		if skill_action != "" and Input.is_action_just_pressed(skill_action):
 			use_skill_at_slot(0)
@@ -643,6 +656,7 @@ func _physics_process(delta):
 							var slide_range = max(4.0, bot_curr_speed * 0.4)
 							if dist_z > 0 and dist_z < slide_range:
 								_start_slide()
+								sfx_slide.play()
 								bot_jump_cooldown = 0.8
 								performed_action = true
 								break
@@ -655,6 +669,7 @@ func _physics_process(delta):
 							var jump_range = max(3.5, bot_curr_speed * 0.35)
 							if dist_z > 0 and dist_z < jump_range:
 								velocity.y = JUMP_FORCE
+								sfx_jump.play()
 								bot_jump_cooldown = 0.7
 								break
 

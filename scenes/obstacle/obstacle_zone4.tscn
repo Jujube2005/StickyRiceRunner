@@ -1,6 +1,6 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://gd6co7s3ddfa"]
 
-[ext_resource type="PackedScene" path="res://assets/models/obstacle/Hurdle.glb" id="1_hurdle"]
+[ext_resource type="PackedScene" uid="uid://jsucdx0wvvba" path="res://assets/models/obstacle/Hurdle.glb" id="1_hurdle"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_zone3"]
 size = Vector3(1.0844727, 0.6, 0.1038208)
@@ -19,4 +19,3 @@ transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, -0.5, 0)
 
 [node name="model_high" parent="." unique_id=781977772 instance=ExtResource("1_hurdle")]
 transform = Transform3D(0.1, 0, 0, 0, 0.2, 0, 0, 0, 0.1, 0, -0.5, 0)
-
