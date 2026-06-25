@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bi0s62s5q1xvu"]
 
-[ext_resource type="Script" uid="uid://dydst2eblm0t2" path="res://scenes/ground/ground_zone1.gd" id="1_zone4script"]
+[ext_resource type="Script" path="res://scenes/ground/ground_zone1.gd" id="1_zone4script"]
 [ext_resource type="PackedScene" uid="uid://orwbw3xyfods" path="res://assets/models/ground/road-v1.glb" id="2_road"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_zone4"]
