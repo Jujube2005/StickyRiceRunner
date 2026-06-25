@@ -28,6 +28,9 @@ var stun_timer := 0.0
 var kratips_collected := 0      # Total kratips (for scoring)
 var kratip_milestone_count := 0 # Kratips toward next silk (0-9, resets at 10)
 var penalties := 0
+
+var slide_timer := 0.0
+const SLIDE_DURATION := 0.7
 var score := 0
 var charges := 0
 var can_charge := true
@@ -56,12 +59,14 @@ var current_anim : String = ""
 @export var anim_run : String = "run"
 @export var anim_jump : String = "jump"
 @export var anim_stun : String = "stun"
+@export var anim_slide : String = "slide"
 
 @export_group("Animation Files")
 @export_file("*.glb") var model_file : String
 @export_file("*.glb") var run_file : String
 @export_file("*.glb") var jump_file : String
 @export_file("*.glb") var stun_file : String
+@export_file("*.glb") var slide_file : String
 
 @export_group("Model Offset")
 # Y offset: compensates for GLB pivot not being at feet.
@@ -81,6 +86,7 @@ var _cached_spine_bone_idx := -2
 @export var jump_action : String
 @export var skill_action : String
 @export var defend_action : String
+@export var slide_action : String
 
 @export var is_bot := false
 var bot_think_timer := 0.0
@@ -95,6 +101,10 @@ func _ready():
 	_setup_shield_vfx()
 	_setup_spawn_shield_vfx()
 	_setup_trail_vfx()
+	
+	var shape_node = get_node_or_null("CollisionShape3D")
+	if shape_node and shape_node.shape:
+		shape_node.shape = shape_node.shape.duplicate()
 	
 	# Dynamically locate GameManager as fallback
 	if !game_manager and get_tree() and get_tree().current_scene:
@@ -136,6 +146,7 @@ func _ready():
 		if run_file: _import_anim(run_file, anim_run)
 		if jump_file: _import_anim(jump_file, anim_jump)
 		if stun_file: _import_anim(stun_file, anim_stun)
+		if slide_file: _import_anim(slide_file, anim_slide)
 		
 		# Force active and play
 		anim_player.active = true
@@ -369,7 +380,10 @@ func _sync_model_to_body():
 	var model_node = get_node_or_null("Model")
 	if model_node:
 		model_node.position.x = model_offset.x
-		model_node.position.y = model_offset.y + model_y_offset
+		var target_y = model_offset.y + model_y_offset
+		if slide_timer > 0:
+			target_y -= 0.8
+		model_node.position.y = target_y
 		model_node.position.z = model_offset.z
 
 func _physics_process(delta):
@@ -486,11 +500,21 @@ func _physics_process(delta):
 		if energy_trail_vfx.emitting != want_energy:
 			energy_trail_vfx.emitting = want_energy
 
+	if slide_timer > 0:
+		slide_timer -= delta
+		if slide_timer <= 0:
+			_end_slide()
+
 	# Animation handling for normal state
 	if is_on_floor():
-		play_animation(anim_run)
-		if anim_player and current_anim == anim_run:
-			anim_player.speed_scale = abs(velocity.z) / BASE_FORWARD_SPEED
+		if slide_timer > 0:
+			play_animation(anim_slide)
+			if anim_player:
+				anim_player.speed_scale = 1.0
+		else:
+			play_animation(anim_run)
+			if anim_player and current_anim == anim_run:
+				anim_player.speed_scale = abs(velocity.z) / BASE_FORWARD_SPEED
 	else:
 		play_animation(anim_jump)
 		if anim_player:
@@ -521,7 +545,12 @@ func _physics_process(delta):
 
 	if !is_bot:
 		if jump_action != "" and Input.is_action_just_pressed(jump_action) and is_on_floor() and !_has_effect("disable_jump"):
+			if slide_timer > 0:
+				_end_slide()
 			velocity.y = JUMP_FORCE
+
+		if slide_action != "" and Input.is_action_just_pressed(slide_action) and is_on_floor() and slide_timer <= 0:
+			_start_slide()
 
 		if skill_action != "" and Input.is_action_just_pressed(skill_action):
 			use_skill_at_slot(0)
@@ -590,18 +619,33 @@ func _physics_process(delta):
 			if best_lane < lane: move_dir = -1
 			elif best_lane > lane: move_dir = 1
 			
-			# Smart Jump Logic
+			# Smart Jump & Slide Logic
 			if is_on_floor() and bot_jump_cooldown <= 0:
 				var my_lane_x = lane * lane_distance
-				for obs in get_tree().get_nodes_in_group("low_obstacle"):
-					if abs(obs.global_position.x - my_lane_x) < 1.0:
-						var dist_z = global_position.z - obs.global_position.z
-						# Jump when close to a low obstacle
-						var jump_range = max(3.5, bot_curr_speed * 0.35)
-						if dist_z > 0 and dist_z < jump_range:
-							velocity.y = JUMP_FORCE
-							bot_jump_cooldown = 0.7
-							break
+				var performed_action = false
+				
+				# 1. Slide for High Obstacles
+				if slide_timer <= 0:
+					for obs in get_tree().get_nodes_in_group("high_obstacle"):
+						if abs(obs.global_position.x - my_lane_x) < 1.0:
+							var dist_z = global_position.z - obs.global_position.z
+							var slide_range = max(4.0, bot_curr_speed * 0.4)
+							if dist_z > 0 and dist_z < slide_range:
+								_start_slide()
+								bot_jump_cooldown = 0.8
+								performed_action = true
+								break
+				
+				# 2. Jump for Low Obstacles
+				if not performed_action and slide_timer <= 0:
+					for obs in get_tree().get_nodes_in_group("low_obstacle"):
+						if abs(obs.global_position.x - my_lane_x) < 1.0:
+							var dist_z = global_position.z - obs.global_position.z
+							var jump_range = max(3.5, bot_curr_speed * 0.35)
+							if dist_z > 0 and dist_z < jump_range:
+								velocity.y = JUMP_FORCE
+								bot_jump_cooldown = 0.7
+								break
 
 	if !is_bot:
 		if left_action != "" and Input.is_action_just_pressed(left_action):
@@ -667,6 +711,20 @@ func _update_effects(delta):
 
 	for effect in expired:
 		effect_durations.erase(effect)
+
+func _start_slide():
+	slide_timer = SLIDE_DURATION
+	var shape_node = get_node_or_null("CollisionShape3D")
+	if shape_node and shape_node.shape is CapsuleShape3D:
+		shape_node.shape.height = 0.9
+		shape_node.position.y = 0.45
+
+func _end_slide():
+	slide_timer = 0.0
+	var shape_node = get_node_or_null("CollisionShape3D")
+	if shape_node and shape_node.shape is CapsuleShape3D:
+		shape_node.shape.height = 1.8047
+		shape_node.position.y = 0.9244
 
 func _has_effect(effect_name):
 	return effect_durations.has(effect_name)
@@ -1089,11 +1147,13 @@ func _auto_assign_files():
 		if !run_file: run_file = "res://assets/animation/Running.glb"
 		if !jump_file: jump_file = "res://assets/animation/jump.glb"
 		if !stun_file: stun_file = "res://assets/animation/Stun.glb"
+		if !slide_file: slide_file = "res://assets/animation/Slide.glb"
 	else:
 		if !model_file: model_file = "res://assets/models/player/girlTmodel.glb"
 		if !run_file: run_file = "res://assets/animation/Running.glb"
 		if !jump_file: jump_file = "res://assets/animation/jump.glb"
 		if !stun_file: stun_file = "res://assets/animation/Stun.glb"
+		if !slide_file: slide_file = "res://assets/animation/Slide.glb"
 
 		# 🧨 SAFETY CHECK ใส่ตรงนี้ ใส่เพิ่มมา
 	if model_file and ResourceLoader.exists(model_file):
