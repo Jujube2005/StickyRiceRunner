@@ -1,10 +1,10 @@
 extends WorldEnvironment
 
 # Zone fog colors matching each zone's atmosphere
-const FOG_ZONE1 := Color(0.85, 0.75, 0.50, 1) # Warm dusty brown
+const FOG_ZONE1 := Color(0.28, 0.52, 0.28, 1) # Soft green haze (Khon Kaen theme)
 const FOG_ZONE2 := Color(0.80, 0.58, 0.38, 1) # Reddish warm
 const FOG_ZONE3 := Color(0.65, 0.67, 0.70, 1) # Cool grey mist
-const FOG_ZONE4 := Color(0.28, 0.52, 0.28, 1) # Soft green haze
+const FOG_ZONE4 := Color(0.85, 0.75, 0.50, 1) # Warm dusty brown (formerly Zone 1)
 
 # Low density — fog only visible at distance (horizon), not near road
 const DENSITY_ZONE1 := 0.007
@@ -25,7 +25,7 @@ func _ready():
 	environment.fog_enabled             = true
 	environment.fog_light_color         = FOG_ZONE1
 	environment.fog_density             = DENSITY_ZONE1
-	environment.fog_sky_affect          = 0.6
+	environment.fog_sky_affect          = 1.0 # Blends completely with sky to hide horizon line
 	environment.fog_aerial_perspective  = 0.3
 	# Height fog — concentrated near ground level → looks like horizon haze
 	environment.fog_height              = -1.5

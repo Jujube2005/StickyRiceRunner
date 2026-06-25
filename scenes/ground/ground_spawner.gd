@@ -114,19 +114,19 @@ func _update_dirt_color(tile: Node3D, z_pos: float):
 	var dirt_right = tile.find_child("SideGroundRight", true, false)
 	
 	if dirt_left and dirt_right:
-		var target_color = Color(0.48, 0.45, 0.3, 1) # Zone 1 (Brown)
+		var target_color = Color(0.08, 0.28, 0.05, 1) # Zone 1 (Dark Green - Khon Kaen theme)
 		var distance = abs(z_pos)
 		
 		# Transition over 150 meters to make it seamless
 		if distance >= 1500.0:
 			var t = clamp((distance - 1500.0) / 150.0, 0.0, 1.0)
-			target_color = Color(0.35, 0.35, 0.35, 1).lerp(Color(0.08, 0.28, 0.05, 1), t) # Zone 3 → Zone 4 (Grey → Dark Green)
+			target_color = Color(0.35, 0.35, 0.35, 1).lerp(Color(0.48, 0.45, 0.3, 1), t) # Zone 3 → Zone 4 (Grey → Brown)
 		elif distance >= 1000.0:
 			var t = clamp((distance - 1000.0) / 150.0, 0.0, 1.0)
 			target_color = Color(0.55, 0.45, 0.3, 1).lerp(Color(0.35, 0.35, 0.35, 1), t) # Zone 2 → Zone 3 (Reddish → Grey)
 		elif distance >= 500.0:
 			var t = clamp((distance - 500.0) / 150.0, 0.0, 1.0)
-			target_color = Color(0.48, 0.45, 0.3, 1).lerp(Color(0.55, 0.45, 0.3, 1), t) # Zone 1 → Zone 2 (Brown → Reddish)
+			target_color = Color(0.08, 0.28, 0.05, 1).lerp(Color(0.55, 0.45, 0.3, 1), t) # Zone 1 → Zone 2 (Green → Reddish)
 			
 		var new_mat = StandardMaterial3D.new()
 		new_mat.albedo_color = target_color
