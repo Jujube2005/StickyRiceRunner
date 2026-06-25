@@ -1,4 +1,4 @@
-﻿extends Node3D
+extends Node3D
 
 ## ElephantChaser — Visual-only elephant that follows its assigned player.
 ## The actual gap is managed by GameManager; this scene just renders
@@ -35,9 +35,9 @@ func _process(_delta: float) -> void:
 	if not is_instance_valid(target_player):
 		return
 
-	var gap : float = 20.0
+	var gap := 20.0
 	if "elephant_gap" in target_player:
-		gap = target_player.elephant_gap
+		gap = float(target_player.get("elephant_gap"))
 	gap = max(gap, 0.0)
 
 	# Positive Z = behind the player in Godot's right-hand system
