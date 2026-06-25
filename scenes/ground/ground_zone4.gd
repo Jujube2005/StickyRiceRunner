@@ -49,29 +49,41 @@ func _spawn_decorations():
 			_place(KHAEN, Vector3(side_x, 0.0, randf_range(-3.0, 3.0)), Vector3(0.2, 0.2, 0.2), rot_y)
 			_last_khaen_z = my_global_z
 
-	# 3. sirindhornae — random 40%, skip if gate is here (avoid overlap)
+	# 3. sirindhornae — random 40%, skip if gate is here, varied near/far + size
 	if not gate_placed_this_tile and randf() < 0.4:
-		var side_x = FAR_LEFT_X if randf() < 0.5 else FAR_RIGHT_X
-		var rot_y = 90.0 if side_x < 0 else -90.0
-		_place(SIRINDHORNAE, Vector3(side_x, 0.0, randf_range(-3.0, 3.0)), Vector3(1.0, 1.0, 1.0), rot_y)
+		# Randomize which side, how far from road, and how big
+		var side_sign = -1.0 if randf() < 0.5 else 1.0
+		var dist_from_road = randf_range(5.0, 20.0)   # near to far
+		var dino_scale = randf_range(0.6, 1.6)         # small to large
+		var rot_y = 90.0 if side_sign < 0 else -90.0
+		_place(SIRINDHORNAE,
+			Vector3(side_sign * dist_from_road, 0.0, randf_range(-4.0, 4.0)),
+			Vector3(dino_scale, dino_scale, dino_scale), rot_y)
 
-	# 4. Kinareemimus — random on each side independently
+	# 4. Kinareemimus — random, varied near/far + size per side
 	if randf() < 0.5:
-		var s = randf_range(0.2, 0.3)
-		_place(KINARE, Vector3(LEFT_SIDE_X + randf_range(-2.0, 2.0), 0.0, randf_range(-4.0, 4.0)),  Vector3(s, s, s),  90.0)
+		var dist = randf_range(4.0, 16.0)
+		var s = randf_range(0.15, 0.4)
+		_place(KINARE, Vector3(-dist, 0.0, randf_range(-4.0, 4.0)), Vector3(s, s, s), 90.0)
 	if randf() < 0.5:
-		var s = randf_range(0.2, 0.3)
-		_place(KINARE, Vector3(RIGHT_SIDE_X + randf_range(-2.0, 2.0), 0.0, randf_range(-4.0, 4.0)), Vector3(s, s, s), -90.0)
+		var dist = randf_range(4.0, 16.0)
+		var s = randf_range(0.15, 0.4)
+		_place(KINARE, Vector3(dist, 0.0, randf_range(-4.0, 4.0)), Vector3(s, s, s), -90.0)
 
-	# 5. Trees — treeV1, closer to road on both sides
-	for _i in range(randi_range(2, 4)):
-		# Left side trees closer to road edge
-		var left_x = randf_range(-16.0, -9.0)
-		_place(TREEV1, Vector3(left_x, 0.0, randf_range(-4.0, 4.0)), Vector3(1500.0, 1500.0, 1500.0), randf_range(0.0, 360.0))
-	for _i in range(randi_range(2, 4)):
-		# Right side trees closer to road edge
-		var right_x = randf_range(9.0, 16.0)
-		_place(TREEV1, Vector3(right_x, 0.0, randf_range(-4.0, 4.0)), Vector3(1500.0, 1500.0, 1500.0), randf_range(0.0, 360.0))
+	# 5. Trees — varied near/far and size, both sides, organic scatter
+	var tree_count_left  = randi_range(2, 5)
+	var tree_count_right = randi_range(2, 5)
+
+	for _i in range(tree_count_left):
+		# Mix near-road (5) and far (18), random scale for depth illusion
+		var tx = randf_range(-18.0, -5.0)
+		var ts = randf_range(800.0, 2000.0)
+		_place(TREEV1, Vector3(tx, 0.0, randf_range(-5.0, 5.0)), Vector3(ts, ts, ts), randf_range(0.0, 360.0))
+
+	for _i in range(tree_count_right):
+		var tx = randf_range(5.0, 18.0)
+		var ts = randf_range(800.0, 2000.0)
+		_place(TREEV1, Vector3(tx, 0.0, randf_range(-5.0, 5.0)), Vector3(ts, ts, ts), randf_range(0.0, 360.0))
 
 func _place(scene: PackedScene, local_pos: Vector3, scale_vec: Vector3, rotation_y: float):
 	if not scene:
