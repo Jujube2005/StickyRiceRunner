@@ -12,9 +12,6 @@
 [ext_resource type="Texture2D" uid="uid://2vq83mq8oapr" path="res://assets/textures/UI/Buttons/setting_board_bg.png" id="13_board"]
 [ext_resource type="Texture2D" uid="uid://f2yc54ptro81" path="res://assets/textures/UI/Buttons/panelBackground2.png" id="14_panel2"]
 [ext_resource type="Texture2D" uid="uid://dj6ynnaiwbgp" path="res://assets/textures/UI/Buttons/box.png" id="tex_btn_box"]
-[ext_resource type="Texture2D" uid="uid://bvg8mvghjfepc" path="res://assets/textures/UI/Buttons/HSliderIcon.png" id="tex_slider_coin"]
-[ext_resource type="Texture2D" uid="uid://o8bdm76q4yw1" path="res://assets/textures/UI/Buttons/HSliderGrabber.png" id="tex_slider_ring"]
-[ext_resource type="Texture2D" uid="uid://bgwdsa1djf4c1" path="res://assets/textures/UI/Buttons/HSliderTrac.png" id="tex_slider_track"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_btn_box"]
 content_margin_left = 30.0
@@ -168,9 +165,10 @@ layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = -0.49594116
-offset_right = 270.9054
-offset_bottom = 125.97772
+offset_left = -2.970901
+offset_top = 11.97904
+offset_right = 267.93445
+offset_bottom = 138.4527
 grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(0.75, 0.75)
@@ -182,7 +180,7 @@ theme_override_constants/margin_bottom = 20
 [node name="Content" type="VBoxContainer" parent="Panel/MarginOuter/VBoxMain/InnerPanel/MarginInner" unique_id=384838042]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_constants/separation = -5
+theme_override_constants/separation = 5
 
 [node name="AudioHeader" type="Button" parent="Panel/MarginOuter/VBoxMain/InnerPanel/MarginInner/Content" unique_id=1100000001]
 unique_name_in_owner = true
@@ -203,7 +201,7 @@ text = "AUDIO"
 
 [node name="AudioSliders" type="VBoxContainer" parent="Panel/MarginOuter/VBoxMain/InnerPanel/MarginInner/Content" unique_id=987654321]
 layout_mode = 2
-theme_override_constants/separation = 15
+theme_override_constants/separation = 30
 
 [node name="Master" type="HBoxContainer" parent="Panel/MarginOuter/VBoxMain/InnerPanel/MarginInner/Content/AudioSliders" unique_id=396862945]
 layout_mode = 2
@@ -303,6 +301,7 @@ value = 0.8
 
 [node name="Sep1" type="HSeparator" parent="Panel/MarginOuter/VBoxMain/InnerPanel/MarginInner/Content" unique_id=1000000004]
 layout_mode = 2
+theme_override_constants/separation = 25
 theme_override_styles/separator = SubResource("StyleBoxLine_separator")
 
 [node name="LanguageHeader" type="Button" parent="Panel/MarginOuter/VBoxMain/InnerPanel/MarginInner/Content" unique_id=1100000002]
@@ -311,7 +310,7 @@ custom_minimum_size = Vector2(150, 36)
 layout_mode = 2
 size_flags_horizontal = 0
 mouse_filter = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_color = Color(0.875, 0.875, 0.875, 1)
 theme_override_colors/font_outline_color = Color(0.2, 0.08, 0, 0.8)
 theme_override_constants/outline_size = 3
 theme_override_fonts/font = ExtResource("11_font")
@@ -353,6 +352,7 @@ popup/item_1/id = 1
 
 [node name="Sep2" type="HSeparator" parent="Panel/MarginOuter/VBoxMain/InnerPanel/MarginInner/Content" unique_id=1000000006]
 layout_mode = 2
+theme_override_constants/separation = 20
 theme_override_styles/separator = SubResource("StyleBoxLine_separator")
 
 [node name="DisplayHeader" type="Button" parent="Panel/MarginOuter/VBoxMain/InnerPanel/MarginInner/Content" unique_id=1100000003]
