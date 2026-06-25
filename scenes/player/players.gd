@@ -527,9 +527,9 @@ func _physics_process(delta):
 	# Calculate dynamic speed based on distance (+ global speed scale + buffalo bonus)
 	var gm_speed_scale := 1.0
 	if game_manager and "global_speed_scale" in game_manager:
-		gm_speed_scale = game_manager.global_speed_scale
-	var buffalo_bonus := BUFFALO_SPEED_BONUS if is_riding_buffalo else 0.0
-	var current_speed = min((BASE_FORWARD_SPEED + (distance * SPEED_SCALE_FACTOR)) * gm_speed_scale + buffalo_bonus, MAX_FORWARD_SPEED)
+		gm_speed_scale = float(game_manager.get("global_speed_scale"))
+	var buffalo_bonus: float = BUFFALO_SPEED_BONUS if is_riding_buffalo else 0.0
+	var current_speed: float = min((BASE_FORWARD_SPEED + (distance * SPEED_SCALE_FACTOR)) * gm_speed_scale + buffalo_bonus, MAX_FORWARD_SPEED)
 	velocity.z = -current_speed * speed_factor
 
 	# ── Speed trail: when going fast (e.g. > 130% base speed) ──

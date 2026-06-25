@@ -23,7 +23,7 @@ func _ready() -> void:
 	add_child(_base_mesh)
 
 	_label = Label3D.new()
-	_label.text = "🐘 ELEPHANT"
+	_label.text = "ELEPHANT"
 	_label.font_size = 64
 	_label.modulate = Color(1.0, 0.8, 0.2, 0.85)
 	_label.billboard = BaseMaterial3D.BILLBOARD_ENABLED
@@ -41,15 +41,15 @@ func _process(_delta: float) -> void:
 	gap = max(gap, 0.0)
 
 	# Positive Z = behind the player in Godot's right-hand system
-	var p_pos := target_player.global_position
+	var p_pos: Vector3 = target_player.global_position
 	global_position = Vector3(p_pos.x, 0.0, p_pos.z + gap)
 
 	if gap < 5.0:
 		_label.modulate = Color(1.0, 0.0, 0.0, 1.0)
-		_label.text = "🐘 NEARLY CAUGHT!"
+		_label.text = "NEARLY CAUGHT!"
 	elif gap < 10.0:
 		_label.modulate = Color(1.0, 0.4, 0.0, 1.0)
-		_label.text = "🐘 ELEPHANT CLOSE!"
+		_label.text = "ELEPHANT CLOSE!"
 	else:
 		_label.modulate = Color(1.0, 0.8, 0.2, 0.85)
-		_label.text = "🐘 ELEPHANT"
+		_label.text = "ELEPHANT"
