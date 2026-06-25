@@ -220,7 +220,7 @@ func _update_endless(delta: float) -> void:
 	if not is_instance_valid(p1) or not is_instance_valid(p2): return
 	
 	# Update difficulty: speed scale based on max distance
-	var max_dist := max(p1.distance, p2.distance)
+	var max_dist: float = max(p1.distance, p2.distance)
 	_update_difficulty(max_dist)
 	
 	# Update zone transitions (reuse same thresholds, but endless has no finish)
