@@ -15,6 +15,8 @@ func _ready() -> void:
 	if elephant_scene:
 		var elephant_model: Node3D = elephant_scene.instantiate()
 		elephant_model.position = Vector3(0, 0, 0)
+		elephant_model.scale = Vector3(0.15, 0.15, 0.15)
+		elephant_model.rotation_degrees.y = -90 # Rotate from facing left to facing forward
 		add_child(elephant_model)
 	else:
 		_base_mesh = MeshInstance3D.new()
