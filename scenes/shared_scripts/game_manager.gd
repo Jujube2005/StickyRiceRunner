@@ -271,9 +271,11 @@ func _check_distance_goal(_new_dist):
 	
 	# Check Zone Transitions
 	var new_zone = current_zone
-	if max_dist >= GOAL_DISTANCE * (2.0 / 3.0):
+	if max_dist >= GOAL_DISTANCE * (3.0 / 4.0):
+		new_zone = 4
+	elif max_dist >= GOAL_DISTANCE * (2.0 / 4.0):
 		new_zone = 3
-	elif max_dist >= GOAL_DISTANCE * (1.0 / 3.0):
+	elif max_dist >= GOAL_DISTANCE * (1.0 / 4.0):
 		new_zone = 2
 		
 	if new_zone != current_zone:

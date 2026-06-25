@@ -3,6 +3,7 @@ extends Node3D
 @export var ground_zone1 : PackedScene = preload("res://scenes/ground/ground_zone1.tscn")
 @export var ground_zone2 : PackedScene = preload("res://scenes/ground/ground_zone2.tscn")
 @export var ground_zone3 : PackedScene = preload("res://scenes/ground/ground_zone3.tscn")
+@export var ground_zone4 : PackedScene = preload("res://scenes/ground/ground_zone4.tscn")
 
 @export var player1 : CharacterBody3D
 @export var player2 : CharacterBody3D
@@ -23,9 +24,11 @@ func _get_current_zone_scene() -> PackedScene:
 	# Calculate zone based on where the tile is actually being placed (spawn_z)
 	var distance = abs(spawn_z)
 	
-	if distance >= 666.0:
+	if distance >= 1500.0:
+		return ground_zone4
+	elif distance >= 1000.0:
 		return ground_zone3
-	elif distance >= 333.0:
+	elif distance >= 500.0:
 		return ground_zone2
 	else:
 		return ground_zone1
@@ -115,11 +118,14 @@ func _update_dirt_color(tile: Node3D, z_pos: float):
 		var distance = abs(z_pos)
 		
 		# Transition over 150 meters to make it seamless
-		if distance >= 666.0:
-			var t = clamp((distance - 666.0) / 150.0, 0.0, 1.0)
+		if distance >= 1500.0:
+			var t = clamp((distance - 1500.0) / 150.0, 0.0, 1.0)
+			target_color = Color(0.35, 0.35, 0.35, 1).lerp(Color(0.1, 0.1, 0.25, 1), t) # Zone 3 to Zone 4 (Dark Blue)
+		elif distance >= 1000.0:
+			var t = clamp((distance - 1000.0) / 150.0, 0.0, 1.0)
 			target_color = Color(0.55, 0.45, 0.3, 1).lerp(Color(0.35, 0.35, 0.35, 1), t) # Zone 2 to Zone 3 (Grey)
-		elif distance >= 333.0:
-			var t = clamp((distance - 333.0) / 150.0, 0.0, 1.0)
+		elif distance >= 500.0:
+			var t = clamp((distance - 500.0) / 150.0, 0.0, 1.0)
 			target_color = Color(0.48, 0.45, 0.3, 1).lerp(Color(0.55, 0.45, 0.3, 1), t) # Zone 1 to Zone 2 (Reddish)
 			
 		var new_mat = StandardMaterial3D.new()

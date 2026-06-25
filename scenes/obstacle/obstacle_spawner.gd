@@ -3,6 +3,7 @@ extends Node
 @export var obstacle_zone1: PackedScene = preload("res://scenes/obstacle/obstacle.tscn")
 @export var obstacle_zone2: PackedScene = preload("res://scenes/obstacle/obstacle_zone2.tscn")
 @export var obstacle_zone3: PackedScene = preload("res://scenes/obstacle/obstacle_zone3.tscn")
+@export var obstacle_zone4: PackedScene = preload("res://scenes/obstacle/obstacle_zone4.tscn")
 
 @export var player1: CharacterBody3D
 @export var player2: CharacterBody3D
@@ -28,9 +29,11 @@ func _ready():
 
 func _get_zone_scene() -> PackedScene:
 	var distance = abs(spawn_z)
-	if distance >= 666.0:
+	if distance >= 1500.0:
+		return obstacle_zone4
+	elif distance >= 1000.0:
 		return obstacle_zone3
-	elif distance >= 333.0:
+	elif distance >= 500.0:
 		return obstacle_zone2
 	else:
 		return obstacle_zone1
