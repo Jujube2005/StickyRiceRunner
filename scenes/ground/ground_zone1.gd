@@ -25,7 +25,25 @@ const FAR_RIGHT_X  :=  18.0
 var _used_positions: Array[Dictionary] = []
 
 func _ready():
+	_mirror_custom_decorations()
 	_spawn_decorations()
+
+func _mirror_custom_decorations():
+	var ignore_names = ["CollisionShape3D", "SideGroundLeft", "SideGroundRight", "road01", "road02", "SceneryPoints"]
+	var nodes_to_duplicate = []
+	for child in get_children():
+		if child is Node3D and not (child.name in ignore_names):
+			# If it's placed on the left side (X < -3.0)
+			if child.position.x < -3.0:
+				nodes_to_duplicate.append(child)
+				
+	for node in nodes_to_duplicate:
+		var duplicate = node.duplicate()
+		add_child(duplicate)
+		# Mirror X position and invert Y rotation (or keep Y rotation, but mirroring usually means X = -X)
+		duplicate.position.x = -node.position.x
+		# Optional: Flip rotation Y so it faces the same way relative to the road
+		duplicate.rotation.y = -node.rotation.y
 
 func _spawn_decorations():
 	_used_positions.clear()
