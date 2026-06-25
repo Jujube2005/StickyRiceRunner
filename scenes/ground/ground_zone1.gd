@@ -86,7 +86,20 @@ func _spawn_decorations():
 			_place(KHAEN, Vector3(side_x, 0.0, randf_range(-3.0, 3.0)), Vector3(0.2, 0.2, 0.2), rot_y, 3.0)
 			_last_khaen_z = my_global_z
 
-	# Trees and Dinosaurs are placed manually in the scene now.
+	# 3. sirindhornae — random 40%, skip if gate is here, varied near/far + size
+	if not gate_placed_this_tile and randf() < 0.4:
+		# Randomize which side, how far from road, and how big
+		var side_sign = -1.0 if randf() < 0.5 else 1.0
+		var dist_from_road = randf_range(8.0, 20.0)   # Push further from road
+		var dino_scale = randf_range(0.6, 0.8)         # small size as requested
+		var rot_y = 90.0 if side_sign < 0 else -90.0
+		# Give it 5 retry attempts to find an empty spot
+		for _attempt in range(5):
+			var test_pos = Vector3(side_sign * randf_range(8.0, 20.0), 0.0, randf_range(-4.0, 4.0))
+			if _place(SIRINDHORNAE, test_pos, Vector3(dino_scale, dino_scale, dino_scale), rot_y, 3.0 * dino_scale):
+				break
+
+	# Trees and Kinareemimus are placed manually in the scene now.
 
 func _place(scene: PackedScene, local_pos: Vector3, scale_vec: Vector3, rotation_y: float, radius: float) -> bool:
 	for item in _used_positions:
