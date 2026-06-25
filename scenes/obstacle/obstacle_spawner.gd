@@ -29,21 +29,19 @@ func _ready():
 
 func _get_zone_scene() -> PackedScene:
 	var distance = abs(spawn_z)
-	if distance >= 1500.0:
+	if distance >= 1000.0:
 		return obstacle_zone4
-	elif distance >= 1000.0:
-		return obstacle_zone3
 	elif distance >= 500.0:
-		return obstacle_zone2
+		return obstacle_zone3
 	else:
-		return obstacle_zone1
+		return obstacle_zone2
 
 func _init_pool():
 	for i in range(pool_size):
-		var obs = obstacle_zone1.instantiate()
+		var obs = obstacle_zone2.instantiate()
 		obs.set_script(load("res://scenes/obstacle/obstacle.gd"))
 		obs.add_to_group("obstacle")
-		obs.set_meta("zone_scene", obstacle_zone1.resource_path)
+		obs.set_meta("zone_scene", obstacle_zone2.resource_path)
 		get_parent().add_child.call_deferred(obs)
 		obstacle_pool.append(obs)
 
