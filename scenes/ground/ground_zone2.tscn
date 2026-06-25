@@ -1,17 +1,9 @@
 [gd_scene format=3 uid="uid://t0odnnx4fis2"]
 
-[ext_resource type="Script" uid="uid://cb5c8y73rpfhw" path="res://scenes/ground/ground_zone2.gd" id="1_zone2script"]
 [ext_resource type="PackedScene" uid="uid://5puofchkhk8s" path="res://assets/models/ground/road01.glb" id="1_au3k8"]
-[ext_resource type="PackedScene" uid="uid://cj53l3mrnwg41" path="res://assets/models/ground/homekorat.glb" id="4_home"]
+[ext_resource type="Script" uid="uid://d17x0ljo1lxml" path="res://scenes/ground/ground_zone2.gd" id="1_zone2script"]
 [ext_resource type="PackedScene" uid="uid://d4moq5avpayts" path="res://assets/models/ground/Kiln.glb" id="4_t3agl"]
-[ext_resource type="PackedScene" uid="uid://cyg00prn0v8o" path="res://assets/models/ground/haystackV1.glb" id="5_j4g0x"]
 [ext_resource type="PackedScene" uid="uid://clpnxsshjl2w7" path="res://assets/models/ground/clayjar.glb" id="5_p3dfm"]
-[ext_resource type="PackedScene" uid="uid://ugghy0bu0y66" path="res://assets/models/ground/haystackV2.glb" id="6_yp3qy"]
-[ext_resource type="PackedScene" uid="uid://shvkfhn332ud" path="res://assets/models/ground/isanthaihouse.glb" id="7_0cny8"]
-[ext_resource type="PackedScene" uid="uid://d2l8vudke3n2f" path="res://assets/models/ground/oldSpirithouse.glb" id="8_insox"]
-[ext_resource type="PackedScene" uid="uid://dvw15335rhnjd" path="res://assets/models/ground/buffalo.glb" id="9_2b0cu"]
-[ext_resource type="PackedScene" uid="uid://uvqpy6k2nbx2" path="res://assets/models/ground/treeV3.glb" id="10_ngb2f"]
-[ext_resource type="PackedScene" uid="uid://wtlsifuaqf1r" path="res://assets/models/ground/treeV1.glb" id="11_6xx6u"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_lv0v5"]
 size = Vector3(30, 2, 10.4)
@@ -64,6 +56,4 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 0, 0)
 transform = Transform3D(0.94547224, 0, 1.9887203, 0, 3.17439, 0, -2.0668051, 0, 0.9097516, -5.9188747, -0.39947116, 5.3551965)
 
 [node name="Sketchfab_Scene" parent="." unique_id=1432283793 instance=ExtResource("5_p3dfm")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.08801365, -2.360768, -7.8354344)
-
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, -1.8966222, 0)

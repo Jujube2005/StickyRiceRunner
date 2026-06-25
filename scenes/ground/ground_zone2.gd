@@ -18,7 +18,7 @@ func _ready():
 	_used_positions.clear()
 	
 	# Spawn densities per tile (approximate numbers, randomly varied)
-	_spawn_random(HOMEKORAT, randi_range(0, 1), Vector3(1, 1, 1), Vector3(deg_to_rad(-90.0), deg_to_rad(90.0), 0.0), 8.0)
+	_spawn_random(HOMEKORAT, randi_range(2, 5), Vector3(1, 1, 1), Vector3(deg_to_rad(-90.0), deg_to_rad(90.0), 0.0), 8.0)
 	_spawn_random(KILN, randi_range(0, 1), Vector3(2.27, 3.17, 2.18), Vector3(0.0, deg_to_rad(65.0), 0.0), 6.0)
 	_spawn_random(TREEV3, randi_range(3, 7), Vector3(0.05, 0.07, 0.05), Vector3(0.0, 0.0, 0.0), 3.0, true) # Random Y rot
 	_spawn_random(CLAYJAR, randi_range(2, 6), Vector3(1.0, 1.0, 1.0), Vector3.ZERO, 1.0, true, true) # Special scale logic later
@@ -27,7 +27,7 @@ func _ready():
 	_spawn_random(HAYSTACKV2, randi_range(1, 3), Vector3(5, 5, 5), Vector3.ZERO, 3.0, true)
 	_spawn_random(OLDSPIRITHOUSE, randi_range(0, 1), Vector3(5, 5, 5), Vector3(0.0, deg_to_rad(-90.0), 0.0), 3.0)
 	_spawn_random(BUFFALO, randi_range(1, 3), Vector3(2, 2, 2), Vector3(0.0, deg_to_rad(-180.0), 0.0), 4.0)
-	_spawn_random(ISANTHAIHOUSE, randi_range(0, 1), Vector3(4, 4, 4), Vector3(0.0, deg_to_rad(-180.0), 0.0), 10.0)
+	_spawn_random(ISANTHAIHOUSE, randi_range(2, 5), Vector3(4, 4, 4), Vector3(0.0, deg_to_rad(-180.0), 0.0), 10.0)
 
 func _spawn_random(scene: PackedScene, count: int, scale_vec: Vector3, rot_vec: Vector3, radius: float, random_y_rot: bool = false, random_scale_clayjar: bool = false, random_scale_tree: bool = false):
 	for _i in range(count):
