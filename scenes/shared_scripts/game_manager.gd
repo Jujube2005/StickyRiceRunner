@@ -263,7 +263,7 @@ func _check_endless_zone(max_dist: float) -> void:
 
 func _update_elephant_gap(player: Node, gap_var: String, delta: float) -> void:
 	"""Reduce or increase a player's elephant gap based on their state."""
-	var gap : float = get(gap_var)
+	var gap := float(get(gap_var))
 	if gap <= 0.0: return  # Already caught
 	
 	if player.get("is_riding_buffalo"):
