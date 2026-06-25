@@ -206,6 +206,12 @@ func show_result(winner_name: String, p1_score: int, p2_score: int, p1_distance:
 		title_text = title_text_draw
 
 	section_label.text = LanguageManager.t("LBL_CHAMPION") if winner_id != "draw" else LanguageManager.t("LBL_FINAL_RESULT")
+	
+	if ResourceLoader.has_cached("res://scenes/shared_scripts/game_config.gd"):
+		if GameConfig.game_mode == "singleplayer" and GameConfig.race_mode == "endless":
+			title_text = LanguageManager.t("LBL_GAME_OVER") if LanguageManager.has_method("t") else "GAME OVER"
+			section_label.text = "RUN FINISHED"
+			
 	var title_settings = LabelSettings.new()
 	title_settings.font_size = 42
 	title_settings.font_color = title_color
