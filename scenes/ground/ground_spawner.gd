@@ -119,8 +119,7 @@ func _update_dirt_color(tile: Node3D, z_pos: float):
 		
 		# Transition over 150 meters to make it seamless
 		if distance >= 1500.0:
-			var t = clamp((distance - 1500.0) / 150.0, 0.0, 1.0)
-			target_color = Color(0.35, 0.35, 0.35, 1).lerp(Color(0.1, 0.1, 0.25, 1), t) # Zone 3 to Zone 4 (Dark Blue)
+			target_color = Color(0.35, 0.35, 0.35, 1) # Zone 4 (Grey — same as Zone 3)
 		elif distance >= 1000.0:
 			var t = clamp((distance - 1000.0) / 150.0, 0.0, 1.0)
 			target_color = Color(0.55, 0.45, 0.3, 1).lerp(Color(0.35, 0.35, 0.35, 1), t) # Zone 2 to Zone 3 (Grey)
