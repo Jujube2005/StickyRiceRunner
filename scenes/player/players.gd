@@ -443,7 +443,7 @@ func _physics_process(delta):
 		
 		# Stun: lay flat (-90°) — lift model up to prevent sinking
 		# Stun: lay flat (90°) unless waiting for the final elephant catch
-		if GameConfig.race_mode == "endless" and obstacle_strikes >= 3:
+		if GameConfig.race_mode == "endless" and obstacle_strikes >= 3 and alive:
 			$Model.rotation.x = 0.0
 		else:
 			$Model.rotation.x = deg_to_rad(90)

@@ -240,6 +240,7 @@ func _update_endless(delta: float) -> void:
 		_player_caught_by_elephant(p1)
 	elif p2.get("obstacle_strikes") >= 3 and elephant_gap_p2 <= 0.2 and not p2.get("finished"):
 		if GameConfig.game_mode == "singleplayer":
+			# In singleplayer, bot dying doesn't end the game for P1
 			p2.set("finished", true)
 			p2.set("alive", false)
 			var model = p2.get_node_or_null("Model")
@@ -291,7 +292,7 @@ func _update_strike_gap(player: Node, gap_var: String, delta: float) -> void:
 		
 	# Smoothly move gap towards target
 	if current_gap > target_gap:
-		current_gap -= 15.0 * delta # Dash at 15m/s (takes ~0.16s from 2.5m)
+		current_gap -= 8.0 * delta # Dash at 8m/s (so it's visible)
 		if current_gap < target_gap:
 			current_gap = target_gap
 	elif current_gap < target_gap:
@@ -336,6 +337,9 @@ func _player_caught_by_elephant(caught_player: Node) -> void:
 			winner = "Player 1"
 		elif p2.distance > p1.distance:
 			winner = "Player 2"
+	
+	# Wait for death animation / fall
+	await get_tree().create_timer(1.5).timeout
 	
 	game_over(winner)
 
