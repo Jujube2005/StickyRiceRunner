@@ -207,13 +207,13 @@ func _spawn_elephants() -> void:
 		_elephant_p1 = Node3D.new()
 		_elephant_p1.set_script(elephant_script)
 		_elephant_p1.set("target_player", p1)
-		get_parent().add_child(_elephant_p1)
+		get_parent().add_child.call_deferred(_elephant_p1)
 	
 	if is_instance_valid(p2):
 		_elephant_p2 = Node3D.new()
 		_elephant_p2.set_script(elephant_script)
 		_elephant_p2.set("target_player", p2)
-		get_parent().add_child(_elephant_p2)
+		get_parent().add_child.call_deferred(_elephant_p2)
 
 
 func _update_endless(delta: float) -> void:
