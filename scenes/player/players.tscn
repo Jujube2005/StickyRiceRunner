@@ -19,17 +19,6 @@ fill_to = Vector2(0.5, 0)
 width = 128
 height = 128
 
-[node name="Players" type="CharacterBody3D" unique_id=1649001234]
-script = ExtResource("1_n4luv")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=200647315]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9244131, 0)
-shape = SubResource("CapsuleShape3D_hti1j")
-
-[node name="Rig" type="Node3D" parent="." unique_id=167856694]
-
-[node name="Model" type="Node3D" parent="." unique_id=1547751969]
-
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_shadow"]
 transparency = 1
 shading_mode = 0
@@ -40,6 +29,17 @@ disable_receive_shadows = true
 [sub_resource type="QuadMesh" id="QuadMesh_shadow"]
 material = SubResource("StandardMaterial3D_shadow")
 size = Vector2(1.2, 1.2)
+
+[node name="Players" type="CharacterBody3D" unique_id=1649001234]
+script = ExtResource("1_n4luv")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=200647315]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9244131, 0)
+shape = SubResource("CapsuleShape3D_hti1j")
+
+[node name="Rig" type="Node3D" parent="." unique_id=167856694]
+
+[node name="Model" type="Node3D" parent="." unique_id=1547751969]
 
 [node name="ShadowRay" type="RayCast3D" parent="." unique_id=987654321]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
