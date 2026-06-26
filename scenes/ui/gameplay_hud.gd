@@ -102,6 +102,14 @@ func _ready():
 	if player2 and player2.has_signal("screen_blackout"):
 		if !player2.screen_blackout.is_connected(_on_p2_screen_blackout):
 			player2.screen_blackout.connect(_on_p2_screen_blackout)
+			
+	# Connect screen_dust signal
+	if player1 and player1.has_signal("screen_dust"):
+		if !player1.screen_dust.is_connected(_on_p1_screen_dust):
+			player1.screen_dust.connect(_on_p1_screen_dust)
+	if player2 and player2.has_signal("screen_dust"):
+		if !player2.screen_dust.is_connected(_on_p2_screen_dust):
+			player2.screen_dust.connect(_on_p2_screen_dust)
 	
 	# Create Kratip Labels dynamically
 	p1_kratip_label = _create_kratip_label($TopLeft/KratibIcon)
@@ -231,6 +239,45 @@ func _on_p1_screen_blackout(duration: float):
 
 func _on_p2_screen_blackout(duration: float):
 	_show_half_vignette(duration, true)   # true  = right half (Player 2)
+
+func _on_p1_screen_dust(duration: float):
+	_show_half_dust(duration, false)
+
+func _on_p2_screen_dust(duration: float):
+	_show_half_dust(duration, true)
+
+func _show_half_dust(duration: float, is_right_half: bool):
+	var overlay = Control.new()
+	overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	overlay.z_index = 100
+	add_child(overlay)
+	await get_tree().process_frame
+	
+	var half_w = size.x / 2.0
+	overlay.size = Vector2(half_w, size.y)
+	overlay.position = Vector2(half_w if is_right_half else 0.0, 0.0)
+	
+	var dust_tex = load("res://assets/models/effects/Rice_Yard_Dust/RiceYardDust.png")
+	if dust_tex:
+		var tex_rect = TextureRect.new()
+		tex_rect.texture = dust_tex
+		tex_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		tex_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		tex_rect.size = Vector2(size.y, size.y) * 1.5
+		tex_rect.position = Vector2((half_w - tex_rect.size.x) / 2.0, (size.y - tex_rect.size.y) / 2.0)
+		tex_rect.pivot_offset = tex_rect.size / 2.0
+		tex_rect.modulate.a = 0.5
+		overlay.add_child(tex_rect)
+		
+		var rot_tw = overlay.create_tween().set_loops()
+		rot_tw.tween_property(tex_rect, "rotation", TAU, 3.0).as_relative()
+		
+	overlay.modulate.a = 0.0
+	var fade_tw = create_tween()
+	fade_tw.tween_property(overlay, "modulate:a", 1.0, 0.5)
+	fade_tw.tween_interval(duration - 1.0)
+	fade_tw.tween_property(overlay, "modulate:a", 0.0, 0.5)
+	fade_tw.tween_callback(overlay.queue_free)
 
 func _show_half_vignette(duration: float, is_right_half: bool):
 	"""Thick fog/clouds overlay on one player's half."""
