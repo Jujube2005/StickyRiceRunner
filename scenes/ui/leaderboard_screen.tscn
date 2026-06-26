@@ -199,7 +199,6 @@ stretch_mode = 5
 
 [node name="EndlessUI" type="VBoxContainer" parent="CenterContainer/MainVBox"]
 unique_name_in_owner = true
-visible = false
 layout_mode = 2
 theme_override_constants/separation = 15
 
