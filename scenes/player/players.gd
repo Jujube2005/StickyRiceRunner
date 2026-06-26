@@ -573,6 +573,7 @@ func _physics_process(delta):
 
 	var pull_vfx = get_node_or_null("PullVFX")
 	if pull_vfx:
+		pull_vfx.rotation.z += 8.0 * delta
 		if abs(position.x) < 0.1:
 			pull_vfx.queue_free()
 
@@ -1236,7 +1237,7 @@ func apply_prank(skill_name):
 					pull_sprite.pixel_size = 0.02
 					pull_sprite.transparent = true
 					add_child(pull_sprite)
-					pull_sprite.position.y = 1.5
+					pull_sprite.position.y = 2.8
 					
 			AudioManager.play_sfx("skill_use")
 			emit_signal("prank_flash", Color(0.6, 0.0, 1.0, 0.30))  # 🟣 ม่วง
