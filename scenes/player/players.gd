@@ -1387,9 +1387,11 @@ func _apply_anim_to_player(anim: Animation, target_name: String):
 			var path = str(anim.track_get_path(i))
 			var p_lower = path.to_lower()
 			
-			# Root Motion Removal for jump animation
-			if target_name == anim_jump:
-				if p_lower.ends_with(":position") or p_lower.ends_with(":location"):
+			# Root Motion Removal
+			if target_name == anim_jump or target_name == anim_buffalo_ride:
+				var is_pos = p_lower.ends_with(":position") or p_lower.ends_with(":location")
+				var is_rot = p_lower.ends_with(":rotation") or p_lower.ends_with(":quaternion")
+				if is_pos or is_rot:
 					if "hips" in p_lower or "metarig" in p_lower or "armature" in p_lower or "root" in p_lower:
 						tracks_to_remove.append(i)
 						continue

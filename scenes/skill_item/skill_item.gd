@@ -35,8 +35,8 @@ func _process(delta):
 			deactivate()
 			return
 			
-	# Float animation
-	global_position.y = start_y + sin(Time.get_ticks_msec() * 0.001 * float_speed) * float_amplitude
+	# Float animation: offset up by float_amplitude so it doesn't sink below start_y
+	global_position.y = start_y + float_amplitude + sin(Time.get_ticks_msec() * 0.001 * float_speed) * float_amplitude
 	
 	# Rotation animation
 	rotation.y += rotation_speed * delta
