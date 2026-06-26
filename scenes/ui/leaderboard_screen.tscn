@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://o1qv7cp17mwx" path="res://scenes/shared_scripts/leaderboard_screen.gd" id="1_script"]
 [ext_resource type="Texture2D" path="res://assets/textures/UI/Buttons/title_header.png" id="2_board_bg"]
-[ext_resource type="Texture2D" uid="uid://b00gqq3x8165t" path="res://assets/textures/UI/Buttons/setting_board_bg.png" id="3_paper"]
+[ext_resource type="Texture2D" path="res://assets/textures/UI/Buttons/wooden_score_board.png" id="3_paper"]
 [ext_resource type="FontFile" uid="uid://2d6rvw7lnbb6" path="res://assets/textures/UI/Font/Mitr/Mitr-Bold.ttf" id="5_font"]
 [ext_resource type="Texture2D" uid="uid://bv4ww2wqi45sl" path="res://assets/textures/UI/Buttons/goldFrame.png" id="6_gold_frame"]
 [ext_resource type="Texture2D" uid="uid://cxx1jbpe12na5" path="res://assets/textures/UI/Buttons/P1WINS.png" id="7_p1_wins"]
