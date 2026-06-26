@@ -1247,6 +1247,7 @@ func apply_prank(skill_name):
 			AudioManager.play_sfx("skill_dust")
 			emit_signal("prank_flash", Color(1.0, 0.9, 0.0, 0.25))  # 🟡 เหลือง
 		"Lane Swap":
+			effect_durations["lane_swap"] = 0.5
 			var old_lane = lane
 			var new_lane = -1 if lane >= 0 else 1
 			
@@ -1332,11 +1333,13 @@ func apply_prank(skill_name):
 				emit_signal("prank_flash", Color(1.0, 0.4, 0.0, 0.45))
 				stun(1.5)
 		"Screen Blur":
+			effect_durations["screen_blur"] = 4.0
 			# หมอกควัน — วงกลมเบลอขอบ (vignette ฝั่งผู้เล่นที่โดน)
 			AudioManager.play_sfx("skill_wind")
 			emit_signal("prank_flash", Color(0.0, 0.0, 0.1, 0.35))  # ⚫ flash เบา
 			emit_signal("screen_blackout", 4.0)
 		"Pull to Center":
+			effect_durations["pull_to_center"] = 1.5
 			# ดึงกลาง
 			var old_lane = lane
 			lane = 0
@@ -1360,6 +1363,9 @@ func apply_prank(skill_name):
 						
 					add_child(pull_sprite)
 					pull_sprite.position.y = 3.0
+					
+					var tw = create_tween()
+					tw.tween_callback(pull_sprite.queue_free).set_delay(1.5)
 					
 			AudioManager.play_sfx("skill_use")
 			emit_signal("prank_flash", Color(0.6, 0.0, 1.0, 0.30))  # 🟣 ม่วง
