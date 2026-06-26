@@ -83,6 +83,7 @@ var current_anim : String = ""
 @export_file("*.glb") var jump_file : String
 @export_file("*.glb") var stun_file : String
 @export_file("*.glb") var slide_file : String
+@export_file("*.glb") var buffalo_ride_file : String
 
 @export_group("Model Offset")
 # Y offset: compensates for GLB pivot not being at feet.
@@ -184,6 +185,7 @@ func _ready():
 		if jump_file: _import_anim(jump_file, anim_jump)
 		if stun_file: _import_anim(stun_file, anim_stun)
 		if slide_file: _import_anim(slide_file, anim_slide)
+		if buffalo_ride_file: _import_anim(buffalo_ride_file, anim_buffalo_ride)
 		
 		# Force active and play
 		anim_player.active = true
@@ -872,7 +874,7 @@ func start_buffalo_ride() -> void:
 		if b_scene:
 			buffalo_model = b_scene.instantiate()
 			buffalo_model.rotation_degrees.y = 180 # Face backwards relative to Z+ (forward in Godot is -Z)
-			buffalo_model.scale = Vector3(0.6, 0.6, 0.6) # Scale down if it's too big
+			buffalo_model.scale = Vector3(1.5, 1.5, 1.5) # Reset to larger scale (1.5x)
 			add_child(buffalo_model) # Add to CharacterBody3D instead of Model to avoid mesh scaling issues
 			var anims = buffalo_model.find_children("*", "AnimationPlayer", true)
 			if anims.size() > 0:
