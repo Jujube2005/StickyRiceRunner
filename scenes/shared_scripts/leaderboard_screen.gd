@@ -75,7 +75,7 @@ func show_result(winner_name: String, _p1_score: int, _p2_score: int, _p1_distan
 	var time_text = "--:--"
 	if data.best_time < 999999:
 		var bt = int(data.best_time)
-		var mins = bt / 60
+		var mins = int(bt / 60.0)
 		var secs = bt % 60
 		time_text = "%02d:%02d" % [mins, secs]
 	
@@ -97,13 +97,13 @@ func show_result(winner_name: String, _p1_score: int, _p2_score: int, _p1_distan
 	var times = data.top_3_times
 	if times.size() > 0:
 		var t = int(times[0])
-		t1 = "%02d:%02d" % [t / 60, t % 60]
+		t1 = "%02d:%02d" % [int(t / 60.0), t % 60]
 	if times.size() > 1:
 		var t = int(times[1])
-		t2 = "%02d:%02d" % [t / 60, t % 60]
+		t2 = "%02d:%02d" % [int(t / 60.0), t % 60]
 	if times.size() > 2:
 		var t = int(times[2])
-		t3 = "%02d:%02d" % [t / 60, t % 60]
+		t3 = "%02d:%02d" % [int(t / 60.0), t % 60]
 
 	if time1st: time1st.text = t1
 	if time2nd: time2nd.text = t2
