@@ -576,6 +576,13 @@ func _physics_process(delta):
 		pull_vfx.rotation.z += 8.0 * delta
 		if abs(position.x) < 0.1:
 			pull_vfx.queue_free()
+			
+	var dust_vfx = get_node_or_null("DustVFX")
+	if dust_vfx:
+		if _has_effect("slow_floor"):
+			dust_vfx.rotation.y += 4.0 * delta
+		else:
+			dust_vfx.queue_free()
 
 	# Animation handling for normal state
 	if is_on_floor():
@@ -1205,6 +1212,25 @@ func apply_prank(skill_name):
 		"Rice Yard Dust":
 			# ฝุ่นลานข้าว — ช้าลง
 			effect_durations["slow_floor"] = 4.0
+			
+			if not has_node("DustVFX"):
+				var dust_tex = load("res://assets/models/effects/Rice_Yard_Dust/RiceYardDust.png")
+				if dust_tex:
+					var dust_node = Node3D.new()
+					dust_node.name = "DustVFX"
+					add_child(dust_node)
+					dust_node.position.y = 1.0
+					for i in 3:
+						var s = Sprite3D.new()
+						s.texture = dust_tex
+						s.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+						s.pixel_size = 0.05
+						s.transparent = true
+						var angle = i * (TAU / 3.0)
+						var r = 1.5
+						s.position = Vector3(cos(angle) * r, 0, sin(angle) * r)
+						dust_node.add_child(s)
+			
 			AudioManager.play_sfx("skill_dust")
 			emit_signal("prank_flash", Color(1.0, 0.9, 0.0, 0.25))  # 🟡 เหลือง
 		"Lane Swap":
