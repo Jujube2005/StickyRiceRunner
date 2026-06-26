@@ -1222,11 +1222,11 @@ func apply_prank(skill_name):
 				rocket_sprite.transparent = true
 				add_child(rocket_sprite)
 				
-				rocket_sprite.position = Vector3(0, 15.0, 0)
+				rocket_sprite.position = Vector3(0, 7.0, 0)
 				rocket_sprite.rotation.z = PI # ชี้ลงพื้น
 				
 				var fall_tw = create_tween()
-				fall_tw.tween_property(rocket_sprite, "position:y", 1.0, 0.3).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)
+				fall_tw.tween_property(rocket_sprite, "position:y", 1.0, 0.25).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)
 				fall_tw.tween_callback(func():
 					rocket_sprite.queue_free()
 					AudioManager.play_sfx("skill_bang_fai")
