@@ -1212,9 +1212,61 @@ func apply_prank(skill_name):
 			AudioManager.play_sfx("skill_dust")
 			emit_signal("prank_flash", Color(1.0, 0.9, 0.0, 0.25))  # 🟡 เหลือง
 		"Lane Swap":
-			lane = -1 if lane >= 0 else 1
+			var old_lane = lane
+			var new_lane = -1 if lane >= 0 else 1
+			
+			var model = get_node_or_null("Model")
+			if model: model.visible = false
+			
 			AudioManager.play_sfx("skill_use")
 			emit_signal("prank_flash", Color(1.0, 0.9, 0.0, 0.25))  # 🟡 เหลือง
+			
+			var s1: Sprite3D = null
+			var swap1_tex = load("res://assets/models/effects/LaneSwap/LaneSwap1.png")
+			if swap1_tex:
+				s1 = Sprite3D.new()
+				s1.texture = swap1_tex
+				s1.billboard = BaseMaterial3D.BILLBOARD_FIXED_Y
+				s1.pixel_size = 0.035
+				s1.transparent = true
+				s1.position = Vector3(0, 1.0, 0)
+				add_child(s1)
+				
+				var tw1 = create_tween()
+				tw1.tween_property(s1, "scale", Vector3(1.2, 1.2, 1.2), 0.2)
+				tw1.parallel().tween_property(s1, "modulate:a", 0.0, 0.2).set_delay(0.1)
+				tw1.tween_callback(s1.queue_free)
+				
+			await get_tree().create_timer(0.2).timeout
+			if not is_inside_tree(): return
+			
+			lane = new_lane
+			position.x = lane * lane_distance
+			
+			if is_instance_valid(s1):
+				s1.position.x += (old_lane - new_lane) * lane_distance
+				
+			var s2: Sprite3D = null
+			var swap2_tex = load("res://assets/models/effects/LaneSwap/LaneSwap2.png")
+			if swap2_tex:
+				s2 = Sprite3D.new()
+				s2.texture = swap2_tex
+				s2.billboard = BaseMaterial3D.BILLBOARD_FIXED_Y
+				s2.pixel_size = 0.035
+				s2.transparent = true
+				s2.position = Vector3(0, 1.0, 0)
+				add_child(s2)
+				
+				var tw2 = create_tween()
+				s2.scale = Vector3(0.5, 0.5, 0.5)
+				tw2.tween_property(s2, "scale", Vector3(1.1, 1.1, 1.1), 0.2)
+				tw2.parallel().tween_property(s2, "modulate:a", 0.0, 0.2).set_delay(0.15)
+				tw2.tween_callback(s2.queue_free)
+				
+			await get_tree().create_timer(0.15).timeout
+			if not is_inside_tree(): return
+			
+			if model: model.visible = true
 		"Boon Bang Fai":
 			# บั้งไฟ — พุ่งจากฟ้าลงมาชน
 			var rocket_tex = load("res://assets/models/effects/Boon_Bung_Fai/Boon Bang Fa.png")
