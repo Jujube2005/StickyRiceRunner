@@ -1222,7 +1222,7 @@ func apply_prank(skill_name):
 				var rocket_sprite = Sprite3D.new()
 				rocket_sprite.texture = rocket_tex
 				rocket_sprite.billboard = BaseMaterial3D.BILLBOARD_ENABLED
-				rocket_sprite.pixel_size = 0.08
+				rocket_sprite.pixel_size = 0.04
 				rocket_sprite.transparent = true
 				rocket_sprite.flip_v = true # หันหัวลงโดยไม่หมุนแกน
 				add_child(rocket_sprite)
