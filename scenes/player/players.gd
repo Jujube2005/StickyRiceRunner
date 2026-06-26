@@ -1274,15 +1274,16 @@ func apply_prank(skill_name):
 				var rocket_sprite = Sprite3D.new()
 				rocket_sprite.texture = rocket_tex
 				rocket_sprite.billboard = BaseMaterial3D.BILLBOARD_FIXED_Y
-				rocket_sprite.pixel_size = 0.04
+				rocket_sprite.pixel_size = 0.06
 				rocket_sprite.transparent = true
 				rocket_sprite.flip_v = true # หันหัวลงโดยไม่หมุนแกน
 				add_child(rocket_sprite)
 				
-				rocket_sprite.position = Vector3(0, 7.0, 0)
+				# Start slightly behind and above, shoot down to middle of back
+				rocket_sprite.position = Vector3(0, 6.0, 1.0)
 				
 				var fall_tw = create_tween()
-				fall_tw.tween_property(rocket_sprite, "position:y", 1.0, 0.15).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)
+				fall_tw.tween_property(rocket_sprite, "position", Vector3(0, 1.2, 0.2), 0.2).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)
 				fall_tw.tween_callback(func():
 					rocket_sprite.queue_free()
 					AudioManager.play_sfx("skill_bang_fai")
@@ -1313,7 +1314,7 @@ func apply_prank(skill_name):
 					pull_sprite.name = "PullVFX"
 					pull_sprite.texture = pull_tex
 					pull_sprite.billboard = BaseMaterial3D.BILLBOARD_ENABLED
-					pull_sprite.pixel_size = 0.02
+					pull_sprite.pixel_size = 0.008
 					pull_sprite.transparent = true
 					add_child(pull_sprite)
 					pull_sprite.position.y = 3.0
