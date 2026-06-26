@@ -2,21 +2,21 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://be4mudfo2tqce"
-path.s3tc="res://.godot/imported/buffalo_Image_2.webp-3b40be77f865134fa1825e299aa27486.s3tc.ctex"
-path.etc2="res://.godot/imported/buffalo_Image_2.webp-3b40be77f865134fa1825e299aa27486.etc2.ctex"
+uid="uid://ded56mwnvh0ik"
+path.s3tc="res://.godot/imported/buffalorun_1.png-d9bbb01122f337d948ddcea63b5257c6.s3tc.ctex"
+path.etc2="res://.godot/imported/buffalorun_1.png-d9bbb01122f337d948ddcea63b5257c6.etc2.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 generator_parameters={
-"md5": "99604ae10b1f2e59aacc5af6fe501f61"
+"md5": "b3ac7a7de7972618e7a2a24f8082205c"
 }
 
 [deps]
 
-source_file="res://assets/models/buffalo/buffalo_Image_2.webp"
-dest_files=["res://.godot/imported/buffalo_Image_2.webp-3b40be77f865134fa1825e299aa27486.s3tc.ctex", "res://.godot/imported/buffalo_Image_2.webp-3b40be77f865134fa1825e299aa27486.etc2.ctex"]
+source_file="res://assets/models/buffalo/buffalorun_1.png"
+dest_files=["res://.godot/imported/buffalorun_1.png-d9bbb01122f337d948ddcea63b5257c6.s3tc.ctex", "res://.godot/imported/buffalorun_1.png-d9bbb01122f337d948ddcea63b5257c6.etc2.ctex"]
 
 [params]
 
@@ -26,12 +26,12 @@ compress/lossy_quality=0.7
 compress/uastc_level=0
 compress/rdo_quality_loss=0.0
 compress/hdr_compression=1
-compress/normal_map=1
+compress/normal_map=0
 compress/channel_pack=0
 mipmaps/generate=true
 mipmaps/limit=-1
-roughness/mode=1
-roughness/src_normal="res://assets/models/buffalo/buffalo_Image_2.webp"
+roughness/mode=0
+roughness/src_normal=""
 process/channel_remap/red=0
 process/channel_remap/green=1
 process/channel_remap/blue=2
