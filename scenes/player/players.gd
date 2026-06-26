@@ -1218,21 +1218,23 @@ func apply_prank(skill_name):
 				var rocket_sprite = Sprite3D.new()
 				rocket_sprite.texture = rocket_tex
 				rocket_sprite.billboard = BaseMaterial3D.BILLBOARD_ENABLED
-				rocket_sprite.pixel_size = 0.04
+				rocket_sprite.pixel_size = 0.08
 				rocket_sprite.transparent = true
+				rocket_sprite.flip_v = true # หันหัวลงโดยไม่หมุนแกน
 				add_child(rocket_sprite)
 				
 				rocket_sprite.position = Vector3(0, 7.0, 0)
-				rocket_sprite.rotation.z = PI # ชี้ลงพื้น
 				
 				var fall_tw = create_tween()
-				fall_tw.tween_property(rocket_sprite, "position:y", 1.0, 0.25).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)
+				fall_tw.tween_property(rocket_sprite, "position:y", 1.0, 0.15).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)
 				fall_tw.tween_callback(func():
 					rocket_sprite.queue_free()
 					AudioManager.play_sfx("skill_bang_fai")
-					emit_signal("prank_flash", Color(1.0, 0.4, 0.0, 0.45))  # 🔴 แดงส้ม
-					stun(1.5)
+					emit_signal("prank_flash", Color(1.0, 0.4, 0.0, 0.45))
+					VfxManager.spawn("skill_bang_fai", global_position + Vector3(0, 1.0, 0))
+					VfxManager.spawn("skill_hit_generic", global_position + Vector3(0, 1.0, 0))
 				)
+				stun(1.5) # ล้มหยุดทันที
 			else:
 				AudioManager.play_sfx("skill_bang_fai")
 				emit_signal("prank_flash", Color(1.0, 0.4, 0.0, 0.45))
