@@ -228,22 +228,32 @@ func show_result(winner_name: String, p1_score: int, p2_score: int, p1_distance:
 
 	if GameConfig.race_mode == "endless":
 		section_label.text = LanguageManager.t("LBL_ENDLESS_SURVIVAL")
-		winner_label.text = LanguageManager.t("LBL_WINNER") + ": " + winner_name
+		winner_label.visible = false
+		
 		final_score_label.visible = true
-		final_score_label.text = "Best Distance: %d m | Best Score: %d\nTotal Kratips: %d" % [int(GameConfig.best_distance), GameConfig.best_score, GameConfig.total_kratips]
-		final_score_label.label_settings.font_size = 24
-		final_score_label.label_settings.font_color = Color(0.7, 0.9, 1.0)
-		distance_label.text = LanguageManager.t("LBL_ENDLESS_DISTANCE") % [p1_distance, p2_distance]
-		kratips_label.text = LanguageManager.t("LBL_KRATIPS") % [p1_kratips, p2_kratips]
-		skills_label.text = LanguageManager.t("LBL_SKILLS_USED") % [p1_skills, p2_skills]
+		final_score_label.text = "🏆 Best Distance: %d m  |  Best Score: %d" % [int(GameConfig.best_distance), GameConfig.best_score]
+		final_score_label.label_settings.font_size = 22
+		final_score_label.label_settings.font_color = Color(1.0, 0.9, 0.4)
+		
+		distance_label.visible = true
+		distance_label.text = "🏃‍♂️ This Run: %d m" % [max(p1_distance, p2_distance)]
+		
 		kratips_label.visible = true
-		skills_label.visible = true
+		kratips_label.text = "📦 Kratips Collected: %d" % [max(p1_kratips, p2_kratips)]
+		
+		skills_label.visible = false
 	else:
+		section_label.text = LanguageManager.t("LBL_CHAMPION")
+		winner_label.visible = true
+		
 		final_score_label.visible = true
+		final_score_label.text = "⭐ Score:  P1 ( %d )  -  P2 ( %d )" % [p1_score, p2_score]
+		final_score_label.label_settings.font_size = 22
+		final_score_label.label_settings.font_color = Color(0.9, 0.9, 1.0)
+		
+		distance_label.visible = false
 		kratips_label.visible = false
 		skills_label.visible = false
-		final_score_label.text = LanguageManager.t("LBL_SCORE") % [p1_score, p2_score]
-		distance_label.text = LanguageManager.t("LBL_DISTANCE") % [p1_distance, p2_distance]
 		
 	_show_winner_model(winner_id)
 
