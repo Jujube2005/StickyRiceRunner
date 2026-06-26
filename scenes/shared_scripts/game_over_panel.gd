@@ -229,7 +229,10 @@ func show_result(winner_name: String, p1_score: int, p2_score: int, p1_distance:
 	if GameConfig.race_mode == "endless":
 		section_label.text = LanguageManager.t("LBL_ENDLESS_SURVIVAL")
 		winner_label.text = LanguageManager.t("LBL_WINNER") + ": " + winner_name
-		final_score_label.visible = false
+		final_score_label.visible = true
+		final_score_label.text = "Best Distance: %d m | Best Score: %d\nTotal Kratips: %d" % [int(GameConfig.best_distance), GameConfig.best_score, GameConfig.total_kratips]
+		final_score_label.label_settings.font_size = 24
+		final_score_label.label_settings.font_color = Color(0.7, 0.9, 1.0)
 		distance_label.text = LanguageManager.t("LBL_ENDLESS_DISTANCE") % [p1_distance, p2_distance]
 		kratips_label.text = LanguageManager.t("LBL_KRATIPS") % [p1_kratips, p2_kratips]
 		skills_label.text = LanguageManager.t("LBL_SKILLS_USED") % [p1_skills, p2_skills]
@@ -253,11 +256,14 @@ func show_result(winner_name: String, p1_score: int, p2_score: int, p1_distance:
 	tween.tween_property(self, "scale", Vector2(1.0, 1.0), 0.45).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 
 	if winner_id != "draw":
-		get_tree().create_timer(0.5).timeout.connect(func():
+		var tw = create_tween()
+		tw.tween_interval(0.5)
+		tw.tween_callback(func():
 			var scene = get_tree().current_scene
-			var winner_player = scene.find_child("Player1" if winner_id == "p1" else "Player2", true, false)
-			if winner_player:
-				VfxManager.spawn("confetti", winner_player.global_position)
+			if scene:
+				var winner_player = scene.find_child("Player1" if winner_id == "p1" else "Player2", true, false)
+				if winner_player:
+					VfxManager.spawn("confetti", winner_player.global_position)
 		)
 
 func _show_winner_model(winner_id: String):

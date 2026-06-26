@@ -90,7 +90,7 @@ var current_anim : String = ""
 # Adjust this value if the character still sinks or floats.
 @export var model_offset := Vector3(0.0, 0.0, 0.0)
 @export var model_y_offset : float = 0.0  # Fine-tune Y separately per character
-@export var stun_model_y_offset : float = 0.0  # Extra Y lift when laying flat (stun), prevents sinking
+@export var stun_model_y_offset : float = -0.5  # Negative value lowers the character when laying flat
 
 var distance := 0.0
 var start_z := 0.0
@@ -423,6 +423,10 @@ func _sync_model_to_body():
 		model_node.position.y = target_y
 		model_node.position.z = model_offset.z
 
+func _process(_delta):
+	_update_blob_shadow()
+
+
 func _physics_process(delta):
 	var new_distance = int(abs(global_position.z - start_z))
 
@@ -437,9 +441,10 @@ func _physics_process(delta):
 		if !is_on_floor():
 			velocity.y -= GRAVITY * delta
 		move_and_slide()
-		_update_blob_shadow()
 		
 		# Play stun animation
+		if anim_player:
+			anim_player.speed_scale = 1.0
 		play_animation(anim_stun)
 		
 		# Stun: lay flat (-90°) — lift model up to prevent sinking
@@ -732,7 +737,6 @@ func _physics_process(delta):
 		position.x += randf_range(-2.0, 2.0) * delta
 
 	move_and_slide()
-	_update_blob_shadow()
 	# (Model Y is always synced via _sync_model_to_body — no global Y override needed)
 
 	# ── Landing detection ──
@@ -801,7 +805,11 @@ func _update_blob_shadow():
 		var mesh = ray.get_node_or_null("BlobShadowMesh")
 		if mesh:
 			if ray.is_colliding():
-				mesh.global_position = ray.get_collision_point() + Vector3(0, 0.05, 0)
+				var model_node = get_node_or_null("Model")
+				if model_node:
+					mesh.global_position = Vector3(model_node.global_position.x, ray.get_collision_point().y + 0.05, model_node.global_position.z)
+				else:
+					mesh.global_position = Vector3(global_position.x, ray.get_collision_point().y + 0.05, global_position.z)
 				mesh.visible = true
 				
 				# Fade shadow based on distance to ground (max fade at 3 units up)

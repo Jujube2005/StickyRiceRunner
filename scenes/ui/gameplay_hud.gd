@@ -289,13 +289,11 @@ void fragment() {
 	overlay.add_child(particles)
 	
 	# Stop emitting after duration, then queue_free after particles finish
-	get_tree().create_timer(duration).timeout.connect(func():
-		if is_instance_valid(particles):
-			particles.emitting = false
-			get_tree().create_timer(2.6).timeout.connect(func():
-				if is_instance_valid(overlay): overlay.queue_free()
-			)
-	)
+	var tw = overlay.create_tween()
+	tw.tween_interval(duration)
+	tw.tween_callback(func(): if is_instance_valid(particles): particles.emitting = false)
+	tw.tween_interval(2.6)
+	tw.tween_callback(func(): if is_instance_valid(overlay): overlay.queue_free())
 
 func show_skill_flash(is_right_half: bool, skill_color: Color):
 	"""Brief half-screen color flash when a skill projectile hits the target player.

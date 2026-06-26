@@ -419,10 +419,10 @@ func _make_gradient(c1: Color, c2: Color) -> Gradient:
 	return g
 
 func _auto_free(node: Node, after_sec: float = 2.0) -> void:
-	get_tree().create_timer(after_sec).timeout.connect(func():
-		if is_instance_valid(node):
-			node.queue_free()
-	)
+	if not is_instance_valid(node): return
+	var tw = node.create_tween()
+	tw.tween_interval(after_sec)
+	tw.tween_callback(node.queue_free)
 
 # ─────────────────────────────────────────────────────────────
 # SKILL → COLOUR MAP  (mirrors gameplay_hud.gd get_skill_color)

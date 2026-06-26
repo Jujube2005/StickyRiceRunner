@@ -13,17 +13,17 @@ colors = PackedColorArray(0, 0, 0, 0.85, 0, 0, 0, 0.35, 0, 0, 0, 0)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_shadow"]
 gradient = SubResource("Gradient_shadow")
+width = 128
+height = 128
 fill = 1
 fill_from = Vector2(0.5, 0.5)
 fill_to = Vector2(0.5, 0)
-width = 128
-height = 128
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_shadow"]
 transparency = 1
 shading_mode = 0
-albedo_texture = SubResource("GradientTexture2D_shadow")
 albedo_color = Color(1, 1, 1, 0.8)
+albedo_texture = SubResource("GradientTexture2D_shadow")
 disable_receive_shadows = true
 
 [sub_resource type="QuadMesh" id="QuadMesh_shadow"]
@@ -40,15 +40,16 @@ shape = SubResource("CapsuleShape3D_hti1j")
 [node name="Rig" type="Node3D" parent="." unique_id=167856694]
 
 [node name="Model" type="Node3D" parent="." unique_id=1547751969]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 1, 0)
 
 [node name="ShadowRay" type="RayCast3D" parent="." unique_id=987654321]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.09350687, 0)
 target_position = Vector3(0, -5, 0)
 collision_mask = 11
 
 [node name="BlobShadowMesh" type="MeshInstance3D" parent="ShadowRay" unique_id=987654322]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, -0.5, 0)
-mesh = SubResource("QuadMesh_shadow")
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 1, 0)
 top_level = true
+mesh = SubResource("QuadMesh_shadow")
 
 [node name="CameraHolder" type="Node3D" parent="." unique_id=1291734684]

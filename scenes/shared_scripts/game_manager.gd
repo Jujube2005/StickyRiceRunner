@@ -177,6 +177,14 @@ func _on_countdown_finished():
 
 
 func _process(delta):
+	if is_instance_valid(revive_ui) and revive_timer > 0:
+		revive_timer -= delta
+		if is_instance_valid(revive_label):
+			revive_label.text = str(ceil(revive_timer))
+		if revive_timer <= 0:
+			_on_revive_skipped()
+			return
+
 	if game_ended: return
 	if countdown_active: return
 	
@@ -357,7 +365,101 @@ func _player_caught_by_elephant(caught_player: Node) -> void:
 	# Wait for death animation / fall
 	await get_tree().create_timer(1.5).timeout
 	
-	game_over(winner)
+	if GameConfig.race_mode == "endless":
+		_show_revive_prompt(caught_player, winner)
+	else:
+		game_over(winner)
+
+var revive_ui: CanvasLayer
+var revive_timer: float
+var revive_label: Label
+var caught_player_ref: Node
+var pending_winner: String
+
+func _show_revive_prompt(player: Node, winner: String):
+	caught_player_ref = player
+	pending_winner = winner
+	var cost = 10
+	var can_afford = player.get("kratips_collected", 0) >= cost
+
+	revive_ui = CanvasLayer.new()
+	add_child(revive_ui)
+
+	var panel = Panel.new()
+	panel.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
+	panel.custom_minimum_size = Vector2(400, 250)
+	panel.position -= panel.custom_minimum_size / 2
+	revive_ui.add_child(panel)
+
+	var vbox = VBoxContainer.new()
+	vbox.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	vbox.alignment = BoxContainer.ALIGNMENT_CENTER
+	panel.add_child(vbox)
+
+	var title = Label.new()
+	title.text = "REVIVE?"
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.add_theme_font_size_override("font_size", 32)
+	vbox.add_child(title)
+
+	revive_label = Label.new()
+	revive_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	revive_label.add_theme_font_size_override("font_size", 48)
+	vbox.add_child(revive_label)
+
+	var hbox = HBoxContainer.new()
+	hbox.alignment = BoxContainer.ALIGNMENT_CENTER
+	vbox.add_child(hbox)
+
+	var btn_revive = Button.new()
+	btn_revive.text = "Revive (10 Kratips)"
+	btn_revive.custom_minimum_size = Vector2(150, 50)
+	btn_revive.disabled = !can_afford
+	btn_revive.pressed.connect(_on_revive_accepted)
+	hbox.add_child(btn_revive)
+
+	var btn_skip = Button.new()
+	btn_skip.text = "Skip"
+	btn_skip.custom_minimum_size = Vector2(100, 50)
+	btn_skip.pressed.connect(_on_revive_skipped)
+	hbox.add_child(btn_skip)
+
+	revive_timer = 5.0
+	set_process(true) # Ensure process is running to tick the timer
+
+func _on_revive_accepted():
+	if !is_instance_valid(revive_ui): return
+	revive_ui.queue_free()
+	
+	if is_instance_valid(caught_player_ref):
+		caught_player_ref.kratips_collected -= 10
+		caught_player_ref.set("obstacle_strikes", 0)
+		caught_player_ref.set("alive", true)
+		
+		# Reset rotation
+		var model = caught_player_ref.get_node_or_null("Model")
+		if model:
+			model.rotation.x = 0
+			
+		# Push elephant back
+		if caught_player_ref == p1:
+			elephant_gap_p1 = ELEPHANT_START_GAP
+		elif caught_player_ref == p2:
+			elephant_gap_p2 = ELEPHANT_START_GAP
+		caught_player_ref.set("elephant_gap", ELEPHANT_START_GAP)
+			
+		# Update UI
+		var hud = get_parent().get_node_or_null("GameplayHUD")
+		if hud:
+			hud.update_kratip_count(caught_player_ref.name, caught_player_ref.kratips_collected)
+			
+	game_ended = false
+	caught_player_ref = null
+
+func _on_revive_skipped():
+	if !is_instance_valid(revive_ui): return
+	revive_ui.queue_free()
+	game_over(pending_winner)
 
 # --- CENTRAL UPDATE LOOP ---
 func _update_pranks(delta):
@@ -517,6 +619,15 @@ func game_over(winner_text: String):
 	var p1_skills = p1.get("skills_used") if is_instance_valid(p1) else 0
 	var p2_skills = p2.get("skills_used") if is_instance_valid(p2) else 0
 	
+	if GameConfig.race_mode == "endless":
+		if is_instance_valid(p1):
+			GameConfig.total_kratips += p1.get("kratips_collected", 0)
+			var d = p1.get("distance", 0.0)
+			var s = calculate_final_score(1)
+			if d > GameConfig.best_distance: GameConfig.best_distance = d
+			if s > GameConfig.best_score: GameConfig.best_score = s
+		GameConfig.save_game()
+
 	ui_gameover.show_result(
 		winner_text, 
 		calculate_final_score(1), calculate_final_score(2), 
