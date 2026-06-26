@@ -869,7 +869,7 @@ func start_buffalo_ride() -> void:
 		var b_scene = load("res://assets/models/buffalo/buffalorun.glb")
 		if b_scene:
 			buffalo_model = b_scene.instantiate()
-			buffalo_model.rotation.y = PI # Face forward (often models face Z+)
+			buffalo_model.rotation_degrees.y = 90 # Face sideways
 			$Model.add_child(buffalo_model)
 			var anims = buffalo_model.find_children("*", "AnimationPlayer", true)
 			if anims.size() > 0:
