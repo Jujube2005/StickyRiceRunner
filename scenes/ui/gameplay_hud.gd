@@ -247,9 +247,10 @@ func _on_p2_screen_dust(duration: float):
 	_show_half_dust(duration, true)
 
 func _show_half_dust(duration: float, is_right_half: bool):
-	var overlay = Control.new()
+	var overlay = ColorRect.new()
 	overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	overlay.z_index = 100
+	overlay.color = Color(1.0, 0.9, 0.0, 0.0) # Yellow
 	add_child(overlay)
 	await get_tree().process_frame
 	
@@ -257,26 +258,16 @@ func _show_half_dust(duration: float, is_right_half: bool):
 	overlay.size = Vector2(half_w, size.y)
 	overlay.position = Vector2(half_w if is_right_half else 0.0, 0.0)
 	
-	var dust_tex = load("res://assets/models/effects/Rice_Yard_Dust/RiceYardDust.png")
-	if dust_tex:
-		var tex_rect = TextureRect.new()
-		tex_rect.texture = dust_tex
-		tex_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		tex_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		tex_rect.size = Vector2(size.y, size.y) * 1.5
-		tex_rect.position = Vector2((half_w - tex_rect.size.x) / 2.0, (size.y - tex_rect.size.y) / 2.0)
-		tex_rect.pivot_offset = tex_rect.size / 2.0
-		tex_rect.modulate.a = 0.5
-		overlay.add_child(tex_rect)
-		
-		var rot_tw = overlay.create_tween().set_loops()
-		rot_tw.tween_property(tex_rect, "rotation", TAU, 3.0).as_relative()
-		
-	overlay.modulate.a = 0.0
+	# Flashing effect
+	var flash_tw = create_tween().set_loops()
+	flash_tw.tween_property(overlay, "color:a", 0.25, 0.4)
+	flash_tw.tween_property(overlay, "color:a", 0.05, 0.4)
+	
+	await get_tree().create_timer(duration).timeout
+	
+	flash_tw.kill()
 	var fade_tw = create_tween()
-	fade_tw.tween_property(overlay, "modulate:a", 1.0, 0.5)
-	fade_tw.tween_interval(duration - 1.0)
-	fade_tw.tween_property(overlay, "modulate:a", 0.0, 0.5)
+	fade_tw.tween_property(overlay, "color:a", 0.0, 0.5)
 	fade_tw.tween_callback(overlay.queue_free)
 
 func _show_half_vignette(duration: float, is_right_half: bool):
