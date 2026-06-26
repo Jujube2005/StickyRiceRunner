@@ -22,7 +22,7 @@
 [ext_resource type="Texture2D" uid="uid://c63tshlsmuwvs" path="res://assets/textures/UI/Buttons/bg1.png" id="17_s46g7"]
 [ext_resource type="Texture2D" uid="uid://dd2pqki3ugew2" path="res://assets/textures/UI/Buttons/bg3.png" id="19_mhyp6"]
 
-[node name="GameOverPanel2" type="Panel" unique_id=311387029]
+[node name="GameOverPanel2" type="Panel"]
 z_index = 10
 anchors_preset = 15
 anchor_right = 1.0
@@ -31,519 +31,324 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_script")
 
-[node name="Backdrop" type="ColorRect" parent="." unique_id=864099439]
+[node name="Backdrop" type="ColorRect" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(1.0191857, 1)
-mouse_filter = 2
-color = Color(0.04, 0.05, 0.09, 0.75)
+color = Color(0, 0, 0, 0.45)
 
-[node name="Board" type="TextureRect" parent="." unique_id=1523570354]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -217.0
-offset_top = -303.0
-offset_right = 423.0
-offset_bottom = 557.0
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(0.7076044, 0.7076044)
-texture = ExtResource("2_board_bg")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="Paper" type="TextureRect" parent="Board" unique_id=1851349985]
+[node name="CenterContainer" type="CenterContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 8.479334
-offset_top = 80.55348
-offset_right = -51.52069
-offset_bottom = -119.44653
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("3_paper")
-expand_mode = 1
-stretch_mode = 5
 
-[node name="TextureRect" type="TextureRect" parent="Board/Paper" unique_id=1714633232]
-layout_mode = 0
-offset_left = 91.859245
-offset_top = 440.92426
-offset_right = 1597.7386
-offset_bottom = 1015.6823
-scale = Vector2(0.26089397, 0.26309252)
-texture = ExtResource("4_s4b4v")
-expand_mode = 1
-
-[node name="KratibIcon" type="TextureRect" parent="Board/Paper" unique_id=75104112]
-layout_mode = 0
-offset_left = 376.91385
-offset_top = -125.77649
-offset_right = 416.91385
-offset_bottom = -85.77646
-scale = Vector2(3.6964352, 3.6964352)
-texture = ExtResource("5_d5iho")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="TitleHeader" type="Label" parent="Board/Paper" unique_id=1268044802]
-layout_mode = 0
-offset_left = -21.198282
-offset_top = -84.497055
-offset_right = 697.8017
-offset_bottom = 72.502945
-scale = Vector2(0.87556535, 0.87556535)
-theme_override_colors/font_color = Color(1, 0.95686275, 0.8666667, 1)
-theme_override_colors/font_outline_color = Color(0.41960785, 0.22745098, 0.07058824, 1)
-theme_override_constants/outline_size = 45
-theme_override_fonts/font = ExtResource("5_font")
-theme_override_font_sizes/font_size = 100
-text = "LEADERBOARD"
-
-[node name="VBox" type="VBoxContainer" parent="Board/Paper" unique_id=940314738]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 40.0
-offset_top = 30.0
-offset_right = -40.0
-offset_bottom = -30.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/separation = 15
-
-[node name="ChampionBox" type="Control" parent="Board/Paper/VBox" unique_id=1319675237]
-custom_minimum_size = Vector2(0, 80)
+[node name="MainVBox" type="VBoxContainer" parent="CenterContainer"]
 layout_mode = 2
+theme_override_constants/separation = 20
 
-[node name="GoldFrame" type="TextureRect" parent="Board/Paper/VBox/ChampionBox" unique_id=2107146403]
+[node name="HeaderTex" type="TextureRect" parent="CenterContainer/MainVBox"]
+layout_mode = 2
+texture = ExtResource("2_board_bg")
+stretch_mode = 3
+
+[node name="HeaderLabel" type="Label" parent="CenterContainer/MainVBox/HeaderTex"]
+unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -143.0252
-offset_top = -34.66953
-offset_right = 176.9748
-offset_bottom = 45.330475
+offset_left = -118.0
+offset_top = -33.5
+offset_right = 118.0
+offset_bottom = 33.5
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_colors/font_outline_color = Color(0.2, 0.1, 0.05, 1)
+theme_override_constants/outline_size = 8
+theme_override_fonts/font = ExtResource("5_font")
+theme_override_font_sizes/font_size = 42
+text = "Race Result"
+horizontal_alignment = 1
+
+[node name="WinnerContainer" type="TextureRect" parent="CenterContainer/MainVBox"]
+unique_name_in_owner = true
+layout_mode = 2
 texture = ExtResource("6_gold_frame")
-expand_mode = 1
-stretch_mode = 5
+stretch_mode = 3
 
-[node name="WinnerTag" type="TextureRect" parent="Board/Paper/VBox/ChampionBox/GoldFrame" unique_id=931815749]
+[node name="Avatar" type="TextureRect" parent="CenterContainer/MainVBox/WinnerContainer"]
 unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 27.958157
-offset_top = -16.727547
-offset_right = -62.04184
-offset_bottom = -16.727547
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(1.4483367, 1.4483367)
-texture = ExtResource("7_p1_wins")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="Avatar" type="TextureRect" parent="Board/Paper/VBox/ChampionBox/GoldFrame" unique_id=534170099]
-unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 4
-anchor_top = 0.5
-anchor_bottom = 0.5
-offset_left = 59.677673
-offset_top = -47.173553
-offset_right = 129.67767
-offset_bottom = 42.826447
-grow_vertical = 2
+custom_minimum_size = Vector2(150, 150)
+layout_mode = 0
+offset_left = 135.0
+offset_top = -25.0
+offset_right = 285.0
+offset_bottom = 125.0
 texture = ExtResource("8_p1_avatar")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="BigTrophy" type="TextureRect" parent="Board/Paper/VBox/ChampionBox/GoldFrame" unique_id=2052550317]
-layout_mode = 1
-anchors_preset = 4
-anchor_top = 0.5
-anchor_bottom = 0.5
-offset_left = -20.091259
-offset_top = -52.487892
-offset_right = 59.90874
-offset_bottom = 27.512108
-grow_vertical = 2
-scale = Vector2(1.275804, 1.275804)
+[node name="Trophy" type="TextureRect" parent="CenterContainer/MainVBox/WinnerContainer"]
+custom_minimum_size = Vector2(140, 140)
+layout_mode = 0
+offset_left = 22.0
+offset_top = -15.0
+offset_right = 162.0
+offset_bottom = 125.0
 texture = ExtResource("9_big_trophy")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Spacer" type="Control" parent="Board/Paper/VBox" unique_id=202432929]
-custom_minimum_size = Vector2(0, 10)
-layout_mode = 2
-
-[node name="StatsList1" type="VBoxContainer" parent="Board/Paper/VBox" unique_id=582674277]
-layout_mode = 2
-theme_override_constants/separation = 10
-
-[node name="RowDist" type="HBoxContainer" parent="Board/Paper/VBox/StatsList1" unique_id=485701279]
-layout_mode = 2
-
-[node name="Icon" type="TextureRect" parent="Board/Paper/VBox/StatsList1/RowDist" unique_id=1471060106]
-custom_minimum_size = Vector2(30, 30)
-layout_mode = 2
-texture = ExtResource("10_icon_dist")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="Label" type="Label" parent="Board/Paper/VBox/StatsList1/RowDist" unique_id=1745660791]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.35, 0.22, 0.1, 1)
-theme_override_fonts/font = ExtResource("5_font")
-theme_override_font_sizes/font_size = 20
-text = "Best Distance"
-
-[node name="Panel" type="ColorRect" parent="Board/Paper/VBox/StatsList1/RowDist" unique_id=1675652359]
-custom_minimum_size = Vector2(100, 30)
-layout_mode = 2
-color = Color(0.4, 0.25, 0.1, 1)
-
-[node name="ValDist" type="Label" parent="Board/Paper/VBox/StatsList1/RowDist/Panel" unique_id=1417866618]
+[node name="WinnerTag" type="TextureRect" parent="CenterContainer/MainVBox/WinnerContainer"]
 unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_fonts/font = ExtResource("5_font")
-theme_override_font_sizes/font_size = 18
-text = "0m"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="RowTime" type="HBoxContainer" parent="Board/Paper/VBox/StatsList1" unique_id=948261747]
-layout_mode = 2
-
-[node name="Icon" type="TextureRect" parent="Board/Paper/VBox/StatsList1/RowTime" unique_id=2135472069]
-custom_minimum_size = Vector2(30, 30)
-layout_mode = 2
-texture = ExtResource("13_icon_run")
+custom_minimum_size = Vector2(300, 80)
+layout_mode = 0
+offset_left = 278.0
+offset_top = 22.0
+offset_right = 578.0
+offset_bottom = 102.0
+texture = ExtResource("7_p1_wins")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Label" type="Label" parent="Board/Paper/VBox/StatsList1/RowTime" unique_id=1545573671]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.35, 0.22, 0.1, 1)
-theme_override_fonts/font = ExtResource("5_font")
-theme_override_font_sizes/font_size = 20
-text = "Best Finish Time"
-
-[node name="Panel" type="ColorRect" parent="Board/Paper/VBox/StatsList1/RowTime" unique_id=1903503924]
-custom_minimum_size = Vector2(100, 30)
-layout_mode = 2
-color = Color(0.4, 0.25, 0.1, 1)
-
-[node name="ValTime" type="Label" parent="Board/Paper/VBox/StatsList1/RowTime/Panel" unique_id=520218640]
+[node name="RaceScorePanel" type="TextureRect" parent="CenterContainer/MainVBox"]
 unique_name_in_owner = true
+layout_mode = 2
+texture = ExtResource("3_paper")
+stretch_mode = 3
+
+[node name="ScoreTitle" type="Label" parent="CenterContainer/MainVBox/RaceScorePanel"]
 layout_mode = 1
-anchors_preset = 15
+anchors_preset = 10
 anchor_right = 1.0
-anchor_bottom = 1.0
+offset_top = 15.0
+offset_bottom = 73.0
 grow_horizontal = 2
-grow_vertical = 2
+theme_override_colors/font_outline_color = Color(0.2, 0.1, 0.05, 1)
+theme_override_constants/outline_size = 6
 theme_override_fonts/font = ExtResource("5_font")
-theme_override_font_sizes/font_size = 18
-text = "00:00"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="RowSilk" type="HBoxContainer" parent="Board/Paper/VBox/StatsList1" unique_id=2057299107]
-layout_mode = 2
-
-[node name="Icon" type="TextureRect" parent="Board/Paper/VBox/StatsList1/RowSilk" unique_id=31685681]
-custom_minimum_size = Vector2(30, 30)
-layout_mode = 2
-texture = ExtResource("11_icon_silk")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="Label" type="Label" parent="Board/Paper/VBox/StatsList1/RowSilk" unique_id=1003871047]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.35, 0.22, 0.1, 1)
-theme_override_fonts/font = ExtResource("5_font")
-theme_override_font_sizes/font_size = 20
-text = "Most Silk Collected"
-
-[node name="Panel" type="ColorRect" parent="Board/Paper/VBox/StatsList1/RowSilk" unique_id=1363138681]
-custom_minimum_size = Vector2(100, 30)
-layout_mode = 2
-color = Color(0.4, 0.25, 0.1, 1)
-
-[node name="ValSilk" type="Label" parent="Board/Paper/VBox/StatsList1/RowSilk/Panel" unique_id=924881322]
-unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_fonts/font = ExtResource("5_font")
-theme_override_font_sizes/font_size = 18
-text = "0"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="Sep1" type="ColorRect" parent="Board/Paper/VBox" unique_id=707638053]
-custom_minimum_size = Vector2(0, 2)
-layout_mode = 2
-color = Color(0.6, 0.4, 0.2, 0.5)
-
-[node name="PlayerStatsHeader" type="Label" parent="Board/Paper/VBox" unique_id=9994098]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.35, 0.22, 0.1, 1)
-theme_override_fonts/font = ExtResource("5_font")
-theme_override_font_sizes/font_size = 18
-text = "— PLAYER STATS —"
+theme_override_font_sizes/font_size = 36
+text = "SCORE"
 horizontal_alignment = 1
 
-[node name="StatsList2" type="VBoxContainer" parent="Board/Paper/VBox" unique_id=1364294400]
-layout_mode = 2
-theme_override_constants/separation = 10
-
-[node name="RowP1" type="HBoxContainer" parent="Board/Paper/VBox/StatsList2" unique_id=273977000]
-layout_mode = 2
-
-[node name="Icon" type="TextureRect" parent="Board/Paper/VBox/StatsList2/RowP1" unique_id=1958562217]
-custom_minimum_size = Vector2(30, 30)
-layout_mode = 2
-texture = ExtResource("12_icon_trophy")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="Label" type="Label" parent="Board/Paper/VBox/StatsList2/RowP1" unique_id=1046330447]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.35, 0.22, 0.1, 1)
-theme_override_fonts/font = ExtResource("5_font")
-theme_override_font_sizes/font_size = 20
-text = "P1 Wins"
-
-[node name="Panel" type="ColorRect" parent="Board/Paper/VBox/StatsList2/RowP1" unique_id=1361072550]
-custom_minimum_size = Vector2(100, 30)
-layout_mode = 2
-color = Color(0.4, 0.25, 0.1, 1)
-
-[node name="ValP1Wins" type="Label" parent="Board/Paper/VBox/StatsList2/RowP1/Panel" unique_id=1898908087]
-unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_fonts/font = ExtResource("5_font")
-theme_override_font_sizes/font_size = 18
-text = "0"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="RowP2" type="HBoxContainer" parent="Board/Paper/VBox/StatsList2" unique_id=952252189]
-layout_mode = 2
-
-[node name="Icon" type="TextureRect" parent="Board/Paper/VBox/StatsList2/RowP2" unique_id=628573255]
-custom_minimum_size = Vector2(30, 30)
-layout_mode = 2
-texture = ExtResource("12_icon_trophy")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="Label" type="Label" parent="Board/Paper/VBox/StatsList2/RowP2" unique_id=803739920]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.35, 0.22, 0.1, 1)
-theme_override_fonts/font = ExtResource("5_font")
-theme_override_font_sizes/font_size = 20
-text = "P2 Wins"
-
-[node name="Panel" type="ColorRect" parent="Board/Paper/VBox/StatsList2/RowP2" unique_id=118964743]
-custom_minimum_size = Vector2(100, 30)
-layout_mode = 2
-color = Color(0.4, 0.25, 0.1, 1)
-
-[node name="ValP2Wins" type="Label" parent="Board/Paper/VBox/StatsList2/RowP2/Panel" unique_id=207683170]
-unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_fonts/font = ExtResource("5_font")
-theme_override_font_sizes/font_size = 18
-text = "0"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="Sep2" type="ColorRect" parent="Board/Paper/VBox" unique_id=862757265]
-custom_minimum_size = Vector2(0, 2)
-layout_mode = 2
-color = Color(0.6, 0.4, 0.2, 0.5)
-
-[node name="Top3Wrapper" type="VBoxContainer" parent="Board/Paper/VBox" unique_id=1907195100]
-layout_mode = 2
-theme_override_constants/separation = -5
-
-[node name="Top3Header" type="Label" parent="Board/Paper/VBox/Top3Wrapper" unique_id=1475395685]
-layout_mode = 2
-size_flags_vertical = 0
-size_flags_stretch_ratio = 0.5
-theme_override_colors/font_color = Color(0.6, 0.6, 0.2, 1)
-theme_override_fonts/font = ExtResource("5_font")
-theme_override_font_sizes/font_size = 16
-text = "top 3 fastest time"
-horizontal_alignment = 1
-
-[node name="Top3" type="HBoxContainer" parent="Board/Paper/VBox/Top3Wrapper" unique_id=2132080962]
-layout_mode = 2
-size_flags_stretch_ratio = 0.0
-theme_override_constants/separation = 5
-alignment = 1
-
-[node name="Time2nd" type="VBoxContainer" parent="Board/Paper/VBox/Top3Wrapper/Top3" unique_id=833729161]
-layout_mode = 2
-alignment = 2
-
-[node name="Medal" type="TextureRect" parent="Board/Paper/VBox/Top3Wrapper/Top3/Time2nd" unique_id=1009681676]
-custom_minimum_size = Vector2(40, 40)
-layout_mode = 2
-texture = ExtResource("14_icon_2nd")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="Panel" type="TextureRect" parent="Board/Paper/VBox/Top3Wrapper/Top3/Time2nd" unique_id=535708710]
-custom_minimum_size = Vector2(80, 20)
-layout_mode = 2
-texture = ExtResource("16_fsi3f")
-
-[node name="Label" type="Label" parent="Board/Paper/VBox/Top3Wrapper/Top3/Time2nd/Panel" unique_id=6472000]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_colors/font_color = Color(0.2, 0.2, 0.2, 1)
-theme_override_fonts/font = ExtResource("5_font")
-theme_override_font_sizes/font_size = 14
-text = "--:--"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="Time1st" type="VBoxContainer" parent="Board/Paper/VBox/Top3Wrapper/Top3" unique_id=549737591]
-layout_mode = 2
-alignment = 2
-
-[node name="Medal" type="TextureRect" parent="Board/Paper/VBox/Top3Wrapper/Top3/Time1st" unique_id=1990371146]
-custom_minimum_size = Vector2(60, 60)
-layout_mode = 2
-texture = ExtResource("9_big_trophy")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="Panel" type="TextureRect" parent="Board/Paper/VBox/Top3Wrapper/Top3/Time1st" unique_id=1443370037]
-custom_minimum_size = Vector2(80, 20)
-layout_mode = 2
-texture = ExtResource("17_s46g7")
-
-[node name="Label" type="Label" parent="Board/Paper/VBox/Top3Wrapper/Top3/Time1st/Panel" unique_id=1553479103]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_colors/font_color = Color(0.2, 0.2, 0.2, 1)
-theme_override_fonts/font = ExtResource("5_font")
-theme_override_font_sizes/font_size = 14
-text = "--:--"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="Time3rd" type="VBoxContainer" parent="Board/Paper/VBox/Top3Wrapper/Top3" unique_id=623930033]
-layout_mode = 2
-alignment = 2
-
-[node name="Medal" type="TextureRect" parent="Board/Paper/VBox/Top3Wrapper/Top3/Time3rd" unique_id=1351618450]
-custom_minimum_size = Vector2(40, 40)
-layout_mode = 2
-texture = ExtResource("15_icon_3rd")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="Panel" type="TextureRect" parent="Board/Paper/VBox/Top3Wrapper/Top3/Time3rd" unique_id=1441818406]
-custom_minimum_size = Vector2(80, 20)
-layout_mode = 2
-texture = ExtResource("19_mhyp6")
-
-[node name="Label" type="Label" parent="Board/Paper/VBox/Top3Wrapper/Top3/Time3rd/Panel" unique_id=1703310293]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_colors/font_color = Color(0.2, 0.2, 0.2, 1)
-theme_override_fonts/font = ExtResource("5_font")
-theme_override_font_sizes/font_size = 14
-text = "--:--"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="ButtonBox" type="HBoxContainer" parent="Board" unique_id=1367107368]
+[node name="ScoreHBox" type="HBoxContainer" parent="CenterContainer/MainVBox/RaceScorePanel"]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -214.00858
-offset_top = -137.8451
-offset_right = 85.991425
-offset_bottom = -57.845093
+offset_left = -250.0
+offset_top = -120.0
+offset_right = 250.0
+offset_bottom = -20.0
 grow_horizontal = 2
 grow_vertical = 0
-scale = Vector2(1.27, 1.27)
+theme_override_constants/separation = 30
+alignment = 1
+
+[node name="P1Icon" type="TextureRect" parent="CenterContainer/MainVBox/RaceScorePanel/ScoreHBox"]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 2
+texture = ExtResource("14_icon_2nd")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ValP1Wins" type="Label" parent="CenterContainer/MainVBox/RaceScorePanel/ScoreHBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0.2, 0.1, 0.05, 1)
+theme_override_constants/outline_size = 6
+theme_override_fonts/font = ExtResource("5_font")
+theme_override_font_sizes/font_size = 36
+text = "0"
+horizontal_alignment = 1
+
+[node name="Space" type="Control" parent="CenterContainer/MainVBox/RaceScorePanel/ScoreHBox"]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+
+[node name="ValP2Wins" type="Label" parent="CenterContainer/MainVBox/RaceScorePanel/ScoreHBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0.2, 0.1, 0.05, 1)
+theme_override_constants/outline_size = 6
+theme_override_fonts/font = ExtResource("5_font")
+theme_override_font_sizes/font_size = 36
+text = "0"
+horizontal_alignment = 1
+
+[node name="P2Icon" type="TextureRect" parent="CenterContainer/MainVBox/RaceScorePanel/ScoreHBox"]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 2
+texture = ExtResource("15_icon_3rd")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="EndlessVBox" type="VBoxContainer" parent="CenterContainer/MainVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="DistCard" type="TextureRect" parent="CenterContainer/MainVBox/EndlessVBox"]
+custom_minimum_size = Vector2(500, 130)
+layout_mode = 2
+texture = ExtResource("3_paper")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Icon" type="TextureRect" parent="CenterContainer/MainVBox/EndlessVBox/DistCard"]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 0
+offset_left = 60.0
+offset_top = 25.0
+offset_right = 140.0
+offset_bottom = 105.0
+texture = ExtResource("12_icon_trophy")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Title" type="Label" parent="CenterContainer/MainVBox/EndlessVBox/DistCard"]
+layout_mode = 0
+offset_left = 180.0
+offset_top = 25.0
+offset_right = 530.0
+offset_bottom = 76.0
+theme_override_colors/font_outline_color = Color(0.2, 0.1, 0.05, 1)
+theme_override_constants/outline_size = 6
+theme_override_fonts/font = ExtResource("5_font")
+theme_override_font_sizes/font_size = 32
+text = "Best Distance"
+horizontal_alignment = 2
+
+[node name="ValDistBest" type="Label" parent="CenterContainer/MainVBox/EndlessVBox/DistCard"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 180.0
+offset_top = 70.0
+offset_right = 530.0
+offset_bottom = 127.0
+theme_override_colors/font_outline_color = Color(0.2, 0.1, 0.05, 1)
+theme_override_constants/outline_size = 6
+theme_override_fonts/font = ExtResource("5_font")
+theme_override_font_sizes/font_size = 36
+text = "1,230 m"
+horizontal_alignment = 2
+
+[node name="RunCard" type="TextureRect" parent="CenterContainer/MainVBox/EndlessVBox"]
+custom_minimum_size = Vector2(500, 130)
+layout_mode = 2
+texture = ExtResource("3_paper")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Icon" type="TextureRect" parent="CenterContainer/MainVBox/EndlessVBox/RunCard"]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 0
+offset_left = 60.0
+offset_top = 25.0
+offset_right = 140.0
+offset_bottom = 105.0
+texture = ExtResource("13_icon_run")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Title" type="Label" parent="CenterContainer/MainVBox/EndlessVBox/RunCard"]
+layout_mode = 0
+offset_left = 180.0
+offset_top = 25.0
+offset_right = 530.0
+offset_bottom = 76.0
+theme_override_colors/font_outline_color = Color(0.2, 0.1, 0.05, 1)
+theme_override_constants/outline_size = 6
+theme_override_fonts/font = ExtResource("5_font")
+theme_override_font_sizes/font_size = 32
+text = "This Run"
+horizontal_alignment = 2
+
+[node name="ValDist" type="Label" parent="CenterContainer/MainVBox/EndlessVBox/RunCard"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 180.0
+offset_top = 70.0
+offset_right = 530.0
+offset_bottom = 127.0
+theme_override_colors/font_outline_color = Color(0.2, 0.1, 0.05, 1)
+theme_override_constants/outline_size = 6
+theme_override_fonts/font = ExtResource("5_font")
+theme_override_font_sizes/font_size = 36
+text = "980 m"
+horizontal_alignment = 2
+
+[node name="KratipCard" type="TextureRect" parent="CenterContainer/MainVBox/EndlessVBox"]
+custom_minimum_size = Vector2(500, 130)
+layout_mode = 2
+texture = ExtResource("3_paper")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Icon" type="TextureRect" parent="CenterContainer/MainVBox/EndlessVBox/KratipCard"]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 0
+offset_left = 60.0
+offset_top = 25.0
+offset_right = 140.0
+offset_bottom = 105.0
+texture = ExtResource("11_icon_silk")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Title" type="Label" parent="CenterContainer/MainVBox/EndlessVBox/KratipCard"]
+layout_mode = 0
+offset_left = 180.0
+offset_top = 25.0
+offset_right = 530.0
+offset_bottom = 76.0
+theme_override_colors/font_outline_color = Color(0.2, 0.1, 0.05, 1)
+theme_override_constants/outline_size = 6
+theme_override_fonts/font = ExtResource("5_font")
+theme_override_font_sizes/font_size = 32
+text = "Kratips"
+horizontal_alignment = 2
+
+[node name="ValSilk" type="Label" parent="CenterContainer/MainVBox/EndlessVBox/KratipCard"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 180.0
+offset_top = 70.0
+offset_right = 530.0
+offset_bottom = 127.0
+theme_override_colors/font_outline_color = Color(0.2, 0.1, 0.05, 1)
+theme_override_constants/outline_size = 6
+theme_override_fonts/font = ExtResource("5_font")
+theme_override_font_sizes/font_size = 36
+text = "0"
+horizontal_alignment = 2
+
+[node name="BtnHBox" type="HBoxContainer" parent="CenterContainer/MainVBox"]
+layout_mode = 2
 theme_override_constants/separation = 40
 alignment = 1
 
-[node name="BtnRestart" type="TextureButton" parent="Board/ButtonBox" unique_id=1679429827]
+[node name="BtnRestart" type="TextureButton" parent="CenterContainer/MainVBox/BtnHBox"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(80, 80)
+custom_minimum_size = Vector2(90, 90)
 layout_mode = 2
 texture_normal = ExtResource("16_btn_restart")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="BtnMenu" type="TextureButton" parent="Board/ButtonBox" unique_id=134177333]
+[node name="BtnMenu" type="TextureButton" parent="CenterContainer/MainVBox/BtnHBox"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(80, 80)
+custom_minimum_size = Vector2(90, 90)
 layout_mode = 2
 texture_normal = ExtResource("17_btn_menu")
 ignore_texture_size = true

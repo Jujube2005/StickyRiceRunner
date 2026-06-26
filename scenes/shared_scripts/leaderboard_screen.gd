@@ -1,15 +1,19 @@
 extends Control
 
-@onready var board_rect: TextureRect = $Board
+@onready var header_label: Label = %HeaderLabel
 
+@onready var winner_container: TextureRect = %WinnerContainer
 @onready var winner_tag: TextureRect = %WinnerTag
 @onready var avatar: TextureRect = %Avatar
 
-@onready var val_dist: Label = %ValDist
-@onready var val_time: Label = %ValTime
-@onready var val_silk: Label = %ValSilk
+@onready var race_score_panel: TextureRect = %RaceScorePanel
 @onready var val_p1_wins: Label = %ValP1Wins
 @onready var val_p2_wins: Label = %ValP2Wins
+
+@onready var endless_vbox: VBoxContainer = %EndlessVBox
+@onready var val_dist_best: Label = %ValDistBest
+@onready var val_run: Label = %ValRun
+@onready var val_kratip: Label = %ValKratip
 
 @onready var btn_restart: TextureButton = %BtnRestart
 @onready var btn_menu: TextureButton = %BtnMenu
@@ -21,15 +25,36 @@ var tex_p2_avatar = preload("res://assets/textures/UI/Buttons/icon_player2Win.pn
 
 var default_scale: Vector2 = Vector2.ONE
 
+const SAVE_PATH = "user://leaderboard_data.json"
+
+static func load_data() -> Dictionary:
+	if FileAccess.file_exists(SAVE_PATH):
+		var file = FileAccess.open(SAVE_PATH, FileAccess.READ)
+		var text = file.get_as_text()
+		if text != "":
+			var res = JSON.parse_string(text)
+			if res is Dictionary:
+				return res
+	return {
+		"best_distance": 0,
+		"best_time": 999999,
+		"most_silk": 0,
+		"p1_wins": 0,
+		"p2_wins": 0,
+		"top_3_times": []
+	}
+
+static func save_data(data: Dictionary):
+	var file = FileAccess.open(SAVE_PATH, FileAccess.WRITE)
+	file.store_string(JSON.stringify(data))
+
 func _ready():
 	hide()
-	default_scale = board_rect.scale
+	default_scale = scale
 	
-	# Connect button pressed signals
 	if btn_restart: btn_restart.pressed.connect(on_restart_pressed)
 	if btn_menu: btn_menu.pressed.connect(on_menu_pressed)
 	
-	# Connect hover effects
 	if btn_restart: _setup_button_hover(btn_restart)
 	if btn_menu: _setup_button_hover(btn_menu)
 
@@ -45,92 +70,64 @@ func _setup_button_hover(btn: TextureButton):
 		tween.tween_property(btn, "scale", Vector2(1.0, 1.0), 0.15).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	)
 
-const SAVE_PATH = "user://leaderboard_data.json"
-
-static func load_data() -> Dictionary:
-	if FileAccess.file_exists(SAVE_PATH):
-		var file = FileAccess.open(SAVE_PATH, FileAccess.READ)
-		var text = file.get_as_text()
-		var res = JSON.parse_string(text)
-		if res is Dictionary:
-			if not res.has("top_3_times"): res["top_3_times"] = []
-			return res
-	return {
-		"best_distance": 0,
-		"best_time": 999999,
-		"most_silk": 0,
-		"p1_wins": 0,
-		"p2_wins": 0,
-		"top_3_times": []
-	}
-
-static func save_data(data: Dictionary):
-	var file = FileAccess.open(SAVE_PATH, FileAccess.WRITE)
-	file.store_string(JSON.stringify(data))
-
 func show_result(winner_name: String, _p1_score: int, _p2_score: int, _p1_distance: int, _p2_distance: int):
 	var data = load_data()
 	
-	# Format Best Time
-	var time_text = "--:--"
-	if data.best_time < 999999:
-		var bt = int(data.best_time)
-		var mins = int(bt / 60.0)
-		var secs = bt % 60
-		time_text = "%02d:%02d" % [mins, secs]
+	# Determine mode
+	var is_endless = GameConfig.race_mode == "endless"
 	
-	if val_dist: val_dist.text = "%dm" % data.best_distance
-	if val_time: val_time.text = time_text
-	if val_silk: val_silk.text = "%d" % data.most_silk
-	
-	if val_p1_wins: val_p1_wins.text = str(data.p1_wins)
-	if val_p2_wins: val_p2_wins.text = str(data.p2_wins)
-
-	# Format Top 3 Times
-	var time1st = get_node_or_null("Board/Paper/VBox/Top3Wrapper/Top3/Time1st/Panel/Label")
-	var time2nd = get_node_or_null("Board/Paper/VBox/Top3Wrapper/Top3/Time2nd/Panel/Label")
-	var time3rd = get_node_or_null("Board/Paper/VBox/Top3Wrapper/Top3/Time3rd/Panel/Label")
-	
-	var t1 = "--:--"
-	var t2 = "--:--"
-	var t3 = "--:--"
-	var times = data.top_3_times
-	if times.size() > 0:
-		var t = int(times[0])
-		t1 = "%02d:%02d" % [int(t / 60.0), t % 60]
-	if times.size() > 1:
-		var t = int(times[1])
-		t2 = "%02d:%02d" % [int(t / 60.0), t % 60]
-	if times.size() > 2:
-		var t = int(times[2])
-		t3 = "%02d:%02d" % [int(t / 60.0), t % 60]
-
-	if time1st: time1st.text = t1
-	if time2nd: time2nd.text = t2
-	if time3rd: time3rd.text = t3
-
-	# Champion Section Update
-	if winner_name == "Player 1":
-		if winner_tag: winner_tag.texture = tex_p1_tag
-		if avatar: avatar.texture = tex_p1_avatar
-	elif winner_name == "Player 2":
-		if winner_tag: winner_tag.texture = tex_p2_tag
-		if avatar: avatar.texture = tex_p2_avatar
+	if is_endless:
+		if header_label: header_label.text = "Endless Result"
+		if winner_container: winner_container.hide()
+		if race_score_panel: race_score_panel.hide()
+		if endless_vbox: endless_vbox.show()
+		
+		# Retrieve kratips from player if possible
+		var kratips_this_run = 0
+		var main_node = get_tree().root.get_node_or_null("Main/GameManager")
+		if main_node and main_node.get("p1") and is_instance_valid(main_node.p1):
+			kratips_this_run = main_node.p1.kratips_collected
+			
+		# Update Best Distance
+		if _p1_distance > data.best_distance:
+			data.best_distance = _p1_distance
+			save_data(data)
+			
+		if val_dist_best: val_dist_best.text = "%d m" % data.best_distance
+		if val_run: val_run.text = "%d m" % _p1_distance
+		if val_kratip: val_kratip.text = "%d" % kratips_this_run
+		
 	else:
-		# Draw / Tie fallback
-		if winner_tag: winner_tag.texture = null
-		if avatar: avatar.texture = null
+		if header_label: header_label.text = "Race Result"
+		if winner_container: winner_container.show()
+		if race_score_panel: race_score_panel.show()
+		if endless_vbox: endless_vbox.hide()
+		
+		if val_p1_wins: val_p1_wins.text = str(_p1_score)
+		if val_p2_wins: val_p2_wins.text = str(_p2_score)
+		
+		if winner_name == "Player 1":
+			if winner_tag: winner_tag.texture = tex_p1_tag
+			if avatar: avatar.texture = tex_p1_avatar
+			data.p1_wins += 1
+		elif winner_name == "Player 2":
+			if winner_tag: winner_tag.texture = tex_p2_tag
+			if avatar: avatar.texture = tex_p2_avatar
+			data.p2_wins += 1
+		else:
+			if winner_tag: winner_tag.texture = null
+			if avatar: avatar.texture = null
+			
+		save_data(data)
 
 	# Play pop-in animation
-	board_rect.scale = default_scale * 0.8
-	board_rect.modulate.a = 0.0
-	self.modulate.a = 0.0
+	scale = default_scale * 0.8
+	modulate.a = 0.0
 	show()
 
 	var tween = create_tween().set_parallel(true)
 	tween.tween_property(self, "modulate:a", 1.0, 0.3)
-	tween.tween_property(board_rect, "modulate:a", 1.0, 0.3)
-	tween.tween_property(board_rect, "scale", default_scale, 0.45).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tween.tween_property(self, "scale", default_scale, 0.45).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 
 func on_restart_pressed():
 	get_tree().paused = false
