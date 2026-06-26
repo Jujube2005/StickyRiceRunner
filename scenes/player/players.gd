@@ -571,6 +571,12 @@ func _physics_process(delta):
 	if shield_vfx and shield_vfx.visible:
 		shield_vfx.rotation.y += 3.0 * delta
 
+	var pull_vfx = get_node_or_null("PullVFX")
+	if pull_vfx:
+		pull_vfx.global_position.x = 0.0
+		if abs(position.x) < 0.1:
+			pull_vfx.queue_free()
+
 	# Animation handling for normal state
 	if is_on_floor():
 		if slide_timer > 0:
@@ -1217,8 +1223,22 @@ func apply_prank(skill_name):
 			emit_signal("screen_blackout", 4.0)
 		"Pull to Center":
 			# ดึงกลาง
+			var old_lane = lane
 			lane = 0
 			velocity.y = 5.0
+			
+			if old_lane != 0 and not has_node("PullVFX"):
+				var pull_tex = load("res://assets/models/effects/Pull_To_Center/Pull to Center 2.png")
+				if pull_tex:
+					var pull_sprite = Sprite3D.new()
+					pull_sprite.name = "PullVFX"
+					pull_sprite.texture = pull_tex
+					pull_sprite.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+					pull_sprite.pixel_size = 0.02
+					pull_sprite.transparent = true
+					add_child(pull_sprite)
+					pull_sprite.position.y = 1.5
+					
 			AudioManager.play_sfx("skill_use")
 			emit_signal("prank_flash", Color(0.6, 0.0, 1.0, 0.30))  # 🟣 ม่วง
 		"Knockback":
