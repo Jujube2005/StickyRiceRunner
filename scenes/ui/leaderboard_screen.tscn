@@ -7,7 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://bv4ww2wqi45sl" path="res://assets/textures/UI/Buttons/goldFrame.png" id="6_gold_frame"]
 [ext_resource type="Texture2D" uid="uid://cxx1jbpe12na5" path="res://assets/textures/UI/Buttons/P1WINS.png" id="7_p1_wins"]
 [ext_resource type="Texture2D" uid="uid://dnydvtv8phfk7" path="res://assets/textures/UI/Buttons/icon_player1Win.png" id="8_p1_avatar"]
-[ext_resource type="Texture2D" uid="uid://cslysseksm7jv" path="res://assets/textures/UI/Buttons/leaderbord.png" id="12_icon_trophy"]
+[ext_resource type="Texture2D" path="res://assets/textures/UI/Buttons/big_trophy.png" id="12_icon_trophy"]
 [ext_resource type="Texture2D" uid="uid://dn2v2i10w6prn" path="res://assets/textures/UI/Buttons/icon_run.png" id="13_icon_run"]
 [ext_resource type="Texture2D" uid="uid://cvaugs5xtglql" path="res://assets/textures/UI/Buttons/P1.png" id="14_icon_2nd"]
 [ext_resource type="Texture2D" uid="uid://xjdny1cp4333" path="res://assets/textures/UI/Buttons/P2.png" id="15_icon_3rd"]
