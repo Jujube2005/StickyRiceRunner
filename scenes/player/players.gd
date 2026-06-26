@@ -1212,10 +1212,31 @@ func apply_prank(skill_name):
 			AudioManager.play_sfx("skill_use")
 			emit_signal("prank_flash", Color(1.0, 0.9, 0.0, 0.25))  # 🟡 เหลือง
 		"Boon Bang Fai":
-			# บั้งไฟ — ล้มลงเหมือนชนสิ่งกีดขวาง
-			AudioManager.play_sfx("skill_bang_fai")
-			emit_signal("prank_flash", Color(1.0, 0.4, 0.0, 0.45))  # 🔴 แดงส้ม
-			stun(1.5)
+			# บั้งไฟ — พุ่งจากฟ้าลงมาชน
+			var rocket_tex = load("res://assets/models/effects/Boon_Bung_Fai/Boon Bang Fa.png")
+			if rocket_tex:
+				var rocket_sprite = Sprite3D.new()
+				rocket_sprite.texture = rocket_tex
+				rocket_sprite.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+				rocket_sprite.pixel_size = 0.04
+				rocket_sprite.transparent = true
+				add_child(rocket_sprite)
+				
+				rocket_sprite.position = Vector3(0, 15.0, 0)
+				rocket_sprite.rotation.z = PI # ชี้ลงพื้น
+				
+				var fall_tw = create_tween()
+				fall_tw.tween_property(rocket_sprite, "position:y", 1.0, 0.3).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)
+				fall_tw.tween_callback(func():
+					rocket_sprite.queue_free()
+					AudioManager.play_sfx("skill_bang_fai")
+					emit_signal("prank_flash", Color(1.0, 0.4, 0.0, 0.45))  # 🔴 แดงส้ม
+					stun(1.5)
+				)
+			else:
+				AudioManager.play_sfx("skill_bang_fai")
+				emit_signal("prank_flash", Color(1.0, 0.4, 0.0, 0.45))
+				stun(1.5)
 		"Screen Blur":
 			# หมอกควัน — วงกลมเบลอขอบ (vignette ฝั่งผู้เล่นที่โดน)
 			AudioManager.play_sfx("skill_wind")
@@ -1237,7 +1258,7 @@ func apply_prank(skill_name):
 					pull_sprite.pixel_size = 0.02
 					pull_sprite.transparent = true
 					add_child(pull_sprite)
-					pull_sprite.position.y = 2.8
+					pull_sprite.position.y = 3.0
 					
 			AudioManager.play_sfx("skill_use")
 			emit_signal("prank_flash", Color(0.6, 0.0, 1.0, 0.30))  # 🟣 ม่วง
