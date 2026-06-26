@@ -380,16 +380,27 @@ func _show_revive_prompt(player: Node, winner: String):
 	caught_player_ref = player
 	pending_winner = winner
 	var cost = 10
-	var can_afford = player.get("kratips_collected", 0) >= cost
+	var _k = player.get("kratips_collected")
+	var can_afford = (_k != null and _k >= cost)
 
 	revive_ui = CanvasLayer.new()
 	add_child(revive_ui)
 
 	var panel = Panel.new()
-	panel.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
 	panel.custom_minimum_size = Vector2(400, 250)
-	panel.position -= panel.custom_minimum_size / 2
 	revive_ui.add_child(panel)
+
+	if player.name == "Player1":
+		panel.set_anchors_and_offsets_preset(Control.PRESET_CENTER_LEFT)
+		panel.position.x += 150
+		panel.position.y -= panel.custom_minimum_size.y / 2
+	elif player.name == "Player2":
+		panel.set_anchors_and_offsets_preset(Control.PRESET_CENTER_RIGHT)
+		panel.position.x -= 150
+		panel.position.y -= panel.custom_minimum_size.y / 2
+	else:
+		panel.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
+		panel.position -= panel.custom_minimum_size / 2
 
 	var vbox = VBoxContainer.new()
 	vbox.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -621,8 +632,10 @@ func game_over(winner_text: String):
 	
 	if GameConfig.race_mode == "endless":
 		if is_instance_valid(p1):
-			GameConfig.total_kratips += p1.get("kratips_collected", 0)
-			var d = p1.get("distance", 0.0)
+			var _kc = p1.get("kratips_collected")
+			if _kc != null: GameConfig.total_kratips += _kc
+			var _d = p1.get("distance")
+			var d = _d if _d != null else 0.0
 			var s = calculate_final_score(1)
 			if d > GameConfig.best_distance: GameConfig.best_distance = d
 			if s > GameConfig.best_score: GameConfig.best_score = s
