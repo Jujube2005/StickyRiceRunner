@@ -37,6 +37,19 @@ var score := 0
 var charges := 0
 var can_charge := true
 var effect_durations := {}
+var skill_immunity_timer: float = 0.0
+
+func is_immune_to_skills() -> bool:
+	if skill_immunity_timer > 0:
+		return true
+	if stun_timer > 0:
+		return true
+	if is_riding_buffalo or silk_protection_timer > 0:
+		return true
+	for eff in effect_durations.values():
+		if eff > 0:
+			return true
+	return false
 
 # --- ENDLESS MODE: ELEPHANT CHASE ---
 var elephant_gap := 30.0          # Distance (m) between player and elephant
@@ -572,6 +585,9 @@ func _physics_process(delta):
 	if shield_vfx and shield_vfx.visible:
 		shield_vfx.rotation.y += 3.0 * delta
 
+	if skill_immunity_timer > 0:
+		skill_immunity_timer -= delta
+		
 	var pull_vfx = get_node_or_null("PullVFX")
 	if pull_vfx:
 		pull_vfx.global_position.x = 0.0
@@ -790,16 +806,20 @@ func _physics_process(delta):
 		grant_spawn_shield(3.0)
 
 func _update_effects(delta):
-	for effect in effect_durations.keys():
-		effect_durations[effect] -= delta
-
 	var expired = []
 	for effect in effect_durations.keys():
+		effect_durations[effect] -= delta
 		if effect_durations[effect] <= 0:
 			expired.append(effect)
 
 	for effect in expired:
 		effect_durations.erase(effect)
+		skill_immunity_timer = 0.3 # Give immunity when effect wears off
+
+	if stun_timer > 0:
+		stun_timer -= delta
+		if stun_timer <= 0:
+			skill_immunity_timer = 0.3 # Give immunity when stun wears off
 
 func _start_slide():
 	slide_timer = SLIDE_DURATION
@@ -1060,11 +1080,13 @@ func request_skill():
 		_prepare_skill()
 		return
 	if game_manager:
-		game_manager.request_skill(self, prepared_skill)
-		AudioManager.play_sfx("skill_use")  # Caster SFX
-		is_skill_ready = false
-		prepared_skill = ""
-		emit_signal("skill_state_changed", false, "")
+		var success = game_manager.request_skill(self, prepared_skill)
+		if success:
+			AudioManager.play_sfx("skill_use")  # Caster SFX
+			is_skill_ready = false
+			prepared_skill = ""
+			reset_charges()
+			emit_signal("skill_state_changed", false, "")
 
 
 func _show_shield_vfx():
@@ -1189,6 +1211,12 @@ func use_skill_at_slot(slot_index: int):
 				get_tree().create_timer(1.0).timeout.connect(clear_warning.bind(warn_msg))
 
 func apply_prank(skill_name):
+	if is_immune_to_skills():
+		return
+		
+	# Instantly grant immunity for instant skills (or start of duration)
+	skill_immunity_timer = 0.3
+	
 	# Silk protection blocks opponent skills entirely
 	if silk_protection_timer > 0.0:
 		var warn_msg = LanguageManager.t("WARN_PKM_DEFLECT")
@@ -1350,7 +1378,7 @@ func apply_prank(skill_name):
 					var inv_sprite = Sprite3D.new()
 					inv_sprite.texture = inv_tex
 					inv_sprite.billboard = BaseMaterial3D.BILLBOARD_FIXED_Y
-					inv_sprite.pixel_size = 0.03
+					inv_sprite.pixel_size = 0.015
 					inv_sprite.transparent = true
 					inv_sprite.position = Vector3(1.2, 0, 0) # Offset to orbit
 					pivot.add_child(inv_sprite)

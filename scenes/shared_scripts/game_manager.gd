@@ -515,6 +515,10 @@ func request_skill(attacker, skill_name = "") -> bool:
 	var target = p2 if attacker == p1 else p1
 	if !target: return false
 	
+	if target.has_method("is_immune_to_skills") and target.is_immune_to_skills():
+		# Optional: play a "blocked" SFX here if needed
+		return false
+	
 	var type = skill_name if skill_name != "" else _choose_skill()
 	
 	prank_id_counter += 1
