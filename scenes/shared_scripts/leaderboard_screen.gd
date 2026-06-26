@@ -68,7 +68,7 @@ static func save_data(data: Dictionary):
 	var file = FileAccess.open(SAVE_PATH, FileAccess.WRITE)
 	file.store_string(JSON.stringify(data))
 
-func show_result(winner_name: String, _p1_score: int, _p2_score: int, p1_distance: int, p2_distance: int):
+func show_result(winner_name: String, _p1_score: int, _p2_score: int, _p1_distance: int, _p2_distance: int):
 	var data = load_data()
 	
 	# Format Best Time
