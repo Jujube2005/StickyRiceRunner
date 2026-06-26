@@ -38,8 +38,8 @@ var can_charge := true
 var effect_durations := {}
 
 # --- ENDLESS MODE: ELEPHANT CHASE ---
-var elephant_gap := 30.0          # Distance (m) between player and elephant
-const ELEPHANT_START_GAP := 30.0
+var elephant_gap := 35.0          # Distance (m) between player and elephant
+const ELEPHANT_START_GAP := 35.0
 var obstacle_strikes: int = 0
 var safe_run_timer: float = 0.0
 
