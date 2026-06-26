@@ -1269,7 +1269,7 @@ func apply_prank(skill_name):
 			if model: model.visible = true
 		"Boon Bang Fai":
 			# บั้งไฟ — พุ่งจากฟ้าลงมาชน
-			var rocket_tex = load("res://assets/models/effects/Boon_Bung_Fai/Boon Bang Fa.png")
+			var rocket_tex = load("res://assets/models/effects/Boon_Bung_Fai/Boon Bang Fai.png")
 			if rocket_tex:
 				var rocket_sprite = Sprite3D.new()
 				rocket_sprite.texture = rocket_tex
@@ -1307,7 +1307,7 @@ func apply_prank(skill_name):
 			velocity.y = 5.0
 			
 			if old_lane != 0 and not has_node("PullVFX"):
-				var pull_tex = load("res://assets/models/effects/Pull_To_Center/Pull to Center 2.png")
+				var pull_tex = load("res://assets/models/effects/Pull_To_Center/Pull to Center.png")
 				if pull_tex:
 					var pull_sprite = Sprite3D.new()
 					pull_sprite.name = "PullVFX"
