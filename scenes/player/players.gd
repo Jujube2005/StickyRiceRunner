@@ -420,6 +420,8 @@ func _sync_model_to_body():
 		var target_y = model_offset.y + model_y_offset
 		if slide_timer > 0:
 			target_y -= 0.8
+		if is_riding_buffalo:
+			target_y += 0.8 # Lift player up to sit on buffalo
 		model_node.position.y = target_y
 		model_node.position.z = model_offset.z
 
@@ -869,8 +871,9 @@ func start_buffalo_ride() -> void:
 		var b_scene = load("res://assets/models/buffalo/buffalorun.glb")
 		if b_scene:
 			buffalo_model = b_scene.instantiate()
-			buffalo_model.rotation_degrees.y = 90 # Face sideways
-			$Model.add_child(buffalo_model)
+			buffalo_model.rotation_degrees.y = 180 # Face backwards relative to Z+ (forward in Godot is -Z)
+			buffalo_model.scale = Vector3(0.6, 0.6, 0.6) # Scale down if it's too big
+			add_child(buffalo_model) # Add to CharacterBody3D instead of Model to avoid mesh scaling issues
 			var anims = buffalo_model.find_children("*", "AnimationPlayer", true)
 			if anims.size() > 0:
 				var anim = anims[0]
