@@ -49,7 +49,7 @@ var buffalo_timer := 0.0
 const BUFFALO_DURATION := 9.0
 const BUFFALO_SPEED_BONUS := 8.0   # Extra forward speed while riding
 var buffalo_hit_absorb := true # Ignore ONE obstacle collision while riding
-var _buffalo_mesh : MeshInstance3D = null
+var buffalo_model: Node3D = null
 
 const SILK_PROTECTION_DURATION := 5.0
 var silk_protection_timer := 0.0  # > 0 means silk protection is active
@@ -865,6 +865,24 @@ func start_buffalo_ride() -> void:
 	buffalo_timer = BUFFALO_DURATION
 	buffalo_hit_absorb = true
 	
+	if buffalo_model == null:
+		var b_scene = load("res://assets/models/buffalo/buffalorun.glb")
+		if b_scene:
+			buffalo_model = b_scene.instantiate()
+			buffalo_model.rotation.y = PI # Face forward (often models face Z+)
+			$Model.add_child(buffalo_model)
+			var anims = buffalo_model.find_children("*", "AnimationPlayer", true)
+			if anims.size() > 0:
+				var anim = anims[0]
+				var list = anim.get_animation_list()
+				if list.size() > 0:
+					var a = anim.get_animation(list[0])
+					if a: a.loop_mode = Animation.LOOP_LINEAR
+					anim.play(list[0])
+	
+	if buffalo_model:
+		buffalo_model.visible = true
+	
 	# Elephant gains distance boost — give player breathing room
 	if game_manager and game_manager.has_method("on_buffalo_ride_started"):
 		game_manager.on_buffalo_ride_started(self)
@@ -881,12 +899,14 @@ func start_buffalo_ride() -> void:
 	
 	AudioManager.play_sfx("skill_use")  # Placeholder; replace with buffalo SFX
 
-
 func _end_buffalo_ride() -> void:
 	"""Deactivate Buffalo Ride — return to normal speed."""
 	is_riding_buffalo = false
 	buffalo_timer = 0.0
 	buffalo_hit_absorb = false
+	
+	if buffalo_model:
+		buffalo_model.visible = false
 	
 	var msg := "🐘 Elephant resumes!"
 	set_warning(msg)
@@ -950,6 +970,9 @@ func die() -> void:
 		safe_run_timer = 0.0
 		if game_manager and game_manager.has_method("on_player_crash"):
 			game_manager.on_player_crash(self)
+	
+	if is_riding_buffalo:
+		_end_buffalo_ride()
 	
 	add_penalty(100)
 	stun(1.5)
