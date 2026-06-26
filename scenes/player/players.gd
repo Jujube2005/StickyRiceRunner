@@ -52,7 +52,7 @@ const BUFFALO_SPEED_BONUS := 8.0   # Extra forward speed while riding
 var buffalo_hit_absorb := true # Ignore ONE obstacle collision while riding
 var buffalo_model: Node3D = null
 
-const SILK_PROTECTION_DURATION := 5.0
+const SILK_PROTECTION_DURATION := 3.0
 var silk_protection_timer := 0.0  # > 0 means silk protection is active
 
 var prepared_skill := ""
