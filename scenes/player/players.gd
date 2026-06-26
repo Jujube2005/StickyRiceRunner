@@ -1349,7 +1349,7 @@ func apply_prank(skill_name):
 					pull_sprite.name = "PullVFX"
 					pull_sprite.texture = pull_tex
 					pull_sprite.billboard = BaseMaterial3D.BILLBOARD_ENABLED
-					pull_sprite.pixel_size = 0.015
+					pull_sprite.pixel_size = 0.003
 					pull_sprite.transparent = true
 					
 					# Only show on victim's screen
@@ -1412,7 +1412,7 @@ func apply_prank(skill_name):
 					var inv_sprite = Sprite3D.new()
 					inv_sprite.texture = inv_tex
 					inv_sprite.billboard = BaseMaterial3D.BILLBOARD_FIXED_Y
-					inv_sprite.pixel_size = 0.015
+					inv_sprite.pixel_size = 0.003
 					inv_sprite.transparent = true
 					inv_sprite.position = Vector3(1.2, 0, 0) # Offset to orbit
 					pivot.add_child(inv_sprite)
