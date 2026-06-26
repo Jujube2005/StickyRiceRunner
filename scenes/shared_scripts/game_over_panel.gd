@@ -3,300 +3,266 @@ extends Control
 var player1_model_scene: PackedScene
 var player2_model_scene: PackedScene
 
-@onready var winner_label = $WinnerLabel
-@onready var final_score_label = $FinalScoreLabel
-@onready var distance_label = $DistanceLabel
-@onready var retry_button = $RetryButton
-
-var kratips_label: Label
-var skills_label: Label
+var tex_title_header = preload("res://assets/textures/UI/Buttons/title_header.png")
+var tex_gold_frame = preload("res://assets/textures/UI/Buttons/goldFrame.png")
+var tex_wood_sign = preload("res://assets/textures/UI/Buttons/wooden_sign.png")
+var tex_icon_trophy = preload("res://assets/textures/UI/Buttons/icon_smallTrophy.png")
+var tex_icon_run = preload("res://assets/textures/UI/Buttons/icon_run.png")
+var tex_btn_restart = preload("res://assets/textures/UI/Buttons/btn_restart.png")
+var tex_menu = preload("res://assets/textures/UI/Buttons/menu.png")
+var tex_p1 = preload("res://assets/textures/UI/Buttons/P1.png")
+var tex_p2 = preload("res://assets/textures/UI/Buttons/P2.png")
+var tex_p1_wins = preload("res://assets/textures/UI/Buttons/P1WINS.png")
+var tex_p2_wins = preload("res://assets/textures/UI/Buttons/P2WINS.png")
 
 var backdrop: ColorRect
-var result_card: PanelContainer
 var content_box: VBoxContainer
-var preview_frame: PanelContainer
-var preview_container: SubViewportContainer
-var preview_viewport: SubViewport
-var preview_root: Node3D
-var preview_pivot: Node3D
-var preview_camera: Camera3D
 var section_label: Label
-var preview_spin_tween: Tween
+var winner_banner: TextureRect
+var winner_text_rect: TextureRect
+
+# Race UI
+var race_container: TextureRect
+var race_p1_score: Label
+var race_p2_score: Label
+
+# Endless UI
+var endless_best_container: TextureRect
+var endless_best_label: Label
+var endless_run_container: TextureRect
+var endless_run_label: Label
+
+var retry_button: TextureButton
+var menu_button: TextureButton
 
 func _ready():
-	# Load models at runtime to avoid parser errors with preload
 	player1_model_scene = load("res://assets/models/player/girlTmodel.glb")
 	player2_model_scene = load("res://assets/models/player/manTmodel.glb")
 	
 	_build_layout()
 	hide()
-	retry_button.pressed.connect(_on_retry_pressed)
 
 func _build_layout():
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = Control.MOUSE_FILTER_STOP
-
-	for node in [winner_label, final_score_label, distance_label, retry_button]:
-		if node.get_parent():
-			node.get_parent().remove_child(node)
 
 	backdrop = ColorRect.new()
 	backdrop.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	backdrop.color = Color(0.03, 0.04, 0.08, 0.82)
 	add_child(backdrop)
 
-	result_card = PanelContainer.new()
-	result_card.set_anchors_preset(Control.PRESET_CENTER)
-	result_card.offset_left = -260
-	result_card.offset_top = -250
-	result_card.offset_right = 260
-	result_card.offset_bottom = 250
-	result_card.mouse_filter = Control.MOUSE_FILTER_STOP
-	var card_style = StyleBoxFlat.new()
-	card_style.bg_color = Color(0.08, 0.1, 0.16, 0.95)
-	card_style.border_width_left = 2
-	card_style.border_width_top = 2
-	card_style.border_width_right = 2
-	card_style.border_width_bottom = 2
-	card_style.border_color = Color(0.95, 0.8, 0.2, 0.65)
-	card_style.shadow_size = 20
-	card_style.shadow_color = Color(0, 0, 0, 0.35)
-	card_style.set_corner_radius_all(24)
-	card_style.set_content_margin_all(28)
-	result_card.add_theme_stylebox_override("panel", card_style)
-	add_child(result_card)
-
 	content_box = VBoxContainer.new()
-	content_box.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	content_box.add_theme_constant_override("separation", 14)
-	result_card.add_child(content_box)
+	content_box.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
+	content_box.position -= Vector2(300, 300)
+	content_box.custom_minimum_size = Vector2(600, 600)
+	content_box.alignment = BoxContainer.ALIGNMENT_CENTER
+	content_box.add_theme_constant_override("separation", 15)
+	add_child(content_box)
 
+	# 1. Header
+	var header = TextureRect.new()
+	header.texture = tex_title_header
+	header.stretch_mode = TextureRect.STRETCH_KEEP_CENTERED
+	content_box.add_child(header)
+	
 	section_label = Label.new()
-	section_label.text = LanguageManager.t("LBL_CHAMPION")
+	section_label.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	section_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	section_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	var section_settings = LabelSettings.new()
-	section_settings.font_size = 16
-	section_settings.font_color = Color(0.83, 0.87, 0.98, 0.9)
-	section_settings.outline_size = 2
-	section_settings.outline_color = Color(0, 0, 0, 0.25)
+	section_settings.font_size = 28
+	section_settings.font_color = Color.WHITE
+	section_settings.outline_size = 6
+	section_settings.outline_color = Color(0.3, 0.15, 0.0)
 	section_label.label_settings = section_settings
-	content_box.add_child(section_label)
+	header.add_child(section_label)
 
-	winner_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	content_box.add_child(winner_label)
-
-	preview_frame = PanelContainer.new()
-	preview_frame.custom_minimum_size = Vector2(0, 220)
-	var preview_style = StyleBoxFlat.new()
-	preview_style.bg_color = Color(0.11, 0.14, 0.22, 0.95)
-	preview_style.border_width_left = 1
-	preview_style.border_width_top = 1
-	preview_style.border_width_right = 1
-	preview_style.border_width_bottom = 1
-	preview_style.border_color = Color(1, 1, 1, 0.08)
-	preview_style.set_corner_radius_all(18)
-	preview_style.set_content_margin_all(12)
-	preview_frame.add_theme_stylebox_override("panel", preview_style)
-	content_box.add_child(preview_frame)
-
-	preview_container = SubViewportContainer.new()
-	preview_container.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	preview_container.stretch = true
-	preview_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	preview_frame.add_child(preview_container)
-
-	preview_viewport = SubViewport.new()
-	preview_viewport.disable_3d = false
-	preview_viewport.transparent_bg = true
-	preview_viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
-	preview_viewport.size = Vector2i(420, 320)
-	preview_container.add_child(preview_viewport)
-
-	preview_root = Node3D.new()
-	preview_viewport.add_child(preview_root)
-
-	var environment = WorldEnvironment.new()
-	var env = Environment.new()
-	env.background_mode = Environment.BG_COLOR
-	env.background_color = Color(0, 0, 0, 0)
-	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
-	env.ambient_light_color = Color(0.45, 0.5, 0.58)
-	env.ambient_light_energy = 0.65
-	environment.environment = env
-	preview_root.add_child(environment)
-
-	var key_light = DirectionalLight3D.new()
-	key_light.rotation_degrees = Vector3(-35, 35, 0)
-	key_light.light_energy = 1.15
-	preview_root.add_child(key_light)
-
-	var fill_light = OmniLight3D.new()
-	fill_light.position = Vector3(0, 1.5, 1.8)
-	fill_light.light_energy = 0.7
-	fill_light.omni_range = 8.0
-	preview_root.add_child(fill_light)
-
-	preview_camera = Camera3D.new()
-	preview_camera.position = Vector3(0, 1.2, 3.2)
-	preview_camera.current = true
-	preview_camera.fov = 33.0
-	preview_root.add_child(preview_camera)
-	preview_camera.look_at(Vector3(0, 1.0, 0), Vector3.UP)
-
-	preview_pivot = Node3D.new()
-	preview_pivot.position = Vector3(0, -0.2, 0)
-	preview_root.add_child(preview_pivot)
-
-	_configure_info_label(final_score_label, 24, Color(1, 1, 1))
-	_configure_info_label(distance_label, 18, Color(0.82, 0.87, 0.96))
+	# 2. Winner Banner
+	winner_banner = TextureRect.new()
+	winner_banner.texture = tex_gold_frame
+	winner_banner.stretch_mode = TextureRect.STRETCH_KEEP_CENTERED
+	content_box.add_child(winner_banner)
 	
-	kratips_label = Label.new()
-	_configure_info_label(kratips_label, 18, Color(0.82, 0.87, 0.96))
-	
-	skills_label = Label.new()
-	_configure_info_label(skills_label, 18, Color(0.82, 0.87, 0.96))
-	
-	content_box.add_child(final_score_label)
-	content_box.add_child(distance_label)
-	content_box.add_child(kratips_label)
-	content_box.add_child(skills_label)
+	winner_text_rect = TextureRect.new()
+	winner_text_rect.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
+	winner_text_rect.stretch_mode = TextureRect.STRETCH_KEEP_CENTERED
+	winner_banner.add_child(winner_text_rect)
 
-	retry_button.text = LanguageManager.t("BTN_PLAY_AGAIN")
-	retry_button.custom_minimum_size = Vector2(0, 54)
-	retry_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	var retry_style = StyleBoxFlat.new()
-	retry_style.bg_color = Color(0.97, 0.78, 0.2)
-	retry_style.set_corner_radius_all(14)
-	retry_style.set_content_margin_all(14)
-	var retry_hover = retry_style.duplicate()
-	retry_hover.bg_color = Color(1.0, 0.84, 0.32)
-	var retry_pressed = retry_style.duplicate()
-	retry_pressed.bg_color = Color(0.86, 0.67, 0.12)
-	retry_button.add_theme_stylebox_override("normal", retry_style)
-	retry_button.add_theme_stylebox_override("hover", retry_hover)
-	retry_button.add_theme_stylebox_override("pressed", retry_pressed)
-	retry_button.add_theme_color_override("font_color", Color(0.08, 0.08, 0.12))
-	retry_button.add_theme_font_size_override("font_size", 22)
-	content_box.add_child(retry_button)
+	# 3. Race Container
+	race_container = TextureRect.new()
+	race_container.texture = tex_wood_sign
+	race_container.stretch_mode = TextureRect.STRETCH_KEEP_CENTERED
+	content_box.add_child(race_container)
+	
+	var race_vbox = VBoxContainer.new()
+	race_vbox.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	race_vbox.alignment = BoxContainer.ALIGNMENT_CENTER
+	race_container.add_child(race_vbox)
+	
+	var score_title = Label.new()
+	score_title.text = "SCORE"
+	score_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	var st_settings = LabelSettings.new()
+	st_settings.font_size = 24
+	st_settings.outline_size = 4
+	st_settings.outline_color = Color.BLACK
+	score_title.label_settings = st_settings
+	race_vbox.add_child(score_title)
+	
+	var race_hbox = HBoxContainer.new()
+	race_hbox.alignment = BoxContainer.ALIGNMENT_CENTER
+	race_hbox.add_theme_constant_override("separation", 40)
+	race_vbox.add_child(race_hbox)
+	
+	var p1_box = HBoxContainer.new()
+	var p1_icon = TextureRect.new()
+	p1_icon.texture = tex_p1
+	p1_icon.stretch_mode = TextureRect.STRETCH_KEEP_CENTERED
+	p1_box.add_child(p1_icon)
+	race_p1_score = Label.new()
+	race_p1_score.label_settings = st_settings
+	p1_box.add_child(race_p1_score)
+	race_hbox.add_child(p1_box)
+	
+	var p2_box = HBoxContainer.new()
+	race_p2_score = Label.new()
+	race_p2_score.label_settings = st_settings
+	p2_box.add_child(race_p2_score)
+	var p2_icon = TextureRect.new()
+	p2_icon.texture = tex_p2
+	p2_icon.stretch_mode = TextureRect.STRETCH_KEEP_CENTERED
+	p2_box.add_child(p2_icon)
+	race_hbox.add_child(p2_box)
 
-	# ── Hover scale animation for Retry Button ─────────────────
-	get_tree().process_frame.connect(func(): retry_button.pivot_offset = retry_button.size / 2.0, CONNECT_ONE_SHOT)
-	retry_button.mouse_entered.connect(func():
+	# 4. Endless Containers
+	endless_best_container = TextureRect.new()
+	endless_best_container.texture = tex_wood_sign
+	endless_best_container.stretch_mode = TextureRect.STRETCH_KEEP_CENTERED
+	content_box.add_child(endless_best_container)
+	
+	var eb_vbox = VBoxContainer.new()
+	eb_vbox.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	eb_vbox.alignment = BoxContainer.ALIGNMENT_CENTER
+	endless_best_container.add_child(eb_vbox)
+	
+	var eb_title_box = HBoxContainer.new()
+	eb_title_box.alignment = BoxContainer.ALIGNMENT_CENTER
+	var eb_icon = TextureRect.new()
+	eb_icon.texture = tex_icon_trophy
+	eb_icon.stretch_mode = TextureRect.STRETCH_KEEP_CENTERED
+	eb_title_box.add_child(eb_icon)
+	var eb_title = Label.new()
+	eb_title.text = "Best Distance"
+	eb_title.label_settings = st_settings
+	eb_title_box.add_child(eb_title)
+	eb_vbox.add_child(eb_title_box)
+	
+	endless_best_label = Label.new()
+	endless_best_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	var val_settings = LabelSettings.new()
+	val_settings.font_size = 28
+	val_settings.outline_size = 4
+	val_settings.outline_color = Color.BLACK
+	endless_best_label.label_settings = val_settings
+	eb_vbox.add_child(endless_best_label)
+	
+	endless_run_container = TextureRect.new()
+	endless_run_container.texture = tex_wood_sign
+	endless_run_container.stretch_mode = TextureRect.STRETCH_KEEP_CENTERED
+	content_box.add_child(endless_run_container)
+	
+	var er_vbox = VBoxContainer.new()
+	er_vbox.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	er_vbox.alignment = BoxContainer.ALIGNMENT_CENTER
+	endless_run_container.add_child(er_vbox)
+	
+	var er_title_box = HBoxContainer.new()
+	er_title_box.alignment = BoxContainer.ALIGNMENT_CENTER
+	var er_icon = TextureRect.new()
+	er_icon.texture = tex_icon_run
+	er_icon.stretch_mode = TextureRect.STRETCH_KEEP_CENTERED
+	er_title_box.add_child(er_icon)
+	var er_title = Label.new()
+	er_title.text = "This Run"
+	er_title.label_settings = st_settings
+	er_title_box.add_child(er_title)
+	er_vbox.add_child(er_title_box)
+	
+	endless_run_label = Label.new()
+	endless_run_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	endless_run_label.label_settings = val_settings
+	er_vbox.add_child(endless_run_label)
+
+	# 5. Buttons
+	var btn_box = HBoxContainer.new()
+	btn_box.alignment = BoxContainer.ALIGNMENT_CENTER
+	btn_box.add_theme_constant_override("separation", 20)
+	content_box.add_child(btn_box)
+	
+	retry_button = TextureButton.new()
+	retry_button.texture_normal = tex_btn_restart
+	retry_button.pressed.connect(_on_retry_pressed)
+	btn_box.add_child(retry_button)
+	
+	menu_button = TextureButton.new()
+	menu_button.texture_normal = tex_menu
+	menu_button.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/ui/main_menu.tscn"))
+	btn_box.add_child(menu_button)
+	
+	_add_hover_anim(retry_button)
+	_add_hover_anim(menu_button)
+
+func _add_hover_anim(btn: Control):
+	btn.mouse_entered.connect(func():
 		var tw = create_tween()
-		tw.tween_property(retry_button, "scale", Vector2(1.08, 1.08), 0.15).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+		btn.pivot_offset = btn.size / 2.0
+		tw.tween_property(btn, "scale", Vector2(1.1, 1.1), 0.1).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	)
-	retry_button.mouse_exited.connect(func():
+	btn.mouse_exited.connect(func():
 		var tw = create_tween()
-		tw.tween_property(retry_button, "scale", Vector2(1.0, 1.0), 0.15).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+		btn.pivot_offset = btn.size / 2.0
+		tw.tween_property(btn, "scale", Vector2(1.0, 1.0), 0.1).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	)
-
-func _configure_info_label(label: Label, font_size: int, color: Color):
-	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	var info_settings = LabelSettings.new()
-	info_settings.font_size = font_size
-	info_settings.font_color = color
-	info_settings.outline_size = 4
-	info_settings.outline_color = Color(0, 0, 0, 0.5)
-	label.label_settings = info_settings
 
 func show_result(winner_name: String, p1_score: int, p2_score: int, p1_distance: int, p2_distance: int, p1_kratips: int = 0, p2_kratips: int = 0, p1_skills: int = 0, p2_skills: int = 0):
 	var winner_id = "draw"
-	var title_text = "DRAW!"
-	var title_color = Color(0.86, 0.91, 1.0)
+	if winner_name == "Player 1": winner_id = "p1"
+	elif winner_name == "Player 2": winner_id = "p2"
 
-	if winner_name == "Player 1":
-		winner_id = "p1"
-		title_text = LanguageManager.t("LBL_P1_WINS")
-		title_color = Color(0.98, 0.83, 0.2)
-	elif winner_name == "Player 2":
-		winner_id = "p2"
-		title_text = LanguageManager.t("LBL_P2_WINS")
-		title_color = Color(0.98, 0.83, 0.2)
-
-	var title_text_draw = LanguageManager.t("LBL_DRAW")
-	if winner_id == "draw":
-		title_text = title_text_draw
-
-	section_label.text = LanguageManager.t("LBL_CHAMPION") if winner_id != "draw" else LanguageManager.t("LBL_FINAL_RESULT")
-	var title_settings = LabelSettings.new()
-	title_settings.font_size = 42
-	title_settings.font_color = title_color
-	title_settings.outline_size = 8
-	title_settings.outline_color = Color.BLACK
-	winner_label.label_settings = title_settings
-	winner_label.text = title_text
+	if winner_id == "p1":
+		winner_text_rect.texture = tex_p1_wins
+		winner_banner.visible = true
+	elif winner_id == "p2":
+		winner_text_rect.texture = tex_p2_wins
+		winner_banner.visible = true
+	else:
+		winner_banner.visible = false
 
 	if GameConfig.race_mode == "endless":
-		section_label.text = LanguageManager.t("LBL_ENDLESS_SURVIVAL")
-		winner_label.visible = false
+		section_label.text = "Endless Result"
+		race_container.visible = false
+		endless_best_container.visible = true
+		endless_run_container.visible = true
 		
-		final_score_label.visible = true
-		final_score_label.text = "🏆 Best Distance: %d m  |  Best Score: %d" % [int(GameConfig.best_distance), GameConfig.best_score]
-		final_score_label.label_settings.font_size = 22
-		final_score_label.label_settings.font_color = Color(1.0, 0.9, 0.4)
-		
-		distance_label.visible = true
-		distance_label.text = "🏃‍♂️ This Run: %d m" % [max(p1_distance, p2_distance)]
-		
-		kratips_label.visible = true
-		kratips_label.text = "📦 Kratips Collected: %d" % [max(p1_kratips, p2_kratips)]
-		
-		skills_label.visible = false
+		endless_best_label.text = str(int(GameConfig.best_distance)) + " m"
+		endless_run_label.text = str(max(p1_distance, p2_distance)) + " m"
 	else:
-		section_label.text = LanguageManager.t("LBL_CHAMPION")
-		winner_label.visible = true
+		section_label.text = "Race Result"
+		race_container.visible = true
+		endless_best_container.visible = false
+		endless_run_container.visible = false
 		
-		final_score_label.visible = true
-		final_score_label.text = "⭐ Score:  P1 ( %d )  -  P2 ( %d )" % [p1_score, p2_score]
-		final_score_label.label_settings.font_size = 22
-		final_score_label.label_settings.font_color = Color(0.9, 0.9, 1.0)
-		
-		distance_label.visible = false
-		kratips_label.visible = false
-		skills_label.visible = false
-		
-	_show_winner_model(winner_id)
+		race_p1_score.text = str(p1_score)
+		race_p2_score.text = str(p2_score)
 
 	self.modulate.a = 0
-	self.scale = Vector2(0.94, 0.94)
+	self.scale = Vector2(0.9, 0.9)
+	self.pivot_offset = size / 2.0
 	show()
 
 	var tween = create_tween().set_parallel(true)
-	tween.tween_property(self, "modulate:a", 1.0, 0.5)
-	tween.tween_property(self, "scale", Vector2(1.0, 1.0), 0.45).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-
-	if winner_id != "draw":
-		var tw = create_tween()
-		tw.tween_interval(0.5)
-		tw.tween_callback(func():
-			var scene = get_tree().current_scene
-			if scene:
-				var winner_player = scene.find_child("Player1" if winner_id == "p1" else "Player2", true, false)
-				if winner_player:
-					VfxManager.spawn("confetti", winner_player.global_position)
-		)
-
-func _show_winner_model(winner_id: String):
-	for child in preview_pivot.get_children():
-		child.queue_free()
-
-	if winner_id == "draw":
-		preview_frame.visible = false
-		return
-
-	preview_frame.visible = true
-	preview_pivot.rotation.y = PI
-	if preview_spin_tween:
-		preview_spin_tween.kill()
-
-	var model_scene: PackedScene = player1_model_scene if winner_id == "p1" else player2_model_scene
-	if model_scene:
-		var model = model_scene.instantiate()
-		preview_pivot.add_child(model)
-		preview_spin_tween = create_tween()
-		preview_spin_tween.tween_property(preview_pivot, "rotation:y", 0.0, 0.7).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
-	else:
-		push_error("Could not load winner model for: " + winner_id)
+	tween.tween_property(self, "modulate:a", 1.0, 0.4)
+	tween.tween_property(self, "scale", Vector2(1.0, 1.0), 0.4).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 
 func _on_retry_pressed():
 	get_tree().reload_current_scene()
