@@ -578,6 +578,13 @@ func _physics_process(delta):
 		pull_vfx.rotation.z += 8.0 * delta
 		if abs(position.x) < 0.1:
 			pull_vfx.queue_free()
+			
+	var invert_vfx = get_node_or_null("InvertVFX")
+	if invert_vfx:
+		if _has_effect("invert_controls"):
+			invert_vfx.rotation.y -= 4.0 * delta # Orbit around head!
+		else:
+			invert_vfx.queue_free()
 
 	# Animation handling for normal state
 	if is_on_floor():
@@ -1331,6 +1338,22 @@ func apply_prank(skill_name):
 			effect_durations["invert_controls"] = 4.5
 			AudioManager.play_sfx("skill_use")
 			emit_signal("prank_flash", Color(1.0, 0.9, 0.0, 0.25))  # 🟡 เหลือง
+			
+			if not has_node("InvertVFX"):
+				var pivot = Node3D.new()
+				pivot.name = "InvertVFX"
+				pivot.position = Vector3(0, 3.5, 0)
+				add_child(pivot)
+				
+				var inv_tex = load("res://assets/models/effects/Invert_Controls/InvertControls.png")
+				if inv_tex:
+					var inv_sprite = Sprite3D.new()
+					inv_sprite.texture = inv_tex
+					inv_sprite.billboard = BaseMaterial3D.BILLBOARD_FIXED_Y
+					inv_sprite.pixel_size = 0.03
+					inv_sprite.transparent = true
+					inv_sprite.position = Vector3(1.2, 0, 0) # Offset to orbit
+					pivot.add_child(inv_sprite)
 		"Field Wind", "Wind Push":
 			# ลมทุ่ง — ตัวสั่นแรง
 			effect_durations["wind_push"] = 4.0
