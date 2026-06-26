@@ -59,7 +59,7 @@ var is_skill_ready := false
 var is_rolling_skill := false
 var skills: Array[String] = []
 
-var shield_vfx : MeshInstance3D = null
+var shield_vfx : Node3D = null
 var trail_vfx : CPUParticles3D = null          # Gold energy trail (silk protection)
 var dust_trail_vfx : CPUParticles3D = null     # Dirt dust while running on ground
 var speed_trail_vfx : CPUParticles3D = null    # Speed streak at high velocity
@@ -292,19 +292,18 @@ func _auto_fix_model_y_offset():
 
 
 func _setup_shield_vfx():
-	shield_vfx = MeshInstance3D.new()
-	var sphere = SphereMesh.new()
-	sphere.radius = 1.5
-	sphere.height = 3.0
-	shield_vfx.mesh = sphere
-	
-	var mat = StandardMaterial3D.new()
-	mat.transparency = StandardMaterial3D.TRANSPARENCY_ALPHA
-	mat.albedo_color = Color(1.0, 0.8, 0.2, 0.1) # Golden translucent (fainter)
-	mat.emission_enabled = true
-	mat.emission = Color(1.0, 0.6, 0.0)
-	mat.emission_energy_multiplier = 1.0
-	shield_vfx.material_override = mat
+	shield_vfx = Node3D.new()
+	var tex = preload("res://assets/models/effects/shield/shield.png")
+	if tex:
+		for i in range(3):
+			var sprite = Sprite3D.new()
+			sprite.texture = tex
+			sprite.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+			sprite.pixel_size = 0.008
+			sprite.transparent = true
+			var angle = i * (PI * 2.0 / 3.0)
+			sprite.position = Vector3(cos(angle) * 1.5, 1.2, sin(angle) * 1.5)
+			shield_vfx.add_child(sprite)
 	
 	add_child(shield_vfx)
 	shield_vfx.visible = false
@@ -488,12 +487,10 @@ func _physics_process(delta):
 			if shield_vfx and shield_vfx.visible:
 				# Use fade-out logic similar to try_defend's shield
 				var fade_tween = create_tween()
-				fade_tween.tween_property(shield_vfx, "scale", Vector3(1.5, 1.5, 1.5), 0.2)
-				fade_tween.parallel().tween_property(shield_vfx, "material_override:albedo_color:a", 0.0, 0.2)
+				fade_tween.tween_property(shield_vfx, "scale", Vector3.ZERO, 0.2)
 				fade_tween.tween_callback(func(): 
 					shield_vfx.visible = false
 					shield_vfx.scale = Vector3.ONE
-					shield_vfx.material_override.albedo_color.a = 0.3
 				)
 			
 			if spawn_shield_vfx and spawn_shield_vfx.visible:
@@ -570,6 +567,9 @@ func _physics_process(delta):
 		slide_timer -= delta
 		if slide_timer <= 0:
 			_end_slide()
+
+	if shield_vfx and shield_vfx.visible:
+		shield_vfx.rotation.y += 3.0 * delta
 
 	# Animation handling for normal state
 	if is_on_floor():
@@ -845,15 +845,17 @@ func _spawn_collect_sparkle():
 		emit_signal("kratip_count_changed", 0, 10)
 		AudioManager.play_sfx("pickup")
 		
+		# Always grant shield protection on 10 kratips
+		grant_silk_protection()
+		
 		if GameConfig.race_mode == "endless":
 			# ENDLESS MODE: Ride a Buffalo!
 			start_buffalo_ride()
 		else:
-			# RACE MODE: Grant Pha Khao Ma shield
+			# RACE MODE: Show UI
 			var hud = get_tree().current_scene.find_child("GameplayHUD", true, false)
 			if hud and hud.has_method("show_shield_unlock"):
 				hud.show_shield_unlock(self.name)
-			grant_silk_protection()
 
 func start_buffalo_ride() -> void:
 	"""Activate Buffalo Ride: speed boost + elephant gap recovery + one obstacle hit absorb."""
@@ -1066,17 +1068,15 @@ func _show_shield_vfx():
 	pulse_tween.tween_property(shield_vfx, "scale", Vector3(1.05, 1.05, 1.05), 0.2)
 	pulse_tween.tween_property(shield_vfx, "scale", Vector3(1.0, 1.0, 1.0), 0.2)
 	
-	# Fade out after some time (matching block duration if implemented, else fixed)
-	await get_tree().create_timer(2.0).timeout
+	# Fade out after some time
+	await get_tree().create_timer(SILK_PROTECTION_DURATION - 0.2).timeout
 	
 	pulse_tween.kill()
 	var fade_tween = create_tween()
-	fade_tween.tween_property(shield_vfx, "scale", Vector3(1.5, 1.5, 1.5), 0.2)
-	fade_tween.parallel().tween_property(shield_vfx, "material_override:albedo_color:a", 0.0, 0.2)
+	fade_tween.tween_property(shield_vfx, "scale", Vector3.ZERO, 0.2)
 	fade_tween.tween_callback(func(): 
 		shield_vfx.visible = false
 		shield_vfx.scale = Vector3.ONE
-		shield_vfx.material_override.albedo_color.a = 0.1
 	)
 
 func _show_spawn_shield_vfx():
