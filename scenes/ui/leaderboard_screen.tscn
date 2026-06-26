@@ -42,7 +42,7 @@ grow_vertical = 2
 
 [node name="MainVBox" type="VBoxContainer" parent="CenterContainer"]
 layout_mode = 2
-theme_override_constants/separation = 15
+theme_override_constants/separation = 20
 
 [node name="ResultContainer" type="MarginContainer" parent="CenterContainer/MainVBox"]
 layout_mode = 2
@@ -55,6 +55,7 @@ theme_override_constants/separation = 15
 [node name="HeaderTex" type="TextureRect" parent="CenterContainer/MainVBox/ResultContainer/RaceUI"]
 custom_minimum_size = Vector2(450, 100)
 layout_mode = 2
+size_flags_horizontal = 4
 texture = ExtResource("2_board_bg")
 expand_mode = 1
 stretch_mode = 5
@@ -62,15 +63,9 @@ stretch_mode = 5
 [node name="RaceHeaderLabel" type="Label" parent="CenterContainer/MainVBox/ResultContainer/RaceUI/HeaderTex"]
 unique_name_in_owner = true
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -118.0
-offset_top = -33.5
-offset_right = 118.0
-offset_bottom = 33.5
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_outline_color = Color(0.2, 0.1, 0.05, 1)
@@ -79,65 +74,95 @@ theme_override_fonts/font = ExtResource("5_font")
 theme_override_font_sizes/font_size = 42
 text = "Race Result"
 horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="RaceWinnerContainer" type="TextureRect" parent="CenterContainer/MainVBox/ResultContainer/RaceUI"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(600, 150)
 layout_mode = 2
+size_flags_horizontal = 4
 texture = ExtResource("6_gold_frame")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="RaceAvatar" type="TextureRect" parent="CenterContainer/MainVBox/ResultContainer/RaceUI/RaceWinnerContainer"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(150, 150)
-layout_mode = 0
-offset_left = 135.0
-offset_top = -25.0
-offset_right = 285.0
-offset_bottom = 125.0
-texture = ExtResource("8_p1_avatar")
-expand_mode = 1
-stretch_mode = 5
+[node name="Control" type="Control" parent="CenterContainer/MainVBox/ResultContainer/RaceUI/RaceWinnerContainer"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
-[node name="Trophy" type="TextureRect" parent="CenterContainer/MainVBox/ResultContainer/RaceUI/RaceWinnerContainer"]
-custom_minimum_size = Vector2(140, 140)
-layout_mode = 0
-offset_left = 22.0
-offset_top = -15.0
-offset_right = 162.0
-offset_bottom = 125.0
+[node name="Trophy" type="TextureRect" parent="CenterContainer/MainVBox/ResultContainer/RaceUI/RaceWinnerContainer/Control"]
+custom_minimum_size = Vector2(160, 160)
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = -30.0
+offset_top = -80.0
+offset_right = 130.0
+offset_bottom = 80.0
+grow_vertical = 2
 texture = ExtResource("12_icon_trophy")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="RaceWinnerTag" type="TextureRect" parent="CenterContainer/MainVBox/ResultContainer/RaceUI/RaceWinnerContainer"]
+[node name="RaceAvatar" type="TextureRect" parent="CenterContainer/MainVBox/ResultContainer/RaceUI/RaceWinnerContainer/Control"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(180, 180)
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 60.0
+offset_top = -90.0
+offset_right = 240.0
+offset_bottom = 90.0
+grow_vertical = 2
+texture = ExtResource("8_p1_avatar")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="RaceWinnerTag" type="TextureRect" parent="CenterContainer/MainVBox/ResultContainer/RaceUI/RaceWinnerContainer/Control"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(300, 80)
-layout_mode = 0
-offset_left = 278.0
-offset_top = 22.0
-offset_right = 578.0
-offset_bottom = 102.0
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -330.0
+offset_top = -40.0
+offset_right = -30.0
+offset_bottom = 40.0
+grow_horizontal = 0
+grow_vertical = 2
 texture = ExtResource("7_p1_wins")
 expand_mode = 1
 stretch_mode = 5
 
 [node name="RaceScorePanel" type="TextureRect" parent="CenterContainer/MainVBox/ResultContainer/RaceUI"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(500, 150)
+custom_minimum_size = Vector2(550, 160)
 layout_mode = 2
+size_flags_horizontal = 4
 texture = ExtResource("3_paper")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="ScoreTitle" type="Label" parent="CenterContainer/MainVBox/ResultContainer/RaceUI/RaceScorePanel"]
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/MainVBox/ResultContainer/RaceUI/RaceScorePanel"]
 layout_mode = 1
-anchors_preset = 10
+anchors_preset = 15
 anchor_right = 1.0
-offset_top = 15.0
-offset_bottom = 73.0
+anchor_bottom = 1.0
 grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="ScoreTitle" type="Label" parent="CenterContainer/MainVBox/ResultContainer/RaceUI/RaceScorePanel/VBoxContainer"]
+layout_mode = 2
 theme_override_colors/font_outline_color = Color(0.2, 0.1, 0.05, 1)
 theme_override_constants/outline_size = 6
 theme_override_fonts/font = ExtResource("5_font")
@@ -145,56 +170,47 @@ theme_override_font_sizes/font_size = 36
 text = "SCORE"
 horizontal_alignment = 1
 
-[node name="ScoreHBox" type="HBoxContainer" parent="CenterContainer/MainVBox/ResultContainer/RaceUI/RaceScorePanel"]
-layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -250.0
-offset_top = -100.0
-offset_right = 250.0
-offset_bottom = -20.0
-grow_horizontal = 2
-grow_vertical = 0
-theme_override_constants/separation = 30
+[node name="ScoreHBox" type="HBoxContainer" parent="CenterContainer/MainVBox/ResultContainer/RaceUI/RaceScorePanel/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 25
 alignment = 1
 
-[node name="P1Icon" type="TextureRect" parent="CenterContainer/MainVBox/ResultContainer/RaceUI/RaceScorePanel/ScoreHBox"]
-custom_minimum_size = Vector2(80, 80)
+[node name="P1Icon" type="TextureRect" parent="CenterContainer/MainVBox/ResultContainer/RaceUI/RaceScorePanel/VBoxContainer/ScoreHBox"]
+custom_minimum_size = Vector2(70, 70)
 layout_mode = 2
+size_flags_vertical = 4
 texture = ExtResource("14_icon_2nd")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="ValP1Wins" type="Label" parent="CenterContainer/MainVBox/ResultContainer/RaceUI/RaceScorePanel/ScoreHBox"]
+[node name="ValP1Wins" type="Label" parent="CenterContainer/MainVBox/ResultContainer/RaceUI/RaceScorePanel/VBoxContainer/ScoreHBox"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_outline_color = Color(0.2, 0.1, 0.05, 1)
 theme_override_constants/outline_size = 6
 theme_override_fonts/font = ExtResource("5_font")
-theme_override_font_sizes/font_size = 36
+theme_override_font_sizes/font_size = 42
 text = "0"
 horizontal_alignment = 1
 
-[node name="Space" type="Control" parent="CenterContainer/MainVBox/ResultContainer/RaceUI/RaceScorePanel/ScoreHBox"]
-custom_minimum_size = Vector2(60, 0)
+[node name="Space" type="Control" parent="CenterContainer/MainVBox/ResultContainer/RaceUI/RaceScorePanel/VBoxContainer/ScoreHBox"]
+custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
 
-[node name="ValP2Wins" type="Label" parent="CenterContainer/MainVBox/ResultContainer/RaceUI/RaceScorePanel/ScoreHBox"]
+[node name="ValP2Wins" type="Label" parent="CenterContainer/MainVBox/ResultContainer/RaceUI/RaceScorePanel/VBoxContainer/ScoreHBox"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_outline_color = Color(0.2, 0.1, 0.05, 1)
 theme_override_constants/outline_size = 6
 theme_override_fonts/font = ExtResource("5_font")
-theme_override_font_sizes/font_size = 36
+theme_override_font_sizes/font_size = 42
 text = "0"
 horizontal_alignment = 1
 
-[node name="P2Icon" type="TextureRect" parent="CenterContainer/MainVBox/ResultContainer/RaceUI/RaceScorePanel/ScoreHBox"]
-custom_minimum_size = Vector2(80, 80)
+[node name="P2Icon" type="TextureRect" parent="CenterContainer/MainVBox/ResultContainer/RaceUI/RaceScorePanel/VBoxContainer/ScoreHBox"]
+custom_minimum_size = Vector2(70, 70)
 layout_mode = 2
+size_flags_vertical = 4
 texture = ExtResource("15_icon_3rd")
 expand_mode = 1
 stretch_mode = 5
@@ -209,6 +225,7 @@ theme_override_constants/separation = 15
 [node name="HeaderTex" type="TextureRect" parent="CenterContainer/MainVBox/ResultContainer/EndlessUI"]
 custom_minimum_size = Vector2(450, 100)
 layout_mode = 2
+size_flags_horizontal = 4
 texture = ExtResource("2_board_bg")
 expand_mode = 1
 stretch_mode = 5
@@ -216,15 +233,9 @@ stretch_mode = 5
 [node name="EndlessHeaderLabel" type="Label" parent="CenterContainer/MainVBox/ResultContainer/EndlessUI/HeaderTex"]
 unique_name_in_owner = true
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -118.0
-offset_top = -33.5
-offset_right = 118.0
-offset_bottom = 33.5
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_outline_color = Color(0.2, 0.1, 0.05, 1)
@@ -233,74 +244,114 @@ theme_override_fonts/font = ExtResource("5_font")
 theme_override_font_sizes/font_size = 42
 text = "Endless Result"
 horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="EndlessWinnerContainer" type="TextureRect" parent="CenterContainer/MainVBox/ResultContainer/EndlessUI"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(600, 150)
 layout_mode = 2
+size_flags_horizontal = 4
 texture = ExtResource("6_gold_frame")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="EndlessAvatar" type="TextureRect" parent="CenterContainer/MainVBox/ResultContainer/EndlessUI/EndlessWinnerContainer"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(150, 150)
-layout_mode = 0
-offset_left = 135.0
-offset_top = -25.0
-offset_right = 285.0
-offset_bottom = 125.0
-texture = ExtResource("8_p1_avatar")
-expand_mode = 1
-stretch_mode = 5
+[node name="Control" type="Control" parent="CenterContainer/MainVBox/ResultContainer/EndlessUI/EndlessWinnerContainer"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
-[node name="Trophy" type="TextureRect" parent="CenterContainer/MainVBox/ResultContainer/EndlessUI/EndlessWinnerContainer"]
-custom_minimum_size = Vector2(140, 140)
-layout_mode = 0
-offset_left = 22.0
-offset_top = -15.0
-offset_right = 162.0
-offset_bottom = 125.0
+[node name="Trophy" type="TextureRect" parent="CenterContainer/MainVBox/ResultContainer/EndlessUI/EndlessWinnerContainer/Control"]
+custom_minimum_size = Vector2(160, 160)
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = -30.0
+offset_top = -80.0
+offset_right = 130.0
+offset_bottom = 80.0
+grow_vertical = 2
 texture = ExtResource("12_icon_trophy")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="EndlessWinnerTag" type="TextureRect" parent="CenterContainer/MainVBox/ResultContainer/EndlessUI/EndlessWinnerContainer"]
+[node name="EndlessAvatar" type="TextureRect" parent="CenterContainer/MainVBox/ResultContainer/EndlessUI/EndlessWinnerContainer/Control"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(180, 180)
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 60.0
+offset_top = -90.0
+offset_right = 240.0
+offset_bottom = 90.0
+grow_vertical = 2
+texture = ExtResource("8_p1_avatar")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="EndlessWinnerTag" type="TextureRect" parent="CenterContainer/MainVBox/ResultContainer/EndlessUI/EndlessWinnerContainer/Control"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(300, 80)
-layout_mode = 0
-offset_left = 278.0
-offset_top = 22.0
-offset_right = 578.0
-offset_bottom = 102.0
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -330.0
+offset_top = -40.0
+offset_right = -30.0
+offset_bottom = 40.0
+grow_horizontal = 0
+grow_vertical = 2
 texture = ExtResource("7_p1_wins")
 expand_mode = 1
 stretch_mode = 5
 
 [node name="DistCard" type="TextureRect" parent="CenterContainer/MainVBox/ResultContainer/EndlessUI"]
-custom_minimum_size = Vector2(500, 120)
+custom_minimum_size = Vector2(500, 140)
 layout_mode = 2
+size_flags_horizontal = 4
 texture = ExtResource("3_paper")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Icon" type="TextureRect" parent="CenterContainer/MainVBox/ResultContainer/EndlessUI/DistCard"]
-custom_minimum_size = Vector2(80, 80)
-layout_mode = 0
-offset_left = 60.0
-offset_top = 20.0
-offset_right = 140.0
-offset_bottom = 100.0
+[node name="MarginContainer" type="MarginContainer" parent="CenterContainer/MainVBox/ResultContainer/EndlessUI/DistCard"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/MainVBox/ResultContainer/EndlessUI/DistCard/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Icon" type="TextureRect" parent="CenterContainer/MainVBox/ResultContainer/EndlessUI/DistCard/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(90, 90)
+layout_mode = 2
+size_flags_vertical = 4
 texture = ExtResource("12_icon_trophy")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Title" type="Label" parent="CenterContainer/MainVBox/ResultContainer/EndlessUI/DistCard"]
-layout_mode = 0
-offset_left = 180.0
-offset_top = 20.0
-offset_right = 530.0
-offset_bottom = 71.0
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/MainVBox/ResultContainer/EndlessUI/DistCard/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="Title" type="Label" parent="CenterContainer/MainVBox/ResultContainer/EndlessUI/DistCard/MarginContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
 theme_override_colors/font_outline_color = Color(0.2, 0.1, 0.05, 1)
 theme_override_constants/outline_size = 6
 theme_override_fonts/font = ExtResource("5_font")
@@ -308,44 +359,55 @@ theme_override_font_sizes/font_size = 32
 text = "Best Distance"
 horizontal_alignment = 2
 
-[node name="ValDistBest" type="Label" parent="CenterContainer/MainVBox/ResultContainer/EndlessUI/DistCard"]
+[node name="ValDistBest" type="Label" parent="CenterContainer/MainVBox/ResultContainer/EndlessUI/DistCard/MarginContainer/HBoxContainer/VBoxContainer"]
 unique_name_in_owner = true
-layout_mode = 0
-offset_left = 180.0
-offset_top = 65.0
-offset_right = 530.0
-offset_bottom = 122.0
+layout_mode = 2
 theme_override_colors/font_outline_color = Color(0.2, 0.1, 0.05, 1)
 theme_override_constants/outline_size = 6
 theme_override_fonts/font = ExtResource("5_font")
-theme_override_font_sizes/font_size = 36
+theme_override_font_sizes/font_size = 38
 text = "1,230 m"
 horizontal_alignment = 2
 
 [node name="RunCard" type="TextureRect" parent="CenterContainer/MainVBox/ResultContainer/EndlessUI"]
-custom_minimum_size = Vector2(500, 120)
+custom_minimum_size = Vector2(500, 140)
 layout_mode = 2
+size_flags_horizontal = 4
 texture = ExtResource("3_paper")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Icon" type="TextureRect" parent="CenterContainer/MainVBox/ResultContainer/EndlessUI/RunCard"]
-custom_minimum_size = Vector2(80, 80)
-layout_mode = 0
-offset_left = 60.0
-offset_top = 20.0
-offset_right = 140.0
-offset_bottom = 100.0
+[node name="MarginContainer" type="MarginContainer" parent="CenterContainer/MainVBox/ResultContainer/EndlessUI/RunCard"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/MainVBox/ResultContainer/EndlessUI/RunCard/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Icon" type="TextureRect" parent="CenterContainer/MainVBox/ResultContainer/EndlessUI/RunCard/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(90, 90)
+layout_mode = 2
+size_flags_vertical = 4
 texture = ExtResource("13_icon_run")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Title" type="Label" parent="CenterContainer/MainVBox/ResultContainer/EndlessUI/RunCard"]
-layout_mode = 0
-offset_left = 180.0
-offset_top = 20.0
-offset_right = 530.0
-offset_bottom = 71.0
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/MainVBox/ResultContainer/EndlessUI/RunCard/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="Title" type="Label" parent="CenterContainer/MainVBox/ResultContainer/EndlessUI/RunCard/MarginContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
 theme_override_colors/font_outline_color = Color(0.2, 0.1, 0.05, 1)
 theme_override_constants/outline_size = 6
 theme_override_fonts/font = ExtResource("5_font")
@@ -353,17 +415,13 @@ theme_override_font_sizes/font_size = 32
 text = "This Run"
 horizontal_alignment = 2
 
-[node name="ValRun" type="Label" parent="CenterContainer/MainVBox/ResultContainer/EndlessUI/RunCard"]
+[node name="ValRun" type="Label" parent="CenterContainer/MainVBox/ResultContainer/EndlessUI/RunCard/MarginContainer/HBoxContainer/VBoxContainer"]
 unique_name_in_owner = true
-layout_mode = 0
-offset_left = 180.0
-offset_top = 65.0
-offset_right = 530.0
-offset_bottom = 122.0
+layout_mode = 2
 theme_override_colors/font_outline_color = Color(0.2, 0.1, 0.05, 1)
 theme_override_constants/outline_size = 6
 theme_override_fonts/font = ExtResource("5_font")
-theme_override_font_sizes/font_size = 36
+theme_override_font_sizes/font_size = 38
 text = "980 m"
 horizontal_alignment = 2
 
