@@ -387,11 +387,16 @@ func show_shield_unlock(player_name: String):
 	tween.tween_callback(popup.queue_free)
 
 func _process(delta):
-	if player1:
-		p1_distance.text = str(int(player1.distance)) + "/2000m"
-		
-	if player2:
-		p2_distance.text = str(int(player2.distance)) + "/2000m"
+	if GameConfig.race_mode == "endless":
+		if player1:
+			p1_distance.text = str(int(player1.distance)) + "m"
+		if player2:
+			p2_distance.text = str(int(player2.distance)) + "m"
+	else:
+		if player1:
+			p1_distance.text = str(int(player1.distance)) + "/2000m"
+		if player2:
+			p2_distance.text = str(int(player2.distance)) + "/2000m"
 		
 	# Compare distances and update LEADING indicators
 	if player1 and player2:
