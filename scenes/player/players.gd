@@ -573,7 +573,6 @@ func _physics_process(delta):
 
 	var pull_vfx = get_node_or_null("PullVFX")
 	if pull_vfx:
-		pull_vfx.global_position.x = 0.0
 		if abs(position.x) < 0.1:
 			pull_vfx.queue_free()
 
