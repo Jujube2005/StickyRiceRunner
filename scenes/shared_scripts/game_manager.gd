@@ -81,6 +81,12 @@ func _ready():
 	# In Endless mode, spawn elephant chasers
 	if GameConfig.race_mode == "endless":
 		_spawn_elephants()
+		
+	# Configure camera cull masks for isolated VFX rendering
+	var cam1 = get_tree().current_scene.find_child("CameraP1", true, false)
+	var cam2 = get_tree().current_scene.find_child("CameraP2", true, false)
+	if cam1: cam1.cull_mask &= ~(1 << 2) # Remove layer 3 (P2 only)
+	if cam2: cam2.cull_mask &= ~(1 << 1) # Remove layer 2 (P1 only)
 
 func _spawn_players():
 	var players_node = get_node("../Players")

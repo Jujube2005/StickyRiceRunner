@@ -1349,8 +1349,15 @@ func apply_prank(skill_name):
 					pull_sprite.name = "PullVFX"
 					pull_sprite.texture = pull_tex
 					pull_sprite.billboard = BaseMaterial3D.BILLBOARD_ENABLED
-					pull_sprite.pixel_size = 0.008
+					pull_sprite.pixel_size = 0.015
 					pull_sprite.transparent = true
+					
+					# Only show on victim's screen
+					if self.name == "Player1":
+						pull_sprite.layers = 2 # Bit 1 (Layer 2)
+					else:
+						pull_sprite.layers = 4 # Bit 2 (Layer 3)
+						
 					add_child(pull_sprite)
 					pull_sprite.position.y = 3.0
 					
