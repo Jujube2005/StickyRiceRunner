@@ -282,7 +282,7 @@ func _show_half_dust(duration: float, is_right_half: bool):
 	
 	flash_tw.kill()
 	var fade_tw = create_tween()
-	fade_tw.tween_parallel(true)
+	fade_tw.set_parallel(true)
 	fade_tw.tween_property(overlay, "color:a", 0.0, 0.5)
 	fade_tw.tween_property(overlay, "modulate:a", 0.0, 0.5)
 	fade_tw.chain().tween_callback(overlay.queue_free)
