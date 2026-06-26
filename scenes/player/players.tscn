@@ -32,6 +32,11 @@ size = Vector2(1.2, 1.2)
 
 [node name="Players" type="CharacterBody3D" unique_id=1649001234]
 script = ExtResource("1_n4luv")
+run_file = "uid://cp5f4jkgeokix"
+jump_file = "uid://b4t1c8eq2t1bt"
+stun_file = "uid://j4gmdvgxyb77"
+slide_file = "uid://dg80vsxgdvc0j"
+buffalo_ride_file = "uid://colfsabb8j1qj"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=200647315]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9244131, 0)
