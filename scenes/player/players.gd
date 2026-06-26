@@ -1364,10 +1364,37 @@ func apply_prank(skill_name):
 			AudioManager.play_sfx("skill_use")
 			emit_signal("prank_flash", Color(0.6, 0.0, 1.0, 0.30))  # 🟣 ม่วง
 		"Knockback":
-			global_position.z += 6.0
-			velocity.y = 5.0
-			AudioManager.play_sfx("skill_use")
-			emit_signal("prank_flash", Color(0.6, 0.0, 1.0, 0.30))  # 🟣 ม่วง
+			var pig_tex = load("res://assets/models/effects/Knock_back/Knockback1.png")
+			if pig_tex:
+				var pig_sprite = Sprite3D.new()
+				pig_sprite.texture = pig_tex
+				pig_sprite.billboard = BaseMaterial3D.BILLBOARD_FIXED_Y
+				pig_sprite.pixel_size = 0.05
+				pig_sprite.transparent = true
+				add_child(pig_sprite)
+				
+				# Spawn in front of the player (Z is negative for forward)
+				pig_sprite.position = Vector3(0, 1.0, -10.0)
+				
+				var crash_tw = create_tween()
+				crash_tw.tween_property(pig_sprite, "position", Vector3(0, 1.0, 0.5), 0.15).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)
+				crash_tw.tween_callback(func():
+					pig_sprite.queue_free()
+					AudioManager.play_sfx("skill_use")
+					emit_signal("prank_flash", Color(1.0, 0.2, 0.2, 0.40))  # 🔴 แดงกระแทก
+					VfxManager.spawn("skill_hit_generic", global_position + Vector3(0, 1.0, 0))
+					
+					# เด้งถอยหลังทันที
+					global_position.z += 8.0
+					velocity.y = 6.0
+					stun(1.0) # ล้มตอนกระเด็น
+				)
+			else:
+				global_position.z += 8.0
+				velocity.y = 6.0
+				AudioManager.play_sfx("skill_use")
+				emit_signal("prank_flash", Color(1.0, 0.2, 0.2, 0.40))
+				stun(1.0)
 		"Invert Controls":
 			# กลับทาง
 			effect_durations["invert_controls"] = 4.5
