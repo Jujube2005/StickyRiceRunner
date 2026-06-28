@@ -1,6 +1,6 @@
 extends Control
 
-@onready var race_ui: VBoxContainer = %RaceUI
+@onready var race_ui: Control = %RaceUI
 @onready var race_header_label: Label = %RaceHeaderLabel
 @onready var race_winner_container: TextureRect = %RaceWinnerContainer
 @onready var race_winner_tag: TextureRect = %RaceWinnerTag
@@ -8,7 +8,7 @@ extends Control
 @onready var val_p1_wins: Label = %ValP1Wins
 @onready var val_p2_wins: Label = %ValP2Wins
 
-@onready var endless_ui: VBoxContainer = %EndlessUI
+@onready var endless_ui: Control = %EndlessUI
 @onready var endless_header_label: Label = %EndlessHeaderLabel
 @onready var endless_winner_container: TextureRect = %EndlessWinnerContainer
 @onready var endless_winner_tag: TextureRect = %EndlessWinnerTag
@@ -16,8 +16,10 @@ extends Control
 @onready var val_dist_best: Label = %ValDistBest
 @onready var val_run: Label = %ValRun
 
-@onready var btn_restart: TextureButton = %BtnRestart
-@onready var btn_menu: TextureButton = %BtnMenu
+@onready var btn_restart: TextureButton = get_node_or_null("%BtnRestart")
+@onready var btn_menu: TextureButton = get_node_or_null("%BtnMenu")
+@onready var btn_restart_endless: TextureButton = get_node_or_null("%BtnRestartEndless")
+@onready var btn_menu_endless: TextureButton = get_node_or_null("%BtnMenuEndless")
 
 var tex_p1_tag = preload("res://assets/textures/UI/Buttons/P1WINS.png")
 var tex_p2_tag = preload("res://assets/textures/UI/Buttons/P2WINS.png")
@@ -46,8 +48,12 @@ func _ready():
 	default_scale = scale
 	if btn_restart: btn_restart.pressed.connect(on_restart_pressed)
 	if btn_menu: btn_menu.pressed.connect(on_menu_pressed)
+	if btn_restart_endless: btn_restart_endless.pressed.connect(on_restart_pressed)
+	if btn_menu_endless: btn_menu_endless.pressed.connect(on_menu_pressed)
 	if btn_restart: _setup_button_hover(btn_restart)
 	if btn_menu: _setup_button_hover(btn_menu)
+	if btn_restart_endless: _setup_button_hover(btn_restart_endless)
+	if btn_menu_endless: _setup_button_hover(btn_menu_endless)
 
 func _setup_button_hover(btn: TextureButton):
 	btn.pivot_offset = btn.custom_minimum_size / 2.0
@@ -67,7 +73,9 @@ func show_result(winner_name: String, _p1_score: int, _p2_score: int, _p1_distan
 	
 	if is_endless:
 		if race_ui: race_ui.hide()
-		if endless_ui: endless_ui.show()
+		if endless_ui: 
+			endless_ui.show()
+			endless_ui.position = Vector2.ZERO
 		
 		if endless_header_label: endless_header_label.text = "Endless Result"
 			
@@ -91,7 +99,9 @@ func show_result(winner_name: String, _p1_score: int, _p2_score: int, _p1_distan
 		
 	else:
 		if endless_ui: endless_ui.hide()
-		if race_ui: race_ui.show()
+		if race_ui: 
+			race_ui.show()
+			race_ui.position = Vector2.ZERO
 		
 		if race_header_label: race_header_label.text = "Race Result"
 		

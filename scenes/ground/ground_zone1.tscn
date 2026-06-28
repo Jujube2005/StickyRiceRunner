@@ -61,7 +61,7 @@ transform = Transform3D(1500, 0, 0, 0, 1500, 0, 0, 0, 1500, -6.2949414, -0.45744
 transform = Transform3D(1500, 0, 0, 0, 1500, 0, 0, 0, 1500, -6.1813607, -0.22043276, -7.205997)
 
 [node name="rock" parent="." unique_id=1271522707 instance=ExtResource("4_p3dfm")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.3992596, 0, 2.410157)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.895194, -0.019224882, 2.6133418)
 
 [node name="rock3" parent="." unique_id=1053064039 instance=ExtResource("4_p3dfm")]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -6.2284217, 0.117332935, -1.8970453)
@@ -73,7 +73,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.4325037, 0, 6.3111024)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.0357947, -0.025612116, -3.0689514)
 
 [node name="Sketchfab_Scene" parent="." unique_id=1421409945 instance=ExtResource("5_p3dfm")]
-transform = Transform3D(-8.742278e-09, 0, 0.2, 0, 0.2, 0, -0.2, 0, -8.742278e-09, -8.746833, -0.021294981, 5.45389)
+transform = Transform3D(-8.742278e-09, 0, 0.2, 0, 0.2, 0, -0.2, 0, -8.742278e-09, -7.7621427, -0.021294981, 5.45389)
 
 [node name="Sketchfab_Scene2" parent="." unique_id=279703989 instance=ExtResource("5_p3dfm")]
 transform = Transform3D(-0.1, 0, -1.509958e-08, 0, 0.1, 0, 1.509958e-08, 0, -0.1, -6.01764, -0.2182503, -4.686182)

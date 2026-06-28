@@ -186,7 +186,7 @@ func _process(delta):
 	if is_instance_valid(revive_ui) and revive_timer > 0:
 		revive_timer -= delta
 		if is_instance_valid(revive_label):
-			revive_label.text = str(ceil(revive_timer))
+			revive_label.text = "%.1f" % revive_timer
 		if revive_timer <= 0:
 			_on_revive_skipped()
 			return
@@ -390,56 +390,31 @@ func _show_revive_prompt(player: Node, winner: String):
 	var can_afford = (_k != null and _k >= cost)
 
 	revive_ui = CanvasLayer.new()
-	add_child(revive_ui)
-
-	var panel = Panel.new()
-	panel.custom_minimum_size = Vector2(400, 250)
-	revive_ui.add_child(panel)
-
+	
+	# Add to player's specific SubViewport so it fits split screen exactly
+	var viewport = null
 	if player.name == "Player1":
-		panel.set_anchors_and_offsets_preset(Control.PRESET_CENTER_LEFT)
-		panel.position.x += 150
-		panel.position.y -= panel.custom_minimum_size.y / 2
+		viewport = get_node_or_null("../Cameras/SubViewportContainerP1er/SubViewportP1")
 	elif player.name == "Player2":
-		panel.set_anchors_and_offsets_preset(Control.PRESET_CENTER_RIGHT)
-		panel.position.x -= 150
-		panel.position.y -= panel.custom_minimum_size.y / 2
+		viewport = get_node_or_null("../Cameras/SubViewportContainerP2/SubViewportP2")
+	
+	if viewport:
+		viewport.add_child(revive_ui)
 	else:
-		panel.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
-		panel.position -= panel.custom_minimum_size / 2
+		add_child(revive_ui)
 
-	var vbox = VBoxContainer.new()
-	vbox.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	vbox.alignment = BoxContainer.ALIGNMENT_CENTER
-	panel.add_child(vbox)
-
-	var title = Label.new()
-	title.text = "REVIVE?"
-	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	title.add_theme_font_size_override("font_size", 32)
-	vbox.add_child(title)
-
-	revive_label = Label.new()
-	revive_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	revive_label.add_theme_font_size_override("font_size", 48)
-	vbox.add_child(revive_label)
-
-	var hbox = HBoxContainer.new()
-	hbox.alignment = BoxContainer.ALIGNMENT_CENTER
-	vbox.add_child(hbox)
-
-	var btn_revive = Button.new()
-	btn_revive.text = "Revive (10 Kratips)"
-	btn_revive.custom_minimum_size = Vector2(150, 50)
-	btn_revive.disabled = !can_afford
-	btn_revive.pressed.connect(_on_revive_accepted)
-	hbox.add_child(btn_revive)
-
-	var btn_skip = Button.new()
-	btn_skip.text = "Skip"
-	btn_skip.custom_minimum_size = Vector2(100, 50)
-	btn_skip.pressed.connect(_on_revive_skipped)
-	hbox.add_child(btn_skip)
+	# Instantiate the revive screen scene from the .tscn file
+	var scene = load("res://scenes/ui/revive_screen.tscn")
+	var instance = scene.instantiate()
+	revive_ui.add_child(instance)
+	
+	# Setup signals and affordability check
+	instance.setup(can_afford)
+	instance.accepted.connect(_on_revive_accepted)
+	instance.skipped.connect(_on_revive_skipped)
+	
+	# Reference the timer label for _process to tick the countdown timer
+	revive_label = instance.timer_label
 
 	revive_timer = 5.0
 	set_process(true) # Ensure process is running to tick the timer
