@@ -31,6 +31,13 @@ var _has_skipped: bool = false
 
 # ─────────────────────────────────────────────────────────────
 func _ready() -> void:
+	# Ensure main_menu is being loaded in the background.
+	# opening_cutscene normally requests this, but if it was skipped instantly
+	# the request may not have been made yet — request only if not already queued.
+	var status = ResourceLoader.load_threaded_get_status(NEXT_SCENE)
+	if status == ResourceLoader.THREAD_LOAD_INVALID_RESOURCE:
+		ResourceLoader.load_threaded_request(NEXT_SCENE)
+
 	# Center the characters and make them huge
 	char_left.set_anchors_preset(PRESET_FULL_RECT)
 	char_left.offset_left = 0
@@ -232,4 +239,19 @@ func _on_cutscene_finished() -> void:
 	var tween = create_tween()
 	tween.tween_property(overlay, "color:a", 1.0, 0.6)
 	await tween.finished
-	get_tree().change_scene_to_file(NEXT_SCENE)
+
+	# Use the threaded-loaded main_menu (requested by opening_cutscene).
+	# Poll until it's ready — should already be done after ~25 s of cutscene.
+	while true:
+		var status = ResourceLoader.load_threaded_get_status(NEXT_SCENE)
+		if status == ResourceLoader.THREAD_LOAD_LOADED:
+			var scene = ResourceLoader.load_threaded_get(NEXT_SCENE) as PackedScene
+			get_tree().change_scene_to_packed(scene)
+			return
+		elif status == ResourceLoader.THREAD_LOAD_FAILED or status == ResourceLoader.THREAD_LOAD_INVALID_RESOURCE:
+			push_warning("[IntroductionCutscene] Threaded load failed, falling back to change_scene_to_file.")
+			get_tree().change_scene_to_file(NEXT_SCENE)
+			return
+		# Still in progress — wait one frame and check again
+		await get_tree().process_frame
+

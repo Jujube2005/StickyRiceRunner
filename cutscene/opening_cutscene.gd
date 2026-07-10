@@ -30,6 +30,10 @@ var _player: Node
 var _has_skipped: bool = false
 
 func _ready() -> void:
+	# Kick off background loading of main_menu immediately —
+	# the cutscene takes ~25 s so main_menu will be ready long before we need it.
+	ResourceLoader.load_threaded_request("res://scenes/main_menu/main_menu.tscn")
+
 	# Instantiate the CutscenePlayer script onto the helper node
 	var cp_script = load("res://cutscene/cutscene_player.gd")
 	_player = cp_script.new()
