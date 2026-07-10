@@ -254,7 +254,8 @@ func _start_game(game_mode_type: String):
 	var tween = create_tween()
 	tween.tween_property(self, "modulate:a", 0.0, 0.5)
 	tween.tween_callback(func():
-		var error = get_tree().change_scene_to_file("res://scenes/main/main.tscn")
+		# Go to pre-game loading screen which will load main.tscn in the background
+		var error = get_tree().change_scene_to_file("res://scenes/loading/pre_game_loading.tscn")
 		if error != OK:
-			print("Error loading game scene: ", error)
+			print("Error loading pre-game loading scene: ", error)
 	)
